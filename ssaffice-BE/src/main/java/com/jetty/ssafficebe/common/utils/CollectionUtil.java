@@ -1,12 +1,17 @@
 package com.jetty.ssafficebe.common.utils;
 
-import org.springframework.util.StringUtils;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.springframework.util.StringUtils;
 
 public class CollectionUtil {
 
@@ -14,13 +19,12 @@ public class CollectionUtil {
     }
 
     /**
-     * Collection을 변환하는 메소드.
-     * fromList에서 각 요소를 function을 통해 변환하여 새로운 리스트로 반환.
+     * Collection을 변환하는 메소드. fromList에서 각 요소를 function을 통해 변환하여 새로운 리스트로 반환.
      *
-     * @param fromList  변환할 컬렉션
-     * @param function  변환할 함수
-     * @param <F>       소스 타입
-     * @param <T>       타겟 타입
+     * @param fromList 변환할 컬렉션
+     * @param function 변환할 함수
+     * @param <F>      소스 타입
+     * @param <T>      타겟 타입
      * @return 변환된 리스트
      */
     public static <F, T> List<T> transform(
@@ -33,13 +37,12 @@ public class CollectionUtil {
     }
 
     /**
-     * Iterable을 변환하는 메소드.
-     * fromList에서 각 요소를 function을 통해 변환하여 새로운 리스트로 반환.
+     * Iterable을 변환하는 메소드. fromList에서 각 요소를 function을 통해 변환하여 새로운 리스트로 반환.
      *
-     * @param fromList  변환할 Iterable
-     * @param function  변환할 함수
-     * @param <F>       소스 타입
-     * @param <T>       타겟 타입
+     * @param fromList 변환할 Iterable
+     * @param function 변환할 함수
+     * @param <F>      소스 타입
+     * @param <T>      타겟 타입
      * @return 변환된 리스트
      */
     public static <F, T> List<T> transform(
@@ -52,13 +55,12 @@ public class CollectionUtil {
     }
 
     /**
-     * 중복되지 않은 변환된 리스트 반환.
-     * fromList에서 각 요소를 targetFunction으로 변환하고, 비어 있지 않은 값들만 필터링하여 중복을 제거.
+     * 중복되지 않은 변환된 리스트 반환. fromList에서 각 요소를 targetFunction으로 변환하고, 비어 있지 않은 값들만 필터링하여 중복을 제거.
      *
-     * @param fromList      변환할 컬렉션
+     * @param fromList       변환할 컬렉션
      * @param targetFunction 변환할 함수
-     * @param <F>           소스 타입
-     * @param <T>           타겟 타입
+     * @param <F>            소스 타입
+     * @param <T>            타겟 타입
      * @return 중복이 제거된 리스트
      */
     public static <F, T> List<T> transformDistinct(
@@ -78,13 +80,13 @@ public class CollectionUtil {
     /**
      * srcList에서 matchList의 keySet과 일치하지 않는 요소들을 제거.
      *
-     * @param srcList         원본 컬렉션
-     * @param matchList       매칭할 대상 컬렉션
-     * @param srcKeyFunction  원본 컬렉션에서 Key를 추출할 함수
+     * @param srcList          원본 컬렉션
+     * @param matchList        매칭할 대상 컬렉션
+     * @param srcKeyFunction   원본 컬렉션에서 Key를 추출할 함수
      * @param matchKeyFunction 매칭 대상 컬렉션에서 Key를 추출할 함수
-     * @param <F>             원본 타입
-     * @param <T>             매칭 대상 타입
-     * @param <S>             Key 타입
+     * @param <F>              원본 타입
+     * @param <T>              매칭 대상 타입
+     * @param <S>              Key 타입
      */
     public static <F, T, S> void removeNoneMatch(
             Collection<F> srcList,
@@ -104,13 +106,13 @@ public class CollectionUtil {
     /**
      * srcList에서 matchList의 keySet과 일치하지 않는 요소들을 반환.
      *
-     * @param srcList         원본 컬렉션
-     * @param matchList       매칭할 대상 컬렉션
-     * @param srcKeyFunction  원본 컬렉션에서 Key를 추출할 함수
+     * @param srcList          원본 컬렉션
+     * @param matchList        매칭할 대상 컬렉션
+     * @param srcKeyFunction   원본 컬렉션에서 Key를 추출할 함수
      * @param matchKeyFunction 매칭 대상 컬렉션에서 Key를 추출할 함수
-     * @param <F>             원본 타입
-     * @param <T>             매칭 대상 타입
-     * @param <S>             Key 타입
+     * @param <F>              원본 타입
+     * @param <T>              매칭 대상 타입
+     * @param <S>              Key 타입
      * @return 매칭되지 않은 요소들이 담긴 리스트
      */
     public static <F, T, S> List<F> findNoneMatch(
@@ -131,21 +133,18 @@ public class CollectionUtil {
     }
 
     /**
-     * 원본 리스트에 대한 삽입/수정/삭제 작업을 처리.
-     * - 업데이트 대상이 없는 원본 데이터를 삭제
-     * - 업데이트 대상이 있는 원본 데이터를 수정
-     * - 원본에 없는 데이터를 삽입
+     * 원본 리스트에 대한 삽입/수정/삭제 작업을 처리. - 업데이트 대상이 없는 원본 데이터를 삭제 - 업데이트 대상이 있는 원본 데이터를 수정 - 원본에 없는 데이터를 삽입
      *
-     * @param targetList       원본 컬렉션
-     * @param srcList          업데이트 대상 컬렉션
+     * @param targetList        원본 컬렉션
+     * @param srcList           업데이트 대상 컬렉션
      * @param targetKeyFunction 원본에서 Key를 추출할 함수
-     * @param srcKeyFunction   업데이트 대상에서 Key를 추출할 함수
-     * @param deleteFunction   삭제할 요소에 대한 처리
-     * @param updateFunction   업데이트할 요소에 대한 처리
-     * @param insertFunction   삽입할 요소에 대한 처리
-     * @param <F>              원본 타입
-     * @param <T>              업데이트 대상 타입
-     * @param <S>              Key 타입
+     * @param srcKeyFunction    업데이트 대상에서 Key를 추출할 함수
+     * @param deleteFunction    삭제할 요소에 대한 처리
+     * @param updateFunction    업데이트할 요소에 대한 처리
+     * @param insertFunction    삽입할 요소에 대한 처리
+     * @param <F>               원본 타입
+     * @param <T>               업데이트 대상 타입
+     * @param <S>               Key 타입
      */
     public static <F, T, S> void deleteOrUpdateOrInsert(
             Collection<F> targetList, // 원본
