@@ -7,13 +7,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "role")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Role {
 
     @Id
@@ -24,5 +27,9 @@ public class Role {
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<UserRole> userRoles = new HashSet<>();
 
-
+    @Builder
+    public Role(String roleId, String description) {
+        this.roleId = roleId;
+        this.description = description;
+    }
 }
