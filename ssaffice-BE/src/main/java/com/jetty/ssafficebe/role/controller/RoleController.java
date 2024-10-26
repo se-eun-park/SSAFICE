@@ -1,0 +1,47 @@
+package com.jetty.ssafficebe.role.controller;
+
+import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.role.payload.RoleAssignmentRequest;
+import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
+import com.jetty.ssafficebe.role.service.RoleService;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/roles")
+@RequiredArgsConstructor
+public class RoleController {
+
+    private final RoleService roleService;
+
+    /**
+     * 등록되어있는 역할군 출력. 역할군별 유저 조회시 태그 선택 리스트가 필요할 경우
+     *
+     * @return List<RoleSummarySimple> { "roleId" : "ROLE_USER", "ROLE_ADMIN", "ROLE_SYSADMIN", "description" : "학생",
+     * "프로", "시스템 관리자" }
+     */
+    @GetMapping(params = "dataType=simple")
+    public ResponseEntity<List<RoleSummarySimple>> getRoleSimpleList() {
+        return ResponseEntity.ok(this.roleService.getRoleList());
+    }
+
+    /**
+     * 역할 ID에 사용자 ID 목록을 할당하여 역할을 부여.
+     *
+     * @param roleId  역할을 할당할 역할 ID (예: "ROLE_ADMIN")
+     * @param request 역할이 할당될 사용자 ID 목록 (예: { "userIds": [1, 2, 3] })
+     */
+    @PutMapping("/{roleId}")
+    public ResponseEntity<ApiResponse> assignRoleToUsers(@PathVariable String roleId,
+                                                         @RequestBody RoleAssignmentRequest request) {
+        ApiResponse apiResponse = this.roleService.assignRoleToUsers(roleId, request);
+        return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+    }
+}
