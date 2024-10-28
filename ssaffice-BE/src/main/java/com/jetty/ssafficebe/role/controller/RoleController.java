@@ -8,6 +8,7 @@ import com.jetty.ssafficebe.role.service.RoleService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,6 +57,17 @@ public class RoleController {
     @PostMapping
     public ResponseEntity<ApiResponse> saveRole(@RequestBody RoleDTO request) {
         ApiResponse apiResponse = this.roleService.saveRole(request);
+        return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+    }
+
+    /**
+     * 역할 삭제
+     *
+     * @param roleId 삭제할 역할 ID (예: "ROLE_USER")
+     */
+    @DeleteMapping("/{roleId}")
+    public ResponseEntity<ApiResponse> deleteRole(@PathVariable String roleId) {
+        ApiResponse apiResponse = this.roleService.deleteRole(roleId);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 }
