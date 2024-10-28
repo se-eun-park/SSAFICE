@@ -4,12 +4,15 @@ import com.jetty.ssafficebe.commoncode.CommonCode;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum Region implements CommonCode {
-    SEOUL("서울"),
-    DAEGU("대구"),
-    BU_UL_GYEONG("부울경"),
-    GWANGJU("광주"),
-    DAEJEON("대전");
+public enum Track implements CommonCode {
+    NON_MAJOR_PYTHON("비전공-파이썬"),
+    NON_MAJOR_JAVA("비전공-자바"),
+    MAJOR_JAVA("전공-자바"),
+    EMBEDDED("임베디드"),
+    MOBILE("모바일"),
+    DATA("데이터")
+    ;
+
 
     private final String title;
 

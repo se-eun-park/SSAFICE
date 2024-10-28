@@ -1,0 +1,16 @@
+### 회원가입
+POST http://localhost:9090/api/users
+Content-Type: application/json
+
+{
+  "email": "test2@gmail.com",
+  "password": "1234",
+  "name": "tester2",
+  "roleIds": [
+    "ROLE_USER"
+  ],
+  "cohortNum": 1,
+  "regionCd": "SEOUL",
+  "classNum": 1,
+  "trackCd": "NON_MAJOR_PYTHON"
+}
