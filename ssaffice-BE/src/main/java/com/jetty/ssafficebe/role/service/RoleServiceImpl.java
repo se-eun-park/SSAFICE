@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.role.service;
 
 import com.jetty.ssafficebe.common.exception.ErrorCode;
+import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.utils.CollectionUtil;
@@ -8,6 +9,7 @@ import com.jetty.ssafficebe.role.converter.RoleConverter;
 import com.jetty.ssafficebe.role.entity.Role;
 import com.jetty.ssafficebe.role.entity.UserRole;
 import com.jetty.ssafficebe.role.payload.RoleAssignmentRequest;
+import com.jetty.ssafficebe.role.payload.RoleDTO;
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
 import com.jetty.ssafficebe.role.repository.UserRoleRepository;
@@ -63,6 +65,17 @@ public class RoleServiceImpl implements RoleService {
         );
 
         return new ApiResponse(true, HttpStatus.CREATED, "역할 할당이 완료되었습니다.", role.getRoleId());
+    }
+
+    @Override
+    public ApiResponse saveRole(RoleDTO request) {
+        if (this.roleRepository.existsById(request.getRoleId())) {
+            throw new DuplicateValueException(ErrorCode.ROLE_ALREADY_EXISTS, "roleId", request.getRoleId());
+        }
+
+        Role role = this.roleConverter.toRole(request);
+        Role savedRole = this.roleRepository.save(role);
+        return new ApiResponse(true, HttpStatus.CREATED, "역할이 생성되었습니다.", savedRole);
     }
 
 
