@@ -12,7 +12,6 @@ import com.jetty.ssafficebe.role.payload.RoleAssignmentRequest;
 import com.jetty.ssafficebe.role.payload.RoleDTO;
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
-import com.jetty.ssafficebe.role.repository.UserRoleRepository;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
