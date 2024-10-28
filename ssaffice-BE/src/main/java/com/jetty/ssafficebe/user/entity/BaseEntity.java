@@ -34,7 +34,7 @@ public class BaseEntity {
     private LocalDateTime updatedAt;
 
     @LastModifiedBy
-    private LocalDateTime updatedId;
+    private Long updatedId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedId", insertable = false, updatable = false)

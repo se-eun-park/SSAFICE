@@ -2,10 +2,14 @@ package com.jetty.ssafficebe.user.entity;
 
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.role.entity.UserRole;
+import com.jetty.ssafficebe.user.code.Region;
+import com.jetty.ssafficebe.user.code.Track;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,12 +44,19 @@ public class User extends BaseEntity {
 
     private Integer cohortNum;
 
-    // TODO : 지역 코드 entity 생성 및 연결 필요
+    private String trackCd;
+
+    @Column(name = "trackCd", updatable = false, insertable = false)
+    @Enumerated(EnumType.STRING)
+    private Track track;
+
     private String regionCd;
 
-    private Integer Class;
+    @Column(name = "regionCd", updatable = false, insertable = false)
+    @Enumerated(EnumType.STRING)
+    private Region region;
 
-    private String roleId;
+    private Integer classNum;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserRole> userRoles = new ArrayList<>();
