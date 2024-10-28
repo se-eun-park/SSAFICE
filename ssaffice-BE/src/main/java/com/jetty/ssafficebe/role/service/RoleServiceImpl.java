@@ -78,5 +78,14 @@ public class RoleServiceImpl implements RoleService {
         return new ApiResponse(true, HttpStatus.CREATED, "역할이 생성되었습니다.", savedRole);
     }
 
+    @Override
+    public ApiResponse deleteRole(String roleId) {
+        if (!this.roleRepository.existsById(roleId)) {
+            throw new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND, "roleId", roleId);
+        }
+
+        this.roleRepository.deleteById(roleId);
+        return new ApiResponse(true, HttpStatus.OK, "역할이 삭제되었습니다.", roleId);
+    }
 
 }

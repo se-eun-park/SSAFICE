@@ -13,5 +13,7 @@ public interface RoleService {
     ApiResponse assignRoleToUsers(String roleId, RoleAssignmentRequest request);
 
     ApiResponse saveRole(RoleDTO request);
+
+    ApiResponse deleteRole(String roleId);
 }
 
