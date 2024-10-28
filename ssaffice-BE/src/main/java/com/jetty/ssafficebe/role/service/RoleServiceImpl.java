@@ -85,7 +85,7 @@ public class RoleServiceImpl implements RoleService {
         }
 
         this.roleRepository.deleteById(roleId);
-        return new ApiResponse(true, HttpStatus.NO_CONTENT, "역할이 삭제되었습니다.", roleId);
+        return new ApiResponse(true, HttpStatus.OK, "역할이 삭제되었습니다.", roleId);
     }
 
 }
