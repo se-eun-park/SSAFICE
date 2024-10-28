@@ -70,4 +70,8 @@ public class RoleController {
         ApiResponse apiResponse = this.roleService.deleteRole(roleId);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
+
+    /**
+     * TODO : 역할 별 유저 목록 조회. (유저 CRUD 구현 이후 추가 가능)
+     */
 }
