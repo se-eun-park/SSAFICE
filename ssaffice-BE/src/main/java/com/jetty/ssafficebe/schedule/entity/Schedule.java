@@ -3,6 +3,8 @@ package com.jetty.ssafficebe.schedule.entity;
 import com.jetty.ssafficebe.user.entity.BaseEntity;
 import com.jetty.ssafficebe.user.entity.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -32,8 +34,10 @@ public class Schedule extends BaseEntity {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Boolean isEssential;
-    private String category; // "일반", "파일"
-    private String type; // "공지", "개인"
+    @Enumerated(EnumType.STRING)
+    private ScheduleCategory category;
+    @Enumerated(EnumType.STRING)
+    private ScheduleType type;
     private Boolean isFinish;
     private Boolean isEnroll;
     private String url;
