@@ -12,7 +12,6 @@ import com.jetty.ssafficebe.role.payload.RoleAssignmentRequest;
 import com.jetty.ssafficebe.role.payload.RoleDTO;
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
-import com.jetty.ssafficebe.role.repository.UserRoleRepository;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -26,13 +25,12 @@ import org.springframework.stereotype.Service;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final UserRoleRepository userRoleRepository;
     private final UserRepository userRepository;
     private final RoleConverter roleConverter;
 
     @Override
     public List<RoleSummarySimple> getRoleList() {
-        return CollectionUtil.transform(this.roleRepository.findAll(), this.roleConverter::toRoleSimple);
+        return CollectionUtil.transform(this.roleRepository.findAll(), this.roleConverter::toRoleSummarySimple);
     }
 
     @Override
@@ -40,6 +38,7 @@ public class RoleServiceImpl implements RoleService {
     public ApiResponse assignRoleToUsers(String roleId, RoleAssignmentRequest request) {
         Role role;
         if (!roleRepository.existsById(roleId)) {
+            System.out.println("역할 없음");
             throw new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND, "roleId", roleId);
         }
         role = this.roleRepository.getReferenceById(roleId);
