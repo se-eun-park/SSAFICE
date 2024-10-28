@@ -1,28 +1,19 @@
 package com.jetty.ssafficebe.schedule.entity;
 
 import com.jetty.ssafficebe.user.entity.BaseEntity;
-import com.jetty.ssafficebe.user.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import java.time.LocalTime;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "schedule")
 public class Schedule extends BaseEntity {
 
@@ -30,7 +21,7 @@ public class Schedule extends BaseEntity {
     private Long scheduleId;
     private String title;
     private String memo;
-    private String remind;
+    private LocalTime remind;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Boolean isEssential;
@@ -42,9 +33,9 @@ public class Schedule extends BaseEntity {
     private Boolean isEnroll;
     private String url;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id")
+//    private User user;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "notice_id")
