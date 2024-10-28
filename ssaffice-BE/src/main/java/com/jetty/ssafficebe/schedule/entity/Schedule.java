@@ -27,17 +27,22 @@ public class Schedule extends BaseEntity {
     private Boolean isEssential;
     @Enumerated(EnumType.STRING)
     private ScheduleCategory category;
+
     @Enumerated(EnumType.STRING)
     private ScheduleType type;
+
     private Boolean isFinish;
     private Boolean isEnroll;
     private String url;
 
+    private Long userId;
+//
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
+//    @JoinColumn(name = "user_id", insertable = false, updatable = false)
 //    private User user;
-
+//
+    private Long noticeId;
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "notice_id")
+//    @JoinColumn(name = "notice_id", insertable = false, updatable = false)
 //    private Notice notice;
 }
