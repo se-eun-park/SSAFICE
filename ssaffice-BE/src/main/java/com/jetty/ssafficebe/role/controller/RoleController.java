@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.role.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.role.payload.RoleAssignmentRequest;
+import com.jetty.ssafficebe.role.payload.RoleDTO;
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.service.RoleService;
 import java.util.List;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,18 @@ public class RoleController {
     public ResponseEntity<ApiResponse> assignRoleToUsers(@PathVariable String roleId,
                                                          @RequestBody RoleAssignmentRequest request) {
         ApiResponse apiResponse = this.roleService.assignRoleToUsers(roleId, request);
+        return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+    }
+
+    /**
+     * 역할 추가
+     *
+     * @param request { "roleId" : "ROLE_USER", "description" : "학생" }
+     * @return ApiResponse { "success" : true, "status" : 201, "message" : "역할이 추가되었습니다." }
+     */
+    @PostMapping
+    public ResponseEntity<ApiResponse> saveRole(@RequestBody RoleDTO request) {
+        ApiResponse apiResponse = this.roleService.saveRole(request);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 }
