@@ -12,11 +12,15 @@ import com.jetty.ssafficebe.role.payload.RoleAssignmentRequest;
 import com.jetty.ssafficebe.role.payload.RoleDTO;
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
+import com.jetty.ssafficebe.user.entity.User;
+import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +70,9 @@ public class RoleServiceImpl implements RoleService {
         return new ApiResponse(true, HttpStatus.CREATED, "역할 할당이 완료되었습니다.", role.getRoleId());
     }
 
+
     @Override
+    @Transactional
     public ApiResponse saveRole(RoleDTO request) {
         if (this.roleRepository.existsById(request.getRoleId())) {
             throw new DuplicateValueException(ErrorCode.ROLE_ALREADY_EXISTS, "roleId", request.getRoleId());
@@ -77,7 +83,9 @@ public class RoleServiceImpl implements RoleService {
         return new ApiResponse(true, HttpStatus.CREATED, "역할이 생성되었습니다.", savedRole);
     }
 
+
     @Override
+    @Transactional
     public ApiResponse deleteRole(String roleId) {
         if (!this.roleRepository.existsById(roleId)) {
             throw new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND, "roleId", roleId);
@@ -85,6 +93,37 @@ public class RoleServiceImpl implements RoleService {
 
         this.roleRepository.deleteById(roleId);
         return new ApiResponse(true, HttpStatus.OK, "역할이 삭제되었습니다.", roleId);
+    }
+
+    // 역할 별 유저 목록 조회
+    @Override
+    public Page<UserSummary> getUserListByRole(String roleId, Pageable pageable) {
+        if (!this.roleRepository.existsById(roleId)) {
+            throw new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND, "roleId", roleId);
+        }
+
+        // roleId로 유저 목록 조회
+        Page<User> usersPage = userRepository.findUsersByRoleId(roleId, pageable);
+
+        // UserSummary 형태로 변환 후 리턴
+        return usersPage.map(user -> {
+            UserSummary userSummary = UserSummary.builder()
+                                                 .userId(user.getUserId())
+                                                 .email(user.getEmail())
+                                                 .name(user.getName())
+                                                 .build();
+
+            List<RoleDTO> userRoles = user.getUserRoles().stream().map(userRole -> {
+                Role role = userRole.getRole();
+                return RoleDTO.builder()
+                              .roleId(role.getRoleId())
+                              .description(role.getDescription())
+                              .build();
+            }).toList();
+
+            userSummary.setRoles(userRoles);
+            return userSummary;
+        });
     }
 
 }

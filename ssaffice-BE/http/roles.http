@@ -2,17 +2,9 @@
 POST http://localhost:9090/api/roles
 Content-Type: application/json
 
-//{
-//  "roleId": "ROLE_USER",
-//  "description": "학생"
-//}
-//{
-//  "roleId": "ROLE_SYSADMIN",
-//  "description": "시스템 관리자"
-//}
 {
-  "roleId": "ROLE_ADMIN",
-  "description": "프로, 컨설턴트, 코치"
+  "roleId": "ROLE_USER",
+  "description": "학생"
 }
 
 
@@ -29,5 +21,8 @@ PUT http://localhost:9090/api/roles/ROLE_ADMIN
 Content-Type: application/json
 
 {
-  "userIds": [1, 2, 3]
-  }
+  "userIds": [ 1, 2, 3 ]
+}
+
+### 역할에 속한 유저리스트 가져오기
+GET http://localhost:9090/api/roles/ROLE_ADMIN/users
