@@ -3,11 +3,11 @@ POST http://localhost:9090/api/users
 Content-Type: application/json
 
 {
-  "email": "test2@gmail.com",
+  "email": "test4@gmail.com",
   "password": "1234",
-  "name": "tester2",
+  "name": "tester4",
   "roleIds": [
-    "ROLE_USER"
+    "ROLE_ADMIN"
   ],
   "cohortNum": 1,
   "regionCd": "SEOUL",
