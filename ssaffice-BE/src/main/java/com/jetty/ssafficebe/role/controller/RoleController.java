@@ -89,7 +89,7 @@ public class RoleController {
      */
     @GetMapping("/{roleId}/users")
     public ResponseEntity<Page<UserSummary>> getUserListByRole(@PathVariable String roleId,
-                                                               @PageableDefault(page = 0,
+                                                               @PageableDefault(
                                                                 size = 20,
                                                                 sort = "userId",
                                                                 direction = Direction.ASC) Pageable pageable) {
