@@ -3,14 +3,17 @@ POST http://localhost:9090/api/users
 Content-Type: application/json
 
 {
-  "email": "test4@gmail.com",
+  "email": "test1@gmail.com",
   "password": "1234",
-  "name": "tester4",
+  "name": "tester1",
   "roleIds": [
-    "ROLE_ADMIN"
+    "ROLE_USER"
   ],
   "cohortNum": 1,
   "regionCd": "SEOUL",
   "classNum": 1,
   "trackCd": "NON_MAJOR_PYTHON"
 }
+
+### 유저 아이디로 유저 정보 검색
+GET http://localhost:9090/api/users/1
