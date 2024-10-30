@@ -1,5 +1,6 @@
 package com.jetty.ssafficebe.user.payload;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +9,7 @@ import lombok.Setter;
 public class UpdateUserRequest {
     private String name;
 
-    private String cohortNum;
+    private Integer cohortNum;
 
     private String trackCd;
 
@@ -16,5 +17,5 @@ public class UpdateUserRequest {
 
     private String curriculumCd;
 
-    private String classNum;
+    private Integer classNum;
 }
