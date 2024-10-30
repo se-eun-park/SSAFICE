@@ -1,0 +1,42 @@
+services:
+  ssaffice-BE:
+    image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-BE}:${DOCKER_TAG:-latest}
+    container_name: ssaffice-BE
+    ports:
+      - "9090:9090"  # 8080 -> 9090으로 변경
+    env_file:
+      - ./ssaffice-BE/.env
+    volumes:
+      - ./ssaffice-BE/logs:/app/logs
+    depends_on:
+      - redis
+
+  ssaffice-FE:
+    image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-FE}:${DOCKER_TAG:-latest}
+    container_name: ssaffice-FE
+    ports:
+      - "443:443"
+      - "80:80"
+    env_file:
+      - ./ssaffice-FE/.env
+    volumes:
+      # Let's Encrypt SSL 설정
+      - /etc/letsencrypt/live/k11a605.p.ssafy.io/fullchain.pem:/etc/letsencrypt/live/k11a605.p.ssafy.io/fullchain.pem:ro
+      - /etc/letsencrypt/live/k11a605.p.ssafy.io/privkey.pem:/etc/letsencrypt/live/k11a605.p.ssafy.io/privkey.pem:ro
+      - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro
+      - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem:ro
+    depends_on:
+      - ssaffice-BE
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  logs:
+  redis_data:
