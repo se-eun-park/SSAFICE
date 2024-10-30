@@ -4,6 +4,7 @@ import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
+import java.util.List;
 
 public interface UserService {
 
@@ -12,4 +13,6 @@ public interface UserService {
     UserSummary getUserSummary(Long userId);
 
     ApiResponse updateUser(Long userId, UpdateUserRequest saveUserRequest);
+
+    ApiResponse deleteUsers(List<Long> userIds);
 }

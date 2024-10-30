@@ -28,6 +28,8 @@ public class UserSummary {
 
     private String curriculumCd;
 
+    private String disabledYn;
+
     private List<RoleSummarySimple> roles = new ArrayList<>();
 
     // TODO : MM 프로필 사진 가져오기가 가능하면 넘겨주기
