@@ -4,18 +4,24 @@ import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.role.converter.RoleConverter;
+import com.jetty.ssafficebe.role.entity.Role;
 import com.jetty.ssafficebe.role.entity.UserRole;
+import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
 import com.jetty.ssafficebe.role.repository.UserRoleRepository;
 import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
-import com.jetty.ssafficebe.user.payload.UserInfo;
+import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
+import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +32,10 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserConverter userConverter;
     private final PasswordEncoder passwordEncoder;
-
+    private final RoleConverter roleConverter;
 
     @Override
+    @Transactional
     public ApiResponse saveUser(SaveUserRequest saveUserRequest) {
         if (userRepository.existsByEmail(saveUserRequest.getEmail())) {
             throw new DuplicateValueException(ErrorCode.EMAIL_ALREADY_EXISTS, "email", saveUserRequest.getEmail());
@@ -55,10 +62,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfo getUserInfo(Long userId) {
+    public UserSummary getUserSummary(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
 
-        return userConverter.toUserInfo(user);
+        UserSummary userSummary = userConverter.toUserSummary(user);
+
+        List<RoleSummarySimple> userRoles = user.getUserRoles().stream().map(userRole -> {
+            Role role = userRole.getRole();
+            return roleConverter.toRoleSummarySimple(role);
+        }).toList();
+
+        userSummary.setRoles(userRoles);
+
+        return userConverter.toUserSummary(user);
+    }
+
+    @Override
+    public ApiResponse updateUser(Long userId, UpdateUserRequest saveUserRequest) {
+        return null;
     }
 }
