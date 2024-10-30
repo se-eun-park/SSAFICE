@@ -18,7 +18,7 @@ COPY src ./src
 RUN gradle clean build --no-daemon
 
 # 빌드된 JAR 파일 이름 변경
-RUN mv /app/build/libs/qufit-*-SNAPSHOT.jar /app/app.jar
+RUN mv /app/build/libs/ssaffice-*-SNAPSHOT.jar /app/app.jar
 
 # 실행 스테이지
 FROM openjdk:17-jdk-slim
