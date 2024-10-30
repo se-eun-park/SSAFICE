@@ -12,4 +12,6 @@ public interface UserService {
     UserSummary getUserSummary(Long userId);
 
     ApiResponse updateUser(Long userId, UpdateUserRequest saveUserRequest);
+
+    ApiResponse deleteUsers(Long[] userIds);
 }

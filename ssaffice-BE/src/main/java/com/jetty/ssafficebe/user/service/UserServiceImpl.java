@@ -70,20 +70,10 @@ public class UserServiceImpl implements UserService {
 
         UserSummary userSummary = userConverter.toUserSummary(user);
 
-        for (UserRole userRole : user.getUserRoles()) {
-            Role role = userRole.getRole();
-            System.out.println(role.getRoleId());
-        }
-
         List<RoleSummarySimple> userRoles = user.getUserRoles().stream().map(userRole -> {
             Role role = userRole.getRole();
             return roleConverter.toRoleSummarySimple(role);
         }).toList();
-
-        for (RoleSummarySimple userRole : userRoles) {
-            String roleId = userRole.getRoleId();
-            System.out.println(roleId);
-        }
 
         userSummary.setRoles(userRoles);
 
@@ -97,11 +87,21 @@ public class UserServiceImpl implements UserService {
 
         userConverter.updateUser(user, updateUserRequest);
 
-        System.out.println(updateUserRequest);
-
-        // DB에 반영
         User updatedUser = userRepository.save(user);
 
         return new ApiResponse(true, HttpStatus.OK, "유저 정보 수정 성공", updatedUser.getUserId());
+    }
+
+    @Override
+    public ApiResponse deleteUsers(Long[] userIds) {
+        for (Long userId : userIds) {
+            User user = userRepository.findById(userId).orElse(null);
+
+            if (user != null) {
+                user.setDisabledYn("Y");
+                userRepository.save(user);
+            }
+        }
+        return new ApiResponse(true, HttpStatus.OK, "유저 삭제 성공");
     }
 }

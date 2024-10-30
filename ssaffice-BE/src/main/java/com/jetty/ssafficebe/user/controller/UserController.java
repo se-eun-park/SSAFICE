@@ -7,6 +7,7 @@ import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +51,15 @@ public class UserController {
     public ResponseEntity<ApiResponse> updateUser(@PathVariable Long userId,
                                                   @RequestBody UpdateUserRequest updateUserRequest) {
         return ResponseEntity.ok().body(userService.updateUser(userId, updateUserRequest));
+    }
+
+    /**
+     * 유저 삭제.
+     * 관리자 페이지에서 사용하는 api로 유저 리스트를 받아 해당 유저 전제 soft delete.
+     */
+    @DeleteMapping
+    public ResponseEntity<ApiResponse> deleteUsers(@RequestBody Long[] userIds) {
+        return ResponseEntity.ok().body(userService.deleteUsers(userIds));
     }
 
 }
