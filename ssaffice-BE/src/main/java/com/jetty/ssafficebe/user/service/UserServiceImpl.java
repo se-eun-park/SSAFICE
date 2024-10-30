@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse deleteUsers(Long[] userIds) {
+    public ApiResponse deleteUsers(List<Long> userIds) {
         for (Long userId : userIds) {
             User user = userRepository.findById(userId).orElse(null);
 
