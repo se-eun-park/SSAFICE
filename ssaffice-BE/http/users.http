@@ -3,9 +3,9 @@ POST http://localhost:9090/api/users
 Content-Type: application/json
 
 {
-  "email": "test1@gmail.com",
+  "email": "test2@gmail.com",
   "password": "1234",
-  "name": "tester1",
+  "name": "tester2",
   "roleIds": [
     "ROLE_USER"
   ],
@@ -30,3 +30,9 @@ Content-Type: application/json
   "curriculumCd" : "SECOND_COMMON",
   "classNum" : 1
 }
+
+### 유저 삭제
+DELETE http://localhost:9090/api/users
+Content-Type: application/json
+
+[1]
