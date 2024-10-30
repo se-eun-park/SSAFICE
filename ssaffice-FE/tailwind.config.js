@@ -107,6 +107,7 @@ export default {
         'spacing-4': 'var(--unit-4)',
         'spacing-6': 'var(--unit-6)',
         'spacing-8': 'var(--unit-8)',
+        'spacing-10': 'var(--unit-10)',
         'spacing-12': 'var(--unit-12)',
         'spacing-16': 'var(--unit-16)',
         'spacing-20': 'var(--unit-20)',
