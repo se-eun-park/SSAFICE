@@ -1,6 +1,5 @@
 package com.jetty.ssafficebe.user.payload;
 
-import com.jetty.ssafficebe.role.payload.RoleDTO;
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import java.util.ArrayList;
 import java.util.List;

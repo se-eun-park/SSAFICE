@@ -1,8 +1,8 @@
 package com.jetty.ssafficebe.user.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
-import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
+import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -42,14 +42,14 @@ public class UserController {
     /**
      * 유저 정보 수정. 역할 변경, 비밀번호 변경 로직은 다른 API로 분리.
      *
-     * @param userId 유저 ID
+     * @param userId            유저 ID
      * @param updateUserRequest 수정할 유저 정보
      * @return ApiResponse
      */
     @PutMapping("/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UpdateUserRequest updateUserRequest) {
-        ApiResponse apiResponse = userService.updateUser(userId, updateUserRequest);
-        return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+    public ResponseEntity<ApiResponse> updateUser(@PathVariable Long userId,
+                                                  @RequestBody UpdateUserRequest updateUserRequest) {
+        return ResponseEntity.ok().body(userService.updateUser(userId, updateUserRequest));
     }
 
 }

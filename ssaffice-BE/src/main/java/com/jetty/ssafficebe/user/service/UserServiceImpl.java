@@ -28,11 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserConverter userConverter;
+
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
-    private final UserConverter userConverter;
-    private final PasswordEncoder passwordEncoder;
     private final RoleConverter roleConverter;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -68,18 +70,38 @@ public class UserServiceImpl implements UserService {
 
         UserSummary userSummary = userConverter.toUserSummary(user);
 
+        for (UserRole userRole : user.getUserRoles()) {
+            Role role = userRole.getRole();
+            System.out.println(role.getRoleId());
+        }
+
         List<RoleSummarySimple> userRoles = user.getUserRoles().stream().map(userRole -> {
             Role role = userRole.getRole();
             return roleConverter.toRoleSummarySimple(role);
         }).toList();
 
+        for (RoleSummarySimple userRole : userRoles) {
+            String roleId = userRole.getRoleId();
+            System.out.println(roleId);
+        }
+
         userSummary.setRoles(userRoles);
 
-        return userConverter.toUserSummary(user);
+        return userSummary;
     }
 
     @Override
-    public ApiResponse updateUser(Long userId, UpdateUserRequest saveUserRequest) {
-        return null;
+    public ApiResponse updateUser(Long userId, UpdateUserRequest updateUserRequest) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+
+        userConverter.updateUser(user, updateUserRequest);
+
+        System.out.println(updateUserRequest);
+
+        // DB에 반영
+        User updatedUser = userRepository.save(user);
+
+        return new ApiResponse(true, HttpStatus.OK, "유저 정보 수정 성공", updatedUser.getUserId());
     }
 }
