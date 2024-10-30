@@ -4,31 +4,40 @@ import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.role.converter.RoleConverter;
+import com.jetty.ssafficebe.role.entity.Role;
 import com.jetty.ssafficebe.role.entity.UserRole;
+import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
 import com.jetty.ssafficebe.role.repository.UserRoleRepository;
 import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
-import com.jetty.ssafficebe.user.payload.UserInfo;
+import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
+import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserConverter userConverter;
+
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
-    private final UserConverter userConverter;
+    private final RoleConverter roleConverter;
+
     private final PasswordEncoder passwordEncoder;
 
-
     @Override
+    @Transactional
     public ApiResponse saveUser(SaveUserRequest saveUserRequest) {
         if (userRepository.existsByEmail(saveUserRequest.getEmail())) {
             throw new DuplicateValueException(ErrorCode.EMAIL_ALREADY_EXISTS, "email", saveUserRequest.getEmail());
@@ -55,10 +64,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfo getUserInfo(Long userId) {
+    public UserSummary getUserSummary(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
 
-        return userConverter.toUserInfo(user);
+        UserSummary userSummary = userConverter.toUserSummary(user);
+
+        for (UserRole userRole : user.getUserRoles()) {
+            Role role = userRole.getRole();
+            System.out.println(role.getRoleId());
+        }
+
+        List<RoleSummarySimple> userRoles = user.getUserRoles().stream().map(userRole -> {
+            Role role = userRole.getRole();
+            return roleConverter.toRoleSummarySimple(role);
+        }).toList();
+
+        for (RoleSummarySimple userRole : userRoles) {
+            String roleId = userRole.getRoleId();
+            System.out.println(roleId);
+        }
+
+        userSummary.setRoles(userRoles);
+
+        return userSummary;
+    }
+
+    @Override
+    public ApiResponse updateUser(Long userId, UpdateUserRequest updateUserRequest) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+
+        userConverter.updateUser(user, updateUserRequest);
+
+        System.out.println(updateUserRequest);
+
+        // DB에 반영
+        User updatedUser = userRepository.save(user);
+
+        return new ApiResponse(true, HttpStatus.OK, "유저 정보 수정 성공", updatedUser.getUserId());
     }
 }

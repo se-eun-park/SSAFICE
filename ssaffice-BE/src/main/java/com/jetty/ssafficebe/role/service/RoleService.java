@@ -20,5 +20,7 @@ public interface RoleService {
     ApiResponse deleteRole(String roleId);
 
     Page<UserSummary> getUserListByRole(String roleId, Pageable pageable);
+
+
 }
 

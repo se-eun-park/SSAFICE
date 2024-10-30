@@ -11,4 +11,6 @@ public interface RoleConverter {
     RoleSummarySimple toRoleSummarySimple(Role role);
 
     Role toRole(RoleDTO request);
+
+    RoleDTO toRoleDTO(Role role);
 }

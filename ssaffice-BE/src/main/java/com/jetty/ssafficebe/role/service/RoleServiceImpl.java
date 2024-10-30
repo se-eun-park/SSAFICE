@@ -12,10 +12,10 @@ import com.jetty.ssafficebe.role.payload.RoleAssignmentRequest;
 import com.jetty.ssafficebe.role.payload.RoleDTO;
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
+import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final RoleConverter roleConverter;
+    private final UserConverter userConverter;
 
     @Override
     public List<RoleSummarySimple> getRoleList() {
@@ -42,7 +44,6 @@ public class RoleServiceImpl implements RoleService {
     public ApiResponse assignRoleToUsers(String roleId, RoleAssignmentRequest request) {
         Role role;
         if (!roleRepository.existsById(roleId)) {
-            System.out.println("역할 없음");
             throw new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND, "roleId", roleId);
         }
         role = this.roleRepository.getReferenceById(roleId);
@@ -107,21 +108,15 @@ public class RoleServiceImpl implements RoleService {
 
         // UserSummary 형태로 변환 후 리턴
         return usersPage.map(user -> {
-            UserSummary userSummary = UserSummary.builder()
-                                                 .userId(user.getUserId())
-                                                 .email(user.getEmail())
-                                                 .name(user.getName())
-                                                 .build();
+            UserSummary userSummary = this.userConverter.toUserSummary(user);
 
-            List<RoleDTO> userRoles = user.getUserRoles().stream().map(userRole -> {
+            List<RoleSummarySimple> userRoles = user.getUserRoles().stream().map(userRole -> {
                 Role role = userRole.getRole();
-                return RoleDTO.builder()
-                              .roleId(role.getRoleId())
-                              .description(role.getDescription())
-                              .build();
+                return roleConverter.toRoleSummarySimple(role);
             }).toList();
 
             userSummary.setRoles(userRoles);
+
             return userSummary;
         });
     }

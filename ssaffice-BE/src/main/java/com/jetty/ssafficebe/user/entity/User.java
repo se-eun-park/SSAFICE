@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.user.entity;
 
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.role.entity.UserRole;
+import com.jetty.ssafficebe.user.code.Curriculum;
 import com.jetty.ssafficebe.user.code.Region;
 import com.jetty.ssafficebe.user.code.Track;
 import jakarta.persistence.CascadeType;
@@ -57,6 +58,12 @@ public class User extends BaseEntity {
     private Region region;
 
     private Integer classNum;
+
+    private String curriculumCd;
+
+    @Column(name = "curriculumCd", updatable = false, insertable = false)
+    @Enumerated(EnumType.STRING)
+    private Curriculum curriculum;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserRole> userRoles = new ArrayList<>();
