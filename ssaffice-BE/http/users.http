@@ -35,4 +35,4 @@ Content-Type: application/json
 DELETE http://localhost:9090/api/users
 Content-Type: application/json
 
-[1]
+[2]
