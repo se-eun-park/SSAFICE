@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.user.service;
 
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueException;
+import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.role.entity.UserRole;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
@@ -9,6 +10,7 @@ import com.jetty.ssafficebe.role.repository.UserRoleRepository;
 import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
+import com.jetty.ssafficebe.user.payload.UserInfo;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,6 +51,14 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        return new ApiResponse(true, HttpStatus.CREATED, "유저 추가 성공");
+        return new ApiResponse(true, HttpStatus.CREATED, "유저 추가 성공", user.getUserId());
+    }
+
+    @Override
+    public UserInfo getUserInfo(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+
+        return userConverter.toUserInfo(user);
     }
 }
