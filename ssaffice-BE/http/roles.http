@@ -25,4 +25,4 @@ Content-Type: application/json
 }
 
 ### 역할에 속한 유저리스트 가져오기
-GET http://localhost:9090/api/roles/ROLE_ADMIN/users
+GET http://localhost:9090/api/roles/ROLE_USER/users

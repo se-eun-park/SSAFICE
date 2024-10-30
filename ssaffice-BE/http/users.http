@@ -17,3 +17,16 @@ Content-Type: application/json
 
 ### 유저 아이디로 유저 정보 검색
 GET http://localhost:9090/api/users/1
+
+### 유저 정보 수정
+PUT http://localhost:9090/api/users/1
+Content-Type: application/json
+
+{
+  "name" : "수정테스트2",
+  "cohortNum" : 100,
+  "trackCd" : "NON_MAJOR_JAVA",
+  "regionCd" : "SEOUL",
+  "curriculumCd" : "SECOND_COMMON",
+  "classNum" : 1
+}
