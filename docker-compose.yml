@@ -1,42 +1,29 @@
 services:
-  ssaffice-be:  # 소문자로 변경
+  ssaffice-be:
     image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-be}:${DOCKER_TAG:-latest}
-    container_name: ssaffice-be  # 소문자로 변경
-    ports:
-      - "9090:9090"
+    container_name: ssaffice-be
     env_file:
-      - ./ssaffice-BE/.env  # 파일 경로는 기존 그대로 유지
+      - ./ssaffice-BE/.env
     volumes:
-      - ./ssaffice-BE/logs:/app/logs  # 파일 경로는 기존 그대로 유지
+      - ./ssaffice-BE/logs:/app/logs
     depends_on:
       - redis
-
-  ssaffice-fe:  # 소문자로 변경
+  ssaffice-fe:
     image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-fe}:${DOCKER_TAG:-latest}
-    container_name: ssaffice-fe  # 소문자로 변경
-    ports:
-      - "443:443"
-      - "80:80"
+    container_name: ssaffice-fe
     env_file:
-      - ./ssaffice-FE/.env  # 파일 경로는 기존 그대로 유지
-    volumes:
-      # Let's Encrypt SSL 설정
-      - /etc/letsencrypt/live/k11a605.p.ssafy.io/fullchain.pem:/etc/letsencrypt/live/k11a605.p.ssafy.io/fullchain.pem:ro
-      - /etc/letsencrypt/live/k11a605.p.ssafy.io/privkey.pem:/etc/letsencrypt/live/k11a605.p.ssafy.io/privkey.pem:ro
-      - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro
-      - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem:ro
+      - ./ssaffice-FE/.env
+    environment:
+      - BACKEND_HOST=ssaffice-be
+      - BACKEND_PORT=9090
     depends_on:
-      - ssaffice-be  # 의존성 서비스 이름도 소문자로 변경
-
+      - ssaffice-be
   redis:
     image: redis:latest
     container_name: redis
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     restart: unless-stopped
-
 volumes:
   logs:
   redis_data:
