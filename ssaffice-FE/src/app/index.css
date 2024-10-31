@@ -155,6 +155,9 @@
   --unit-40: 40px;
   --unit-48: 48px;
   --unit-64: 64px;
+  --unit-80: 80px;
+  --unit-96: 96px;
+  --unit-128: 128px;
 }
 
 @layer base {

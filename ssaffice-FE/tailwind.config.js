@@ -118,6 +118,9 @@ export default {
         'spacing-40': 'var(--unit-40)',
         'spacing-48': 'var(--unit-48)',
         'spacing-64': 'var(--unit-64)',
+        'spacing-80': 'var(--unit-80)',
+        'spacing-96': 'var(--unit-96)',
+        'spacing-128': 'var(--unit-128)',
       },
       borderRadius: {
         'radius-0': 'var(--unit-0)',
