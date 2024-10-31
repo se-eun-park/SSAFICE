@@ -1,10 +1,5 @@
-//MARK: 데이터
-/* 임시 데이터 입니다 */
-const selectedContent = `Lorem ipsum dolor sit amet consectetur. 
-Lacinia volutpat non mollis parturient commodo. 
-Lorem ipsum dolor sit amet consectetur. 
-Lacinia volutpat non mollis parturient commodo.
-`
+import { Link } from 'react-router-dom'
+import useLandingPageModel from '../../model/useLandingPageModel'
 
 //MARK: 공통 CSS
 /*
@@ -30,6 +25,15 @@ const selectedBtnClasses: string = `
 ` // 선택된 탭 버튼에 적용됩니다.
 
 export const LandingPage = () => {
+  const {
+    tabLabels,
+    selectedIndex,
+    selectedTitle,
+    selectedContent,
+    selectedImage,
+    handleSelectedIndex,
+  } = useLandingPageModel()
+
   return (
     <div className='flex flex-col'>
       {/* MARK: 화면 상단
@@ -48,8 +52,8 @@ export const LandingPage = () => {
             SSAFICE는 SSAFY 구성원에게 최적의 일정 관리 서비스를 제공합니다.
           </div>
         </div>
-        <button
-          type='button'
+        <Link
+          to='/login'
           className='
             flex
             px-spacing-28 py-spacing-10
@@ -59,7 +63,7 @@ export const LandingPage = () => {
           '
         >
           SSAFICE 바로가기
-        </button>
+        </Link>
       </div>
 
       {/* MARK: 화면 하단
@@ -78,21 +82,15 @@ export const LandingPage = () => {
           </div>
           {/* button tabs */}
           <div className='flex flex-row gap-spacing-4'>
-            <button type='button' className={selectedBtnClasses}>
-              mm연동
-            </button>
-            <button type='button' className={btnClasses}>
-              대시보드
-            </button>
-            <button type='button' className={btnClasses}>
-              캘린더
-            </button>
-            <button type='button' className={btnClasses}>
-              할 일 등록
-            </button>
-            <button type='button' className={btnClasses}>
-              리마인드
-            </button>
+            {tabLabels.map((each, index) => (
+              <button
+                type='button'
+                className={index === selectedIndex ? selectedBtnClasses : btnClasses}
+                onClick={() => handleSelectedIndex(index)}
+              >
+                {each}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -111,20 +109,25 @@ export const LandingPage = () => {
           '
           >
             <div className='flex flex-col gap-spacing-16 '>
-              <div className='text-color-text-primary heading-desktop-4xl'>mm 연동</div>
+              <div className='text-color-text-primary heading-desktop-4xl'>{selectedTitle}</div>
               <div className='text-color-text-primary heading-desktop-lg whitespace-pre-wrap'>
                 {selectedContent}
               </div>
             </div>
             <div className='flex gap-spacing-12 justify-start'>
-              <div className='text-color-text-info heading-desktop-lg'>SSAFICE 바로가기</div>
-              <div className='text-color-text-info heading-desktop-lg'>-&gt;</div> {/* SVG 영역 */}
+              <Link to='/login' className='text-color-text-info heading-desktop-lg'>
+                SSAFICE 바로가기
+              </Link>
+              <Link to='/login' className='text-color-text-info heading-desktop-lg'>
+                -&gt;
+              </Link>
+              {/* SVG 영역 */}
             </div>
           </div>
 
           {/* 이미지 영역 */}
           <div>
-            <img src='https://picsum.photos/600/400' />
+            <img src={selectedImage} />
           </div>
         </div>
       </div>
