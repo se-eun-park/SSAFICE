@@ -9,7 +9,6 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.util.Date;
-import java.util.List;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +32,9 @@ public class JwtProvider {
         secretKey = Keys.hmacShaKeyFor(KeyExpander.expandKey(this.secretKeyString.getBytes(), 64));
     }
 
-    public String generateToken(String email, List<String> roles) {
+    public String generateToken(String email) {
         return Jwts.builder()
                    .subject(email)
-                   .claim("roles", roles)
                    .expiration(new Date(System.currentTimeMillis() + expiration))
                    .signWith(this.secretKey)
                    .compact();
