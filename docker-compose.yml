@@ -1,0 +1,29 @@
+services:
+  ssaffice-be:
+    image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-be}:${DOCKER_TAG:-latest}
+    container_name: ssaffice-be
+    env_file:
+      - ./ssaffice-BE/.env
+    volumes:
+      - ./ssaffice-BE/logs:/app/logs
+    depends_on:
+      - redis
+  ssaffice-fe:
+    image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-fe}:${DOCKER_TAG:-latest}
+    container_name: ssaffice-fe
+    env_file:
+      - ./ssaffice-FE/.env
+    environment:
+      - BACKEND_HOST=ssaffice-be
+      - BACKEND_PORT=9090
+    depends_on:
+      - ssaffice-be
+  redis:
+    image: redis:latest
+    container_name: redis
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+volumes:
+  logs:
+  redis_data:
