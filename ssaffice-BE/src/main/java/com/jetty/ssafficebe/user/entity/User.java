@@ -1,0 +1,72 @@
+package com.jetty.ssafficebe.user.entity;
+
+import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
+import com.jetty.ssafficebe.role.entity.UserRole;
+import com.jetty.ssafficebe.user.code.Curriculum;
+import com.jetty.ssafficebe.user.code.Region;
+import com.jetty.ssafficebe.user.code.Track;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Table(name = "user")
+@Getter
+@Setter
+public class User extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+
+    private String email;
+
+    private String password;
+
+    private String name;
+
+    private String disabledYn = "N";
+
+    @Convert(converter = BooleanToYNConverter.class)
+    @Column(name = "disabledYn", updatable = false, insertable = false)
+    private boolean disabled;
+
+    private Integer cohortNum;
+
+    private String trackCd;
+
+    @Column(name = "trackCd", updatable = false, insertable = false)
+    @Enumerated(EnumType.STRING)
+    private Track track;
+
+    private String regionCd;
+
+    @Column(name = "regionCd", updatable = false, insertable = false)
+    @Enumerated(EnumType.STRING)
+    private Region region;
+
+    private Integer classNum;
+
+    private String curriculumCd;
+
+    @Column(name = "curriculumCd", updatable = false, insertable = false)
+    @Enumerated(EnumType.STRING)
+    private Curriculum curriculum;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRole> userRoles = new ArrayList<>();
+
+
+}
