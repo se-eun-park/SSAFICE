@@ -51,7 +51,7 @@ pipeline = template | llm | SimpleJsonOutputParser()
 
 session = requests.Session()
 
-# 로그인 API 호출 함수 (return : token을 반환)
+# 로그인 API 호출 함수, 관리자 로그인 토큰을 발급받기 위함 (return : token을 반환)
 def login_to_mattermost():
     login_url = mm_baseurl+'/users/login'    
     credentials = {
@@ -89,6 +89,19 @@ def get_user_info(token):
         print("Failed to get user info with status code:", response.status_code)
         return None
 
+# 로그인한 정보를 바탕으로 사용자 정보를 가져오는 API 호출 함수
+def get_user_info_by_user_id(token, user_id):    
+    headers = get_headers(token)
+    response = session.get(f"{mm_baseurl}/users/{user_id}", headers=headers)    
+    
+    if response.status_code == 200:
+        # print("User info:", response.json())
+        return response.json()
+    else: 
+        print("Failed to get user info with status code:", response.status_code)
+        return None
+    
+    
 def get_user_profile_image(token):    
     headers = get_headers(token)
     response = session.get(f"{mm_baseurl}/users/me/image", headers=headers)   
@@ -171,10 +184,10 @@ def get_channel_members_by_channel_id(token, channel_id):
     if response.status_code == 200:
         return response.json()
     else:
-        print("Failed to get channel info with status code:", response.status_code)
+        print("Failed to get members with status code:", response.status_code)
         return None
 
-# 해당 channel에 속한 모든 member 정보를 가져오는 함수.
+# 해당 user가 속한 모든 channel 정보를 가져오는 함수.
 def get_channels_by_user_id(token, user_id):    
     headers = get_headers(token)
     response = session.get(f"{mm_baseurl}/users/{user_id}/channels", headers=headers)
@@ -182,5 +195,5 @@ def get_channels_by_user_id(token, user_id):
     if response.status_code == 200:
         return response.json()
     else:
-        print("Failed to get channel info with status code:", response.status_code)
+        print("Failed to get channels with status code:", response.status_code)
         return None
