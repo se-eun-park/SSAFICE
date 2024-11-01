@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 const tabLabels: string[] = ['mm연동', '대시보드', '캘린더', '할 일 등록', '리마인드']
 
 const tabValues: string[] = [
-  `0 - Lorem ipsum dolor sit amet consectetur. 
+  `Lorem ipsum dolor sit amet consectetur. 
 Lacinia volutpat non mollis parturient commodo. 
 Lorem ipsum dolor sit amet consectetur. 
 Lacinia volutpat non mollis parturient commodo.`,

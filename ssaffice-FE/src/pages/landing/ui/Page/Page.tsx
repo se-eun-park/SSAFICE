@@ -11,8 +11,8 @@ import useLandingPageModel from '../../model/useLandingPageModel'
   5) 기타 속성(radius, 기타 속성 순서로)
 */
 const btnClasses: string = ` 
-  px-spacing-28 py-spacing-10
-  text-color-text-interactive-secondary heading-desktop-lg 
+  px-spacing-24 py-spacing-10
+  text-color-text-interactive-secondary body-lg-semibold
   bg-color-bg-interactive-selected 
   rounded-radius-32 
 ` // 화면 하단 버튼 요소에 공통 적용됩니다.
@@ -40,15 +40,19 @@ export const LandingPage = () => {
        */}
       <div
         className='
-        flex flex-col gap-spacing-32 items-center justify-start
-        h-[400px] py-spacing-40
+        flex flex-col gap-spacing-40 items-center justify-start
+        h-[400px] py-spacing-64
         '
       >
         {/* 헤더 텍스트 영역 */}
         <div className='flex flex-col gap-spacing-16 items-center'>
-          <div className='text-color-text-primary heading-desktop-5xl'>SSAFY 일정관리</div>
-          <div className='text-color-text-primary heading-desktop-4xl'>SSAFICE와 함께 시작하기</div>
-          <div className='text-color-text-primary heading-desktop-lg'>
+          <div className='flex flex-col gap-spacing-8 items-center'>
+            <div className='text-color-text-primary heading-desktop-4xl'>SSAFY 일정관리</div>
+            <div className='text-color-text-primary heading-desktop-3xl'>
+              SSAFICE와 함께 시작하기
+            </div>
+          </div>
+          <div className='text-color-text-primary heading-desktop-md'>
             SSAFICE는 SSAFY 구성원에게 최적의 일정 관리 서비스를 제공합니다.
           </div>
         </div>
@@ -56,8 +60,8 @@ export const LandingPage = () => {
           to='/login'
           className='
             flex
-            px-spacing-28 py-spacing-10
-            text-white heading-desktop-lg 
+            px-spacing-24 py-spacing-10
+            text-white heading-desktop-md
             bg-color-bg-interactive-primary 
             rounded-radius-32 
           '
@@ -70,18 +74,18 @@ export const LandingPage = () => {
        */}
       <div
         className='
-        flex flex-col gap-spacing-40 
-        py-spacing-64 
+        flex flex-col gap-spacing-40 justify-start
+        px-spacing-80 py-spacing-64 
         border border-t-color-border-tertiary
       '
       >
         {/* 텍스트, 탭 5개 영역 */}
         <div className='flex flex-col gap-spacing-20 items-center'>
-          <div className='text-color-text-primary heading-desktop-xl'>
+          <div className='text-color-text-primary body-xl-semibold'>
             교육생과 프로 모두에게 최적의 경험을 제공합니다.
           </div>
           {/* button tabs */}
-          <div className='flex flex-row gap-spacing-4'>
+          <div className='flex flex-row gap-spacing-16'>
             {tabLabels.map((each, index) => (
               <button
                 type='button'
@@ -97,28 +101,27 @@ export const LandingPage = () => {
         {/* 탭 이미지, 상세설명 영역 */}
         <div
           className='
-        flex justify-center 
-        w-320 h-100 px-spacing-80
+        flex justify-between
+        h-[400px]
         '
         >
           {/* 탭 설명 영역 */}
           <div
             className='
             flex flex-col gap-spacing-32 items-start justify-center
-            w-full 
           '
           >
-            <div className='flex flex-col gap-spacing-16 '>
-              <div className='text-color-text-primary heading-desktop-4xl'>{selectedTitle}</div>
-              <div className='text-color-text-primary heading-desktop-lg whitespace-pre-wrap'>
+            <div className='flex flex-col gap-spacing-16'>
+              <div className='text-color-text-primary heading-desktop-3xl'>{selectedTitle}</div>
+              <div className='text-color-text-primary body-lg-medium whitespace-pre-wrap'>
                 {selectedContent}
               </div>
             </div>
             <div className='flex gap-spacing-12 justify-start'>
-              <Link to='/login' className='text-color-text-info heading-desktop-lg'>
+              <Link to='/login' className='text-color-text-info body-lg-semibold'>
                 SSAFICE 바로가기
               </Link>
-              <Link to='/login' className='text-color-text-info heading-desktop-lg'>
+              <Link to='/login' className='text-color-text-info body-lg-semibold'>
                 -&gt;
               </Link>
               {/* SVG 영역 */}
@@ -126,8 +129,8 @@ export const LandingPage = () => {
           </div>
 
           {/* 이미지 영역 */}
-          <div>
-            <img src={selectedImage} />
+          <div className='w-[600px] h-[400px] overflow-hidden'>
+            <img src={selectedImage} className='w-full h-full object-cover' alt='탭 이미지' />
           </div>
         </div>
       </div>
