@@ -10,9 +10,9 @@ export const RouteToLoginButton = () => {
   return (
     <button
       onClick={routeToLogin}
-      className='w-fit h-fit bg-color-bg-interactive-primary px-spacing-28 py-spacing-10 rounded-radius-32'
+      className='w-fit h-fit bg-color-bg-interactive-primary px-spacing-24 py-spacing-8 rounded-radius-32'
     >
-      <span className='text-color-text-interactive-inverse heading-desktop-lg'>로그인</span>
+      <span className='text-color-text-interactive-inverse body-md-medium'>로그인</span>
     </button>
   )
 }

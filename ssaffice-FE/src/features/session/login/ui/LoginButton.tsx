@@ -35,7 +35,7 @@ export const LoginButton = ({
   return (
     <button
       onClick={() => handleOnClickButton(label)}
-      className={`w-full py-spacing-16 heading-desktop-lg rounded-radius-8 ${classname}`}
+      className={`w-full py-spacing-16 body-lg-medium rounded-radius-8 ${classname}`}
     >
       {label}
     </button>
