@@ -47,22 +47,22 @@ public class User extends BaseEntity {
 
     private String trackCd;
 
-    @Column(name = "trackCd", updatable = false, insertable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "trackCd", updatable = false, insertable = false)
     private Track track;
 
     private String regionCd;
 
-    @Column(name = "regionCd", updatable = false, insertable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "regionCd", updatable = false, insertable = false)
     private Region region;
 
     private Integer classNum;
 
     private String curriculumCd;
 
-    @Column(name = "curriculumCd", updatable = false, insertable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "curriculumCd", updatable = false, insertable = false)
     private Curriculum curriculum;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
