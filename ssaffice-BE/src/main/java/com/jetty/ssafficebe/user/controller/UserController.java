@@ -24,6 +24,9 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * 유저 등록
+     */
     @PostMapping
     public ResponseEntity<ApiResponse> saveUser(@RequestBody SaveUserRequest saveUserRequest) {
         ApiResponse apiResponse = userService.saveUser(saveUserRequest);
@@ -36,6 +39,10 @@ public class UserController {
         return null;
     }
 
+    /**
+     * 유저 정보 조회
+     * TODO : 관리자인 경우만 허용하도록 변경
+     */
     @GetMapping("/{userId}")
     public ResponseEntity<UserSummary> getUser(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUserSummary(userId));
@@ -43,10 +50,7 @@ public class UserController {
 
     /**
      * 유저 정보 수정. 역할 변경, 비밀번호 변경 로직은 다른 API로 분리.
-     *
-     * @param userId            유저 ID
-     * @param updateUserRequest 수정할 유저 정보
-     * @return ApiResponse
+     * TODO : 관리자인 경우만 허용하도록 변경
      */
     @PutMapping("/{userId}")
     public ResponseEntity<ApiResponse> updateUser(@PathVariable Long userId,
@@ -57,6 +61,7 @@ public class UserController {
     /**
      * 유저 삭제. 관리자 페이지에서 사용하는 api로 유저 리스트를 받아 해당 유저 전체 soft delete.
      * disabledYn을 'Y'로 변경.
+     * TODO : 관리자인 경우만 허용하도록 변경
      */
     @DeleteMapping
     public ResponseEntity<ApiResponse> deleteUsers(@RequestBody List<Long> userIds) {
