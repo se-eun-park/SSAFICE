@@ -1,13 +1,22 @@
 package com.jetty.ssafficebe.user.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
+import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
+import com.jetty.ssafficebe.user.payload.UserFilterRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,10 +42,16 @@ public class UserController {
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 
-    // TODO : 내 정보 조회 -> 로그인 구현 후 추가
+    /**
+     * 내 정보 조회
+     */
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse> getMyInfo() {
-        return null;
+    public ResponseEntity<UserSummary> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        return ResponseEntity.ok(userService.getUserSummary(userDetails.getUserId()));
     }
 
     /**
@@ -46,6 +61,19 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<UserSummary> getUser(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUserSummary(userId));
+    }
+
+    /**
+     * 내 정보 수정
+     */
+    @PutMapping("/me")
+    public ResponseEntity<ApiResponse> updateMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                    @RequestBody UpdateUserRequest updateUserRequest) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        return ResponseEntity.ok().body(userService.updateUser(userDetails.getUserId(), updateUserRequest));
     }
 
     /**
@@ -59,8 +87,7 @@ public class UserController {
     }
 
     /**
-     * 유저 삭제. 관리자 페이지에서 사용하는 api로 유저 리스트를 받아 해당 유저 전체 soft delete.
-     * disabledYn을 'Y'로 변경.
+     * 유저 삭제. 관리자 페이지에서 사용하는 api로 유저 리스트를 받아 해당 유저 전체 soft delete. disabledYn을 'Y'로 변경.
      * TODO : 관리자인 경우만 허용하도록 변경
      */
     @DeleteMapping
@@ -68,4 +95,30 @@ public class UserController {
         return ResponseEntity.ok().body(userService.deleteUsers(userIds));
     }
 
+    /**
+     * 유저 리스트 조회
+     * TODO : 관리자인 경우만 허용하도록 변경
+     */
+    @GetMapping
+    public ResponseEntity<Page<UserSummary>> getUserPage(@RequestBody UserFilterRequest userFilterRequest,
+                                                         @PageableDefault(
+                                                              size = 20,
+                                                              sort = "userId",
+                                                              direction = Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(userService.getUserPage(userFilterRequest, pageable));
+    }
+
+    /**
+     * 내 비밀번호 수정
+     * 비밀번호 수정 페이지에서 사용
+     */
+    @PutMapping("/me/password")
+    public ResponseEntity<ApiResponse> updateMyPassword(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                        @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        return ResponseEntity.ok().body(userService.updatePassword(userDetails.getUserId(), updatePasswordRequest));
+    }
 }
