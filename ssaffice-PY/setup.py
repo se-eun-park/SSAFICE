@@ -24,6 +24,7 @@ class Setting:
     MM_BASEURL : str ## mattermost
     SSAFY_BASE_URL : str ## ssafy
     SSAFY_TEAM_ID : str ## ssafy
+    MM_WEBSOCKETURL : str ## mattermost
 
 config = Setting()
 config.DB_HOST = os.getenv("DB_HOST")
@@ -39,6 +40,7 @@ config.OPENAI_MODEL_NAME = os.getenv("OPENAI_MODEL_NAME")
 config.MM_BASEURL = os.getenv("MM_BASEURL")
 config.SSAFY_BASE_URL = os.getenv("SSAFY_BASE_URL")
 config.SSAFY_TEAM_ID = os.getenv("SSAFY_TEAM_ID")
+config.MM_WEBSOCKETURL = os.getenv("MM_WEBSOCKETURL")
 
 
 # db랑 연결하기 위한 메서드
