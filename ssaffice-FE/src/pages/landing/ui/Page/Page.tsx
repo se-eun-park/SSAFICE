@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom'
-import useLandingPageModel from '../../model/useLandingPageModel'
-
+import { Link, useLandingPageModel } from '../../index'
 //MARK: 공통 CSS
 /*
   className 순서는 이렇게 작성되었습니다. 
@@ -52,7 +50,7 @@ export const LandingPage = () => {
               SSAFICE와 함께 시작하기
             </div>
           </div>
-          <div className='text-color-text-primary heading-desktop-md'>
+          <div className='text-color-text-primary body-lg-medium'>
             SSAFICE는 SSAFY 구성원에게 최적의 일정 관리 서비스를 제공합니다.
           </div>
         </div>
@@ -61,8 +59,8 @@ export const LandingPage = () => {
           className='
             flex
             px-spacing-24 py-spacing-10
-            text-white heading-desktop-md
-            bg-color-bg-interactive-primary 
+            text-white body-lg-medium
+            bg-color-bg-interactive-primary hover:bg-color-bg-interactive-primary-hover
             rounded-radius-32 
           '
         >
@@ -124,13 +122,17 @@ export const LandingPage = () => {
               <Link to='/login' className='text-color-text-info body-lg-semibold'>
                 -&gt;
               </Link>
-              {/* SVG 영역 */}
             </div>
           </div>
 
           {/* 이미지 영역 */}
           <div className='w-[600px] h-[400px] overflow-hidden'>
-            <img src={selectedImage} className='w-full h-full object-cover' alt='탭 이미지' />
+            <img
+              id='slide-target'
+              src={selectedImage}
+              className='w-full h-full object-cover'
+              alt='탭 이미지'
+            />
           </div>
         </div>
       </div>
