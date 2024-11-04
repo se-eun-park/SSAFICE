@@ -24,7 +24,7 @@ public class BaseEntity {
     private LocalDateTime createdAt;
 
     @CreatedBy
-    private Long createdId;
+    private Long createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "createdId", insertable = false, updatable = false)
@@ -34,7 +34,7 @@ public class BaseEntity {
     private LocalDateTime updatedAt;
 
     @LastModifiedBy
-    private Long updatedId;
+    private Long updatedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedId", insertable = false, updatable = false)

@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findById(userId).orElse(null);
 
             if (user != null) {
-                user.setDisabledYn("Y");
+                user.setIsDisabledYn("Y");
                 userRepository.save(user);
             }
         }
