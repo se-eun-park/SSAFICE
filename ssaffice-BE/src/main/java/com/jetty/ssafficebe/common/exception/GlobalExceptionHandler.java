@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.common.exception;
 
 import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueException;
+import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -29,4 +30,11 @@ public class GlobalExceptionHandler {
                              .body(new ApiResponse(false, status, e.getMessage(), e.getData()));
     }
 
+    @ExceptionHandler(InvalidValueException.class)
+    protected ResponseEntity<ApiResponse> handleInvalidValueException(InvalidValueException e) {
+        HttpStatus status = e.getErrorCode().getStatus();
+
+        return ResponseEntity.status(status)
+                             .body(new ApiResponse(false, status, e.getMessage(), e.getData()));
+    }
 }
