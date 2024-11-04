@@ -36,11 +36,11 @@ public class User extends BaseEntity {
 
     private String name;
 
-    private String disabledYn = "N";
+    private String isDisabledYn = "N";
 
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "disabledYn", updatable = false, insertable = false)
-    private boolean disabled;
+    private boolean isDisabled;
 
     private Integer cohortNum;
 
