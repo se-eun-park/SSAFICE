@@ -1,7 +1,7 @@
 package com.jetty.ssafficebe.schedule.payload;
 
-import com.jetty.ssafficebe.schedule.entity.ScheduleCategory;
-import com.jetty.ssafficebe.schedule.entity.ScheduleType;
+import com.jetty.ssafficebe.schedule.entity.TaskType;
+import com.jetty.ssafficebe.schedule.entity.ScheduleSourceType;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.Getter;
@@ -18,8 +18,8 @@ public class ScheduleResponse {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Boolean isEssential;
-    private ScheduleCategory category;
-    private ScheduleType type;
+    private TaskType category;
+    private ScheduleSourceType type;
     private Boolean isFinish;
     private Boolean isEnroll;
     private String url;

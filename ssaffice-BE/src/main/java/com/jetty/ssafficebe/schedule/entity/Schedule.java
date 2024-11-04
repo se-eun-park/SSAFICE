@@ -26,10 +26,10 @@ public class Schedule extends BaseEntity {
     private LocalDateTime endDate;
     private Boolean isEssential;
     @Enumerated(EnumType.STRING)
-    private ScheduleCategory category;
+    private TaskType category;
 
     @Enumerated(EnumType.STRING)
-    private ScheduleType type;
+    private ScheduleSourceType type;
 
     private Boolean isFinish;
     private Boolean isEnroll;
