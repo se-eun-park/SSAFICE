@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
-export const RouteToLoginButton = () => {
+export const ClickRouteToLoginButton = () => {
   const navigate = useNavigate()
 
   const routeToLogin = () => {

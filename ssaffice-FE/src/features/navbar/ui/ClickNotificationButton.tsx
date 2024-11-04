@@ -1,6 +1,6 @@
 import { NotificationInactiveIcon } from '@/assets/svg'
 
-export const NotificationButton = () => {
+export const ClickNotificationButton = () => {
   return (
     <button>
       <NotificationInactiveIcon className='h-6' />

@@ -1,4 +1,8 @@
-import { RouteToLoginButton, NotificationButton, ProfileButton } from '@/features/navbar'
+import {
+  ClickRouteToLoginButton,
+  ClickNotificationButton,
+  ClickProfileButton,
+} from '@/features/navbar'
 import { Logo } from '@/assets/svg'
 import { useLoginStateStore } from '@/entities/session'
 
@@ -11,11 +15,11 @@ export const Navbar = () => {
       <Logo className='h-9' />
       {isLogin ? (
         <div className='flex items-center gap-x-spacing-40'>
-          <NotificationButton />
-          <ProfileButton />
+          <ClickNotificationButton />
+          <ClickProfileButton />
         </div>
       ) : (
-        <RouteToLoginButton />
+        <ClickRouteToLoginButton />
       )}
     </header>
   )
