@@ -18,8 +18,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ApiResponse addSchedule(ScheduleRequest scheduleRequest) {
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
-        scheduleRepository.save(schedule);
 
-        return new ApiResponse(true, "일정 등록에 성공하였습니다.", scheduleConverter.toScheduleResponse(schedule));
+        Schedule savedSchedule = scheduleRepository.save(schedule);
+
+        return new ApiResponse(true, "일정 등록에 성공하였습니다.", scheduleConverter.toScheduleResponse(savedSchedule));
     }
 }
