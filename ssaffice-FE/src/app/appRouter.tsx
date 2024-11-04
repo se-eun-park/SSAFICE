@@ -3,11 +3,13 @@ import { NotFoundPage } from '@/pages/notFound'
 import { LoginPage } from '@/pages/login'
 import { LandingPage } from '@/pages/landing'
 import { MainPage } from '@/pages/main'
+import { baseLayout } from './layouts/baseLayout'
 
 export const appRouter = () => {
   return createBrowserRouter([
     {
       path: '/',
+      element: baseLayout,
       errorElement: <NotFoundPage />,
       children: [
         {
