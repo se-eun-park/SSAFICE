@@ -1,0 +1,10 @@
+### 공지 추가
+POST http://localhost:9090/api/notice
+Content-Type: application/json
+
+{
+  "title": "테스트2",
+  "content": "공지사항입니다.",
+  "taskTypeCd" : "GENERAL",
+  "isEssentialYn" : "N"
+}
