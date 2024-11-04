@@ -5,5 +5,5 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 
 public interface ScheduleService {
 
-    ApiResponse addSchedule(ScheduleRequest scheduleRequest);
+    ApiResponse saveSchedule(ScheduleRequest scheduleRequest);
 }
