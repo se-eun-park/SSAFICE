@@ -134,6 +134,17 @@ export default {
         'radius-32': 'var(--unit-32)',
         'radius-circle': '999999px',
       },
+      // keyframes: {
+      //   slideToLeft: {
+      //     '0%': { transform: 'translateX(100%)' }, // 시작: 오른쪽 밖
+      //     '100%': { transform: 'translateX(0)' }, // 끝: 제자리
+      //   },
+      // },
+      // animation: {
+      //   slideToLeft: 'slideToLeft 0.3s ease-in-out forwards', // 0.5초 동안 진행, 끝에 멈춤
+      //   // !TODO 애니메이션 좀 더 빠르게 진행 less than 300ms
+      //   // !Latency 있으므로 아예 빠질 수도 있음
+      // },
     },
   },
   plugins: [
