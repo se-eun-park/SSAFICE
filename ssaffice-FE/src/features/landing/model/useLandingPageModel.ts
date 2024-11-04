@@ -30,20 +30,20 @@ const useLandingPageModel = () => {
     })
   }, [selectedIndex])
 
-  useEffect(() => {
-    const eventTarget = document.getElementById('slide-target')
-    if (eventTarget) {
-      eventTarget.classList.add('animate-slideToLeft')
+  // useEffect(() => {
+  //   const eventTarget = document.getElementById('slide-target')
+  //   if (eventTarget) {
+  //     eventTarget.classList.add('animate-slideToLeft')
 
-      eventTarget.addEventListener(
-        'animationend',
-        () => {
-          eventTarget.classList.remove('animate-slideToLeft')
-        },
-        { once: true },
-      )
-    }
-  }, [selectedData.selectedImage]) // 이미지가 변경되면
+  //     eventTarget.addEventListener(
+  //       'animationend',
+  //       () => {
+  //         eventTarget.classList.remove('animate-slideToLeft')
+  //       },
+  //       { once: true },
+  //     )
+  //   }
+  // }, [selectedData.selectedImage]) // 이미지가 변경되면 작동하는 이벤트
 
   return {
     tabLabels,
