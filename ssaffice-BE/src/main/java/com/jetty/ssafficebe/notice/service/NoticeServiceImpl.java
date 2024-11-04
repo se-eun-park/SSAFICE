@@ -1,5 +1,7 @@
 package com.jetty.ssafficebe.notice.service;
 
+import com.jetty.ssafficebe.common.exception.ErrorCode;
+import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
 import com.jetty.ssafficebe.notice.entity.Notice;
@@ -19,10 +21,19 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Transactional
     @Override
-    public ApiResponse addNotice(NoticeRequest noticeRequest) {
+    public ApiResponse saveNotice(NoticeRequest noticeRequest) {
         Notice notice = noticeConverter.toNotice(noticeRequest);
 
         Notice savedNotice = noticeRepository.save(notice);
         return new ApiResponse(true, HttpStatus.CREATED, "공지사항 추가 성공", savedNotice.getTitle());
+    }
+
+    @Transactional
+    @Override
+    public ApiResponse deleteNotice(Long noticeId) {
+        noticeRepository.delete(noticeRepository.findById(noticeId).orElseThrow(() -> new ResourceNotFoundException(
+                ErrorCode.NOTICE_NOT_FOUND, "해당 공지사항을 찾을 수 없습니다.", noticeId)));
+
+        return new ApiResponse(true, HttpStatus.OK, "공지사항 삭제 성공", noticeId);
     }
 }

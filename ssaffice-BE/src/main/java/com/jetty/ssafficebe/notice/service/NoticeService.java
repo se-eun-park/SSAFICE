@@ -5,5 +5,7 @@ import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 
 public interface NoticeService {
 
-    ApiResponse addNotice(NoticeRequest noticeRequest);
+    ApiResponse saveNotice(NoticeRequest noticeRequest);
+
+    ApiResponse deleteNotice(Long noticeId);
 }

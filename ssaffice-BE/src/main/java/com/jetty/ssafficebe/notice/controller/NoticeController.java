@@ -5,6 +5,8 @@ import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +23,15 @@ public class NoticeController {
      * 공지사항 추가
      */
     @PostMapping
-    public ResponseEntity<ApiResponse> addNotice(@RequestBody NoticeRequest noticeRequest) {
-        return ResponseEntity.ok(noticeService.addNotice(noticeRequest));
+    public ResponseEntity<ApiResponse> saveNotice(@RequestBody NoticeRequest noticeRequest) {
+        return ResponseEntity.ok(noticeService.saveNotice(noticeRequest));
+    }
+
+    /**
+     * 공지사항 삭제
+     */
+    @DeleteMapping("/{noticeId}")
+    public ResponseEntity<ApiResponse> deleteNotice(@PathVariable Long noticeId) {
+        return ResponseEntity.ok(noticeService.deleteNotice(noticeId));
     }
 }

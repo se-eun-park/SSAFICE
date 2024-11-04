@@ -16,7 +16,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     @Override
-    public ApiResponse addSchedule(ScheduleRequest scheduleRequest) {
+    public ApiResponse saveSchedule(ScheduleRequest scheduleRequest) {
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
 
         Schedule savedSchedule = scheduleRepository.save(schedule);

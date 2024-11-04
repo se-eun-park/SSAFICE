@@ -22,7 +22,7 @@ public class ScheduleController {
      */
     @PostMapping
     public ResponseEntity<?> addSchedule(@RequestBody ScheduleRequest scheduleRequest) {
-        ApiResponse apiResponse = scheduleService.addSchedule(scheduleRequest);
+        ApiResponse apiResponse = scheduleService.saveSchedule(scheduleRequest);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 
