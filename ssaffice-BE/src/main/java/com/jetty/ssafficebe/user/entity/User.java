@@ -39,7 +39,7 @@ public class User extends BaseEntity {
     private String isDisabledYn = "N";
 
     @Convert(converter = BooleanToYNConverter.class)
-    @Column(name = "disabledYn", updatable = false, insertable = false)
+    @Column(name = "isDisabledYn", updatable = false, insertable = false)
     private boolean isDisabled;
 
     private Integer cohortNum;
