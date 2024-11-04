@@ -1,4 +1,6 @@
-import { Link, useLandingPageModel } from '../../index'
+import { Link } from 'react-router-dom'
+import { useLandingPageModel } from '@/features/landing/index'
+
 //MARK: 공통 CSS
 /*
   className 순서는 이렇게 작성되었습니다. 

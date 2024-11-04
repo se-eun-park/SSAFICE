@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { tabLabels, tabValues, tabImages } from '@/pages/landing/index'
+import { tabLabels, tabValues, tabImages } from '@/shared/data/index'
 
 type SelectedData = {
   selectedTitle: string
