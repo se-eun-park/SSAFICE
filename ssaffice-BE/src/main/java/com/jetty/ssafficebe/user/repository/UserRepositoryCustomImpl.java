@@ -48,7 +48,7 @@ public class UserRepositoryCustomImpl extends AbstractQueryDslRepository impleme
             query.where(user.trackCd.eq(userFilterRequest.getTrackCd()));
         }
         if (userFilterRequest.getDisabledYn() != null) {
-            query.where(user.disabledYn.eq(userFilterRequest.getDisabledYn()));
+            query.where(user.isDisabledYn.eq(userFilterRequest.getDisabledYn()));
         }
 
         return getPageImpl(query, pageable);

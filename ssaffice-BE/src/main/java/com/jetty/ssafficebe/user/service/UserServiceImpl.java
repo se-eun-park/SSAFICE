@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -85,6 +86,7 @@ public class UserServiceImpl implements UserService {
         return userSummary;
     }
 
+    @Transactional
     @Override
     public ApiResponse updateUser(Long userId, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findById(userId).orElseThrow(
@@ -97,6 +99,7 @@ public class UserServiceImpl implements UserService {
         return new ApiResponse(true, HttpStatus.OK, "유저 정보 수정 성공", updatedUser.getUserId());
     }
 
+    @Transactional
     @Override
     public ApiResponse deleteUsers(List<Long> userIds) {
         for (Long userId : userIds) {
@@ -127,6 +130,7 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+    @Transactional
     @Override
     public ApiResponse updatePassword(Long userId, UpdatePasswordRequest updatePasswordRequest) {
         User user = userRepository.findById(userId).orElseThrow(
