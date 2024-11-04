@@ -22,6 +22,6 @@ export type DropDownContentProps = {
 
 export type DropDownMainProps = {
   children?: ReactNode
-  isOpen?: boolean
+  isOpen: boolean
   isShadow?: boolean
 }
