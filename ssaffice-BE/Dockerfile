@@ -14,11 +14,8 @@ RUN gradle dependencies --no-daemon
 # 소스 코드 복사
 COPY src ./src
 
-# 애플리케이션 빌드 (dev 프로파일 지정 및 테스트 스킵)
-RUN gradle clean build \
-    -Pspring.profiles.active=dev \
-    -x test \
-    --no-daemon
+# 애플리케이션 빌드
+RUN gradle clean build -x test --no-daemon
 
 # 빌드된 JAR 파일 이름 변경
 RUN mv /app/build/libs/ssaffice-*-SNAPSHOT.jar /app/app.jar
@@ -34,5 +31,5 @@ COPY --from=build /app/app.jar ./app.jar
 
 EXPOSE 9090
 
-# jar 실행 시 dev 프로파일 지정
-ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "app.jar"]
+# jar 실행
+ENTRYPOINT ["java", "-jar", "app.jar"]
