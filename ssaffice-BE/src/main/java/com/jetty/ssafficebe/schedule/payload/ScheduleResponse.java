@@ -1,7 +1,7 @@
 package com.jetty.ssafficebe.schedule.payload;
 
-import com.jetty.ssafficebe.schedule.entity.TaskType;
-import com.jetty.ssafficebe.schedule.entity.ScheduleSourceType;
+import com.jetty.ssafficebe.common.code.TaskType;
+import com.jetty.ssafficebe.common.code.ScheduleSourceType;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.Getter;

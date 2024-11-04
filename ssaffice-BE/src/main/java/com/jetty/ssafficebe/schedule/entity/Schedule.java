@@ -1,5 +1,7 @@
 package com.jetty.ssafficebe.schedule.entity;
 
+import com.jetty.ssafficebe.common.code.ScheduleSourceType;
+import com.jetty.ssafficebe.common.code.TaskType;
 import com.jetty.ssafficebe.user.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

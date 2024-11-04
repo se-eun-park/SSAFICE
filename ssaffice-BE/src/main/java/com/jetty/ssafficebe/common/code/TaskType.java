@@ -1,30 +1,30 @@
-package com.jetty.ssafficebe.schedule.entity;
+package com.jetty.ssafficebe.common.code;
 
 import com.jetty.ssafficebe.commoncode.CommonCode;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum ScheduleSourceType implements CommonCode {
+public enum TaskType implements CommonCode {
 
-    NOTICE("공지"),
-    PERSONAL("개인"),
+    GENERAL("일반"),
+    FILE("파일"),
     ;
 
     private final String title;
 
     @Override
     public String getCode() {
-        return name();
+        return "";
     }
 
     @Override
     public String getTitle() {
-        return title;
+        return "";
     }
 
     @Override
     public int getIndex() {
-        return ordinal();
+        return 0;
     }
 
     @Override
