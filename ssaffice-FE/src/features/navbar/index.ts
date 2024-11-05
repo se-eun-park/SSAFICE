@@ -1,3 +1,3 @@
-export { RouteToLoginButton } from './ui/RouteToLoginButton'
-export { NotificationButton } from './ui/NotificationButton'
-export { ProfileButton } from './ui/ProfileButton'
+export { ClickRouteToLoginButton } from './ui/ClickRouteToLoginButton'
+export { ClickNotificationButton } from './ui/ClickNotificationButton'
+export { ClickProfileButton } from './ui/ClickProfileButton'

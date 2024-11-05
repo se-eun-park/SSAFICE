@@ -1,0 +1,38 @@
+### 회원가입
+POST http://localhost:9090/api/users
+Content-Type: application/json
+
+{
+  "email": "test2@gmail.com",
+  "password": "1234",
+  "name": "tester2",
+  "roleIds": [
+    "ROLE_USER"
+  ],
+  "cohortNum": 1,
+  "regionCd": "SEOUL",
+  "classNum": 1,
+  "trackCd": "NON_MAJOR_PYTHON"
+}
+
+### 유저 아이디로 유저 정보 검색
+GET http://localhost:9090/api/users/1
+
+### 유저 정보 수정
+PUT http://localhost:9090/api/users/1
+Content-Type: application/json
+
+{
+  "name" : "수정테스트2",
+  "cohortNum" : 100,
+  "trackCd" : "NON_MAJOR_JAVA",
+  "regionCd" : "SEOUL",
+  "curriculumCd" : "SECOND_COMMON",
+  "classNum" : 1
+}
+
+### 유저 삭제
+DELETE http://localhost:9090/api/users
+Content-Type: application/json
+
+[2]
