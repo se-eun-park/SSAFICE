@@ -31,7 +31,7 @@ export const ClickProfileButton = () => {
       </button>
 
       {/* DropDown 컴포넌트 */}
-      <DropDown isOpen={isOpen} isShadow={true}>
+      <DropDown isOpen={isOpen} isShadow={true} position='right-0 mt-spacing-8'>
         <DropDown.Content>
           <DropDown.Image>
             <img

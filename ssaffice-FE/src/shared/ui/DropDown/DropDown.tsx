@@ -47,7 +47,7 @@ function DropDownContent({ children, onClickEvent, isHover }: DropDownContentPro
       onClick={onClickEvent}
       className={`flex items-center px-spacing-16 py-spacing-10 ${isHover ? 'hover:bg-color-bg-interactive-secondary-hover' : ''}`}
     >
-      {dropDownImage && <div className='mr-spacing-12'>{dropDownImage}</div>}
+      {dropDownImage.length > 0 && <div className='mr-spacing-12'>{dropDownImage}</div>}
       <div className='flex flex-col'>{dropDownContent}</div>
     </Wrapper>
   )
@@ -55,14 +55,14 @@ function DropDownContent({ children, onClickEvent, isHover }: DropDownContentPro
 
 // 메인 컴포넌트
 
-function DropDownMain({ children, isOpen, isShadow }: DropDownMainProps) {
+function DropDownMain({ children, isOpen, isShadow, position }: DropDownMainProps) {
   if (!isOpen) {
     return null
   }
 
   return (
     <div
-      className={`absolute mt-spacing-4 z-20 right-0 flex flex-col border divide-y-2 bg-color-bg-primary border-color-border-tertiary rounded-radius-8 min-w-60 ${isShadow ? 'effect-shadow' : ''}`}
+      className={`absolute z-20 flex flex-col border divide-y-2 bg-color-bg-primary border-color-border-tertiary rounded-radius-8 min-w-60 ${position} ${isShadow ? 'effect-shadow' : ''}`}
     >
       {children}
     </div>

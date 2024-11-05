@@ -24,4 +24,5 @@ export type DropDownMainProps = {
   children?: ReactNode
   isOpen: boolean
   isShadow?: boolean
+  position?: string
 }
