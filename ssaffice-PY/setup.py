@@ -47,7 +47,8 @@ engine = create_engine('mysql+pymysql://'+config.DB_USERNAME+':'+config.DB_PASSW
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # db랑 연결하기 위한 메서드
-def get_db():
+@contextmanager
+def get_db():    
     db = SessionLocal()
     try:
         yield db
