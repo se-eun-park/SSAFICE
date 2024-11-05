@@ -1,3 +1,9 @@
+import { SummaryTab } from '@/widgets/summaryTab'
+
 export const MainPage = () => {
-  return <div>메인 페이지입니다</div>
+  return (
+    <main className='w-full h-full px-spacing-32 py-spacing-40'>
+      <SummaryTab />
+    </main>
+  )
 }
