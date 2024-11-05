@@ -34,7 +34,7 @@ template = PromptTemplate(
     'title': '할 일을 1문장으로 작성',
     'content' : 할 일을 하는 방법을 3문장 내외로 작성,    
     'schedule_start_time': 할 일의 시작 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성 시작 일자를 알 수 없으면 null 시작 시간을 알 수 없으면 'YYYY-MM-DD 00:00',
-    'schedule_end_time': 할 일의 마감 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성 마감 일자를 알 수 없으면 null 마감 시간을 알 수 없으면 'YYYY-MM-DD 23:59'
+    'schedule_end_time': 할 일의 마감 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성 마감 일자를 알 수 없으면 null 마감 시간을 알 수 없으면 'YYYY-MM-DD 00:00'
 
     해당 id의 메시지가 일정이 아닐 때의 키는 다음과 같다:        
     'id': id,
