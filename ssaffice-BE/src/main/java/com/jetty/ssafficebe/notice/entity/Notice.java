@@ -53,6 +53,4 @@ public class Notice extends BaseEntity {
     @Column(name = "isEssentialYn", updatable = false, insertable = false)
     private Boolean isEssential;
 
-    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Schedule> schedules = new ArrayList<>();
 }

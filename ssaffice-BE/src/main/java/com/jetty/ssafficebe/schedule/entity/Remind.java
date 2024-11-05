@@ -26,7 +26,7 @@ public class Remind extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long remindId;
 
-    private String isEssentialYn;
+    private String isEssentialYn = "N";
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isEssentialYn", updatable = false, insertable = false)
     private Boolean isEssential;
