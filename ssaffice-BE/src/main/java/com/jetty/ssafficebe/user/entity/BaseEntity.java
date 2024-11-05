@@ -27,7 +27,7 @@ public class BaseEntity {
     private Long createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "createdId", insertable = false, updatable = false)
+    @JoinColumn(name = "createdBy", insertable = false, updatable = false)
     private User createdUser;
 
     @UpdateTimestamp
@@ -37,6 +37,6 @@ public class BaseEntity {
     private Long updatedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updatedId", insertable = false, updatable = false)
+    @JoinColumn(name = "updatedBy", insertable = false, updatable = false)
     private User updatedUser;
 }
