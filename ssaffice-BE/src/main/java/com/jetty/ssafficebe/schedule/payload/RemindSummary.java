@@ -6,9 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RemindResponse {
+public class RemindSummary {
 
     private Long remindId;
     private String isEssentialYn;
     private LocalDateTime remindDateTime;
+    private Long scheduleId;
 }

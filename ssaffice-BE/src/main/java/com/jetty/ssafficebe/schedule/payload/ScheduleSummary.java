@@ -11,6 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ScheduleSummary {
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String createdBy;
+    private String updatedBy;
 
     private Long scheduleId;
     private String title;
@@ -21,8 +25,8 @@ public class ScheduleSummary {
     private ScheduleSourceType scheduleSourceType;
     private String isEssentialYn;
     private String isFinishYn;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String isEnrollYn;
+
     private Notice notice;
-    private List<RemindResponse> reminds;
+    private List<RemindSummary> reminds;
 }
