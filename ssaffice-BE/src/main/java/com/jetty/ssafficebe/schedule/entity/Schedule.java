@@ -41,10 +41,10 @@ public class Schedule extends BaseEntity {
     private LocalDateTime endDateTime;
 
     @Enumerated(EnumType.STRING)
-    private TaskType category;
+    private TaskType taskType;
 
     @Enumerated(EnumType.STRING)
-    private ScheduleSourceType type;
+    private ScheduleSourceType scheduleSourceType;
 
     private String isEssentialYn;
     @Convert(converter = BooleanToYNConverter.class)
@@ -53,10 +53,10 @@ public class Schedule extends BaseEntity {
 
     private String isFinishYn = "N";
     @Convert(converter = BooleanToYNConverter.class)
-    @Column(name = "isFinishlYn", updatable = false, insertable = false)
+    @Column(name = "isFinishYn", updatable = false, insertable = false)
     private Boolean isFinish;
 
-    private String isEnrollYn;
+    private String isEnrollYn = "N";
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isEnrollYn", updatable = false, insertable = false)
     private Boolean isEnroll;
@@ -71,6 +71,4 @@ public class Schedule extends BaseEntity {
     @JoinColumn(name = "noticeId", insertable = false, updatable = false)
     private Notice notice;
 
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Remind> reminds = new ArrayList<>();
 }
