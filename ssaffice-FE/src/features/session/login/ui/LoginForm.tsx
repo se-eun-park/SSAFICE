@@ -24,7 +24,6 @@ export const LoginForm = () => {
               placeholder:color-text-disabled placeholder:body-md-medium 
               '
               placeholder='EMAIL'
-              required
             />
           </div>
           <div className='flex flex-col gap-spacing-12'>
@@ -43,7 +42,8 @@ export const LoginForm = () => {
               w-full px-spacing-16 py-spacing-12 
               border border-color-border-secondary 
               rounded-radius-8 
-              placeholder:color-text-disabled placeholder:body-md-medium'
+              placeholder:color-text-disabled placeholder:body-md-medium
+              '
               placeholder='PASSWORD'
             />
           </div>
