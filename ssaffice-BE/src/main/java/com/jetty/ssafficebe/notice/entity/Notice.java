@@ -48,5 +48,4 @@ public class Notice extends BaseEntity {
     @Column(name = "isEssentialYn", updatable = false, insertable = false)
     private Boolean isEssential;
 
-
 }

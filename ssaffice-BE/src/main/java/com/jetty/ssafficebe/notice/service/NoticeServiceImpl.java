@@ -6,8 +6,12 @@ import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
 import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
+import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
 import com.jetty.ssafficebe.notice.repository.NoticeRepository;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +27,9 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public ApiResponse saveNotice(NoticeRequest noticeRequest) {
         Notice notice = noticeConverter.toNotice(noticeRequest);
-
         Notice savedNotice = noticeRepository.save(notice);
+
+        // TODO : 추가 시 개인별로 일정 추가 필요
         return new ApiResponse(true, HttpStatus.CREATED, "공지사항 추가 성공", savedNotice.getTitle());
     }
 
@@ -35,5 +40,10 @@ public class NoticeServiceImpl implements NoticeService {
                 ErrorCode.NOTICE_NOT_FOUND, "해당 공지사항을 찾을 수 없습니다.", noticeId)));
 
         return new ApiResponse(true, HttpStatus.OK, "공지사항 삭제 성공", noticeId);
+    }
+
+    @Override
+    public Page<NoticeSummaryForList> getNoticeList(Pageable pageable) {
+        return noticeRepository.getNoticeList(pageable);
     }
 }

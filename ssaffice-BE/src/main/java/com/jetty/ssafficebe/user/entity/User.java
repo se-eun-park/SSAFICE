@@ -10,6 +10,7 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,6 +39,8 @@ public class User extends BaseEntity {
 
     private String isDisabledYn = "N";
 
+    private String profileImgUrl;
+
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isDisabledYn", updatable = false, insertable = false)
     private boolean isDisabled;
@@ -58,8 +61,7 @@ public class User extends BaseEntity {
 
     private Integer classNum;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserRole> userRoles = new ArrayList<>();
-
 
 }
