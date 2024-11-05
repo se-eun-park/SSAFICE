@@ -1,7 +1,7 @@
 package com.jetty.ssafficebe.schedule.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
-import com.jetty.ssafficebe.user.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -20,7 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "remind")
-public class Remind extends BaseEntity {
+public class Remind {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +34,8 @@ public class Remind extends BaseEntity {
     private LocalDateTime remindDateTime;
 
     private Long scheduleId;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scheduleId", insertable = false, updatable = false)
     private Schedule schedule;

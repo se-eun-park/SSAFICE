@@ -71,4 +71,11 @@ public class Schedule extends BaseEntity {
     @JoinColumn(name = "noticeId", insertable = false, updatable = false)
     private Notice notice;
 
+    @OneToMany(mappedBy = "scheduleId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Remind> reminds = new ArrayList<>();
+
+    public void addRemind(Remind remind) {
+        this.reminds.add(remind);
+        remind.setSchedule(this);
+    }
 }
