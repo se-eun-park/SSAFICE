@@ -1,6 +1,6 @@
 from setup import get_db
 
-def insert_test(test):  
+def insert_notice(notice):  
   with get_db() as db: 
-    db.add(test)
+    db.add(notice)
     db.commit()
