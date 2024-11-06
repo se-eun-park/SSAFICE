@@ -24,7 +24,7 @@ class Setting:
     MM_BASEURL : str ## mattermost
     SSAFY_BASE_URL : str ## ssafy
     SSAFY_TEAM_ID : str ## ssafy
-    MM_WEBSOCKETURL : str ## mattermost
+    MM_WEBSOCKET_URL : str ## mattermost
 
 config = Setting()
 config.DB_HOST = os.getenv("DB_HOST")
@@ -40,14 +40,15 @@ config.OPENAI_MODEL_NAME = os.getenv("OPENAI_MODEL_NAME")
 config.MM_BASEURL = os.getenv("MM_BASEURL")
 config.SSAFY_BASE_URL = os.getenv("SSAFY_BASE_URL")
 config.SSAFY_TEAM_ID = os.getenv("SSAFY_TEAM_ID")
-config.MM_WEBSOCKETURL = os.getenv("MM_WEBSOCKETURL")
+config.MM_WEBSOCKET_URL = os.getenv("MM_WEBSOCKETURL")
 
+
+engine = create_engine('mysql+pymysql://'+config.DB_USERNAME+':'+config.DB_PASSWORD+'@'+config.DB_HOST+':'+config.DB_PORT+'/'+config.DB_NAME)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # db랑 연결하기 위한 메서드
 @contextmanager
-def get_db():
-    engine = create_engine('mysql+pymysql://'+config.DB_USERNAME+':'+config.DB_PASSWORD+'@'+config.DB_HOST+':'+config.DB_PORT+'/'+config.DB_NAME)
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+def get_db():    
     db = SessionLocal()
     try:
         yield db

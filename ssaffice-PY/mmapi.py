@@ -25,18 +25,18 @@ template = PromptTemplate(
     template="""
     다음의 메시지 리스트를 보면서 id별로 일정 여부를을 파악하여 JSON형태로 출력하라.    
     일정이란 해당 메시지에 해야할 task가 주어져 있거나 특정 시간이 주어져 있는 모든 메시지를 의미한다.
-    '제출 안내'가 포함되어 있는 메시지는 모두 일정으로 분류한다.
+    '제출 안내'가 포함되어 있는 메시지는 모두 일정으로 분류한다.    
     
-    해당 id의메시지가 일정일 때는 todo_list안의 배열로 입력.키는 다음과 같다:     
+    JSON 형태는 list라는 배열안에 넣어서 출력한다.
+    해당 id의메시지가 일정일 때의 키는 다음과 같다:     
     'id': id,
     'isTodo': 'o',
     'title': '할 일을 1문장으로 작성',
-    'content' : 할 일을 하는 방법을 3문장 내외로 작성,
-    'schedule_date': 'MM/DD'(공백 없이) or 'today' or 'tomorrow' etc,
-    'schedule_start_time': 'HH:mm (알 수 없으면 00:00)'
-    'schedule_end_time': 'HH:mm (알 수 없으면 00:00)'
+    'content' : 할 일을 하는 방법을 3문장 내외로 작성,    
+    'schedule_start_time': 할 일의 시작 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성 시작 일자를 알 수 없으면 null 시작 시간을 알 수 없으면 'YYYY-MM-DD 00:00',
+    'schedule_end_time': 할 일의 마감 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성 마감 일자를 알 수 없으면 null 마감 시간을 알 수 없으면 'YYYY-MM-DD 00:00'
 
-    해당 id의 메시지가 일정이 아닐 때의 non_todo_list안의 배열로 입력. 키는 다음과 같다:        
+    해당 id의 메시지가 일정이 아닐 때의 키는 다음과 같다:        
     'id': id,
     'isTodo': 'x',
     'details': '세부 내용'
@@ -52,7 +52,7 @@ pipeline = template | llm | SimpleJsonOutputParser()
 session = requests.Session()
 
 # 로그인 API 호출 함수, 관리자 로그인 토큰을 발급받기 위함 (return : token을 반환)
-def login_to_mattermost():
+def make_mattermost_admin_token():
     login_url = mm_baseurl+'/users/login'    
     credentials = {
         'login_id': mm_id,
@@ -69,7 +69,7 @@ def login_to_mattermost():
     
 
 def get_headers(token):
-    token = login_to_mattermost()
+    token = make_mattermost_admin_token()
     headers = {
         'Authorization': f'Bearer {token}',
         'Accept': 'application/json',
@@ -197,3 +197,19 @@ def get_channels_by_user_id(token, user_id):
     else:
         print("Failed to get channels with status code:", response.status_code)
         return None
+
+# 일반 유저들의 token을 받기 위한 메서드 > 이 token을 가지고 get요청을 통해 user_mm_id확인
+def login(mm_id, mm_pw):
+    login_url = mm_baseurl+'/users/login'    
+    credentials = {
+        'login_id': mm_id,
+        'password': mm_pw
+    }
+    response = session.post(login_url, json=credentials)
+    if response.status_code == 200:
+        print("Login successful")
+        return response.headers.get('Token')
+    else:
+        print("Login failed")
+        print("Response:", response.json())
+        return None  # 로그인 실패 시 None 반환
