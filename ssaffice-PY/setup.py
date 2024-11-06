@@ -25,6 +25,7 @@ class Setting:
     SSAFY_BASE_URL: str  ## ssafy
     SSAFY_TEAM_ID: str  ## ssafy
     MM_WEBSOCKET_URL: str  ## mattermost
+    MM_WEBHOOK_URL: str  ## mattermost
 
 
 config = Setting()
@@ -42,6 +43,7 @@ config.MM_BASEURL = os.getenv("MM_BASEURL")
 config.SSAFY_BASE_URL = os.getenv("SSAFY_BASE_URL")
 config.SSAFY_TEAM_ID = os.getenv("SSAFY_TEAM_ID")
 config.MM_WEBSOCKET_URL = os.getenv("MM_WEBSOCKETURL")
+config.MM_WEBHOOK_URL = os.getenv("MM_WEBHOOK_URL")
 
 
 engine = create_engine(
