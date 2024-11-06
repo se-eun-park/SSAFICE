@@ -7,24 +7,25 @@ from contextlib import contextmanager
 
 env_path = Path(__file__).resolve().parent / ".env"
 
-load_dotenv(
-  dotenv_path = env_path
-)
-class Setting:    
-    DB_HOST: str ## mariadB
-    DB_PORT: str ## mariaDB
-    DB_NAME: str ## mariaDB
-    DB_USERNAME: str ## mariaDB
-    DB_PASSWORD: str ## mariaDB    
-    OPENAI_API_KEY : str ## openai
-    SSAFY_API_KEY : str ## ssafy
-    MM_ID : str ## mattermost
-    MM_PW : str ## mattermost
-    OPENAI_MODEL_NAME : str ## openai
-    MM_BASEURL : str ## mattermost
-    SSAFY_BASE_URL : str ## ssafy
-    SSAFY_TEAM_ID : str ## ssafy
-    MM_WEBSOCKET_URL : str ## mattermost
+load_dotenv(dotenv_path=env_path)
+
+
+class Setting:
+    DB_HOST: str  ## mariadB
+    DB_PORT: str  ## mariaDB
+    DB_NAME: str  ## mariaDB
+    DB_USERNAME: str  ## mariaDB
+    DB_PASSWORD: str  ## mariaDB
+    OPENAI_API_KEY: str  ## openai
+    SSAFY_API_KEY: str  ## ssafy
+    MM_ID: str  ## mattermost
+    MM_PW: str  ## mattermost
+    OPENAI_MODEL_NAME: str  ## openai
+    MM_BASEURL: str  ## mattermost
+    SSAFY_BASE_URL: str  ## ssafy
+    SSAFY_TEAM_ID: str  ## ssafy
+    MM_WEBSOCKET_URL: str  ## mattermost
+
 
 config = Setting()
 config.DB_HOST = os.getenv("DB_HOST")
@@ -43,12 +44,24 @@ config.SSAFY_TEAM_ID = os.getenv("SSAFY_TEAM_ID")
 config.MM_WEBSOCKET_URL = os.getenv("MM_WEBSOCKETURL")
 
 
-engine = create_engine('mysql+pymysql://'+config.DB_USERNAME+':'+config.DB_PASSWORD+'@'+config.DB_HOST+':'+config.DB_PORT+'/'+config.DB_NAME)
+engine = create_engine(
+    "mysql+pymysql://"
+    + config.DB_USERNAME
+    + ":"
+    + config.DB_PASSWORD
+    + "@"
+    + config.DB_HOST
+    + ":"
+    + config.DB_PORT
+    + "/"
+    + config.DB_NAME
+)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 # db랑 연결하기 위한 메서드
 @contextmanager
-def get_db():    
+def get_db():
     db = SessionLocal()
     try:
         yield db
