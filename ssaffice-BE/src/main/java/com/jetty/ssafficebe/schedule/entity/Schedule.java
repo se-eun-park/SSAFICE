@@ -1,9 +1,11 @@
 package com.jetty.ssafficebe.schedule.entity;
 
 import com.jetty.ssafficebe.common.code.ScheduleSourceType;
+import com.jetty.ssafficebe.common.code.ScheduleStatusType;
 import com.jetty.ssafficebe.common.code.TaskType;
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.notice.entity.Notice;
+import com.jetty.ssafficebe.remind.entity.Remind;
 import com.jetty.ssafficebe.user.entity.BaseEntity;
 import com.jetty.ssafficebe.user.entity.User;
 import jakarta.persistence.CascadeType;
@@ -40,42 +42,53 @@ public class Schedule extends BaseEntity {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
 
+    private String taskTypeCd;
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "taskTypeCd", updatable = false, insertable = false)
     private TaskType taskType;
 
+    private String scheduleSourceTypeCd;
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "scheduleSourceTypeCd", updatable = false, insertable = false)
     private ScheduleSourceType scheduleSourceType;
 
+    private String scheduleStatusTypeCd = "TODO";
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "scheduleStatusTypeCd", updatable = false, insertable = false)
+    private ScheduleStatusType scheduleStatusType;
+
     private String isEssentialYn;
+
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isEssentialYn", updatable = false, insertable = false)
     private Boolean isEssential;
 
-    private String isFinishYn = "N";
-    @Convert(converter = BooleanToYNConverter.class)
-    @Column(name = "isFinishYn", updatable = false, insertable = false)
-    private Boolean isFinish;
-
     private String isEnrollYn = "N";
+
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isEnrollYn", updatable = false, insertable = false)
     private Boolean isEnroll;
 
     private Long userId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
     private Long noticeId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "noticeId", insertable = false, updatable = false)
     private Notice notice;
 
     @OneToMany(mappedBy = "scheduleId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Remind> reminds = new ArrayList<>();
+    private List<Remind> remindList = new ArrayList<>();
 
     public void addRemind(Remind remind) {
-        this.reminds.add(remind);
+        this.remindList.add(remind);
         remind.setSchedule(this);
     }
 }
