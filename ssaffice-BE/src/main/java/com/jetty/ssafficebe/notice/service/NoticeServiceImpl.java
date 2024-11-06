@@ -8,7 +8,8 @@ import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
 import com.jetty.ssafficebe.notice.repository.NoticeRepository;
-
+import com.jetty.ssafficebe.user.entity.User;
+import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,26 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public Page<NoticeSummaryForList> getNoticeList(Pageable pageable) {
-        return noticeRepository.getNoticeList(pageable);
+        Page<Notice> noticeList = noticeRepository.getNoticeList(pageable);
+
+        return noticeList.map(notice ->
+                              {
+                                  NoticeSummaryForList noticeSummaryForList = noticeConverter.toNoticeSummaryForList(
+                                          notice);
+                                  User createUser = notice.getCreateUser();
+
+                                  if (createUser != null) {
+                                      noticeSummaryForList.setCreateUser(CreatedBySummary.builder()
+                                                                                         .userId(createUser.getUserId())
+                                                                                         .name(createUser.getName())
+                                                                                         .email(createUser.getEmail())
+                                                                                         .profileImgUrl(
+                                                                                                 createUser.getProfileImgUrl())
+                                                                                         .build());
+                                  }
+
+                                  return noticeSummaryForList;
+                              }
+        );
     }
 }

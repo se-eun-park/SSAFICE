@@ -28,7 +28,7 @@ public class BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "createdBy", insertable = false, updatable = false)
-    private User createdUser;
+    private User createUser;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
@@ -38,5 +38,5 @@ public class BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedBy", insertable = false, updatable = false)
-    private User updatedUser;
+    private User updateUser;
 }

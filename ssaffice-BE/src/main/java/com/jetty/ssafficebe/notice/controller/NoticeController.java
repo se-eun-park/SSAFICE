@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.notice.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
 import com.jetty.ssafficebe.notice.service.NoticeService;
@@ -43,13 +44,13 @@ public class NoticeController {
 
     /**
      * 공지사항 리스트 조회
-     * <p>
+     *
      * TODO : NoticeSummaryForList로 변경 필요
      */
     @GetMapping
     public ResponseEntity<Page<NoticeSummaryForList>> getNoticeList(@PageableDefault(size = 20,
-                                                                                     sort = "createdAt",
-                                                                                     direction = Direction.DESC) Pageable pageable) {
+                                                                       sort = "createdAt",
+                                                                       direction = Direction.DESC) Pageable pageable) {
 
         return ResponseEntity.ok(noticeService.getNoticeList(pageable));
     }
