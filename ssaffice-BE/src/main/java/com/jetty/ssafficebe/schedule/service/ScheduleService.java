@@ -6,4 +6,6 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 public interface ScheduleService {
 
     ApiResponse saveSchedule(ScheduleRequest scheduleRequest);
+
+    ApiResponse updateSchedule(String scheduleId, ScheduleRequest scheduleRequest);
 }
