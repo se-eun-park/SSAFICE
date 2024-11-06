@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum ScheduleSourceType implements CommonCode {
 
-    NOTICE("공지"),
+    GLOBAL_NOTICE("전체공지"),
+    GLOBAL_TEAM("팀공지"),
     PERSONAL("개인"),
     ;
 

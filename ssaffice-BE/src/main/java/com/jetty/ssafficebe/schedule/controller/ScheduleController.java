@@ -21,28 +21,29 @@ public class ScheduleController {
      * 일정 등록
      */
     @PostMapping
-    public ResponseEntity<?> addSchedule(@RequestBody ScheduleRequest scheduleRequest) {
+    public ResponseEntity<ApiResponse> saveSchedule(@RequestBody ScheduleRequest scheduleRequest) {
         ApiResponse apiResponse = scheduleService.saveSchedule(scheduleRequest);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 
-    /**
+    /*
      * 일정 수정
      */
 
-    /**
+
+    /*
      * 일정 리스트 조회
      */
 
-    /**
+    /*
      * 일정 조회
      */
 
-    /**
+    /*
      * 일정 삭제
      */
 
-    /**
+    /*
      * 일정 검색
      */
 }
