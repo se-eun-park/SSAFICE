@@ -1,6 +1,6 @@
-package com.jetty.ssafficebe.schedule.converter;
+package com.jetty.ssafficebe.remind.converter;
 
-import com.jetty.ssafficebe.schedule.entity.Remind;
+import com.jetty.ssafficebe.remind.entity.Remind;
 import java.time.LocalDateTime;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

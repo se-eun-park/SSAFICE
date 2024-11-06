@@ -1,7 +1,8 @@
-package com.jetty.ssafficebe.schedule.entity;
+package com.jetty.ssafficebe.remind.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
+import com.jetty.ssafficebe.schedule.entity.Schedule;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;

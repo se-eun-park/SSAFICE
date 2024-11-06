@@ -1,6 +1,6 @@
-package com.jetty.ssafficebe.schedule.repository;
+package com.jetty.ssafficebe.remind.repository;
 
-import com.jetty.ssafficebe.schedule.entity.Remind;
+import com.jetty.ssafficebe.remind.entity.Remind;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RemindRepository extends JpaRepository<Remind, Long> {
