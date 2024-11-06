@@ -12,11 +12,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name = "notice")
 @Getter
 @Setter
 public class Notice extends BaseEntity {
@@ -47,6 +49,5 @@ public class Notice extends BaseEntity {
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isEssentialYn", updatable = false, insertable = false)
     private Boolean isEssential;
-
 
 }
