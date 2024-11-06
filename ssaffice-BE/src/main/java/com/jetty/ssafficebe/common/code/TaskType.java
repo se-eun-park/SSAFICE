@@ -14,17 +14,17 @@ public enum TaskType implements CommonCode {
 
     @Override
     public String getCode() {
-        return "";
+        return name();
     }
 
     @Override
     public String getTitle() {
-        return "";
+        return title;
     }
 
     @Override
     public int getIndex() {
-        return 0;
+        return ordinal();
     }
 
     @Override
