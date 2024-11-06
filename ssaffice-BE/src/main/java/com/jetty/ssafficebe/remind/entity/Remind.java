@@ -28,6 +28,7 @@ public class Remind {
     private Long remindId;
 
     private String isEssentialYn = "N";
+
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isEssentialYn", updatable = false, insertable = false)
     private Boolean isEssential;
@@ -36,7 +37,6 @@ public class Remind {
 
     private Long scheduleId;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scheduleId", insertable = false, updatable = false)
     private Schedule schedule;
