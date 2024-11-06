@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.user.entity;
 
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.role.entity.UserRole;
+import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.user.code.Region;
 import com.jetty.ssafficebe.user.code.Track;
 import jakarta.persistence.CascadeType;
