@@ -1,3 +1,5 @@
+export { default as FastLeftArrowIcon } from './FastLeftArrowIcon'
+export { default as HamburgerMenuIcon } from './HamburgerMenuIcon'
 export { default as Logo } from './Logo'
 export { default as LogoutIcon } from './LogoutIcon'
 export { default as NotificationInactiveIcon } from './NotificationInactiveIcon'

@@ -1,7 +1,7 @@
 export const GetTodo = () => {
   return (
     <div>
-      <h2 className='heading-desktop-lg mb-spacing-4 text-color-text-primary min-w-max'>할일</h2>
+      <h2 className='heading-desktop-lg mb-spacing-4 text-color-text-primary min-w-max'>할 일</h2>
 
       <ul className='flex flex-col border-t px-spacing-4 py-spacing-10 border-color-border-info gap-y-spacing-10 text-color-text-primary'>
         <li className='flex items-center body-md-medium min-w-max'>

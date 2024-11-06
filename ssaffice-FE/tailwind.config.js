@@ -145,6 +145,42 @@ export default {
       //   // !TODO 애니메이션 좀 더 빠르게 진행 less than 300ms
       //   // !Latency 있으므로 아예 빠질 수도 있음
       // },
+      keyframes: {
+        slideShrink: {
+          '0%': { width: '100%' },
+          '100%': { width: '0%', padding: '0' },
+        },
+        slideExpand: {
+          '0%': { width: '0%', padding: '0' },
+          '100%': { width: '100%' },
+        },
+        slideExpandFast: {
+          '0%': { width: '0%', opacity: 0 },
+          '100%': { width: '100%', opacity: 1 },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '50%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeOut: {
+          '0%': { opacity: '1' },
+          '50%': { opacity: '0' },
+          '100%': { opacity: '0' },
+        },
+        gapShrink: {
+          '0%': { gap: '40px' },
+          '100%': { gap: '0px' },
+        },
+      },
+      animation: {
+        slideShrink: 'slideShrink 0.5s ease-in-out',
+        slideExpand: 'slideExpand 0.5s ease-in-out',
+        slideExpandFast: 'slideExpandFast 0.3s ease-in-out',
+        fadeIn: 'fadeIn 0.5s ease-in-out',
+        fadeOut: 'fadeOut 0.5s ease-in-out',
+        gapShrink: 'gapShrink 0.5s ease-in-out',
+      },
     },
   },
   plugins: [
