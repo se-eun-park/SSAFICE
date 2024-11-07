@@ -1,6 +1,13 @@
+import { useState } from 'react'
 import { LoginButton } from './LoginButton'
+import { CommonModal } from '@/shared/ui/CommonModal/CommonModal'
+import { LoginErrorModal } from './LoginErrorModal'
 
 export const LoginForm = () => {
+  const [isOpen, setIsOpen] = useState(false)
+  const open = () => setIsOpen(true)
+  const close = () => setIsOpen(false)
+
   return (
     <div className='flex flex-col w-full'>
       <div className='flex flex-col gap-spacing-64'>
@@ -49,6 +56,17 @@ export const LoginForm = () => {
           </div>
         </div>
         <LoginButton label='로그인' />
+        <button type='button' onClick={open}>
+          trigger
+        </button>
+        <CommonModal
+          width='443px'
+          height='207px'
+          tsx={<LoginErrorModal errorType={`LoginFail`} />}
+          opened={isOpen}
+          closeRequest={close}
+          hasShadow
+        />
       </div>
 
       {/* 

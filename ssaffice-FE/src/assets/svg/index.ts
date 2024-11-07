@@ -1,3 +1,5 @@
+export { default as AlertLogo } from './AlertLogo'
+export { default as ExitButton } from './ExitButton'
 export { default as Logo } from './Logo'
 export { default as LogoutIcon } from './LogoutIcon'
 export { default as NotificationInactiveIcon } from './NotificationInactiveIcon'
