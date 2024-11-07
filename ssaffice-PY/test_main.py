@@ -1,15 +1,20 @@
 from mmapi import *
-from websocket_test import *
+# from websocket_test import *
 
 token = make_mattermost_admin_token() ## 해당 토큰은 관리자 계정의 토큰이라 가정한다.
 print(token)
 
-connect_websocket()
+# connect_websocket()
 
 
 if token:
-    print(get_user_info(token))
-    user_id = get_user_info(token)['id']
+    get_file_by_file_id(token, '6upofnnpg7gdmxftwk61te9n4r')
+    
+    # print(get_user_info(token))    
+    
+    # members = get_team_members_by_team_id(token, 'oazj1yrefjn8iqukezqn3r75ay')
+    # print(members)
+    
     # user_teams = get_user_teams(token)
     # print(user_teams)
     
