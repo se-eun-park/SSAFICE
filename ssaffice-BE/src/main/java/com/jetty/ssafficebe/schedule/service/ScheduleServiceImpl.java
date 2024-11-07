@@ -4,6 +4,7 @@ import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
+import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.notice.repository.NoticeRepository;
 import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.remind.entity.Remind;
@@ -38,10 +39,17 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ApiResponse saveSchedule(ScheduleRequest scheduleRequest) {
         // ! 1. Schedule 저장
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
-        schedule.setNotice(noticeRepository.findById(scheduleRequest.getNoticeId())
-                                           .orElseThrow(() -> new ResourceNotFoundException(
-                                                   ErrorCode.NOTICE_NOT_FOUND, "해당 공지사항을 찾을 수 없습니다.",
-                                                   scheduleRequest.getNoticeId())));
+
+        // Notice 설정 (필수 공지 파생의 경우)
+        if (scheduleRequest.getNoticeId() != null) {
+            Notice notice = noticeRepository.findById(scheduleRequest.getNoticeId())
+                                            .orElseThrow(() -> new ResourceNotFoundException(
+                                                    ErrorCode.NOTICE_NOT_FOUND,
+                                                    "해당 공지사항을 찾을 수 없습니다.",
+                                                    scheduleRequest.getNoticeId()));
+            schedule.setNotice(notice);
+            schedule.setIsEssentialYn("Y");
+        }
 
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
@@ -63,11 +71,17 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 3. Response 생성
         ScheduleSummary scheduleSummary = scheduleConverter.toScheduleSummary(savedSchedule);
-        scheduleSummary.setNoticeSummaryForList(
-                noticeConverter.toNoticeSummaryForList(schedule.getNotice()));
+
+        // Notice 설정 (필수 공지 파생의 경우)
+        if (scheduleRequest.getNoticeId() != null) {
+            scheduleSummary.setNoticeSummaryForList(
+                    noticeConverter.toNoticeSummaryForList(schedule.getNotice()));
+        }
+
         scheduleSummary.setRemindSummaryList(savedSchedule.getRemindList().stream()
                                                           .map(remindConverter::toRemindSummary)
                                                           .collect(Collectors.toList()));
+
         return new ApiResponse(true, "일정 등록에 성공하였습니다.", scheduleSummary);
     }
 

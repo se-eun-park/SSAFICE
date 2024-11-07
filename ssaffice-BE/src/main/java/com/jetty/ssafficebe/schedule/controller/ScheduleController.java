@@ -21,6 +21,9 @@ public class ScheduleController {
 
     /**
      * 일정 등록
+     *
+     * @param scheduleRequest : 일정 정보 + 공지사항 id(필수 공지 파생의 경우: null) + 리마인드 정보
+     * @return 일정 + 공지사항 + 리마인드 정보
      */
     @PostMapping
     public ResponseEntity<ApiResponse> saveSchedule(@RequestBody ScheduleRequest scheduleRequest) {
@@ -32,7 +35,8 @@ public class ScheduleController {
      * 일정 수정
      */
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<ApiResponse> updateSchedule(@PathVariable("scheduleId") String scheduleId, @RequestBody ScheduleRequest scheduleRequest) {
+    public ResponseEntity<ApiResponse> updateSchedule(@PathVariable("scheduleId") String scheduleId,
+                                                      @RequestBody ScheduleRequest scheduleRequest) {
         ApiResponse apiResponse = scheduleService.updateSchedule(scheduleId, scheduleRequest);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
@@ -42,7 +46,7 @@ public class ScheduleController {
      */
 
     /*
-     * 일정 조회
+     * 일정 상세 조회
      */
 
     /*

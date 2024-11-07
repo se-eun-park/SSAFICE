@@ -60,7 +60,7 @@ public class Schedule extends BaseEntity {
     @Column(name = "scheduleStatusTypeCd", updatable = false, insertable = false)
     private ScheduleStatusType scheduleStatusType;
 
-    private String isEssentialYn;
+    private String isEssentialYn = "N";
 
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isEssentialYn", updatable = false, insertable = false)
