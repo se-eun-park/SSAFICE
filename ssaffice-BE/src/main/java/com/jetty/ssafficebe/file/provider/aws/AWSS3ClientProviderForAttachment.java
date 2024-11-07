@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-@Profile({"aws"})
 @Component
 public class AWSS3ClientProviderForAttachment extends AWSS3ClientProvider {
 
