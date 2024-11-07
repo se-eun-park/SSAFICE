@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { LoginButton } from './LoginButton'
-// import { CommonModal } from '@/shared/ui/CommonModal/CommonModal'
+import { useLoginFormModel } from '../model/useLoginFormModel'
+import { CommonModal } from '@/shared/ui/CommonModal/CommonModal'
 
 export const LoginForm = () => {
-  // const [isOpen, setIsOpen] = useState(false)
-  // const open = () => setIsOpen(true)
-  // const close = () => setIsOpen(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const open = () => setIsOpen(true)
+  const close = () => setIsOpen(false)
+  const { email, password, handleEmailValue, handlePasswordValue } = useLoginFormModel()
 
   return (
     <div className='flex flex-col w-full'>
@@ -30,6 +32,8 @@ export const LoginForm = () => {
               placeholder:color-text-disabled placeholder:body-md-medium 
               '
               placeholder='EMAIL'
+              value={email}
+              onChange={(e) => handleEmailValue(e.target.value)}
             />
           </div>
           <div className='flex flex-col gap-spacing-12'>
@@ -51,16 +55,18 @@ export const LoginForm = () => {
               placeholder:color-text-disabled placeholder:body-md-medium
               '
               placeholder='PASSWORD'
+              value={password}
+              onChange={(e) => handlePasswordValue(e.target.value)}
             />
           </div>
         </div>
         <LoginButton label='로그인' />
 
         {/* CommonModal 주석 처리 */}
-        {/* <button type='button' onClick={open}>
+        <button type='button' onClick={open}>
           trigger
-        </button> */}
-        {/* <CommonModal name='EmailValidFalse' opened={isOpen} closeRequest={close} /> */}
+        </button>
+        <CommonModal name='EmailValidFalse' opened={isOpen} closeRequest={close} />
       </div>
 
       {/* 

@@ -1,4 +1,3 @@
-import React, { Suspense } from 'react'
 import ReactModal from 'react-modal'
 import { findModalByName, ModalName } from '@/shared/model'
 
@@ -52,10 +51,13 @@ export const CommonModal = ({ name, opened, closeRequest }: CommonModalParams) =
   }
 
   return opened ? (
-    <ReactModal isOpen={opened} onRequestClose={closeRequest} style={commonModalStyle}>
-      <Suspense fallback={<div>Loading...</div>}>
-        <div className='flex w-full h-full'>{modal?.modal}</div>
-      </Suspense>
+    <ReactModal
+      isOpen={opened}
+      onRequestClose={closeRequest}
+      style={commonModalStyle}
+      ariaHideApp={false}
+    >
+      <div className='flex w-full h-full'>{modal?.modal}</div>
     </ReactModal>
   ) : null
 }

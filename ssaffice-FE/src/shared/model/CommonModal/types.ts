@@ -4,7 +4,8 @@ export type ModalName = 'EmailValidFalse' | 'LoginFail'
 
 export type ModalElement = {
   modal: // LazyExoticComponent<React.ComponentType<any>>
-  ReactNode
+  // ReactNode
+  JSX.Element
   width: string
   height: string
   hasShadow?: boolean
