@@ -1,2 +1,2 @@
-export { DropDown } from './DropDown'
+export { DropDown } from './DropDown/DropDown'
 export { TabLayout } from './TabLayout'
