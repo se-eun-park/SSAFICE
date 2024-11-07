@@ -4,7 +4,6 @@ import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
-import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.notice.repository.NoticeRepository;
 import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.remind.entity.Remind;
@@ -39,18 +38,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ApiResponse saveSchedule(ScheduleRequest scheduleRequest) {
         // ! 1. Schedule 저장
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
-
-        // Notice 설정 (필수 공지 파생의 경우)
-        if (scheduleRequest.getNoticeId() != null) {
-            Notice notice = noticeRepository.findById(scheduleRequest.getNoticeId())
-                                            .orElseThrow(() -> new ResourceNotFoundException(
-                                                    ErrorCode.NOTICE_NOT_FOUND,
-                                                    "해당 공지사항을 찾을 수 없습니다.",
-                                                    scheduleRequest.getNoticeId()));
-            schedule.setNotice(notice);
-            schedule.setIsEssentialYn("Y");
-        }
-
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
         // ! 2. Remind 생성 및 저장 -> TODO : remind api 쪽으로 분리할 예정
@@ -72,12 +59,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 3. Response 생성
         ScheduleSummary scheduleSummary = scheduleConverter.toScheduleSummary(savedSchedule);
 
-        // Notice 설정 (필수 공지 파생의 경우)
-        if (scheduleRequest.getNoticeId() != null) {
-            scheduleSummary.setNoticeSummaryForList(
-                    noticeConverter.toNoticeSummaryForList(schedule.getNotice()));
-        }
-
         scheduleSummary.setRemindSummaryList(savedSchedule.getRemindList().stream()
                                                           .map(remindConverter::toRemindSummary)
                                                           .collect(Collectors.toList()));
@@ -85,9 +66,27 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ApiResponse(true, "일정 등록에 성공하였습니다.", scheduleSummary);
     }
 
+
+    // TODO : 종료 시간 변경 시 리마인드 삭제 파트 추가
     @Override
-    public ApiResponse updateSchedule(String scheduleId, ScheduleRequest scheduleRequest) {
-        return new ApiResponse(true, "일정 수정에 성공하였습니다.");
+    public ApiResponse updateSchedule(Long scheduleId, ScheduleRequest scheduleRequest) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                                              .orElseThrow(() -> new ResourceNotFoundException(
+                                                      ErrorCode.SCHEDULE_NOT_FOUND,
+                                                      "해당 일정을 찾을 수 없습니다.",
+                                                      scheduleId));
+
+        schedule.setTitle(scheduleRequest.getTitle());
+        schedule.setMemo(scheduleRequest.getMemo());
+        schedule.setStartDateTime(scheduleRequest.getStartDateTime());
+        schedule.setEndDateTime(scheduleRequest.getEndDateTime());
+        schedule.setTaskTypeCd(scheduleRequest.getTaskTypeCd());
+        schedule.setScheduleStatusTypeCd(scheduleRequest.getScheduleStatusTypeCd());
+        schedule.setScheduleStatusTypeCd(scheduleRequest.getScheduleStatusTypeCd());
+        schedule.setIsEnrollYn("Y");
+
+        Schedule savedSchedule = scheduleRepository.save(schedule);
+        return new ApiResponse(true, "일정 수정에 성공하였습니다.", scheduleConverter.toScheduleSummary(savedSchedule));
     }
 
 }

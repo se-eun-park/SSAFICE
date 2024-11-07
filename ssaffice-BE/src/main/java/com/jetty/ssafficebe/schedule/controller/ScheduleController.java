@@ -22,7 +22,7 @@ public class ScheduleController {
     /**
      * 일정 등록
      *
-     * @param scheduleRequest : 일정 정보 + 공지사항 id(필수 공지 파생의 경우: null) + 리마인드 정보
+     * @param scheduleRequest : 일정 정보 + 공지사항 id(개인 일정의 경우: null) + 리마인드 정보
      * @return 일정 + 공지사항 + 리마인드 정보
      */
     @PostMapping
@@ -33,9 +33,12 @@ public class ScheduleController {
 
     /**
      * 일정 수정
+     * @param scheduleId : 일정 id
+     * @param scheduleRequest : schedule 정보
+     * @return 수정된 일정 정보
      */
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<ApiResponse> updateSchedule(@PathVariable("scheduleId") String scheduleId,
+    public ResponseEntity<ApiResponse> updateSchedule(@PathVariable("scheduleId") Long scheduleId,
                                                       @RequestBody ScheduleRequest scheduleRequest) {
         ApiResponse apiResponse = scheduleService.updateSchedule(scheduleId, scheduleRequest);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);

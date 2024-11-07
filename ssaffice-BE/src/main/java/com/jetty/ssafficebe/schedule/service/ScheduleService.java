@@ -7,5 +7,5 @@ public interface ScheduleService {
 
     ApiResponse saveSchedule(ScheduleRequest scheduleRequest);
 
-    ApiResponse updateSchedule(String scheduleId, ScheduleRequest scheduleRequest);
+    ApiResponse updateSchedule(Long scheduleId, ScheduleRequest scheduleRequest);
 }
