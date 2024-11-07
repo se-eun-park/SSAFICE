@@ -1,42 +1,33 @@
 services:
+  # Backend Service
   ssaffice-be:
     image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-be}:${DOCKER_TAG:-latest}
     container_name: ssaffice-be
-    ports:
-      - "9090:9090"
+    network_mode: "host"
     env_file:
       - ./ssaffice-BE/.env
+    environment:
+      - TZ=Asia/Seoul
+      - SERVER_ADDRESS=0.0.0.0
     volumes:
       - ./ssaffice-BE/logs:/app/logs
-    depends_on:
-      - redis
-    restart: unless-stopped
 
+  # Frontend Service
   ssaffice-fe:
     image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-fe}:${DOCKER_TAG:-latest}
     container_name: ssaffice-fe
-    ports:
-      - "443:443"
-      - "80:80"
+    network_mode: "host"
     environment:
       - SERVER_NAME=k11a605.p.ssafy.io
-      - BACKEND_HOST=ssaffice-be
+      - BACKEND_HOST=127.0.0.1
       - BACKEND_PORT=9090
+      - TZ=Asia/Seoul
     volumes:
       - /etc/letsencrypt/live/k11a605.p.ssafy.io/fullchain.pem:/etc/nginx/ssl/certificate.crt:ro
       - /etc/letsencrypt/live/k11a605.p.ssafy.io/privkey.pem:/etc/nginx/ssl/private.key:ro
       - /etc/letsencrypt/live/k11a605.p.ssafy.io/chain.pem:/etc/nginx/ssl/ca_bundle.crt:ro
     depends_on:
       - ssaffice-be
-    restart: unless-stopped
-
-  redis:
-    image: redis:latest
-    container_name: redis
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
 
 volumes:
   logs:
-  redis_data:
