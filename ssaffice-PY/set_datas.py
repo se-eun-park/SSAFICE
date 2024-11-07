@@ -1,5 +1,5 @@
 from setup import get_db
-from models.models import Notice, Notice_Channel
+from models import *
 
 
 def insert_notice(notice):
