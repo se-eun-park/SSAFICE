@@ -1,10 +1,9 @@
 import { AlertLogo, ExitButton } from '@/assets/svg'
 
-type LoginErrorModalParam = {
+type LoginErrorModalProps = {
   errorType: 'EmailValidFalse' | 'LoginFail'
 }
-
-export const LoginErrorModal = (errorType: LoginErrorModalParam) => {
+export const LoginErrorModal = ({ errorType }: LoginErrorModalProps) => {
   return (
     <div
       className='
@@ -27,8 +26,8 @@ export const LoginErrorModal = (errorType: LoginErrorModalParam) => {
 
         <div className='flex w-full h-full items-center whitespace-pre-line'>
           <div className='flex body-lg-semibold text-color-text-primary text-center'>
-            {errorType.errorType === 'EmailValidFalse' && '유효하지 않은 이메일입니다.'}
-            {errorType.errorType === 'LoginFail' && `이메일 또는\n비밀번호가 틀렸습니다.`}
+            {errorType === 'EmailValidFalse' && '유효하지 않은 이메일입니다.'}
+            {errorType === 'LoginFail' && `이메일 또는\n비밀번호가 틀렸습니다.`}
           </div>
         </div>
       </div>
