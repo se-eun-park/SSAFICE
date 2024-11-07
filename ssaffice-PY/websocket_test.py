@@ -1,8 +1,7 @@
 import websocket
 import json
 from mmapi import *
-from setup import config, get_db
-from models.models import Notice
+from setup import config
 from websocket_service import *
 from get_datas import *
 from set_datas import *
@@ -38,7 +37,7 @@ def on_message(ws, message):
                     notice_channel_db_id,
                 )
 
-                file_download_if_file_exist(token, data)
+                file_upload_if_file_exist(token, data)
             else:
                 print("일정이 아닙니다.")
 

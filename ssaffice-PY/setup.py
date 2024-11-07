@@ -26,6 +26,10 @@ class Setting:
     SSAFY_TEAM_ID: str  ## ssafy
     MM_WEBSOCKET_URL: str  ## mattermost
     MM_WEBHOOK_URL: str  ## mattermost
+    S3_ACCESS_KEY: str  ## s3
+    S3_SECRET_KEY: str  ## s3
+    S3_PREFIX: str  ## s3
+    S3_BUCKET_NAME: str  ## s3
 
 
 config = Setting()
@@ -44,6 +48,10 @@ config.SSAFY_BASE_URL = os.getenv("SSAFY_BASE_URL")
 config.SSAFY_TEAM_ID = os.getenv("SSAFY_TEAM_ID")
 config.MM_WEBSOCKET_URL = os.getenv("MM_WEBSOCKETURL")
 config.MM_WEBHOOK_URL = os.getenv("MM_WEBHOOK_URL")
+config.S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
+config.S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
+config.S3_PREFIX = os.getenv("S3_PREFIX")
+config.S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
 
 
 engine = create_engine(
