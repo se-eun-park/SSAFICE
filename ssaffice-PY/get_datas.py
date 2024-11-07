@@ -1,4 +1,4 @@
-from models.models import *
+from models import *
 from setup import config, get_db
 
 

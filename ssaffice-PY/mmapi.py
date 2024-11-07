@@ -1,6 +1,4 @@
 import requests
-import json
-import mimetypes
 from langchain.prompts import PromptTemplate
 from langchain_community.chat_models import ChatOpenAI
 from langchain_openai import ChatOpenAI

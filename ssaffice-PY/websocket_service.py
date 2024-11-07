@@ -1,9 +1,16 @@
 from mmapi import *
 from setup import config, get_db
-from models.models import Notice
+from models import Notice, Notice_Channel
 from get_datas import *
 from set_datas import *
 from datetime import datetime
+import json
+import boto3
+
+s3_access_key = config.S3_ACCESS_KEY
+s3_secret_key = config.S3_SECRET_KEY
+s3_prefix = config.S3_PREFIX
+s3_bucket_name = config.S3_BUCKET_NAME
 
 
 def is_notice(data):
@@ -48,7 +55,7 @@ def make_notice_entity(data, notice):
         start_date_time=notice["schedule_start_time"],
         end_date_time=notice["schedule_end_time"],
         is_essential=is_essential,
-        task_type="공지",
+        task_type="GENERAL",
         created_by=user_id,
     )
 
@@ -65,7 +72,7 @@ def make_notice_channel_entity(data, id):
     return notice_channel
 
 
-def file_download_if_file_exist(token, data):
+def file_upload_if_file_exist(token, data):
     json_data = json.loads(data["data"]["post"])
     file_ids = (
         [file["id"] for file in json_data["metadata"]["files"]]
@@ -79,16 +86,36 @@ def file_download_if_file_exist(token, data):
     )
     if file_ids is not None:
         for file_id, file_name in zip(file_ids, file_names):
-            file_download(token, file_id, file_name)
+            upload_file_to_s3(token, file_id, file_name)
+            # file_download(token, file_id, file_name)
 
+
+# local로 파일 다운로드하는 함수
 def file_download(token, file_id, file_name):
     response = get_file_by_file_id(token, file_id)
-
     content_type = response.headers.get("Content-Type")
     extension = mimetypes.guess_extension(content_type) if content_type else ".bin"
 
     download_name = f"{file_name}{extension}"
     with open(download_name, "wb") as file:
         file.write(response.content)
-
     print(f"{download_name} 다운로드 완료")
+
+# s3로 파일 업로드
+def upload_file_to_s3(token, file_id, file_name):
+    response = get_file_by_file_id(token, file_id)
+    s3 = boto3.client(
+        "s3", aws_access_key_id=s3_access_key, aws_secret_access_key=s3_secret_key
+    )
+
+    try:
+        s3.put_object(
+            Bucket=s3_bucket_name, Key=f"{s3_prefix}/{file_name}", Body=response.content
+        )
+        print(f"{file_name} 업로드 완료")
+    except Exception as e:
+        print(f"Error : {e}")
+
+
+def make_schedule_entity():
+    pass
