@@ -8,4 +8,8 @@ public interface ScheduleService {
     ApiResponse saveSchedule(ScheduleRequest scheduleRequest);
 
     ApiResponse updateSchedule(Long scheduleId, ScheduleRequest scheduleRequest);
+
+    ApiResponse getSchedule(Long scheduleId);
+
+    ApiResponse deleteSchedule(Long scheduleId);
 }

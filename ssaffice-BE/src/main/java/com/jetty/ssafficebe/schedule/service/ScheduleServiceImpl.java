@@ -3,8 +3,6 @@ package com.jetty.ssafficebe.schedule.service;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
-import com.jetty.ssafficebe.notice.converter.NoticeConverter;
-import com.jetty.ssafficebe.notice.repository.NoticeRepository;
 import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.remind.entity.Remind;
 import com.jetty.ssafficebe.remind.repository.RemindRepository;
@@ -30,8 +28,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final RemindConverter remindConverter;
     private final RemindRepository remindRepository;
-    private final NoticeRepository noticeRepository;
-    private final NoticeConverter noticeConverter;
 
     @Override
     @Transactional
@@ -87,6 +83,24 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return new ApiResponse(true, "일정 수정에 성공하였습니다.", scheduleConverter.toScheduleSummary(savedSchedule));
+    }
+
+    @Override
+    public ApiResponse getSchedule(Long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                                              .orElseThrow(() -> new ResourceNotFoundException(
+                                                      ErrorCode.SCHEDULE_NOT_FOUND,
+                                                      "해당 일정을 찾을 수 없습니다.",
+                                                      scheduleId));
+        return new ApiResponse(true, "일정 조회에 성공하였습니다.", scheduleConverter.toScheduleSummary(schedule));
+    }
+
+    @Override
+    public ApiResponse deleteSchedule(Long scheduleId) {
+        scheduleRepository.delete(
+                scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
+                        ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", scheduleId)));
+        return new ApiResponse(true, "일정 조회에 성공하였습니다.", scheduleId);
     }
 
 }
