@@ -63,6 +63,7 @@ class Notice(Base):
     notice_id = Column(Integer, primary_key=True, index=True)
     message_id = Column(String(30))
     title = Column(String(255))
+    original_message = Column(String(1000))
     content = Column(String(500))
     start_date_time = Column(DateTime)
     end_date_time = Column(DateTime)
