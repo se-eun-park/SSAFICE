@@ -19,6 +19,7 @@ public class ResourceNotFoundException extends CustomException {
         data = ErrorDetail.builder()
                           .errorCode(errorCode.name())
                           .fieldName(fieldName)
-                          .value(value).build();
+                          .value(value)
+                          .build();
     }
 }

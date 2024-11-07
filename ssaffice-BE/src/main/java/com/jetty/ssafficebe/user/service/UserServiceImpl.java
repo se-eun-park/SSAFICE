@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.user.service;
 
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueException;
+import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.role.converter.RoleConverter;
@@ -13,15 +14,20 @@ import com.jetty.ssafficebe.role.repository.UserRoleRepository;
 import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
+import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
+import com.jetty.ssafficebe.user.payload.UserFilterRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -80,6 +86,7 @@ public class UserServiceImpl implements UserService {
         return userSummary;
     }
 
+    @Transactional
     @Override
     public ApiResponse updateUser(Long userId, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findById(userId).orElseThrow(
@@ -92,16 +99,50 @@ public class UserServiceImpl implements UserService {
         return new ApiResponse(true, HttpStatus.OK, "유저 정보 수정 성공", updatedUser.getUserId());
     }
 
+    @Transactional
     @Override
     public ApiResponse deleteUsers(List<Long> userIds) {
         for (Long userId : userIds) {
             User user = userRepository.findById(userId).orElse(null);
 
             if (user != null) {
-                user.setDisabledYn("Y");
+                user.setIsDisabledYn("Y");
                 userRepository.save(user);
             }
         }
         return new ApiResponse(true, HttpStatus.OK, "유저 삭제 성공");
+    }
+
+    @Override
+    public Page<UserSummary> getUserPage(UserFilterRequest userFilterRequest, Pageable pageable) {
+        Page<User> usersPageByFilter = this.userRepository.getUsersByFilter(userFilterRequest, pageable);
+        return usersPageByFilter.map(user -> {
+            UserSummary userSummary = this.userConverter.toUserSummary(user);
+
+            List<RoleSummarySimple> userRoles = user.getUserRoles().stream().map(userRole -> {
+                Role role = userRole.getRole();
+                return roleConverter.toRoleSummarySimple(role);
+            }).toList();
+
+            userSummary.setRoles(userRoles);
+
+            return userSummary;
+        });
+    }
+
+    @Transactional
+    @Override
+    public ApiResponse updatePassword(Long userId, UpdatePasswordRequest updatePasswordRequest) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+
+        if (!passwordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getPassword())) {
+            throw new InvalidValueException(ErrorCode.INVALID_PASSWORD, "password", null);
+        }
+
+        // 새 비밀번호 암호화 및 업데이트
+        user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+        userRepository.save(user);
+        return new ApiResponse(true, HttpStatus.OK, "비밀번호 변경 성공");
     }
 }

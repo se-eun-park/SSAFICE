@@ -3,9 +3,9 @@ POST http://localhost:9090/api/users
 Content-Type: application/json
 
 {
-  "email": "test2@gmail.com",
+  "email": "test5@gmail.com",
   "password": "1234",
-  "name": "tester2",
+  "name": "tester5",
   "roleIds": [
     "ROLE_USER"
   ],
@@ -36,3 +36,20 @@ DELETE http://localhost:9090/api/users
 Content-Type: application/json
 
 [2]
+
+### 유저 리스트 조회
+GET http://localhost:9090/api/users?sort=createdAt,desc
+Content-Type: application/json
+
+{
+  "trackCd" : "NON_MAJOR_PYTHON"
+}
+
+### 비밀번호 수정
+PUT http://localhost:9090/api/users/me/password
+Content-Type: application/json
+
+{
+  "oldPassword" : "1234",
+  "newPassword" : "12345"
+}

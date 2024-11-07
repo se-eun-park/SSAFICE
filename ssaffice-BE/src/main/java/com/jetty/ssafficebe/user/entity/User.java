@@ -2,7 +2,7 @@ package com.jetty.ssafficebe.user.entity;
 
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.role.entity.UserRole;
-import com.jetty.ssafficebe.user.code.Curriculum;
+import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.user.code.Region;
 import com.jetty.ssafficebe.user.code.Track;
 import jakarta.persistence.CascadeType;
@@ -11,6 +11,7 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,36 +38,31 @@ public class User extends BaseEntity {
 
     private String name;
 
-    private String disabledYn = "N";
+    private String isDisabledYn = "N";
+
+    private String profileImgUrl;
 
     @Convert(converter = BooleanToYNConverter.class)
-    @Column(name = "disabledYn", updatable = false, insertable = false)
-    private boolean disabled;
+    @Column(name = "isDisabledYn", updatable = false, insertable = false)
+    private boolean isDisabled;
 
     private Integer cohortNum;
 
     private String trackCd;
 
-    @Column(name = "trackCd", updatable = false, insertable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "trackCd", updatable = false, insertable = false)
     private Track track;
 
     private String regionCd;
 
-    @Column(name = "regionCd", updatable = false, insertable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "regionCd", updatable = false, insertable = false)
     private Region region;
 
     private Integer classNum;
 
-    private String curriculumCd;
-
-    @Column(name = "curriculumCd", updatable = false, insertable = false)
-    @Enumerated(EnumType.STRING)
-    private Curriculum curriculum;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserRole> userRoles = new ArrayList<>();
-
 
 }

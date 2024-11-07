@@ -1,9 +1,8 @@
 package com.jetty.ssafficebe.schedule.payload;
 
-import com.jetty.ssafficebe.schedule.entity.ScheduleCategory;
-import com.jetty.ssafficebe.schedule.entity.ScheduleType;
+import com.jetty.ssafficebe.remind.payload.RemindRequest;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,11 +12,12 @@ public class ScheduleRequest {
 
     private String title;
     private String memo;
-    private LocalTime remind;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private Boolean isEssential;
-    private ScheduleCategory category;
-    private ScheduleType type;
-    private String url;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
+    private String taskTypeCd;
+    private String scheduleSourceTypeCd;
+    private String scheduleStatusTypeCd;
+    private Long userId;
+    private Long noticeId;
+    private List<RemindRequest> remindRequestList;
 }

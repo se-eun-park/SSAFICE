@@ -24,19 +24,19 @@ public class BaseEntity {
     private LocalDateTime createdAt;
 
     @CreatedBy
-    private Long createdId;
+    private Long createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "createdId", insertable = false, updatable = false)
-    private User createdUser;
+    @JoinColumn(name = "createdBy", insertable = false, updatable = false)
+    private User createUser;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @LastModifiedBy
-    private Long updatedId;
+    private Long updatedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updatedId", insertable = false, updatable = false)
-    private User updatedUser;
+    @JoinColumn(name = "updatedBy", insertable = false, updatable = false)
+    private User updateUser;
 }
