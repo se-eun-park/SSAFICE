@@ -1,4 +1,4 @@
-package com.jetty.ssafficebe.schedule.payload;
+package com.jetty.ssafficebe.remind.payload;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
