@@ -8,7 +8,10 @@ import com.jetty.ssafficebe.file.repository.AttachmentFileRepository;
 import com.jetty.ssafficebe.file.storage.FileStorageService;
 import com.jetty.ssafficebe.file.util.MimeUtil;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,9 +62,30 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
         return summary;
     }
 
-    // TODO : 구현 필요
     @Override
     @Transactional
     public void updateFileRefId(String refId, String fileType, Collection<String> fileIds) {
+        if (fileIds == null) {
+            fileIds = new ArrayList<>();
+        }
+        HashSet<String> fileIdSet = new HashSet<>(fileIds);
+
+        // DB에서 해당 참조 id로 파일 리스트 조회
+        List<AttachmentFile> fileListByRefId =
+                this.attachmentFileRepository.findAllByRefIdAndFileTypeAndIsDeletedYn(refId, fileType, "N");
+        for (AttachmentFile attachmentFile : fileListByRefId) {
+            if (fileIdSet.contains(attachmentFile.getFileId())) {
+                fileIdSet.remove(attachmentFile.getFileId());
+            } else {
+                attachmentFile.setIsDeletedYn("Y");
+            }
+        }
+
+        List<AttachmentFile> fileListToUpdateRefId = this.attachmentFileRepository.findAllByFileIdIn(fileIdSet);
+        for (AttachmentFile attachmentFile : fileListToUpdateRefId) {
+            attachmentFile.setRefId(refId);
+            attachmentFile.setFileType(fileType);
+            attachmentFile.setIsDeletedYn("N");
+        }
     }
 }

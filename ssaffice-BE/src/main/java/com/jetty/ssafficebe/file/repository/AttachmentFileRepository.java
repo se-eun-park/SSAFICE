@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AttachmentFileRepository extends JpaRepository<AttachmentFile, String> {
 
-    List<AttachmentFile> findAllByRefIdAndFileTypeAndIsDeleted(String refId, String fileType, boolean isDeleted);
-
     List<AttachmentFile> findAllByFileIdIn(Collection<String> fileIdSet);
+
+    List<AttachmentFile> findAllByRefIdAndFileTypeAndIsDeletedYn(String refId, String fileType, String isDeletedYn);
 }
