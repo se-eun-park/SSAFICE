@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { LoginButton } from './LoginButton'
-import { useLoginFormModel } from '../model/useLoginFormModel'
+// import { useLoginFormModel } from '../model/useLoginFormModel'
 import { CommonModal } from '@/shared/ui/CommonModal/CommonModal'
 
 export const LoginForm = () => {
   const [isOpen, setIsOpen] = useState(false)
   const open = () => setIsOpen(true)
   const close = () => setIsOpen(false)
-  const { email, password, handleEmailValue, handlePasswordValue } = useLoginFormModel()
+
+  // const { email, password, handleEmailValue, handlePasswordValue } = useLoginFormModel()
 
   return (
     <div className='flex flex-col w-full'>
@@ -32,8 +33,8 @@ export const LoginForm = () => {
               placeholder:color-text-disabled placeholder:body-md-medium 
               '
               placeholder='EMAIL'
-              value={email}
-              onChange={(e) => handleEmailValue(e.target.value)}
+              //    value={email}
+              //    onChange={(e) => handleEmailValue(e.target.value)}
             />
           </div>
           <div className='flex flex-col gap-spacing-12'>
@@ -55,8 +56,8 @@ export const LoginForm = () => {
               placeholder:color-text-disabled placeholder:body-md-medium
               '
               placeholder='PASSWORD'
-              value={password}
-              onChange={(e) => handlePasswordValue(e.target.value)}
+              //   value={password}
+              //   onChange={(e) => handlePasswordValue(e.target.value)}
             />
           </div>
         </div>

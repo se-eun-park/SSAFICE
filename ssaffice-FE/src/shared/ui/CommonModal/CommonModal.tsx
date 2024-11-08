@@ -8,14 +8,10 @@ type CommonModalParams = {
 }
 
 export const CommonModal = ({ name, opened, closeRequest }: CommonModalParams) => {
-  const modal = findModalByName(name) // 모달을 이름으로 찾아 매치합니다.
+  const modal = findModalByName(name, closeRequest) // 모달을 이름으로 찾아 매치합니다.
   if (!modal) {
     throw new Error(`Modal with name '${name}' not found.`) // name이 유효하지 않으면 에러를 던짐
   }
-
-  // if (modal?.hasCloseButton) {
-  //   // const close = document.getElementsByTagName()
-  // }
 
   const commonModalStyle: ReactModal.Styles = {
     overlay: {

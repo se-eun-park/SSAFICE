@@ -2,8 +2,9 @@ import { AlertLogo, ExitButton } from '@/assets/svg'
 
 type LoginErrorModalProps = {
   errorType: 'EmailValidFalse' | 'LoginFail'
+  closeRequest: () => void
 }
-export const LoginErrorModal = ({ errorType }: LoginErrorModalProps) => {
+export const LoginErrorModal = ({ errorType, closeRequest }: LoginErrorModalProps) => {
   return (
     <div
       className='
@@ -12,7 +13,7 @@ export const LoginErrorModal = ({ errorType }: LoginErrorModalProps) => {
     '
     >
       <div className='flex w-full justify-end'>
-        <div className='flex w-spacing-12 h-spacing-20'>
+        <div className='flex w-spacing-12 h-spacing-20' onClick={closeRequest} role='presentation'>
           <ExitButton />
         </div>
       </div>
