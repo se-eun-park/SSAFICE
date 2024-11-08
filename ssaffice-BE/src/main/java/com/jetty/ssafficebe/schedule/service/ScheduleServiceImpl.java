@@ -76,7 +76,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setMemo(scheduleRequest.getMemo());
         schedule.setStartDateTime(scheduleRequest.getStartDateTime());
         schedule.setEndDateTime(scheduleRequest.getEndDateTime());
-        schedule.setTaskTypeCd(scheduleRequest.getTaskTypeCd());
         schedule.setScheduleStatusTypeCd(scheduleRequest.getScheduleStatusTypeCd());
         schedule.setScheduleStatusTypeCd(scheduleRequest.getScheduleStatusTypeCd());
         schedule.setIsEnrollYn("Y");

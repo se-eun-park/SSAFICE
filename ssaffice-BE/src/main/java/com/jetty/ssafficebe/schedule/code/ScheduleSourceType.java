@@ -1,4 +1,4 @@
-package com.jetty.ssafficebe.common.code;
+package com.jetty.ssafficebe.schedule.code;
 
 import com.jetty.ssafficebe.commoncode.CommonCode;
 import lombok.AllArgsConstructor;
@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum ScheduleSourceType implements CommonCode {
 
-    GLOBAL_NOTICE("전체공지"),
-    GLOBAL_TEAM("팀공지"),
+    GLOBAL("전체공지"),
+    TEAM("팀공지"),
     PERSONAL("개인"),
     ;
 

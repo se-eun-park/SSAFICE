@@ -14,7 +14,6 @@ public class ScheduleRequest {
     private String memo;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private String taskTypeCd;
     private String scheduleSourceTypeCd;
     private String scheduleStatusTypeCd;
     private Long userId;
