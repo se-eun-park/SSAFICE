@@ -10,6 +10,8 @@ export type { ModalName, ModalElement } from './CommonModal/types'
 
 export { useClickOutsideToggle } from './DropDown/hooks'
 
+export { useSearchInput } from './SearchBar/useSearchInput'
+
 export { findModalByName } from './CommonModal/findModalByName'
 
 export {
