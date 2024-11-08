@@ -1,20 +1,36 @@
+import { HoverButton } from '@/features/todoTab'
 import {
   useIsTabOpenStore,
   useSetIsTabOpenStore,
   useIsAnimationStore,
   useSetIsAnimationStore,
+  useIsFirstRenderStore,
+  useSetIsFirstRenderStore,
 } from '@/shared/model'
 import { TabLayout } from '@/shared/ui'
 import { FastLeftArrowIcon } from '@/assets/svg'
 
 export const AnnouncementTab = () => {
+  // store
   const isTabOpen = useIsTabOpenStore()
   const setIsTabOpen = useSetIsTabOpenStore()
 
   const isAnimation = useIsAnimationStore()
   const setIsAnimation = useSetIsAnimationStore()
 
+  const isFirstRender = useIsFirstRenderStore()
+  const setIsFirstRender = useSetIsFirstRenderStore()
+
+  // animation
+  const tabAnimationClass = `${isAnimation ? 'animate-slideShrink' : !isFirstRender ? 'animate-slideExpand' : null}`
+  const contentsAnimationClass = `${isAnimation ? 'animate-fadeOut' : !isFirstRender ? 'animate-fadeIn' : null}`
+
+  // event
   const handleOnClickClose = () => {
+    if (isFirstRender) {
+      setIsFirstRender(false)
+    }
+
     setIsAnimation(true)
 
     setTimeout(() => {
@@ -23,19 +39,21 @@ export const AnnouncementTab = () => {
   }
 
   return (
-    <TabLayout animation={`${isAnimation ? 'animate-slideShrink' : 'animate-slideExpand'}`}>
-      <TabLayout.Header animation={`${isAnimation ? 'animate-fadeOut' : 'animate-fadeIn'}`}>
+    <TabLayout animation={tabAnimationClass}>
+      <TabLayout.Header animation={contentsAnimationClass}>
         <h1>전체 공지</h1>
-        <button onClick={handleOnClickClose}>
-          <FastLeftArrowIcon className='w-6' />
-        </button>
+        <HoverButton
+          icon={<FastLeftArrowIcon className='w-6' />}
+          tooltip='공지 접기'
+          onClickEvent={handleOnClickClose}
+        />
       </TabLayout.Header>
 
-      <TabLayout.Add animation={`${isAnimation ? 'animate-fadeOut' : 'animate-fadeIn'}`}>
+      <TabLayout.Add animation={contentsAnimationClass}>
         <div className='w-full h-[56px] bg-slate-300'>나중엔 검색바가 들어갈것임</div>
       </TabLayout.Add>
 
-      <TabLayout.Content animation={`${isAnimation ? 'animate-fadeOut' : 'animate-fadeIn'}`}>
+      <TabLayout.Content animation={contentsAnimationClass}>
         <div className='w-full h-full rounded-radius-8 bg-color-bg-tertiary'>
           나중엔 공지 리스트 컴포넌트가 들어감
         </div>
