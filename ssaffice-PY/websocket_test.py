@@ -11,25 +11,24 @@ from set_datas import *
 
 mm_websocket_url = config.MM_WEBSOCKET_URL
 websocket_url = mm_websocket_url
-token = make_mattermost_admin_token()
-
+token = TokenManager.get_token()
 
 # 웹소켓 이벤트 핸들러 함수
 def on_message(ws, message):
     data = json.loads(message)
     # event중에 글이 게시되고 해당 게시글이 올라온 채널의 이름이 공지를 포함할 때만 출력
     if is_notice(data):
-        print(data)
         # 일정인지 아닌지 분석하는 함수
         output_message = analyze_message(data)
         for notice in output_message["list"]:
+            print(notice)
             # 일정인 경우에는 일정 등록
             if notice["isTodo"] == "o":
                 # db에 저장할 notice entity 만들기
                 notice_entity = make_notice_entity(data, notice)
 
                 # 파일 업로드 하면서 동시에 task_type을 확인하기
-                # is_file = file_upload_if_file_exist(token, data)
+                file_upload_if_file_exist(token, data)
                 # if is_file:
                 #     notice_entity.task_type = "FILE"
 
@@ -88,7 +87,7 @@ def on_close(ws, close_status_code, close_msg):
 
 
 def on_open(ws):
-    token = make_mattermost_admin_token()
+    token = TokenManager.get_token()
     print("웹소켓 연결이 열렸습니다.")
 
     # Mattermost 인증 토큰 전송

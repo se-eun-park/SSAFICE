@@ -3,6 +3,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.chat_models import ChatOpenAI
 from langchain_openai import ChatOpenAI
 from langchain.output_parsers.json import SimpleJsonOutputParser
+from token_manager import TokenManager
 from setup import config
 
 openai_api_key = config.OPENAI_API_KEY
@@ -51,23 +52,8 @@ pipeline = template | llm | SimpleJsonOutputParser()
 
 session = requests.Session()
 
-
-# 로그인 API 호출 함수, 관리자 로그인 토큰을 발급받기 위함 (return : token을 반환)
-def make_mattermost_admin_token():
-    login_url = mm_baseurl + "/users/login"
-    credentials = {"login_id": mm_id, "password": mm_pw}
-    response = session.post(login_url, json=credentials)
-    if response.status_code == 200:
-        print("Login successful")
-        return response.headers.get("Token")
-    else:
-        print("Login failed")
-        print("Response:", response.json())
-        return None  # 로그인 실패 시 None 반환
-
-
 def get_headers(token):
-    token = make_mattermost_admin_token()
+    token = TokenManager.get_token()
     headers = {
         "Authorization": f"Bearer {token}",
         "Accept": "application/json",
