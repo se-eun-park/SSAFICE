@@ -1,5 +1,7 @@
 export { default as AlertLogo } from './AlertLogo'
 export { default as ExitButton } from './ExitButton'
+export { default as CalendarIcon } from './CalendarIcon'
+export { default as EditIcon } from './EditIcon'
 export { default as FastLeftArrowIcon } from './FastLeftArrowIcon'
 export { default as HamburgerMenuIcon } from './HamburgerMenuIcon'
 export { default as Logo } from './Logo'

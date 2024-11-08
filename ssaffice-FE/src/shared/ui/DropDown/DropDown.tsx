@@ -5,7 +5,7 @@ import {
   DropDownSubTitleProps,
   DropDownContentProps,
   DropDownMainProps,
-} from '@/shared/model'
+} from './types'
 
 // 서브 컴포넌트
 

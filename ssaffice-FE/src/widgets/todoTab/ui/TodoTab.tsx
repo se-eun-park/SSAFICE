@@ -1,30 +1,46 @@
-import { useIsTabOpenStore, useSetIsTabOpenStore, useSetIsAnimationStore } from '@/shared/model'
-import { SearchBar, TabLayout } from '@/shared/ui'
-import { HamburgerMenuIcon } from '@/assets/svg'
 import { TodoList } from './TodoList'
 import { TodoBoard } from './TodoBoard'
 
+import { HoverTitle } from '@/features/todoTab'
+import { useIsTabOpenStore } from '@/shared/model'
+import { SearchBar, TabLayout, HoverButton } from '@/shared/ui'
+import { HamburgerMenuIcon, FastLeftArrowIcon, CalendarIcon, EditIcon } from '@/assets/svg'
+
 export const TodoTab = () => {
+  // store
   const isTabOpen = useIsTabOpenStore()
-  const setIsTabOpen = useSetIsTabOpenStore()
 
-  const setIsAnimation = useSetIsAnimationStore()
+  // event
+  const handleOnClickCalendar = () => {
+    console.log('나중엔 캘린더가 열림')
+  }
 
-  const handleOnClickOpen = () => {
-    setIsTabOpen(isTabOpen)
-    setIsAnimation(false)
+  const handleOnClickCreateTodo = () => {
+    console.log('나중엔 할 일 등록 모달이 열림')
   }
 
   return (
     <TabLayout>
       <TabLayout.Header>
-        <div className='flex gap-x-spacing-12'>
-          {!isTabOpen && (
-            <button onClick={handleOnClickOpen} className='animate-slideExpandFast'>
-              <HamburgerMenuIcon className='w-6' />
-            </button>
-          )}
-          <h1 className='min-w-max'>할 일</h1>
+        <div className='flex justify-between w-full'>
+          <HoverTitle
+            mouseOverIcon={<FastLeftArrowIcon className='w-6 rotate-180' />}
+            mouseOutIcon={<HamburgerMenuIcon className='w-6' />}
+            title='할 일'
+          />
+
+          <div className='flex items-center gap-x-spacing-16'>
+            <HoverButton
+              icon={<CalendarIcon className='w-6' />}
+              tooltip='캘린더'
+              onClickEvent={handleOnClickCalendar}
+            />
+            <HoverButton
+              icon={<EditIcon className='w-6' />}
+              tooltip='할 일 등록'
+              onClickEvent={handleOnClickCreateTodo}
+            />
+          </div>
         </div>
       </TabLayout.Header>
 
