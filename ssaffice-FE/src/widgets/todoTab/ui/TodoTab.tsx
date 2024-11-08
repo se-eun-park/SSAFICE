@@ -1,5 +1,5 @@
 import { useIsTabOpenStore, useSetIsTabOpenStore, useSetIsAnimationStore } from '@/shared/model'
-import { TabLayout } from '@/shared/ui'
+import { SearchBar, TabLayout } from '@/shared/ui'
 import { HamburgerMenuIcon } from '@/assets/svg'
 import { TodoList } from './TodoList'
 import { TodoBoard } from './TodoBoard'
@@ -29,7 +29,7 @@ export const TodoTab = () => {
       </TabLayout.Header>
 
       <TabLayout.Add>
-        <div className='w-full h-[56px] bg-slate-300'>나중엔 검색바가 들어갈것임</div>
+        <SearchBar />
       </TabLayout.Add>
 
       <TabLayout.Content>{isTabOpen ? <TodoList /> : <TodoBoard />}</TabLayout.Content>
