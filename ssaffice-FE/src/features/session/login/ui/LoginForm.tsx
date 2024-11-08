@@ -1,12 +1,25 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LoginButton } from './LoginButton'
 // import { useLoginFormModel } from '../model/useLoginFormModel'
 import { CommonModal } from '@/shared/ui/CommonModal/CommonModal'
+import { ModalName } from '@/shared/model'
 
 export const LoginForm = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const open = () => setIsOpen(true)
+  const [modalName, setModalName] = useState<ModalName>('LoginFail')
+  const [num, setNum] = useState(0)
+
+  const open = () => {
+    setNum(num + 1)
+    setIsOpen(true)
+  }
   const close = () => setIsOpen(false)
+
+  useEffect(() => {
+    if (num % 2 == 0) {
+      setModalName('EmailValidFalse')
+    } else setModalName('LoginFail')
+  }, [num])
 
   // const { email, password, handleEmailValue, handlePasswordValue } = useLoginFormModel()
 
@@ -67,7 +80,7 @@ export const LoginForm = () => {
         <button type='button' onClick={open}>
           trigger
         </button>
-        <CommonModal name='EmailValidFalse' opened={isOpen} closeRequest={close} />
+        <CommonModal name={modalName} opened={isOpen} closeRequest={close} />
       </div>
 
       {/* 
