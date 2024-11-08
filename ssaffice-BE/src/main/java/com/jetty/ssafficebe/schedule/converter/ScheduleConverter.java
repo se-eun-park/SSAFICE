@@ -14,6 +14,6 @@ public interface ScheduleConverter {
     @Mapping(target = "scheduleStatusTypeCd", constant = "TODO")
     Schedule toSchedule(ScheduleRequest scheduleRequest);
 
-    @Mapping(target = "remindSummaryList", source = "remindList")
+    @Mapping(target = "remindSummarys", source = "reminds")
     ScheduleSummary toScheduleSummary(Schedule schedule);
 }

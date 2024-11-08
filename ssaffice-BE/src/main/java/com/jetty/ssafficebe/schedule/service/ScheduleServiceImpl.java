@@ -37,7 +37,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
         // ! 2. Remind 생성 및 저장 -> TODO : remind api 쪽으로 분리할 예정
-        scheduleRequest.getRemindRequestList().forEach(remindRequest -> {
+        scheduleRequest.getRemindRequests().forEach(remindRequest -> {
             List<Remind> reminds = "DAILY".equals(remindRequest.getType()) ?
                                    remindConverter.toRemindList(remindRequest.getRemindDateTime(),
                                            schedule.getEndDateTime(),
@@ -55,7 +55,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 3. Response 생성
         ScheduleSummary scheduleSummary = scheduleConverter.toScheduleSummary(savedSchedule);
 
-        scheduleSummary.setRemindSummaryList(savedSchedule.getRemindList().stream()
+        scheduleSummary.setRemindSummarys(savedSchedule.getReminds().stream()
                                                           .map(remindConverter::toRemindSummary)
                                                           .collect(Collectors.toList()));
 

@@ -18,5 +18,5 @@ public class ScheduleRequest {
     private String scheduleStatusTypeCd;
     private Long userId;
     private Long noticeId;
-    private List<RemindRequest> remindRequestList;
+    private List<RemindRequest> remindRequests;
 }

@@ -25,5 +25,5 @@ public class ScheduleSummary {
     private CreatedBySummary createUser;
 
     private NoticeSummaryForList noticeSummaryForList;
-    private List<RemindSummary> remindSummaryList;
+    private List<RemindSummary> remindSummarys;
 }
