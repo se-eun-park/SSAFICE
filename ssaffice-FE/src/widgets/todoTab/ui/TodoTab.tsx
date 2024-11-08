@@ -3,7 +3,7 @@ import { TodoBoard } from './TodoBoard'
 
 import { HoverTitle, HoverButton } from '@/features/todoTab'
 import { useIsTabOpenStore } from '@/shared/model'
-import { TabLayout } from '@/shared/ui'
+import { SearchBar, TabLayout } from '@/shared/ui'
 import { HamburgerMenuIcon, FastLeftArrowIcon, CalendarIcon, EditIcon } from '@/assets/svg'
 
 export const TodoTab = () => {
@@ -45,7 +45,7 @@ export const TodoTab = () => {
       </TabLayout.Header>
 
       <TabLayout.Add>
-        <div className='w-full h-[56px] bg-slate-300'>나중엔 검색바가 들어갈것임</div>
+        <SearchBar />
       </TabLayout.Add>
 
       <TabLayout.Content>{isTabOpen ? <TodoList /> : <TodoBoard />}</TabLayout.Content>

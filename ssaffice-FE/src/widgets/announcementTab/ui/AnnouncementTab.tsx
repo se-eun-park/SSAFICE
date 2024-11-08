@@ -7,7 +7,7 @@ import {
   useIsFirstRenderStore,
   useSetIsFirstRenderStore,
 } from '@/shared/model'
-import { TabLayout } from '@/shared/ui'
+import { SearchBar, TabLayout } from '@/shared/ui'
 import { FastLeftArrowIcon } from '@/assets/svg'
 
 export const AnnouncementTab = () => {
@@ -50,7 +50,7 @@ export const AnnouncementTab = () => {
       </TabLayout.Header>
 
       <TabLayout.Add animation={contentsAnimationClass}>
-        <div className='w-full h-[56px] bg-slate-300'>나중엔 검색바가 들어갈것임</div>
+        <SearchBar />
       </TabLayout.Add>
 
       <TabLayout.Content animation={contentsAnimationClass}>
