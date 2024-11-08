@@ -3,16 +3,14 @@ from sqlalchemy import String
 from sqlalchemy.types import TypeDecorator
 
 # Enum 클래스 정의
-class TaskType(enum.Enum):
-    GENERAL = "GENERAL"
-    FILE = "FILE"
-
+class NoticeSourceType(enum.Enum):
+    GLOBAL = "GLOBAL"
+    TEAM = "TEAM"
 
 class ScheduleSourceType(enum.Enum):
     GLOBAL_NOTICE = "GLOBAL_NOTICE"
-    GLOBAL_TEAM = "GLOBAL_TEAM"
+    TEAM_NOTICE = "TEAM_NOTICE"
     PERSONAL = "PERSONAL"
-
 
 class ScheduleStatusType(enum.Enum):
     TODO = "TODO"

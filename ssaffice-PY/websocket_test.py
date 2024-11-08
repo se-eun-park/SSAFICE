@@ -19,25 +19,57 @@ def on_message(ws, message):
     data = json.loads(message)
     # event중에 글이 게시되고 해당 게시글이 올라온 채널의 이름이 공지를 포함할 때만 출력
     if is_notice(data):
+        print(data)
         # 일정인지 아닌지 분석하는 함수
         output_message = analyze_message(data)
         for notice in output_message["list"]:
             # 일정인 경우에는 일정 등록
             if notice["isTodo"] == "o":
+                # db에 저장할 notice entity 만들기
                 notice_entity = make_notice_entity(data, notice)
-                notice_db_id = insert_notice(notice_entity)
 
+                # 파일 업로드 하면서 동시에 task_type을 확인하기
+                # is_file = file_upload_if_file_exist(token, data)
+                # if is_file:
+                #     notice_entity.task_type = "FILE"
+
+                # notice를 DB에 저장
+                notice_db_id = insert_notice(notice_entity)
                 print("공지 등록 완료, notice_id :", notice_db_id)
 
-                notice_channel = make_notice_channel_entity(data, notice_db_id)
-                notice_channel_db_id = insert_notice_channel(notice_channel)
-
+                # notice_channel을 DB에 저장
+                notice_channel_entity = make_notice_channel_entity(data, notice_db_id)
+                notice_channel_db_id = insert_notice_channel(notice_channel_entity)
                 print(
                     "notice_channel 등록 완료, notice_channel_id :",
                     notice_channel_db_id,
                 )
 
-                file_upload_if_file_exist(token, data)
+                # 일정에 해당하는 유저를 먼저 정의해야함.
+                channel_id = json.loads(data["data"]["post"])["channel_id"]
+                user_count = get_channel_members_count(token, channel_id)[
+                    "member_count"
+                ]
+                max_page_num = user_count // 200 + 1
+
+                for page_num in range(0, max_page_num):
+                    member_ids = find_user_id_by_channel_id(token, channel_id, page_num)                                      
+                    for member_id in member_ids:
+                        # user별로 DB에 넣을 schedule entity 생성
+                        schedule = make_schedule_entity(notice_db_id)
+                        source_type = find_channel_type(data)
+                        schedule.schedule_source_type = source_type
+                        # 아직 회원가입하지 않은 유저라면 일정에 넣지 않고 pass
+                        if get_user_id_by_user_mm_id(member_id) == None:
+                            print(f"pass : {member_id}")
+                            pass
+                        else:
+                            user_id = get_user_id_by_user_mm_id(member_id)
+                            schedule.user_id = user_id
+                            # schedule를 DB에 저장
+                            user_id = insert_schedule(schedule)                            
+                            print(f"insert : {user_id}")
+
             else:
                 print("일정이 아닙니다.")
 

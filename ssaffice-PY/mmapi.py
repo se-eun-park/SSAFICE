@@ -183,10 +183,10 @@ def get_channel_info_by_channel_id(token, channel_id):
 
 
 # channel_id를 통해 해당 channel에 속한 모든 member의 정보를 가져오는 함수.
-def get_channel_members_by_channel_id(token, channel_id):
+def get_channel_members_by_channel_id(token, channel_id, page_num):
     headers = get_headers(token)
     response = session.get(
-        f"{mm_baseurl}/channels/{channel_id}/members", headers=headers
+        f"{mm_baseurl}/channels/{channel_id}/members?page={page_num}&per_page=200", headers=headers
     )
 
     if response.status_code == 200:
@@ -240,4 +240,14 @@ def get_file_by_file_id(token, file_id):
         return response
     else:
         print("Failed to get file with status code:", response.status_code)
+        return None
+    
+def get_channel_members_count(token, channel_id):
+    headers = get_headers(token)
+    response = session.get(f"{mm_baseurl}/channels/{channel_id}/stats", headers=headers)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Failed to get channel members with status code:", response.status_code)
         return None

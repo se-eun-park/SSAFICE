@@ -1,6 +1,6 @@
 from mmapi import *
 from setup import config, get_db
-from models import Notice, Notice_Channel
+from models import Notice, Notice_Channel, Schedule
 from get_datas import *
 from set_datas import *
 from datetime import datetime
@@ -13,13 +13,14 @@ s3_prefix = config.S3_PREFIX
 s3_bucket_name = config.S3_BUCKET_NAME
 
 
+# 해당 채널이 분석 대상 메시지 확인하는 함수
 def is_notice(data):
     if data["event"] == "posted" and "test" in data["data"]["channel_display_name"]:
         return True
     return False
 
 
-# 메시지를 분석하는 함수의 변수명.
+# 메시지가 일정인지 분석하는 함수.
 def analyze_message(data):
     json_data = json.loads(data["data"]["post"])
     message_id = json_data["id"]
@@ -33,6 +34,7 @@ def analyze_message(data):
         print("Error : ", e)
 
 
+# 메시지의 중요도를 확인하는 함수
 def essential_test(data):
     if "priority" in data["metadata"]:
         if data["metadata"]["priority"]["priority"] == "important":
@@ -55,7 +57,6 @@ def make_notice_entity(data, notice):
         start_date_time=notice["schedule_start_time"],
         end_date_time=notice["schedule_end_time"],
         is_essential=is_essential,
-        task_type="GENERAL",
         created_by=user_id,
     )
 
@@ -64,11 +65,8 @@ def make_notice_entity(data, notice):
 
 def make_notice_channel_entity(data, id):
     json_data = json.loads(data["data"]["post"])
-    team_id = get_team_id_by_team_code(data["data"]["team_id"])
-    channel_id = get_channel_id_by_channel_code(json_data["channel_id"])
-    notice_channel = Notice_Channel(
-        notice_id=id, channel_id=channel_id, mm_team_id=team_id
-    )
+    channel_id = json_data["channel_id"]
+    notice_channel = Notice_Channel(notice_id=id, channel_id=channel_id)
     return notice_channel
 
 
@@ -87,19 +85,9 @@ def file_upload_if_file_exist(token, data):
     if file_ids is not None:
         for file_id, file_name in zip(file_ids, file_names):
             upload_file_to_s3(token, file_id, file_name)
-            # file_download(token, file_id, file_name)
+        return True
+    return False
 
-
-# local로 파일 다운로드하는 함수
-def file_download(token, file_id, file_name):
-    response = get_file_by_file_id(token, file_id)
-    content_type = response.headers.get("Content-Type")
-    extension = mimetypes.guess_extension(content_type) if content_type else ".bin"
-
-    download_name = f"{file_name}{extension}"
-    with open(download_name, "wb") as file:
-        file.write(response.content)
-    print(f"{download_name} 다운로드 완료")
 
 # s3로 파일 업로드
 def upload_file_to_s3(token, file_id, file_name):
@@ -117,5 +105,37 @@ def upload_file_to_s3(token, file_id, file_name):
         print(f"Error : {e}")
 
 
-def make_schedule_entity():
-    pass
+def find_channel_type(data):
+    json_data = json.loads(data["data"]["post"])
+    channel_id = json_data["channel_id"]
+    channel_type = data["data"]["channel_type"]
+    if channel_id == "i3ht4brt7jgu9g5rg8e4tfc98r":  # 11기 공지사항 채널id임
+        return "GLOBAL_NOTICE"
+    elif (
+        channel_type == "O" or channel_type == "P"
+    ):  # O는 public 채널, P는 private 채널
+        return "TEAM_NOTICE"
+    else:
+        return "PERSONAL"  # mm 에서 받아오는 경우에는 PERSONAL이 쓰이는 경우는 없음
+
+
+def make_schedule_entity(notice_id):
+    notice = get_notice_by_notice_id(notice_id)
+    response_schedule = Schedule(
+        title=notice.title,
+        memo=notice.content,
+        start_date_time=notice.start_date_time,
+        end_date_time=notice.end_date_time,
+        is_essential=notice.is_essential,
+        # is_enroll의 기본값은 is_essential을 따라감.
+        is_enroll=notice.is_essential,
+        notice_id=notice_id,
+    )
+    return response_schedule
+
+
+def find_user_id_by_channel_id(token, channel_id, page_num):
+    response = get_channel_members_by_channel_id(token, channel_id, page_num)
+    user_ids = [member["user_id"] for member in response]
+    print(user_ids)
+    return user_ids
