@@ -15,6 +15,8 @@ public class NoticeRequest {
     private LocalDateTime endDateTime;
     private String noticeTypeCd;
     private String isEssentialYn;
+
+    // TODO : 채널 아이디로 공지 대상자 조회 후 일정 추가 기능 필요. (필수 공지, 일반 공지 나눠서 처리)
     private String channelId;
 
 }
