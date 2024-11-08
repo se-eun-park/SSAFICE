@@ -7,25 +7,23 @@ Content-Type: application/json
   "memo": "테스트내용1",
   "startDateTime": "2024-11-01T14:44:00",
   "endDateTime": "2024-11-12T18:00:00",
-  "taskTypeCd": "GENERAL",
-  "scheduleSourceTypeCd": "PERSONAL",
+  "scheduleSourceTypeCd": "TEAM",
   "scheduleStatusTypeCd": "TODO",
-  "userId": null,
+  "userId": 1,
   "noticeId": null,
-  "remindRequestList": [
-    {
-      "type": "DAILY",
-      "remindDateTime": "2024-11-07T09:00:00"
-    },
+  "remindRequests": [
+
     {
       "type": "ONCE",
       "remindDateTime": "2024-11-07T15:00:00"
     }
   ]
 }
+### 변수 설정
+@scheduleId = 1
 
 ### 일정 수정
-PUT http://localhost:9090/api/schedule/1
+PUT http://localhost:9090/api/schedule/{{scheduleId}}
 Content-Type: application/json
 
 {
@@ -33,23 +31,166 @@ Content-Type: application/json
   "memo": "테스트내용수정1",
   "startDateTime": "2024-11-01T12:44:00",
   "endDateTime": "2024-11-12T16:00:00",
-  "taskTypeCd": "GENERAL",
   "scheduleSourceTypeCd": "PERSONAL",
   "scheduleStatusTypeCd": "IN_PROGRESS"
 }
 
 ### 일정 조회
-GET http://localhost:9090/api/schedule/1
+GET http://localhost:9090/api/schedule/{{scheduleId}}
 Content-Type: application/json
-
-{
-  "scheduleId": 1
-}
 
 ### 일정 삭제
-DELETE http://localhost:9090/api/schedule/1
+DELETE http://localhost:9090/api/schedule/{{scheduleId}}
+Content-Type: application/json
+
+### 일정 조회
+GET http://localhost:9090/api/schedule
 Content-Type: application/json
 
 {
-  "scheduleId": 1
+  "isEnrollYn": null,
+  "scheduleStatusTypeCd": null,
+  "scheduleSourceTypeCd": null,
+  "filterStartDateTime": null,
+  "filterEndDateTime": null
+}
+
+### [리스트 관련 테스트]
+### 1. 전체 공지 일정 등록
+POST http://localhost:9090/api/schedule
+Content-Type: application/json
+
+{
+  "title": "2024년 연말 시상식",
+  "memo": "전 직원 참석 필수",
+  "startDateTime": "2024-12-20T14:00:00",
+  "endDateTime": "2024-12-20T18:00:00",
+  "scheduleSourceTypeCd": "GLOBAL",
+  "scheduleStatusTypeCd": "TODO",
+  "userId": null,
+  "noticeId": null,
+  "remindRequests": [
+    {
+      "type": "ONCE",
+      "remindDateTime": "2024-12-20T13:00:00"
+    }
+  ]
+}
+
+### 2. 팀 공지 일정 등록
+POST http://localhost:9090/api/schedule
+Content-Type: application/json
+
+{
+  "title": "4분기 팀 회고",
+  "memo": "2024년 4분기 팀 회고 및 송년회",
+  "startDateTime": "2024-12-15T16:00:00",
+  "endDateTime": "2024-12-15T20:00:00",
+  "scheduleSourceTypeCd": "TEAM",
+  "scheduleStatusTypeCd": "TODO",
+  "userId": null,
+  "noticeId": null,
+  "remindRequests": [
+    {
+      "type": "ONCE",
+      "remindDateTime": "2024-12-15T15:00:00"
+    }
+  ]
+}
+
+### 3. 개인 일정 (매일 알림)
+POST http://localhost:9090/api/schedule
+Content-Type: application/json
+
+{
+  "title": "오전 데일리 스크럼",
+  "memo": "팀 데일리 스크럼 미팅",
+  "startDateTime": "2024-11-01T10:00:00",
+  "endDateTime": "2024-11-30T10:30:00",
+  "scheduleSourceTypeCd": "PERSONAL",
+  "scheduleStatusTypeCd": "IN_PROGRESS",
+  "userId": null,
+  "noticeId": null,
+  "remindRequests": [
+    {
+      "type": "DAILY",
+      "remindDateTime": "2024-11-01T09:45:00"
+    }
+  ]
+}
+
+### 4. 개인 일정 (완료된 일정)
+POST http://localhost:9090/api/schedule
+Content-Type: application/json
+
+{
+  "title": "프로젝트 회의",
+  "memo": "신규 프로젝트 킥오프 미팅",
+  "startDateTime": "2024-11-01T14:00:00",
+  "endDateTime": "2024-11-01T16:00:00",
+  "scheduleSourceTypeCd": "PERSONAL",
+  "scheduleStatusTypeCd": "DONE",
+  "userId": null,
+  "noticeId": null,
+  "remindRequests": []
+}
+
+### 5. 조회 테스트 1 - 특정 기간 내 모든 일정
+GET http://localhost:9090/api/schedule
+Content-Type: application/json
+
+{
+  "isEnrollYn": null,
+  "scheduleSourceTypeCd": null,
+  "scheduleStatusTypeCd": null,
+  "filterStartDateTime": "2024-11-01T00:00:00",
+  "filterEndDateTime": "2024-12-31T23:59:59"
+}
+
+### 6. 조회 테스트 2 - 특정 날짜 이후의 모든 일정
+GET http://localhost:9090/api/schedule
+Content-Type: application/json
+
+{
+  "isEnrollYn": null,
+  "scheduleSourceTypeCd": null,
+  "scheduleStatusTypeCd": null,
+  "filterStartDateTime": "2024-12-01T00:00:00",
+  "filterEndDateTime": null
+}
+
+### 7. 조회 테스트 3 - 특정 날짜 이전의 모든 일정
+GET http://localhost:9090/api/schedule
+Content-Type: application/json
+
+{
+  "isEnrollYn": null,
+  "scheduleSourceTypeCd": null,
+  "scheduleStatusTypeCd": null,
+  "filterStartDateTime": null,
+  "filterEndDateTime": "2024-11-30T23:59:59"
+}
+
+### 8. 조회 테스트 4 - 전체 공지만 조회
+GET http://localhost:9090/api/schedule
+Content-Type: application/json
+
+{
+  "isEnrollYn": null,
+  "scheduleSourceTypeCd": "GLOBAL",
+  "scheduleStatusTypeCd": null,
+  "filterStartDateTime": null,
+  "filterEndDateTime": null
+}
+
+### 9. 조회 테스트 5 - 진행 중인 개인 일정만 조회
+GET http://localhost:9090/api/schedule
+Content-Type: application/json
+
+{
+  "isEnrollYn": null,
+  "scheduleSourceTypeCd": "PERSONAL",
+  "scheduleStatusTypeCd": "IN_PROGRESS",
+  "filterStartDateTime": null,
+  "filterEndDateTime": null
 }
