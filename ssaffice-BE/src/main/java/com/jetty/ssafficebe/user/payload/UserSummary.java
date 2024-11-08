@@ -34,6 +34,5 @@ public class UserSummary {
 
     private List<RoleSummarySimple> roles = new ArrayList<>();
 
-    // TODO : MM 프로필 사진 가져오기가 가능하면 넘겨주기
     private String profileImgUrl;
 }

@@ -8,6 +8,7 @@ import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserFilterRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.service.UserService;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/users")
@@ -102,23 +105,29 @@ public class UserController {
     @GetMapping
     public ResponseEntity<Page<UserSummary>> getUserPage(@RequestBody UserFilterRequest userFilterRequest,
                                                          @PageableDefault(
-                                                              size = 20,
-                                                              sort = "userId",
-                                                              direction = Direction.ASC) Pageable pageable) {
+                                                                 size = 20,
+                                                                 sort = "userId",
+                                                                 direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(userService.getUserPage(userFilterRequest, pageable));
     }
 
     /**
-     * 내 비밀번호 수정
-     * 비밀번호 수정 페이지에서 사용
+     * 내 비밀번호 수정 비밀번호 수정 페이지에서 사용
      */
     @PutMapping("/me/password")
     public ResponseEntity<ApiResponse> updateMyPassword(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                         @RequestBody UpdatePasswordRequest updatePasswordRequest) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
 
         return ResponseEntity.ok().body(userService.updatePassword(userDetails.getUserId(), updatePasswordRequest));
+    }
+
+    /**
+     * 유저 프로필 업로드
+     */
+    @PostMapping("/me/profileImg")
+    public ResponseEntity<ApiResponse> updateProfileImg(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                        @RequestParam MultipartFile profileImg) throws IOException {
+
+        return ResponseEntity.ok().body(userService.updateProfileImg(userDetails.getUserId(), profileImg));
     }
 }

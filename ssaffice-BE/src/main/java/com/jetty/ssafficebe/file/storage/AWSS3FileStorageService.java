@@ -1,5 +1,6 @@
 package com.jetty.ssafficebe.file.storage;
 
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -38,7 +39,7 @@ public class AWSS3FileStorageService implements FileStorageService {
         objectMetaData.setContentLength(file.getSize());
         awsS3ClientProviderForAttachment.getS3Client()
                                         .putObject(new PutObjectRequest(bucket,
-                                                                        this.getTargetPath(hash), // hash값을 이용하여 저장 경로 생성
+                                                                        this.getTargetPath(hash),
                                                                         file.getInputStream(),
                                                                         objectMetaData));
 
@@ -72,5 +73,23 @@ public class AWSS3FileStorageService implements FileStorageService {
     private String getTargetPath(String hash) {
         return Paths.get(keyPrefix, ResourceHashUtil.getDirPath(hash), ResourceHashUtil.getFilePath(hash)).toString();
     }
+
+    @Override
+    public String uploadProfileImage(MultipartFile file) throws IOException {
+        String hash = ResourceHashUtil.generateHash(file.getInputStream());
+        ObjectMetadata objectMetaData = new ObjectMetadata();
+        objectMetaData.setContentType(file.getContentType());
+        objectMetaData.setContentLength(file.getSize());
+        awsS3ClientProviderForAttachment.getS3Client()
+                                        .putObject(new PutObjectRequest(bucket,
+                                                                        this.getTargetPath(hash),
+                                                                        file.getInputStream(),
+                                                                        objectMetaData).withCannedAcl(
+                                                CannedAccessControlList.PublicRead));
+
+        return awsS3ClientProviderForAttachment.getS3Client().getUrl(bucket, this.getTargetPath(hash))
+                                                        .toString();
+    }
+
 
 }
