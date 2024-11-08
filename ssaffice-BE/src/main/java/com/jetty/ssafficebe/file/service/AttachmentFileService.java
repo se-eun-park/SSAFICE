@@ -8,9 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface AttachmentFileService {
 
-    UploadFileResponse uploadFile(MultipartFile file, String fileType, String refId) throws IOException;
+    UploadFileResponse uploadFile(MultipartFile file, String fileType, Long refId) throws IOException;
 
     AttachmentFileSummaryWithStream getAttachmentFileWithInputStream(String fileId, String fileType) throws IOException;
 
-    void updateFileRefId(String refId, String fileType, Collection<String> fileIds);
+    void updateFileRefId(Long refId, String fileType, Collection<String> fileIds);
 }
