@@ -1,4 +1,5 @@
 from mmapi import *
+from websocket_service import *
 # from websocket_test import *
 
 token = make_mattermost_admin_token() ## 해당 토큰은 관리자 계정의 토큰이라 가정한다.
@@ -7,8 +8,9 @@ print(token)
 # connect_websocket()
 
 
-if token:
-    get_file_by_file_id(token, '6upofnnpg7gdmxftwk61te9n4r')
+if token:        
+    print(get_channel_members_count(token, 'i3ht4brt7jgu9g5rg8e4tfc98r'))
+    
     
     # print(get_user_info(token))    
     

@@ -15,11 +15,8 @@ def insert_notice_channel(notice_channel):
         db.commit()
         return notice_channel.notice_channel_id
 
-
-def insert_notice_channel_from_notice_id(notice_id, channel_id, mm_team_id):
+def insert_schedule(schedule):
     with get_db() as db:
-        notice_channel = Notice_Channel(
-            notice_id=notice_id, channel_id=channel_id, mm_team_id=mm_team_id
-        )
-        db.add(notice_channel)
+        db.add(schedule)
         db.commit()
+        return schedule.user_id

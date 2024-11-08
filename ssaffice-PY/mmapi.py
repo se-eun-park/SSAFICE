@@ -3,6 +3,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.chat_models import ChatOpenAI
 from langchain_openai import ChatOpenAI
 from langchain.output_parsers.json import SimpleJsonOutputParser
+from token_manager import TokenManager
 from setup import config
 
 openai_api_key = config.OPENAI_API_KEY
@@ -51,23 +52,8 @@ pipeline = template | llm | SimpleJsonOutputParser()
 
 session = requests.Session()
 
-
-# 로그인 API 호출 함수, 관리자 로그인 토큰을 발급받기 위함 (return : token을 반환)
-def make_mattermost_admin_token():
-    login_url = mm_baseurl + "/users/login"
-    credentials = {"login_id": mm_id, "password": mm_pw}
-    response = session.post(login_url, json=credentials)
-    if response.status_code == 200:
-        print("Login successful")
-        return response.headers.get("Token")
-    else:
-        print("Login failed")
-        print("Response:", response.json())
-        return None  # 로그인 실패 시 None 반환
-
-
 def get_headers(token):
-    token = make_mattermost_admin_token()
+    token = TokenManager.get_token()
     headers = {
         "Authorization": f"Bearer {token}",
         "Accept": "application/json",
@@ -183,10 +169,10 @@ def get_channel_info_by_channel_id(token, channel_id):
 
 
 # channel_id를 통해 해당 channel에 속한 모든 member의 정보를 가져오는 함수.
-def get_channel_members_by_channel_id(token, channel_id):
+def get_channel_members_by_channel_id(token, channel_id, page_num):
     headers = get_headers(token)
     response = session.get(
-        f"{mm_baseurl}/channels/{channel_id}/members", headers=headers
+        f"{mm_baseurl}/channels/{channel_id}/members?page={page_num}&per_page=200", headers=headers
     )
 
     if response.status_code == 200:
@@ -240,4 +226,14 @@ def get_file_by_file_id(token, file_id):
         return response
     else:
         print("Failed to get file with status code:", response.status_code)
+        return None
+    
+def get_channel_members_count(token, channel_id):
+    headers = get_headers(token)
+    response = session.get(f"{mm_baseurl}/channels/{channel_id}/stats", headers=headers)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Failed to get channel members with status code:", response.status_code)
         return None

@@ -15,7 +15,7 @@ class Notice(Base):
     start_date_time = Column(DateTime)
     end_date_time = Column(DateTime)
     is_essential = Column(BooleanToYN, default="N")
-    task_type = Column(Enum(TaskType), nullable=True)
+    notice_source_type = Column(Enum(NoticeType), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now())
     created_by = Column(Integer, ForeignKey("user.user_id"))
