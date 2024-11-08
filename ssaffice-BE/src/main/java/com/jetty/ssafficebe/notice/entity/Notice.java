@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.notice.entity;
 
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.common.code.TaskType;
+import com.jetty.ssafficebe.notice.code.NoticeType;
 import com.jetty.ssafficebe.user.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -38,11 +39,11 @@ public class Notice extends BaseEntity {
 
     private LocalDateTime endDateTime;
 
-    private String taskTypeCd;
+    private String noticeTypeCd;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "taskTypeCd", updatable = false, insertable = false)
-    private TaskType taskType;
+    @Column(name = "noticeTypeCd", updatable = false, insertable = false)
+    private NoticeType noticeType;
 
     private String isEssentialYn = "N";
 

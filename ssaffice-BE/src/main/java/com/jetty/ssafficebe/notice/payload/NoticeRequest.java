@@ -13,7 +13,8 @@ public class NoticeRequest {
     private String content;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private String taskTypeCd;
+    private String noticeTypeCd;
     private String isEssentialYn;
+    private String channelId;
 
 }

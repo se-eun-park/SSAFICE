@@ -18,7 +18,7 @@ public class NoticeSummaryForList {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String isEssentialYn;
-    private String taskTypeCd;
+    private String noticeTypeCd;
     private CreatedBySummary createUser;
 
 }
