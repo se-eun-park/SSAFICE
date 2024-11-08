@@ -37,7 +37,7 @@ export const CommonModal = ({ name, opened, closeRequest }: CommonModalParams) =
 
       // appearance setting
       background: '#fff', // color-bg-primary
-      borderRadius: '0px',
+      borderRadius: modal?.hasRounded ? modal?.hasRounded : '0px',
       border: 'none',
       boxShadow: modal?.hasShadow ? '4px 4px 4px rgba(0, 0, 0, 0.25)' : 'none', // 그림자 적용
 
