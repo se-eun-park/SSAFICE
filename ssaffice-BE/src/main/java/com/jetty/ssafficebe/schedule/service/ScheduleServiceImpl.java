@@ -3,37 +3,52 @@ package com.jetty.ssafficebe.schedule.service;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.notice.repository.NoticeRepository;
 import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.remind.entity.Remind;
 import com.jetty.ssafficebe.remind.repository.RemindRepository;
 import com.jetty.ssafficebe.schedule.converter.ScheduleConverter;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
+import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
+import com.jetty.ssafficebe.schedule.payload.ScheduleSummaryForList;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
+import com.jetty.ssafficebe.user.entity.User;
+import com.jetty.ssafficebe.user.payload.CreatedBySummary;
+import com.jetty.ssafficebe.user.repository.UserRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
+@Transactional
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleConverter scheduleConverter;
     private final ScheduleRepository scheduleRepository;
     private final RemindConverter remindConverter;
     private final RemindRepository remindRepository;
+    private final UserRepository userRepository;
+    private final NoticeRepository noticeRepository;
+
 
     @Override
-    @Transactional
     public ApiResponse saveSchedule(ScheduleRequest scheduleRequest) {
         // ! 1. Schedule 저장
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
+        if (scheduleRequest.getUserId() != null) {
+            schedule.setUser(userRepository.findById(scheduleRequest.getUserId()).orElse(null));
+        }
+        if (scheduleRequest.getNoticeId() != null) {
+            schedule.setNotice(noticeRepository.findById(scheduleRequest.getNoticeId()).orElse(null));
+        }
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
         // ! 2. Remind 생성 및 저장 -> TODO : remind api 쪽으로 분리할 예정
@@ -56,8 +71,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         ScheduleSummary scheduleSummary = scheduleConverter.toScheduleSummary(savedSchedule);
 
         scheduleSummary.setRemindSummarys(savedSchedule.getReminds().stream()
-                                                          .map(remindConverter::toRemindSummary)
-                                                          .collect(Collectors.toList()));
+                                                       .map(remindConverter::toRemindSummary)
+                                                       .collect(Collectors.toList()));
 
         return new ApiResponse(true, "일정 등록에 성공하였습니다.", scheduleSummary);
     }
@@ -76,7 +91,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setMemo(scheduleRequest.getMemo());
         schedule.setStartDateTime(scheduleRequest.getStartDateTime());
         schedule.setEndDateTime(scheduleRequest.getEndDateTime());
-        schedule.setScheduleStatusTypeCd(scheduleRequest.getScheduleStatusTypeCd());
+        schedule.setScheduleSourceTypeCd(scheduleRequest.getScheduleSourceTypeCd());
         schedule.setScheduleStatusTypeCd(scheduleRequest.getScheduleStatusTypeCd());
         schedule.setIsEnrollYn("Y");
 
@@ -102,4 +117,24 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ApiResponse(true, "일정 조회에 성공하였습니다.", scheduleId);
     }
 
+    @Override
+    public Page<ScheduleSummaryForList> getScheduleList(ScheduleFilterRequest filterRequest, Pageable pageable) {
+        Page<Schedule> schedulesPage = scheduleRepository.getSchedulesByFilter(filterRequest, pageable);
+
+        return schedulesPage.map(schedule -> {
+            ScheduleSummaryForList summary = scheduleConverter.toScheduleSummaryForList(schedule);
+
+            if (schedule.getNotice() != null && schedule.getNotice().getCreateUser() != null) {
+                User createUser = schedule.getNotice().getCreateUser();
+                summary.setCreateUser(CreatedBySummary.builder()
+                                                      .userId(createUser.getUserId())
+                                                      .name(createUser.getName())
+                                                      .email(createUser.getEmail())
+                                                      .profileImgUrl(createUser.getProfileImgUrl())
+                                                      .build());
+            }
+
+            return summary;
+        });
+    }
 }
