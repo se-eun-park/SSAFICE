@@ -1,4 +1,3 @@
-import { HoverButton } from '@/features/todoTab'
 import {
   useIsTabOpenStore,
   useSetIsTabOpenStore,
@@ -7,7 +6,7 @@ import {
   useIsFirstRenderStore,
   useSetIsFirstRenderStore,
 } from '@/shared/model'
-import { SearchBar, TabLayout } from '@/shared/ui'
+import { SearchBar, TabLayout, HoverButton } from '@/shared/ui'
 import { FastLeftArrowIcon } from '@/assets/svg'
 
 export const AnnouncementTab = () => {

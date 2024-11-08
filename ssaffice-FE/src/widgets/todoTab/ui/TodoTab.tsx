@@ -1,9 +1,9 @@
 import { TodoList } from './TodoList'
 import { TodoBoard } from './TodoBoard'
 
-import { HoverTitle, HoverButton } from '@/features/todoTab'
+import { HoverTitle } from '@/features/todoTab'
 import { useIsTabOpenStore } from '@/shared/model'
-import { SearchBar, TabLayout } from '@/shared/ui'
+import { SearchBar, TabLayout, HoverButton } from '@/shared/ui'
 import { HamburgerMenuIcon, FastLeftArrowIcon, CalendarIcon, EditIcon } from '@/assets/svg'
 
 export const TodoTab = () => {
