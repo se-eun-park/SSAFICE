@@ -1,7 +1,6 @@
 package com.jetty.ssafficebe.notice.entity;
 
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
-import com.jetty.ssafficebe.common.code.TaskType;
 import com.jetty.ssafficebe.notice.code.NoticeType;
 import com.jetty.ssafficebe.user.entity.BaseEntity;
 import jakarta.persistence.Column;
