@@ -8,6 +8,8 @@ export type {
 
 export { useClickOutsideToggle } from './DropDown/hooks'
 
+export { useSearchInput } from './SearchBar/useSearchInput'
+
 export {
   useIsTabOpenStore,
   useSetIsTabOpenStore,

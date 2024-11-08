@@ -1,6 +1,9 @@
 import { SearchIcon } from '@/assets/svg'
+import { useSearchInput } from '../model'
 
 export const SearchBar = () => {
+  const { value, handleValue } = useSearchInput()
+
   return (
     <div
       className='
@@ -19,6 +22,7 @@ export const SearchBar = () => {
         <SearchIcon />
       </div>
       <input
+        id='searchInput'
         type='text'
         placeholder='검색'
         className='
@@ -26,6 +30,8 @@ export const SearchBar = () => {
         placeholder:text-color-text-disabled placeholder:body-md-medium
         focus:outline-none
       '
+        value={value}
+        onChange={(e) => handleValue(e.target.value)}
       />
     </div>
   )
