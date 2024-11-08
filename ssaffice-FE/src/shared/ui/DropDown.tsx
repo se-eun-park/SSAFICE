@@ -45,7 +45,7 @@ function DropDownContent({ children, onClickEvent, isHover }: DropDownContentPro
   return (
     <Wrapper
       onClick={onClickEvent}
-      className={`flex items-center px-spacing-16 py-spacing-10 ${isHover ? 'hover:bg-color-bg-interactive-secondary-hover' : ''}`}
+      className={`flex items-center px-spacing-16 py-spacing-10 ${isHover ? 'hover:bg-color-bg-tertiary' : ''}`}
     >
       {dropDownImage.length > 0 && <div className='mr-spacing-12'>{dropDownImage}</div>}
       <div className='flex flex-col'>{dropDownContent}</div>
