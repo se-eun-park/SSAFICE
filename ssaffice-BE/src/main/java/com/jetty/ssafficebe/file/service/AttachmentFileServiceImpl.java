@@ -26,7 +26,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
     private final AttachmentFileConverter attachmentFileConverter;
 
     @Override
-    public UploadFileResponse uploadFile(MultipartFile file, String fileType, String refId) throws IOException {
+    public UploadFileResponse uploadFile(MultipartFile file, String fileType, Long refId) throws IOException {
         String hash = this.fileStorageService.uploadFile(file);
 
         AttachmentFile attachmentFile = new AttachmentFile();
@@ -64,7 +64,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
 
     @Override
     @Transactional
-    public void updateFileRefId(String refId, String fileType, Collection<String> fileIds) {
+    public void updateFileRefId(Long refId, String fileType, Collection<String> fileIds) {
         if (fileIds == null) {
             fileIds = new ArrayList<>();
         }

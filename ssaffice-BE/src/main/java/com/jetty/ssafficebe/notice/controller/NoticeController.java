@@ -4,6 +4,8 @@ import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
 import com.jetty.ssafficebe.notice.service.NoticeService;
+import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/notice")
@@ -29,8 +33,9 @@ public class NoticeController {
      * 공지사항 추가
      */
     @PostMapping
-    public ResponseEntity<ApiResponse> saveNotice(@RequestBody NoticeRequest noticeRequest) {
-        return ResponseEntity.ok(noticeService.saveNotice(noticeRequest));
+    public ResponseEntity<ApiResponse> saveNotice(@RequestBody NoticeRequest noticeRequest,
+                                                  @RequestParam("files") List<MultipartFile> files) throws IOException {
+        return ResponseEntity.ok(noticeService.saveNotice(noticeRequest, files));
     }
 
     /**
@@ -46,8 +51,8 @@ public class NoticeController {
      */
     @GetMapping
     public ResponseEntity<Page<NoticeSummaryForList>> getNoticeList(@PageableDefault(size = 20,
-                                                                       sort = "createdAt",
-                                                                       direction = Direction.DESC) Pageable pageable) {
+                                                                                     sort = "createdAt",
+                                                                                     direction = Direction.DESC) Pageable pageable) {
 
         return ResponseEntity.ok(noticeService.getNoticeList(pageable));
     }

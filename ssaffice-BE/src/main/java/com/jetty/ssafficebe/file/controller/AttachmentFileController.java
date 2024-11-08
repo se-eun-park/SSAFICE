@@ -57,7 +57,7 @@ public class AttachmentFileController {
     public ResponseEntity<UploadFileResponse> uploadAttachmentFile(
             @RequestParam MultipartFile file,
             @RequestParam String fileType,
-            @RequestParam String refId) throws IOException {
+            @RequestParam Long refId) throws IOException {
         return ResponseEntity.ok(this.attachmentFileService.uploadFile(file, fileType, refId));
     }
 

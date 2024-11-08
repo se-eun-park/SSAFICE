@@ -3,6 +3,7 @@ package com.jetty.ssafficebe.notice.service;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.file.service.AttachmentFileService;
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
 import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
@@ -10,12 +11,15 @@ import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
 import com.jetty.ssafficebe.notice.repository.NoticeRepository;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.CreatedBySummary;
+import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -23,14 +27,25 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
     private final NoticeConverter noticeConverter;
+    private final AttachmentFileService attachmentFileService;
 
     @Transactional
     @Override
-    public ApiResponse saveNotice(NoticeRequest noticeRequest) {
+    public ApiResponse saveNotice(NoticeRequest noticeRequest, List<MultipartFile> files) throws IOException {
         Notice notice = noticeConverter.toNotice(noticeRequest);
         Notice savedNotice = noticeRepository.save(notice);
 
+        // 파일 업로드
+        for (MultipartFile file : files) {
+            attachmentFileService.uploadFile(file, "notice", savedNotice.getNoticeId());
+        }
+
         // TODO : 추가 시 개인별로 일정 추가 필요
+        // 공지 대상자 일정 추가
+        // 1. 채널 아이디로 공지 대상자 조회
+
+        // 2. 공지 대상자 일정 추가
+
         return new ApiResponse(true, HttpStatus.CREATED, "공지사항 추가 성공", savedNotice.getTitle());
     }
 
