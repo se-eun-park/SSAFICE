@@ -3,7 +3,7 @@ from sqlalchemy import String
 from sqlalchemy.types import TypeDecorator
 
 # Enum 클래스 정의
-class NoticeSourceType(enum.Enum):
+class NoticeType(enum.Enum):
     GLOBAL = "GLOBAL"
     TEAM = "TEAM"
 
