@@ -37,3 +37,19 @@ Content-Type: application/json
   "scheduleSourceTypeCd": "PERSONAL",
   "scheduleStatusTypeCd": "IN_PROGRESS"
 }
+
+### 일정 조회
+GET http://localhost:9090/api/schedule/1
+Content-Type: application/json
+
+{
+  "scheduleId": 1
+}
+
+### 일정 삭제
+DELETE http://localhost:9090/api/schedule/1
+Content-Type: application/json
+
+{
+  "scheduleId": 1
+}
