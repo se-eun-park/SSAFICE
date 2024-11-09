@@ -43,8 +43,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ApiResponse saveSchedule(Long userId, ScheduleRequest scheduleRequest) {
         // ! 1. Schedule 저장
+        scheduleRequest.setUserId(userId);
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
-        if (scheduleRequest.getUserId() != null) {
+        if (userId != null) {
             schedule.setUser(userRepository.findById(scheduleRequest.getUserId()).orElse(null));
         }
         if (scheduleRequest.getNoticeId() != null) {
