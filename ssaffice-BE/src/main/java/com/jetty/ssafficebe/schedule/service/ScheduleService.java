@@ -9,9 +9,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface ScheduleService {
 
-    ApiResponse saveSchedule(ScheduleRequest scheduleRequest);
+    ApiResponse saveSchedule(Long userId, ScheduleRequest scheduleRequest);
 
-    ApiResponse updateSchedule(Long scheduleId, ScheduleRequest scheduleRequest);
+    ApiResponse updateSchedule(Long userId, Long scheduleId, ScheduleRequest scheduleRequest);
 
     ApiResponse getSchedule(Long scheduleId);
 
