@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.notice.service;
 
 import com.jetty.ssafficebe.common.exception.ErrorCode;
+import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.file.service.AttachmentFileService;
@@ -59,23 +60,35 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public Page<NoticeSummaryForList> getNoticeList(Pageable pageable) {
-        Page<Notice> noticeList = noticeRepository.getNoticeList(pageable);
+    public Page<NoticeSummaryForList> getNoticeList(Long userId, String usage, Pageable pageable) {
+        Page<Notice> noticeList;
 
-        return noticeList.map(notice ->
-                              {
+        // ROLE_USER인 경우 해당 유저가 속해있는 채널의 공지사항만 조회
+        if (usage.equals("ROLE_USER")) {
+            noticeList = noticeRepository.getNoticeList(userId, pageable);
+        }
+        // ROLE_ADMIN인 경우 해당 관리자가 작성한 공지사항 조회
+        else if (usage.equals("ROLE_ADMIN")) {
+            noticeList = noticeRepository.getNoticeListForAdmin(userId, pageable);
+        } else {
+            throw new InvalidValueException(ErrorCode.INVALID_USAGE, "usage", usage);
+        }
+
+        return noticeList.map(notice -> {
                                   NoticeSummaryForList noticeSummaryForList = noticeConverter.toNoticeSummaryForList(
                                           notice);
+
                                   User createUser = notice.getCreateUser();
 
                                   if (createUser != null) {
-                                      noticeSummaryForList.setCreateUser(CreatedBySummary.builder()
-                                                                                         .userId(createUser.getUserId())
-                                                                                         .name(createUser.getName())
-                                                                                         .email(createUser.getEmail())
-                                                                                         .profileImgUrl(
-                                                                                                 createUser.getProfileImgUrl())
-                                                                                         .build());
+                                      noticeSummaryForList.setCreateUser(
+                                              CreatedBySummary.builder()
+                                                              .userId(createUser.getUserId())
+                                                              .name(createUser.getName())
+                                                              .email(createUser.getEmail())
+                                                              .profileImgUrl(
+                                                                      createUser.getProfileImgUrl())
+                                                              .build());
                                   }
 
                                   return noticeSummaryForList;

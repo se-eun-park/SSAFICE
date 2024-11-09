@@ -17,10 +17,23 @@ public class NoticeRepositoryCustomImpl extends AbstractQueryDslRepository imple
     }
 
     @Override
-    public Page<Notice> getNoticeList(Pageable pageable) {
+    public Page<Notice> getNoticeList(Long userId, Pageable pageable) {
         QNotice notice = QNotice.notice;
 
         JPQLQuery<Notice> query = from(notice);
+
+        // 1. 유저 아이디로 채널 리스트 조회
+        // 2. 채널 리스트로 공지 리스트 조회
+        // 3. 최신순으로 정렬하여 리턴
+
+        return getPageImpl(query, pageable);
+    }
+
+    @Override
+    public Page<Notice> getNoticeListForAdmin(Long userId, Pageable pageable) {
+        QNotice notice = QNotice.notice;
+
+        JPQLQuery<Notice> query = from(notice).where(notice.createdBy.eq(userId));
 
         return getPageImpl(query, pageable);
     }
