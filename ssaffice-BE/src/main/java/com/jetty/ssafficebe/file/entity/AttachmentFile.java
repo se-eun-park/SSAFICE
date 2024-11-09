@@ -16,6 +16,7 @@ import org.hibernate.annotations.UuidGenerator;
 @Getter
 @Setter
 public class AttachmentFile extends BaseEntity {
+
     @Id
     @UuidGenerator
     private String fileId;
@@ -23,8 +24,8 @@ public class AttachmentFile extends BaseEntity {
     private String fileName;
     private Long fileSize;
     private Long refId;
-    private String hash; // 내용을 기반으로 한 해시값 -> 내용이 변경되거나 그런걸 알 수 있다고 하더라?
-    private String mimeType; // 파일 확장자 타입 같음.
+    private String hash; // 내용을 기반으로 한 해시값
+    private String mimeType;
     private String isDeletedYn = "N";
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isDeletedYn", updatable = false, insertable = false)

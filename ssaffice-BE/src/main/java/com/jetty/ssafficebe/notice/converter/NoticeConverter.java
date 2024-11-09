@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.notice.converter;
 
 import com.jetty.ssafficebe.notice.entity.Notice;
+import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
 import org.mapstruct.Mapper;
@@ -12,4 +13,6 @@ public interface NoticeConverter {
     Notice toNotice(NoticeRequest noticeRequest);
 
     NoticeSummaryForList toNoticeSummaryForList(Notice notice);
+
+    NoticeDetail toNoticeDetail(Notice notice);
 }
