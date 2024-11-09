@@ -18,7 +18,6 @@ public class ScheduleSummary {
     private LocalDateTime createdAt;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private String taskTypeCd;
     private String scheduleSourceTypeCd;
     private String scheduleStatusTypeCd;
     private String isEssentialYn;
@@ -26,5 +25,5 @@ public class ScheduleSummary {
     private CreatedBySummary createUser;
 
     private NoticeSummaryForList noticeSummaryForList;
-    private List<RemindSummary> remindSummaryList;
+    private List<RemindSummary> remindSummarys;
 }

@@ -1,11 +1,11 @@
-package com.jetty.ssafficebe.common.code;
+package com.jetty.ssafficebe.schedule.code;
 
 import com.jetty.ssafficebe.commoncode.CommonCode;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-
 public enum ScheduleStatusType implements CommonCode {
+
     TODO("해야 할 일"),
     IN_PROGRESS("진행 중"),
     DONE("완료"),

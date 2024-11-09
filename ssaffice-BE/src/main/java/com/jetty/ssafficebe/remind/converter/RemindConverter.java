@@ -6,14 +6,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface RemindConverter {
 
-    @Mapping(target = "remindDateTime", source = "remindDateTime")
-    @Mapping(target = "scheduleId", source = "scheduleId")
     Remind toRemind(LocalDateTime remindDateTime, Long scheduleId);
 
     default List<Remind> toRemindList(LocalDateTime startDateTime, LocalDateTime endDateTime, Long scheduleId) {
