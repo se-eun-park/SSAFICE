@@ -3,16 +3,16 @@ POST http://localhost:9090/api/users
 Content-Type: application/json
 
 {
-  "email": "test2@gmail.com",
+  "email": "admin2@gmail.com",
   "password": "1234",
-  "name": "tester2",
+  "name": "admin2",
   "roleIds": [
-    "ROLE_USER"
+    "ROLE_ADMIN"
   ],
-  "cohortNum": 1,
-  "regionCd": "SEOUL",
-  "classNum": 1,
-  "trackCd": "NON_MAJOR_PYTHON"
+  "cohortNum": null,
+  "regionCd": null,
+  "classNum": null,
+  "trackCd": null
 }
 
 ### 유저 아이디로 유저 정보 검색

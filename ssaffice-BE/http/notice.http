@@ -6,3 +6,4 @@ Content-Type: application/json
 ### 공지 리스트 조회
 GET http://localhost:9090/api/notice?page=0&size=20&sort=createdAt,DESC
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjFAZ21haWwuY29tIiwiZXhwIjoxNzMxMjIxMjg4fQ.TNU3h8Ge_9lw3Gwz4Cj6gqoi826Y1MqqA8BIV9_87x5Z_WaE3MjtsAvqecE4mGXzWQMyjF_fdV7gZZbiyj9ZgQ
