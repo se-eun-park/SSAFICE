@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.notice.service;
 
 import com.jetty.ssafficebe.common.exception.ErrorCode;
+import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidAuthorizationException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
@@ -56,9 +57,17 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Transactional
     @Override
-    public ApiResponse deleteNotice(Long noticeId) {
-        noticeRepository.delete(noticeRepository.findById(noticeId).orElseThrow(() -> new ResourceNotFoundException(
-                ErrorCode.NOTICE_NOT_FOUND, "해당 공지사항을 찾을 수 없습니다.", noticeId)));
+    public ApiResponse deleteNotice(Long userId, Long noticeId) {
+        // 공지Id로 공지사항 조회
+        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new ResourceNotFoundException(
+                ErrorCode.NOTICE_NOT_FOUND, "해당 공지사항을 찾을 수 없습니다.", noticeId));
+
+        // 공지사항 주인인지 확인
+        if (!notice.getCreatedBy().equals(userId)) {
+            throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "userId", userId);
+        }
+
+        noticeRepository.delete(notice);
 
         return new ApiResponse(true, HttpStatus.OK, "공지사항 삭제 성공", noticeId);
     }

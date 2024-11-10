@@ -54,8 +54,9 @@ public class NoticeController {
      * TODO : ROLE_ADMIN인 경우에만 접근 가능
      */
     @DeleteMapping("/{noticeId}")
-    public ResponseEntity<ApiResponse> deleteNotice(@PathVariable Long noticeId) {
-        return ResponseEntity.ok(noticeService.deleteNotice(noticeId));
+    public ResponseEntity<ApiResponse> deleteNotice(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                    @PathVariable Long noticeId) {
+        return ResponseEntity.ok(noticeService.deleteNotice(userDetails.getUserId(), noticeId));
     }
 
     /**
