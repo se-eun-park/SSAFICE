@@ -14,6 +14,8 @@ export { useSearchInput } from './SearchBar/useSearchInput'
 
 export { findModalByName } from './CommonModal/findModalByName'
 
+export { useDateFormatter } from './useDateFormatter'
+
 export {
   useIsTabOpenStore,
   useSetIsTabOpenStore,
