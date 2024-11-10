@@ -11,11 +11,12 @@ import com.jetty.ssafficebe.remind.payload.RemindRequest;
 import com.jetty.ssafficebe.remind.repository.RemindRepository;
 import com.jetty.ssafficebe.remind.service.RemindService;
 import com.jetty.ssafficebe.role.repository.UserRoleRepository;
+import com.jetty.ssafficebe.schedule.code.ScheduleAuthType;
+import com.jetty.ssafficebe.schedule.code.ScheduleSourceType;
 import com.jetty.ssafficebe.schedule.converter.ScheduleConverter;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
-import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummaryForList;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.user.entity.User;
@@ -23,7 +24,6 @@ import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,8 +46,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ApiResponse saveSchedule(Long userId, ScheduleRequest scheduleRequest) {
-        // ! 1. 권한 검증: 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용
-        validateAuthorization(userId, scheduleRequest.getUserId(), "create");
+        // ! 1. 권한 검증
+        validateAuthorization(userId, scheduleRequest.getUserId(), ScheduleAuthType.CREATE);
 
         // ! 2. Schedule 엔티티 생성 및 연관관계 설정
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
@@ -67,7 +67,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 4. Remind 엔티티 생성 및 연관관계 설정
         saveScheduleReminds(userId, scheduleRequest.getRemindRequests(), savedSchedule);
 
-        return new ApiResponse(true, "일정 등록에 성공하였습니다.", createScheduleSummaryWithReminds(savedSchedule));
+        // ! 5. Response 반환
+        return new ApiResponse(true, "일정 등록에 성공하였습니다.", scheduleConverter.toScheduleSummary(savedSchedule));
     }
 
 
@@ -77,8 +78,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
                 ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", scheduleId));
 
-        // ! 2. 권한 검증: 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용
-        validateAuthorization(userId, scheduleRequest.getUserId(), "update");
+        // ! 2. 권한 검증
+        validateAuthorization(userId, scheduleRequest.getUserId(), ScheduleAuthType.UPDATE);
 
 
         // ! 3. Schedule 기본 정보 업데이트
@@ -97,25 +98,48 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 5. Schedule 저장 및 Response 반환
         Schedule savedSchedule = scheduleRepository.save(schedule);
-        return new ApiResponse(true, "일정 수정에 성공하였습니다.", createScheduleSummaryWithReminds(savedSchedule));
+        return new ApiResponse(true, "일정 수정에 성공하였습니다.", scheduleConverter.toScheduleSummary(savedSchedule));
     }
 
     @Override
-    public ApiResponse getSchedule(Long scheduleId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                                              .orElseThrow(() -> new ResourceNotFoundException(
-                                                      ErrorCode.SCHEDULE_NOT_FOUND,
-                                                      "해당 일정을 찾을 수 없습니다.",
-                                                      scheduleId));
+    public ApiResponse getSchedule(Long userId, Long scheduleId) {
+        // ! 1. 조회할 일정 찾기
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
+                ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", scheduleId));
+
+        // ! 2. 권한 검증
+        validateAuthorization(userId, schedule.getUser().getUserId(), ScheduleAuthType.READ);
+
+        // ! 3. Response 반환
         return new ApiResponse(true, "일정 조회에 성공하였습니다.", scheduleConverter.toScheduleSummary(schedule));
     }
 
     @Override
-    public ApiResponse deleteSchedule(Long scheduleId) {
-        scheduleRepository.delete(
-                scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
-                        ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", scheduleId)));
-        return new ApiResponse(true, "일정 조회에 성공하였습니다.", scheduleId);
+    public ApiResponse deleteSchedule(Long userId, Long scheduleId) {
+        // ! 1. 삭제할 일정 찾기
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
+                ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", scheduleId));
+
+        // ! 2. 권한 검증
+        validateAuthorization(userId, schedule.getUser().getUserId(), ScheduleAuthType.DELETE);
+
+        // ! 3. 관리자 권한 검증
+        boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId, Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
+
+        if ("Y".equals(schedule.getIsEssentialYn()) && !isAdmin) {
+            throw new InvalidAuthorizationException(ErrorCode.SCHEDULE_DELETE_FORBIDDEN, "필수 일정은 관리자만 삭제할 수 있습니다.", scheduleId);
+        }
+
+        // ! 4. 팀 공지 일정 처리 및 Response 반환
+        if (schedule.getNotice() != null && ScheduleSourceType.TEAM.name().equals(schedule.getScheduleSourceTypeCd())) {
+            schedule.setIsEnrollYn("N");
+            scheduleRepository.save(schedule);
+            return new ApiResponse(true, "팀 공지 일정이 미등록 처리되었습니다.", scheduleId);
+        }
+
+        // ! 5. 개인 일정 삭제 및 Response 반환
+        scheduleRepository.delete(schedule);
+        return new ApiResponse(true, "일정 삭제에 성공하였습니다.", scheduleId);
     }
 
     @Override
@@ -139,16 +163,20 @@ public class ScheduleServiceImpl implements ScheduleService {
         });
     }
 
-    private void validateAuthorization(Long userId, Long requestUserId, String type) {
+    /**
+     * 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용하는 메서드
+     */
+    private void validateAuthorization(Long userId, Long requestUserId, ScheduleAuthType authType) {
         boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId, Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
 
         if (!requestUserId.equals(userId) && !isAdmin) {
-            ErrorCode errorCode = type.equals("create") ? ErrorCode.SCHEDULE_CREATE_FORBIDDEN : ErrorCode.SCHEDULE_UPDATE_FORBIDDEN;
-            String errorMessage = type.equals("create") ? "일정 등록 권한이 없습니다." : "일정 수정 권한이 없습니다.";
-            throw new InvalidAuthorizationException(errorCode, errorMessage, userId);
+            throw new InvalidAuthorizationException(authType.getErrorCode(), authType.getMessage(), userId);
         }
     }
 
+    /**
+     * 해당 일정에 알람을 생성/저장 하는 메서드
+     */
     private void saveScheduleReminds(Long userId, List<RemindRequest> remindRequests, Schedule schedule) {
         if (remindRequests == null) return;
 
@@ -162,13 +190,5 @@ public class ScheduleServiceImpl implements ScheduleService {
                 }
             }
         });
-    }
-
-    private ScheduleSummary createScheduleSummaryWithReminds(Schedule schedule) {
-        ScheduleSummary summary = scheduleConverter.toScheduleSummary(schedule);
-        summary.setRemindSummarys(schedule.getReminds().stream()
-                                          .map(remindConverter::toRemindSummary)
-                                          .collect(Collectors.toList()));
-        return summary;
     }
 }
