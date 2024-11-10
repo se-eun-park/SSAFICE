@@ -1,8 +1,8 @@
 package com.jetty.ssafficebe.remind.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
+import com.jetty.ssafficebe.user.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "remind")
-public class Remind {
+public class Remind extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

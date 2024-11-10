@@ -1,6 +1,7 @@
 ### 일정 등록 (개인)
-POST http://localhost:9090/api/schedule
+POST http://localhost:9090/api/schedules
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxMjYzOTMzfQ.tdLEbJsZoyDpDOfAWBUt4aQ_cqJqtFYroZ8DOw1Lp3Pu6m6vm93z2Sd_BZpZ5v_1cl-glfAM2etEPFovQekOWQ
 
 {
   "title": "테스트1",
@@ -9,10 +10,8 @@ Content-Type: application/json
   "endDateTime": "2024-11-12T18:00:00",
   "scheduleSourceTypeCd": "TEAM",
   "scheduleStatusTypeCd": "TODO",
-  "userId": 1,
   "noticeId": null,
   "remindRequests": [
-
     {
       "type": "ONCE",
       "remindDateTime": "2024-11-07T15:00:00"
@@ -23,7 +22,7 @@ Content-Type: application/json
 @scheduleId = 1
 
 ### 일정 수정
-PUT http://localhost:9090/api/schedule/{{scheduleId}}
+PUT http://localhost:9090/api/schedules/{{scheduleId}}
 Content-Type: application/json
 
 {
@@ -36,15 +35,15 @@ Content-Type: application/json
 }
 
 ### 일정 조회
-GET http://localhost:9090/api/schedule/{{scheduleId}}
+GET http://localhost:9090/api/schedules/{{scheduleId}}
 Content-Type: application/json
 
 ### 일정 삭제
-DELETE http://localhost:9090/api/schedule/{{scheduleId}}
+DELETE http://localhost:9090/api/schedules/{{scheduleId}}
 Content-Type: application/json
 
 ### 일정 조회
-GET http://localhost:9090/api/schedule
+GET http://localhost:9090/api/schedules
 Content-Type: application/json
 
 {
@@ -57,7 +56,7 @@ Content-Type: application/json
 
 ### [리스트 관련 테스트]
 ### 1. 전체 공지 일정 등록
-POST http://localhost:9090/api/schedule
+POST http://localhost:9090/api/schedules
 Content-Type: application/json
 
 {
@@ -78,7 +77,7 @@ Content-Type: application/json
 }
 
 ### 2. 팀 공지 일정 등록
-POST http://localhost:9090/api/schedule
+POST http://localhost:9090/api/schedules
 Content-Type: application/json
 
 {
@@ -99,7 +98,7 @@ Content-Type: application/json
 }
 
 ### 3. 개인 일정 (매일 알림)
-POST http://localhost:9090/api/schedule
+POST http://localhost:9090/api/schedules
 Content-Type: application/json
 
 {
@@ -120,7 +119,7 @@ Content-Type: application/json
 }
 
 ### 4. 개인 일정 (완료된 일정)
-POST http://localhost:9090/api/schedule
+POST http://localhost:9090/api/schedules
 Content-Type: application/json
 
 {
@@ -136,7 +135,7 @@ Content-Type: application/json
 }
 
 ### 5. 조회 테스트 1 - 특정 기간 내 모든 일정
-GET http://localhost:9090/api/schedule
+GET http://localhost:9090/api/schedules
 Content-Type: application/json
 
 {
@@ -148,7 +147,7 @@ Content-Type: application/json
 }
 
 ### 6. 조회 테스트 2 - 특정 날짜 이후의 모든 일정
-GET http://localhost:9090/api/schedule
+GET http://localhost:9090/api/schedules
 Content-Type: application/json
 
 {
@@ -160,7 +159,7 @@ Content-Type: application/json
 }
 
 ### 7. 조회 테스트 3 - 특정 날짜 이전의 모든 일정
-GET http://localhost:9090/api/schedule
+GET http://localhost:9090/api/schedules
 Content-Type: application/json
 
 {
@@ -172,7 +171,7 @@ Content-Type: application/json
 }
 
 ### 8. 조회 테스트 4 - 전체 공지만 조회
-GET http://localhost:9090/api/schedule
+GET http://localhost:9090/api/schedules
 Content-Type: application/json
 
 {
@@ -184,7 +183,7 @@ Content-Type: application/json
 }
 
 ### 9. 조회 테스트 5 - 진행 중인 개인 일정만 조회
-GET http://localhost:9090/api/schedule
+GET http://localhost:9090/api/schedules
 Content-Type: application/json
 
 {

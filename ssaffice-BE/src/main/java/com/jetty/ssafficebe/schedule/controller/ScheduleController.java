@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.schedule.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummaryForList;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/schedule")
+@RequestMapping("/api/schedules")
 @RequiredArgsConstructor
 public class ScheduleController {
 
@@ -34,8 +36,9 @@ public class ScheduleController {
      * @return 등록된 일정 정보
      */
     @PostMapping
-    public ResponseEntity<ApiResponse> saveSchedule(@RequestBody ScheduleRequest scheduleRequest) {
-        ApiResponse apiResponse = scheduleService.saveSchedule(scheduleRequest);
+    public ResponseEntity<ApiResponse> saveSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                    @RequestBody ScheduleRequest scheduleRequest) {
+        ApiResponse apiResponse = scheduleService.saveSchedule(userDetails.getUserId(), scheduleRequest);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 
@@ -45,13 +48,12 @@ public class ScheduleController {
      * @param scheduleId      : 수정할 일정 id
      * @param scheduleRequest : schedule 정보
      * @return 수정된 일정 정보
-     * <p>
-     * TODO: 기존 리마인드 전부 삭제 후 다시 추가
      */
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<ApiResponse> updateSchedule(@PathVariable("scheduleId") Long scheduleId,
+    public ResponseEntity<ApiResponse> updateSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                      @PathVariable("scheduleId") Long scheduleId,
                                                       @RequestBody ScheduleRequest scheduleRequest) {
-        ApiResponse apiResponse = scheduleService.updateSchedule(scheduleId, scheduleRequest);
+        ApiResponse apiResponse = scheduleService.updateSchedule(userDetails.getUserId(), scheduleId, scheduleRequest);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 

@@ -10,4 +10,5 @@ public class RemindRequest {
 
     private String type;
     private LocalDateTime remindDateTime;
+    private Long scheduleId;
 }
