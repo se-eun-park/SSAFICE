@@ -30,18 +30,12 @@ public class RemindServiceImpl implements RemindService {
 
     @Override
     public ApiResponse saveRemind(Long userId, RemindRequest remindRequest) {
-        Schedule schedule = scheduleRepository.findById(remindRequest.getScheduleId())
-                                              .orElseThrow(() -> new ResourceNotFoundException(
-                                                      ErrorCode.SCHEDULE_NOT_FOUND,
-                                                      "해당 일정을 찾을 수 없습니다.",
-                                                      remindRequest.getScheduleId()));
+        Schedule schedule = scheduleRepository.findById(remindRequest.getScheduleId()).orElseThrow(() -> new ResourceNotFoundException(
+                ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", remindRequest.getScheduleId()));
 
         // 일정 작성자 권한 검증
         if (!schedule.getUserId().equals(userId)) {
-            throw new InvalidAuthorizationException(
-                    ErrorCode.INVALID_AUTHORIZATION,
-                    "userId",
-                    userId);
+            throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "userId", userId);
         }
 
         // DAILY 타입인 경우
@@ -66,27 +60,17 @@ public class RemindServiceImpl implements RemindService {
 
     @Override
     public ApiResponse deleteRemind(Long userId, Long remindId) {
-        Remind remind = remindRepository.findById(remindId)
-                                        .orElseThrow(() -> new ResourceNotFoundException(
-                                                ErrorCode.REMIND_NOT_FOUND,
-                                                "해당 알림을 찾을 수 없습니다.",
-                                                remindId.toString()));
+        Remind remind = remindRepository.findById(remindId).orElseThrow(() -> new ResourceNotFoundException(
+                ErrorCode.REMIND_NOT_FOUND, "해당 알림을 찾을 수 없습니다.", remindId.toString()));
         // 리마인드 소유자 권한 검증
         Schedule schedule = remind.getSchedule();
         if (!schedule.getUserId().equals(userId)) {
-            throw new InvalidAuthorizationException(
-                    ErrorCode.INVALID_AUTHORIZATION,
-                    "userId",
-                    userId);
+            throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "userId", userId);
         }
 
         // Essential 리마인드 삭제 방지
         if ("Y".equals(remind.getIsEssentialYn())) {
-            throw new InvalidValueException(
-                    ErrorCode.INVALID_REMIND_OPERATION,
-                    "필수 리마인드는 삭제할 수 없습니다.",
-                    remindId.toString()
-            );
+            throw new InvalidValueException(ErrorCode.INVALID_REMIND_OPERATION, "필수 리마인드는 삭제할 수 없습니다.", remindId.toString());
         }
 
         remindRepository.delete(remind);
@@ -95,10 +79,7 @@ public class RemindServiceImpl implements RemindService {
 
     private Remind saveSingleRemind(LocalDateTime remindDateTime, Schedule schedule) {
         if (remindRepository.existsByScheduleIdAndRemindDateTime(schedule.getScheduleId(), remindDateTime)) {
-            throw new DuplicateValueException(
-                    ErrorCode.REMIND_ALREADY_EXISTS,
-                    "이미 해당 시간에 알림이 존재합니다.",
-                    remindDateTime.toString());
+            throw new DuplicateValueException(ErrorCode.REMIND_ALREADY_EXISTS, "이미 해당 시간에 알림이 존재합니다.", remindDateTime.toString());
         }
 
         RemindRequest singleRequest = new RemindRequest();

@@ -10,6 +10,7 @@ public class RemindSummary {
 
     private Long remindId;
     private String isEssentialYn;
+    private String remindTypeCd;
     private LocalDateTime remindDateTime;
     private Long scheduleId;
 }
