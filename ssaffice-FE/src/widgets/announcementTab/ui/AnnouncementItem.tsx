@@ -13,6 +13,8 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
         bg-color-bg-primary
         border border-color-border-tertiary
         rounded-radius-8 
+        
+        hover:bg-color-bg-interactive-secondary-hover
     '
     >
       <div
