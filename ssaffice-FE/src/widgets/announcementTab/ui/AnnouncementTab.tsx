@@ -6,6 +6,8 @@ import {
 } from '@/shared/model'
 import { SearchBar, TabLayout } from '@/shared/ui'
 import { FastLeftArrowIcon } from '@/assets/svg'
+import { AnnouncementList } from './AnnouncementList'
+import { useAnnouncementTabSelectView } from '@/features/announcementTab'
 
 export const AnnouncementTab = () => {
   const isTabOpen = useIsTabOpenStore()
@@ -22,10 +24,27 @@ export const AnnouncementTab = () => {
     }, 400)
   }
 
+  const { isAllNoticeView, handleNoticeViewSelect, selectedStyle, unselectedStyle } =
+    useAnnouncementTabSelectView()
+
   return (
     <TabLayout animation={`${isAnimation ? 'animate-slideShrink' : 'animate-slideExpand'}`}>
       <TabLayout.Header animation={`${isAnimation ? 'animate-fadeOut' : 'animate-fadeIn'}`}>
-        <h1>전체 공지</h1>
+        <div className='flex heading-desktop-xl'>
+          <div
+            onClick={() => handleNoticeViewSelect('미등록 공지')}
+            className={isAllNoticeView ? unselectedStyle : selectedStyle}
+          >
+            미등록 공지
+          </div>
+          <div className='text-color-text-primary'>&nbsp;|&nbsp;</div>
+          <div
+            onClick={() => handleNoticeViewSelect('전체 공지')}
+            className={isAllNoticeView ? selectedStyle : unselectedStyle}
+          >
+            전체 공지
+          </div>
+        </div>
         <button onClick={handleOnClickClose}>
           <FastLeftArrowIcon className='w-6' />
         </button>
@@ -36,8 +55,15 @@ export const AnnouncementTab = () => {
       </TabLayout.Add>
 
       <TabLayout.Content animation={`${isAnimation ? 'animate-fadeOut' : 'animate-fadeIn'}`}>
-        <div className='w-full h-full rounded-radius-8 bg-color-bg-tertiary'>
-          나중엔 공지 리스트 컴포넌트가 들어감
+        <div
+          className=' 
+          max-h-[734px] py-spacing-24 px-spacing-16
+          bg-color-bg-tertiary
+          rounded-radius-8
+          overflow-y-scroll
+          '
+        >
+          {isAllNoticeView ? <AnnouncementList /> : <div className='min-h-[734px]'></div>}
         </div>
       </TabLayout.Content>
     </TabLayout>

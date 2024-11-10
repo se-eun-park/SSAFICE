@@ -7,3 +7,5 @@ export type {
 export { dummyAnnouncements } from './model/types'
 
 export { useSortingAnnouncement } from './model/useSortingAnnouncement'
+
+export { useAnnouncementTabSelectView } from './model/useAnnouncementTabSelectView'
