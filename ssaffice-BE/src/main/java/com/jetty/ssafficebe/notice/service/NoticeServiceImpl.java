@@ -7,9 +7,11 @@ import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.file.service.AttachmentFileService;
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
 import com.jetty.ssafficebe.notice.entity.Notice;
+import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
 import com.jetty.ssafficebe.notice.repository.NoticeRepository;
+import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import java.io.IOException;
@@ -29,6 +31,8 @@ public class NoticeServiceImpl implements NoticeService {
     private final NoticeRepository noticeRepository;
     private final NoticeConverter noticeConverter;
     private final AttachmentFileService attachmentFileService;
+
+    private final UserConverter userConverter;
 
     @Transactional
     @Override
@@ -94,5 +98,26 @@ public class NoticeServiceImpl implements NoticeService {
                                   return noticeSummaryForList;
                               }
         );
+    }
+
+    @Override
+    public NoticeDetail getNotice(Long userId, Long noticeId) {
+        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new ResourceNotFoundException(
+                ErrorCode.NOTICE_NOT_FOUND, "해당 공지사항을 찾을 수 없습니다.", noticeId));
+
+        NoticeDetail noticeDetail = noticeConverter.toNoticeDetail(notice);
+
+        // 주인인지 확인
+        if (notice.getCreateUser().getUserId().equals(userId)) {
+            noticeDetail.setOwner(true);
+        }
+
+        // 작성자 정보 매핑
+        noticeDetail.setCreateUser(userConverter.toCreatedBySummary(notice.getCreateUser()));
+
+        // 공지사항 아이디로 첨부파일리스트 조회 후 매핑
+        noticeDetail.setAttachmentFiles(attachmentFileService.getAttachmentFilesSummaryByRefId(noticeId));
+
+        return noticeDetail;
     }
 }

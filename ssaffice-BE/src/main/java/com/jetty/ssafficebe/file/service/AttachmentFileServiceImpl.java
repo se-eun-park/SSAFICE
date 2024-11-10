@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.file.service;
 
 import com.jetty.ssafficebe.file.converter.AttachmentFileConverter;
 import com.jetty.ssafficebe.file.entity.AttachmentFile;
+import com.jetty.ssafficebe.file.payload.AttachmentFileSummary;
 import com.jetty.ssafficebe.file.payload.AttachmentFileSummaryWithStream;
 import com.jetty.ssafficebe.file.payload.UploadFileResponse;
 import com.jetty.ssafficebe.file.repository.AttachmentFileRepository;
@@ -87,5 +88,11 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
             attachmentFile.setFileType(fileType);
             attachmentFile.setIsDeletedYn("N");
         }
+    }
+
+    @Override
+    public List<AttachmentFileSummary> getAttachmentFilesSummaryByRefId(Long refId) {
+        List<AttachmentFile> attachmentFiles = this.attachmentFileRepository.findAllByRefIdAndIsDeletedYn(refId, "N");
+        return attachmentFileConverter.toAttachmentFileSummaryList(attachmentFiles);
     }
 }

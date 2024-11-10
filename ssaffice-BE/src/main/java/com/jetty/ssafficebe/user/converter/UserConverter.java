@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.user.converter;
 
 import com.jetty.ssafficebe.user.entity.User;
+import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
@@ -16,4 +17,6 @@ public interface UserConverter {
     UserSummary toUserSummary(User user);
 
     void updateUser(@MappingTarget User user, UpdateUserRequest updateUserRequest);
+
+    CreatedBySummary toCreatedBySummary(User user);
 }

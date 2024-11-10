@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.notice.service;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
 import java.io.IOException;
@@ -17,4 +18,6 @@ public interface NoticeService {
     ApiResponse deleteNotice(Long noticeId);
 
     Page<NoticeSummaryForList> getNoticeList(Long userId, String usage, Pageable pageable);
+
+    NoticeDetail getNotice(Long userId, Long noticeId);
 }
