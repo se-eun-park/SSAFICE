@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export const useAnnouncementTabSelectView = () => {
   const [isAllNoticeView, setIsAllNoticeView] = useState(false)
@@ -15,10 +15,6 @@ export const useAnnouncementTabSelectView = () => {
         break
     }
   }
-
-  useEffect(() => {
-    console.log(`isAllNoticeView value changed : ${isAllNoticeView}`)
-  }, [isAllNoticeView])
 
   return { isAllNoticeView, handleNoticeViewSelect, selectedStyle, unselectedStyle }
 }
