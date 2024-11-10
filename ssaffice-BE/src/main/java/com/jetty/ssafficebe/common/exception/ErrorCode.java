@@ -18,9 +18,12 @@ public enum ErrorCode {
 
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     INVALID_USAGE(HttpStatus.BAD_REQUEST, "usage 값이 잘못되었습니다."),
-    INVALID_REMIND_OPERATION(HttpStatus.BAD_REQUEST, "필수 리마인드는 삭제할 수 없습니다."),
+    INVALID_REMIND_OPERATION(HttpStatus.BAD_REQUEST, "필수 알림은 삭제할 수 없습니다."),
 
-    INVALID_AUTHORIZATION(HttpStatus.FORBIDDEN, "해당 리소스에 대한 권한이 없습니다."),
+    REMIND_CREATE_FORBIDDEN(HttpStatus.FORBIDDEN, "알림 등록 권한이 없습니다."),
+    REMIND_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "알림 삭제 권한이 없습니다."),
+    SCHEDULE_CREATE_FORBIDDEN(HttpStatus.FORBIDDEN, "일정 등록 권한이 없습니다."),
+    SCHEDULE_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "일정 삭제 권한이 없습니다."),
     ;
 
     private final HttpStatus status;
