@@ -23,7 +23,9 @@ public enum ErrorCode {
     REMIND_CREATE_FORBIDDEN(HttpStatus.FORBIDDEN, "알림 등록 권한이 없습니다."),
     REMIND_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "알림 삭제 권한이 없습니다."),
     SCHEDULE_CREATE_FORBIDDEN(HttpStatus.FORBIDDEN, "일정 등록 권한이 없습니다."),
-    SCHEDULE_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "일정 삭제 권한이 없습니다."),
+    SCHEDULE_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "일정 수정 권한이 없습니다."),
+    SCHEDULE_READ_FORBIDDEN(HttpStatus.FORBIDDEN, "일정 조회 권한이 없습니다."),
+    SCHEDULE_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "일정 삭제 권한이 없습니다."),
     ;
 
     private final HttpStatus status;
