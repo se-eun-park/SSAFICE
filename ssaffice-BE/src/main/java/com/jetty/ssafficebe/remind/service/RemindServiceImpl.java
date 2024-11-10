@@ -6,6 +6,7 @@ import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidAuthorizationE
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.remind.code.RemindAuthType;
 import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.remind.entity.Remind;
 import com.jetty.ssafficebe.remind.payload.RemindRequest;
@@ -31,7 +32,7 @@ public class RemindServiceImpl implements RemindService {
     @Override
     public ApiResponse saveRemind(Long userId, RemindRequest remindRequest) {
         // ! 1. 일정 조회 및 권한 검증
-        Schedule schedule = findAndValidateSchedule(userId, remindRequest.getScheduleId(), "create");
+        Schedule schedule = findAndValidateSchedule(userId, remindRequest.getScheduleId(), RemindAuthType.CREATE);
 
         // ! 2. 알림 타입 검증
         if (!Arrays.asList("DAILY", "ONCE").contains(remindRequest.getRemindTypeCd())) {
@@ -49,6 +50,7 @@ public class RemindServiceImpl implements RemindService {
         schedule.addRemind(remind);
         Remind savedRemind = remindRepository.save(remind);
 
+        // ! 5. Response 반환
         return new ApiResponse(true, "알림 등록에 성공하였습니다.", remindConverter.toRemindSummary(savedRemind));
     }
 
@@ -59,25 +61,27 @@ public class RemindServiceImpl implements RemindService {
                 ErrorCode.REMIND_NOT_FOUND, "해당 알림을 찾을 수 없습니다.", remindId.toString()));
 
         // ! 2. 일정 조회 및 권한 검증
-        findAndValidateSchedule(userId, remind.getScheduleId(), "delete");
+        findAndValidateSchedule(userId, remind.getScheduleId(), RemindAuthType.DELETE);
 
-        // ! 4. 알림 삭제
+        // ! 3. 알림 삭제
         remindRepository.delete(remind);
+
+        // ! 4. Response 반환
         return new ApiResponse(true, "알림이 성공적으로 삭제되었습니다.", remindId);
     }
 
-    private Schedule findAndValidateSchedule(Long userId, Long scheduleId, String type) {
+    /**
+     * 일정 조회 및 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용하는 메서드
+     */
+    private Schedule findAndValidateSchedule(Long userId, Long scheduleId, RemindAuthType authType) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
                 ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", scheduleId));
 
         boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId, Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
 
         if (!schedule.getUserId().equals(userId) && !isAdmin) {
-            ErrorCode errorCode = type.equals("create") ? ErrorCode.REMIND_CREATE_FORBIDDEN : ErrorCode.REMIND_DELETE_FORBIDDEN;
-            String errorMessage = type.equals("delete") ? "알림 등록 권한이 없습니다." : "알림 삭제 권한이 없습니다.";
-            throw new InvalidAuthorizationException(errorCode, errorMessage, userId);
+            throw new InvalidAuthorizationException(authType.getErrorCode(), authType.getMessage(), userId);
         }
-
         return schedule;
     }
 }
