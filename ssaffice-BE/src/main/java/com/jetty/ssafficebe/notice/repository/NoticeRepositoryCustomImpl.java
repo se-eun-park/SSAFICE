@@ -33,7 +33,12 @@ public class NoticeRepositoryCustomImpl extends AbstractQueryDslRepository imple
     public Page<Notice> getNoticeListForAdmin(Long userId, Pageable pageable) {
         QNotice notice = QNotice.notice;
 
-        JPQLQuery<Notice> query = from(notice).where(notice.createdBy.eq(userId));
+        JPQLQuery<Notice> query = from(notice)
+                .where(
+                        notice.noticeTypeCd.eq("GLOBAL")
+                                           .or(notice.noticeTypeCd.eq("TEAM").and(notice.createdBy.eq(userId)))
+
+                );
 
         return getPageImpl(query, pageable);
     }
