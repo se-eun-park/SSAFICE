@@ -38,10 +38,7 @@ public class RemindServiceImpl implements RemindService {
 
         // 일정 작성자 권한 검증
         if (!schedule.getUserId().equals(userId)) {
-            throw new InvalidAuthorizationException(
-                    ErrorCode.INVALID_AUTHORIZATION,
-                    "userId",
-                    userId);
+            throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "userId", userId);
         }
 
         // DAILY 타입인 경우
