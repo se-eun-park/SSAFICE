@@ -1,18 +1,19 @@
 ### 변수 설정
 @scheduleId = 1
-@remindId = 1
+@remindId = 4
 
 ### 알림 등록
 POST http://localhost:9090/api/schedules/{{scheduleId}}/reminds
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxMjYzOTMzfQ.tdLEbJsZoyDpDOfAWBUt4aQ_cqJqtFYroZ8DOw1Lp3Pu6m6vm93z2Sd_BZpZ5v_1cl-glfAM2etEPFovQekOWQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxMzMzNzkwfQ.sDiQRlvThWkQTWGQMtN06JKJhfq5iAtoRcmahCsrq6aBF7r1KWzZ8xhomVwOg4x7nS5WN0zpIp6oOWXbwueqhQ
 
 {
-  "type": "DAILY",
-  "remindDateTime" : "2024-11-01T16:00:00"
+  "isEssentialYn": "N",
+  "remindTypeCd": "DAILY",
+  "remindDateTime" : "2024-11-01T18:00:00"
 }
 
 ### 알림 삭제
 DELETE http://localhost:9090/api/schedules/reminds/{{remindId}}
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxMjYzOTMzfQ.tdLEbJsZoyDpDOfAWBUt4aQ_cqJqtFYroZ8DOw1Lp3Pu6m6vm93z2Sd_BZpZ5v_1cl-glfAM2etEPFovQekOWQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxMzMzNzkwfQ.sDiQRlvThWkQTWGQMtN06JKJhfq5iAtoRcmahCsrq6aBF7r1KWzZ8xhomVwOg4x7nS5WN0zpIp6oOWXbwueqhQ
