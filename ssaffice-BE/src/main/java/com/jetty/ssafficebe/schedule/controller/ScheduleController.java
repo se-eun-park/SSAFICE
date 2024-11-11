@@ -4,7 +4,8 @@ import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
-import com.jetty.ssafficebe.schedule.payload.ScheduleSummaryForList;
+import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
+import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -64,10 +65,9 @@ public class ScheduleController {
      * @return 조회한 일정 정보
      */
     @GetMapping("/{scheduleId}")
-    public ResponseEntity<ApiResponse> getSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                   @PathVariable("scheduleId") Long scheduleId) {
-        ApiResponse apiResponse = scheduleService.getSchedule(userDetails.getUserId(), scheduleId);
-        return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+    public ResponseEntity<ScheduleDetail> getSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                      @PathVariable("scheduleId") Long scheduleId) {
+        return ResponseEntity.ok(scheduleService.getSchedule(userDetails.getUserId(), scheduleId));
     }
 
     /**
@@ -79,22 +79,26 @@ public class ScheduleController {
     @DeleteMapping("/{scheduleId}")
     public ResponseEntity<ApiResponse> deleteSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                       @PathVariable("scheduleId") Long scheduleId) {
-        ApiResponse apiResponse = scheduleService.deleteSchedule(userDetails.getUserId(), scheduleId);
-        return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+        return ResponseEntity.ok(scheduleService.deleteSchedule(userDetails.getUserId(), scheduleId));
     }
 
     /**
-     * 일정 조회
+     * (ROLE_USER) 개인 일정 조회
      *
      * @param pageable              : 20개씩 / 마감 임박순
      * @param scheduleFilterRequest :미등록 공지 여부, 상태, 일정 출처
      * @return 조건에 맞는 일정 리스트
-     * TODO : 현재 로그인한 id 에 맞는 일정 인지 로직 추가
+     * TODO : (개인) 현재 로그인한 id 에 맞는 일정 리스트
      */
     @GetMapping
-    public ResponseEntity<Page<ScheduleSummaryForList>> getScheduleList(
+    public ResponseEntity<Page<ScheduleSummary>> getScheduleList(
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(scheduleService.getScheduleList(scheduleFilterRequest, pageable));
     }
+
+    /**
+     * (ROLE_ADMIN) 관리자의 일정 조회
+     * TODO : 관리자가 작성한 공지에 대한 해당 유저들의 일정 조회 (등록 여부, 완료 여부, 등 ...)
+     */
 }

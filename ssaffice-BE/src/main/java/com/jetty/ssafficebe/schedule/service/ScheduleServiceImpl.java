@@ -13,9 +13,10 @@ import com.jetty.ssafficebe.role.repository.UserRoleRepository;
 import com.jetty.ssafficebe.schedule.code.ScheduleSourceType;
 import com.jetty.ssafficebe.schedule.converter.ScheduleConverter;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
+import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
-import com.jetty.ssafficebe.schedule.payload.ScheduleSummaryForList;
+import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.CreatedBySummary;
@@ -70,7 +71,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         saveScheduleReminds(userId, scheduleRequest.getRemindRequests(), savedSchedule);
 
         // ! 5. Response 반환
-        return new ApiResponse(true, "일정 등록에 성공하였습니다.", scheduleConverter.toScheduleSummary(savedSchedule));
+        return new ApiResponse(true, "일정 등록에 성공하였습니다.", savedSchedule.getScheduleId());
     }
 
 
@@ -84,7 +85,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 2. 권한 검증
         validateAuthorization(userId, scheduleRequest.getUserId());
-
 
         // ! 3. Schedule 기본 정보 업데이트
         schedule.setTitle(scheduleRequest.getTitle());
@@ -103,11 +103,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 5. Schedule 저장 및 Response 반환
         Schedule savedSchedule = scheduleRepository.save(schedule);
         log.info("[Schedule] 일정 수정 완료 - scheduleId={}, title={}", savedSchedule.getScheduleId(), savedSchedule.getTitle());
-        return new ApiResponse(true, "일정 수정에 성공하였습니다.", scheduleConverter.toScheduleSummary(savedSchedule));
+        return new ApiResponse(true, "일정 수정에 성공하였습니다.", schedule.getScheduleId());
     }
 
     @Override
-    public ApiResponse getSchedule(Long userId, Long scheduleId) {
+    public ScheduleDetail getSchedule(Long userId, Long scheduleId) {
         log.debug("[Schedule] 일정 조회 시작 - scheduleId={}, userId={}", scheduleId, userId);
 
         // ! 1. 조회할 일정 찾기
@@ -119,7 +119,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 3. Response 반환
         log.debug("[Schedule] 일정 조회 완료 - scheduleId={}, title={}", scheduleId, schedule.getTitle());
-        return new ApiResponse(true, "일정 조회에 성공하였습니다.", scheduleConverter.toScheduleSummary(schedule));
+        return scheduleConverter.toScheduleDetail(schedule);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Page<ScheduleSummaryForList> getScheduleList(ScheduleFilterRequest filterRequest, Pageable pageable) {
+    public Page<ScheduleSummary> getScheduleList(ScheduleFilterRequest filterRequest, Pageable pageable) {
         log.debug("[Schedule] 일정 목록 조회 시작 - filter=[isEnroll={}, sourceType={}, statusType={}, startDt={}, endDt={}], page={}, size={}",
                 filterRequest.getIsEnrollYn(),
                 filterRequest.getScheduleSourceTypeCd(),
@@ -167,8 +167,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Page<Schedule> schedulesPage = scheduleRepository.getSchedulesByFilter(filterRequest, pageable);
 
-        Page<ScheduleSummaryForList> result = schedulesPage.map(schedule -> {
-            ScheduleSummaryForList summary = scheduleConverter.toScheduleSummaryForList(schedule);
+        Page<ScheduleSummary> result = schedulesPage.map(schedule -> {
+            ScheduleSummary summary = scheduleConverter.toScheduleSummary(schedule);
 
             if (schedule.getNotice() != null && schedule.getNotice().getCreateUser() != null) {
                 User createUser = schedule.getNotice().getCreateUser();
