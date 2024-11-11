@@ -1,6 +1,6 @@
 from mmapi import *
 from setup import config, get_db
-from models import Notice, Notice_Channel, Schedule
+from models import Notice, Notice_Channel, Schedule, File, file as f
 from get_datas import *
 from set_datas import *
 from datetime import datetime, timedelta
@@ -43,11 +43,12 @@ def essential_test(data):
 
 
 def make_notice_entity(data, notice):
-    json_data = json.loads(data["data"]["post"])
+    json_data = json.loads(data["data"]["post"])        
     is_essential = essential_test(json_data)
     mm_user_id = json_data["user_id"]
     user_id = get_user_id_by_user_mm_id(mm_user_id)
     original_message = json_data["message"]
+    channel_id = json_data["channel_id"]
 
     response_notice = Notice(
         message_id=notice["id"],
@@ -58,6 +59,7 @@ def make_notice_entity(data, notice):
         end_date_time=notice["schedule_end_time"],
         is_essential=is_essential,
         created_by=user_id,
+        channel_id=channel_id
     )
 
     return response_notice
@@ -70,37 +72,30 @@ def make_notice_channel_entity(data, id):
     return notice_channel
 
 
-def file_upload_if_file_exist(token, data):
+def get_file_metadata_from_data(data):
     json_data = json.loads(data["data"]["post"])
     file_ids = (
         [file["id"] for file in json_data["metadata"]["files"]]
         if "files" in json_data["metadata"]
         else None
     )
-    file_names = (
-        [file["name"] for file in json_data["metadata"]["files"]]
-        if "files" in json_data["metadata"]
-        else None
-    )
     if file_ids is not None:
-        for file_id, file_name in zip(file_ids, file_names):
-            upload_file_to_s3(token, file_id, file_name)
-        return True
-    return False
+        return json_data["metadata"]["files"]
+    return None
 
 
 # s3로 파일 업로드
-def upload_file_to_s3(token, file_id, file_name):
-    response = get_file_by_file_id(token, file_id)
+def upload_file_to_s3(response):    
+    hash = f.generate_hash(response.content)
     s3 = boto3.client(
         "s3", aws_access_key_id=s3_access_key, aws_secret_access_key=s3_secret_key
     )
 
     try:
         s3.put_object(
-            Bucket=s3_bucket_name, Key=f"{s3_prefix}/{file_name}", Body=response.content
+            Bucket=s3_bucket_name, Key=f"{s3_prefix}/{hash}", Body=response.content
         )
-        print(f"{file_name} 업로드 완료")
+        print(f"{hash} 업로드 완료")
     except Exception as e:
         print(f"Error : {e}")
 
@@ -136,14 +131,30 @@ def make_schedule_entity(notice_id):
 
 def find_user_id_by_channel_id(token, channel_id, page_num):
     response = get_channel_members_by_channel_id(token, channel_id, page_num)
-    user_ids = [member["user_id"] for member in response]    
+    user_ids = [member["user_id"] for member in response]
     return user_ids
+
 
 def make_remind_entity(schedule_id):
     schedule = get_schedule_by_schedule_id(schedule_id)
     response_remind = Remind(
-        is_essential = schedule.is_essential,
-        remind_date_time = schedule.end_date_time - timedelta(hours=1),
-        schedule_id = schedule_id,        
+        is_essential=schedule.is_essential,
+        remind_date_time=schedule.end_date_time - timedelta(hours=1),
+        schedule_id=schedule_id,
     )
     return response_remind
+
+
+def make_file_entity(notice_id, response, metadata, order_idx):  
+    file = response.content
+    hash = f.generate_hash(file)
+    response_file = File(
+        file_type="NOTICE",
+        file_name=metadata["name"],
+        file_size=metadata["size"],
+        ref_id=notice_id,
+        hash=hash,
+        mime_type=metadata["extension"],        
+        order_idx=order_idx,
+    )
+    return response_file
