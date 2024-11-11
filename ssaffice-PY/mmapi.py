@@ -37,8 +37,8 @@ template = PromptTemplate(
     'isTodo': 'o',
     'title': '할 일을 1문장으로 작성',
     'content' : 할 일을 하는 방법을 3문장 내외로 작성,
-    'schedule_start_time': 할 일의 시작 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성. 시작 date를 알 수 없으면 날짜는 {today_date}, 시작 time을 알 수 없으면 시간은 00:00.
-    'schedule_end_time': 할 일의 마감 시간을 'YYYY-MM-DD HH:mm' 형식으로 end date를 알 수 없으면 null. end time을 알 수 없으면 시간은 00:00.
+    'schedule_start_time': 할 일의 시작 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성. start date를 알 수 없으면 날짜는 {today_date}, 시작 time을 알 수 없으면 시간은 00:00.
+    'schedule_end_time': 할 일의 마감 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성. end date를 알 수 없으면 무조건 null. date는 알 수 있지만 end time을 알 수 없으면 시간을 00:00.
 
     해당 메시지가 일정이 아니라고 판단되는 경우:
     'id': id,
