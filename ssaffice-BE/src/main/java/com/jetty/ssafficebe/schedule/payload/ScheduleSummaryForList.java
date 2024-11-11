@@ -11,6 +11,7 @@ public class ScheduleSummaryForList {
 
     private String scheduleId;
     private String title;
+    private LocalDateTime createdAt;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String scheduleSourceTypeCd;
