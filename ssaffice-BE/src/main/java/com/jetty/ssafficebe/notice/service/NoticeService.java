@@ -15,7 +15,7 @@ public interface NoticeService {
 
     ApiResponse saveNotice(NoticeRequest noticeRequest, List<MultipartFile> files) throws IOException;
 
-    ApiResponse deleteNotice(Long noticeId);
+    ApiResponse deleteNotice(Long userId, Long noticeId);
 
     Page<NoticeSummaryForList> getNoticeList(Long userId, String usage, Pageable pageable);
 
