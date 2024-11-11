@@ -26,5 +26,5 @@ class Remind(Base):
 
     remind_id = Column(Integer, primary_key=True, autoincrement=True)
     is_essential = Column(BooleanToYN, default="N")
-    time = Column(DateTime(timezone=True))
+    remind_date_time = Column(DateTime(timezone=True))
     schedule_id = Column(Integer, ForeignKey("schedule.schedule_id"), nullable=False)

@@ -66,8 +66,12 @@ def on_message(ws, message):
                             user_id = get_user_id_by_user_mm_id(member_id)
                             schedule.user_id = user_id
                             # schedule를 DB에 저장
-                            user_id = insert_schedule(schedule)                            
-                            print(f"insert : {user_id}")
+                            schedule_id = insert_schedule(schedule)    
+                            # 필수 공지(= 필수 일정)인 경우에만 remind를 생성
+                            if schedule.is_essential == True:
+                                remind = make_remind_entity(schedule_id)                                
+                                remind_id = insert_remind(remind)
+                                print("remind 등록 완료, remind_id :", remind_id)
 
             else:
                 print("일정이 아닙니다.")

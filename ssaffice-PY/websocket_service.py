@@ -3,7 +3,7 @@ from setup import config, get_db
 from models import Notice, Notice_Channel, Schedule
 from get_datas import *
 from set_datas import *
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import boto3
 
@@ -136,6 +136,14 @@ def make_schedule_entity(notice_id):
 
 def find_user_id_by_channel_id(token, channel_id, page_num):
     response = get_channel_members_by_channel_id(token, channel_id, page_num)
-    user_ids = [member["user_id"] for member in response]
-    print(user_ids)
+    user_ids = [member["user_id"] for member in response]    
     return user_ids
+
+def make_remind_entity(schedule_id):
+    schedule = get_schedule_by_schedule_id(schedule_id)
+    response_remind = Remind(
+        is_essential = schedule.is_essential,
+        remind_date_time = schedule.end_date_time - timedelta(hours=1),
+        schedule_id = schedule_id,        
+    )
+    return response_remind

@@ -19,4 +19,11 @@ def insert_schedule(schedule):
     with get_db() as db:
         db.add(schedule)
         db.commit()
-        return schedule.user_id
+        return schedule.schedule_id
+
+
+def insert_remind(remind):
+    with get_db() as db:
+        db.add(remind)
+        db.commit()
+        return remind.remind_id
