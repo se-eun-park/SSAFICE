@@ -5,8 +5,8 @@ type useDateFormatterParam =
   | 'MM월 DD일 ?요일'
   | 'YYYY-MM-DD(?)'
   | 'D-?'
-// D-Day의 경우 현재 날짜를 기준으로 리턴하면 되므로 date를 전달하지 않아도 됩니다.
 
+// D-? formatting의 경우 date를 꼭 기재해 주세요.
 export const useDateFormatter = (type: useDateFormatterParam, date?: Date): string | Date => {
   if (!date) date = new Date() // date 파라메터가 전달되지 않은 경우 현재 시각 기준으로 리턴합니다.
 
@@ -21,6 +21,27 @@ export const useDateFormatter = (type: useDateFormatterParam, date?: Date): stri
   const minutes: string = String(date.getMinutes()).padStart(2, '0')
   const seconds: string = String(date.getSeconds()).padStart(2, '0')
 
+  const getDateDifference = (targetDate: Date): string => {
+    const currentDate = new Date()
+
+    // 시간 무시하고 날짜 단위로 계산
+    currentDate.setHours(0, 0, 0, 0)
+    targetDate.setHours(0, 0, 0, 0)
+
+    const timeDifference = targetDate.getTime() - currentDate.getTime()
+    const dayDifference = Math.floor(timeDifference / (1000 * 3600 * 24))
+
+    if (dayDifference === 0) {
+      return 'D-Day'
+    }
+
+    if (dayDifference > 0) {
+      return `D-${dayDifference}`
+    }
+
+    return `D+${Math.abs(dayDifference)}`
+  }
+
   switch (type) {
     case 'YYYY-MM-DD(string)':
       return `${yyyy}-${mm}-${dd}`
@@ -33,7 +54,7 @@ export const useDateFormatter = (type: useDateFormatterParam, date?: Date): stri
     case 'YYYY-MM-DD(?)':
       return `${yyyy}-${mm}-${dd}(${dayOfWeek})`
     case 'D-?':
-      return `D-${(Number(new Date()) - Number(date)) / 24 == 0 ? 'day' : (Number(new Date()) - Number(date)) / 24}`
+      return getDateDifference(date)
 
     default:
       console.log(
