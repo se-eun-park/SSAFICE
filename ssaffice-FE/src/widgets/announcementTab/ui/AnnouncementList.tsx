@@ -9,12 +9,12 @@ export const AnnouncementList = () => {
     <div
       className='
         w-full h-full 
-    '
+      '
     >
       <div
         className='
             relative
-            flex flex-col gap-spacing-16
+            flex flex-col
             w-full h-full 
         '
       >

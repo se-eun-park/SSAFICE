@@ -67,20 +67,24 @@ export const AnnouncementTab = () => {
         />
       </TabLayout.Header>
 
-      <TabLayout.Add animation={contentsAnimationClass}>
-        <SearchBar />
-      </TabLayout.Add>
+      {isAllNoticeView && (
+        <TabLayout.Add animation={contentsAnimationClass}>
+          <SearchBar />
+        </TabLayout.Add>
+      )}
 
       <TabLayout.Content animation={contentsAnimationClass}>
         <div
-          className=' 
-          max-h-[734px] py-spacing-24 px-spacing-16
+          className={`
+          flex
+          ${isAllNoticeView ? 'max-h-[734px]' : 'max-h-[806px] mt-spacing-24'} pb-spacing-24 px-spacing-16
           bg-color-bg-tertiary
           rounded-radius-8
           overflow-y-scroll
-          '
+          `}
         >
-          {isAllNoticeView ? <AnnouncementList /> : <div className='min-h-[734px]'></div>}
+          {/* {isAllNoticeView ? <AnnouncementList /> : } */}
+          <AnnouncementList />
         </div>
       </TabLayout.Content>
     </TabLayout>
