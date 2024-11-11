@@ -1,6 +1,6 @@
 from mmapi import *
 from setup import config, get_db
-from models import Notice, Notice_Channel, Schedule, File, file as f
+from models import Notice, Schedule, File, file as f
 from get_datas import *
 from set_datas import *
 from datetime import datetime, timedelta
@@ -43,7 +43,7 @@ def essential_test(data):
 
 
 def make_notice_entity(data, notice):
-    json_data = json.loads(data["data"]["post"])        
+    json_data = json.loads(data["data"]["post"])
     is_essential = essential_test(json_data)
     mm_user_id = json_data["user_id"]
     user_id = get_user_id_by_user_mm_id(mm_user_id)
@@ -59,17 +59,10 @@ def make_notice_entity(data, notice):
         end_date_time=notice["schedule_end_time"],
         is_essential=is_essential,
         created_by=user_id,
-        channel_id=channel_id
+        channel_id=channel_id,
     )
 
     return response_notice
-
-
-def make_notice_channel_entity(data, id):
-    json_data = json.loads(data["data"]["post"])
-    channel_id = json_data["channel_id"]
-    notice_channel = Notice_Channel(notice_id=id, channel_id=channel_id)
-    return notice_channel
 
 
 def get_file_metadata_from_data(data):
@@ -85,7 +78,7 @@ def get_file_metadata_from_data(data):
 
 
 # s3로 파일 업로드
-def upload_file_to_s3(response):    
+def upload_file_to_s3(response):
     hash = f.generate_hash(response.content)
     s3 = boto3.client(
         "s3", aws_access_key_id=s3_access_key, aws_secret_access_key=s3_secret_key
@@ -136,16 +129,21 @@ def find_user_id_by_channel_id(token, channel_id, page_num):
 
 
 def make_remind_entity(schedule_id):
-    schedule = get_schedule_by_schedule_id(schedule_id)
+    schedule = get_schedule_by_schedule_id(schedule_id)    
+    if schedule.end_date_time == None:
+        remind_date = schedule.start_date_time - timedelta(hours=1)
+        pass
+    else:
+        remind_date = schedule.end_date_time - timedelta(hours=1)
     response_remind = Remind(
         is_essential=schedule.is_essential,
-        remind_date_time=schedule.end_date_time - timedelta(hours=1),
+        remind_date_time=remind_date,
         schedule_id=schedule_id,
     )
     return response_remind
 
 
-def make_file_entity(notice_id, response, metadata, order_idx):  
+def make_file_entity(notice_id, response, metadata, order_idx):
     file = response.content
     hash = f.generate_hash(file)
     response_file = File(
@@ -154,7 +152,7 @@ def make_file_entity(notice_id, response, metadata, order_idx):
         file_size=metadata["size"],
         ref_id=notice_id,
         hash=hash,
-        mime_type=metadata["extension"],        
+        mime_type=metadata["extension"],
         order_idx=order_idx,
     )
     return response_file

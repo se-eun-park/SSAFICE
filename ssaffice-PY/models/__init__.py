@@ -3,7 +3,6 @@ from .user import User
 from .notice import Notice
 from .mm_team import MM_Team
 from .channel import Channel
-from .notice_channel import Notice_Channel
 from .schedule import Schedule, Remind
 from .file import File
 

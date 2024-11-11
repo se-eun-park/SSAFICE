@@ -13,6 +13,7 @@ mm_websocket_url = config.MM_WEBSOCKET_URL
 websocket_url = mm_websocket_url
 token = TokenManager.get_token()
 
+
 # 웹소켓 이벤트 핸들러 함수
 def on_message(ws, message):
     data = json.loads(message)
@@ -29,30 +30,24 @@ def on_message(ws, message):
                 # notice를 DB에 저장
                 notice_db_id = insert_notice(notice_entity)
                 print("공지 등록 완료, notice_id :", notice_db_id)
-
+                # break
                 # 파일 업로드 하면서 동시에 db에 파일 정보 삽입
-                metadatas = get_file_metadata_from_data(data)               
-                if metadatas != None:                    
+                metadatas = get_file_metadata_from_data(data)
+                if metadatas != None:
                     order_idx = 0
                     for metadata in metadatas:
-                        response = get_file_by_file_id(token, metadata['id'])
-                        upload_file_to_s3(response)      
-                        file = make_file_entity(notice_db_id, response, metadata, order_idx)
+                        response = get_file_by_file_id(token, metadata["id"])
+                        upload_file_to_s3(response)
+                        file = make_file_entity(
+                            notice_db_id, response, metadata, order_idx
+                        )
                         file_db_id = insert_file(file)
                         print("file db 삽입 완료 : ", file_db_id)
-                        order_idx+=1
+                        order_idx += 1
                 else:
                     print("metadata가 none이었네요")
 
-                # notice_channel을 DB에 저장
-                notice_channel_entity = make_notice_channel_entity(data, notice_db_id)
-                notice_channel_db_id = insert_notice_channel(notice_channel_entity)
-                print(
-                    "notice_channel 등록 완료, notice_channel_id :",
-                    notice_channel_db_id,
-                )
-
-                # 일정에 해당하는 유저를 먼저 정의해야함.
+                # 일정에 해당하는 유저에게 일정을 넣어주기.
                 channel_id = json.loads(data["data"]["post"])["channel_id"]
                 user_count = get_channel_members_count(token, channel_id)[
                     "member_count"
@@ -60,7 +55,7 @@ def on_message(ws, message):
                 max_page_num = user_count // 200 + 1
 
                 for page_num in range(0, max_page_num):
-                    member_ids = find_user_id_by_channel_id(token, channel_id, page_num)                                      
+                    member_ids = find_user_id_by_channel_id(token, channel_id, page_num)
                     for member_id in member_ids:
                         # user별로 DB에 넣을 schedule entity 생성
                         schedule = make_schedule_entity(notice_db_id)
@@ -74,10 +69,10 @@ def on_message(ws, message):
                             user_id = get_user_id_by_user_mm_id(member_id)
                             schedule.user_id = user_id
                             # schedule를 DB에 저장
-                            schedule_id = insert_schedule(schedule)    
+                            schedule_id = insert_schedule(schedule)
                             # 필수 공지(= 필수 일정)인 경우에만 remind를 생성
                             if schedule.is_essential == True:
-                                remind = make_remind_entity(schedule_id)                                
+                                remind = make_remind_entity(schedule_id)
                                 remind_id = insert_remind(remind)
                                 print("remind 등록 완료, remind_id :", remind_id)
 
