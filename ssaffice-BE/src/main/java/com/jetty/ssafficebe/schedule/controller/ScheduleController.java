@@ -64,8 +64,9 @@ public class ScheduleController {
      * @return 조회한 일정 정보
      */
     @GetMapping("/{scheduleId}")
-    public ResponseEntity<ApiResponse> getSchedule(@PathVariable("scheduleId") Long scheduleId) {
-        ApiResponse apiResponse = scheduleService.getSchedule(scheduleId);
+    public ResponseEntity<ApiResponse> getSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                   @PathVariable("scheduleId") Long scheduleId) {
+        ApiResponse apiResponse = scheduleService.getSchedule(userDetails.getUserId(), scheduleId);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 
@@ -74,11 +75,11 @@ public class ScheduleController {
      *
      * @param scheduleId : 삭제할 일정 id
      * @return 삭제된 일정 id
-     * TODO : 공지 파생에 따라서 처리 방식 적용
      */
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<ApiResponse> deleteSchedule(@PathVariable("scheduleId") Long scheduleId) {
-        ApiResponse apiResponse = scheduleService.deleteSchedule(scheduleId);
+    public ResponseEntity<ApiResponse> deleteSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                      @PathVariable("scheduleId") Long scheduleId) {
+        ApiResponse apiResponse = scheduleService.deleteSchedule(userDetails.getUserId(), scheduleId);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
 

@@ -8,7 +8,8 @@ import lombok.Setter;
 @Setter
 public class RemindRequest {
 
-    private String type;
+    private String isEssentialYn;
+    private String remindTypeCd;
     private LocalDateTime remindDateTime;
     private Long scheduleId;
 }

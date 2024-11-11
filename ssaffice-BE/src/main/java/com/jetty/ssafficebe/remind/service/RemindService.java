@@ -7,5 +7,5 @@ public interface RemindService {
 
     ApiResponse saveRemind(Long userId, RemindRequest remindRequest);
 
-    ApiResponse deleteRemind(Long userId,Long remindId);
+    ApiResponse deleteRemind(Long userId, Long remindId);
 }

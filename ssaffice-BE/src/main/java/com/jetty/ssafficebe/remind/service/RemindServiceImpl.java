@@ -6,15 +6,15 @@ import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidAuthorizationE
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.remind.code.RemindAuthType;
 import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.remind.entity.Remind;
 import com.jetty.ssafficebe.remind.payload.RemindRequest;
 import com.jetty.ssafficebe.remind.repository.RemindRepository;
+import com.jetty.ssafficebe.role.repository.UserRoleRepository;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,83 +27,61 @@ public class RemindServiceImpl implements RemindService {
     private final RemindRepository remindRepository;
     private final RemindConverter remindConverter;
     private final ScheduleRepository scheduleRepository;
+    private final UserRoleRepository userRoleRepository;
 
     @Override
     public ApiResponse saveRemind(Long userId, RemindRequest remindRequest) {
-        Schedule schedule = scheduleRepository.findById(remindRequest.getScheduleId())
-                                              .orElseThrow(() -> new ResourceNotFoundException(
-                                                      ErrorCode.SCHEDULE_NOT_FOUND,
-                                                      "해당 일정을 찾을 수 없습니다.",
-                                                      remindRequest.getScheduleId()));
+        // ! 1. 일정 조회 및 권한 검증
+        Schedule schedule = findAndValidateSchedule(userId, remindRequest.getScheduleId(), RemindAuthType.CREATE);
 
-        // 일정 작성자 권한 검증
-        if (!schedule.getUserId().equals(userId)) {
-            throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "userId", userId);
+        // ! 2. 알림 타입 검증
+        if (!Arrays.asList("DAILY", "ONCE").contains(remindRequest.getRemindTypeCd())) {
+            throw new InvalidValueException(ErrorCode.INVALID_USAGE, "remindTypeCd", remindRequest.getRemindTypeCd());
         }
 
-        // DAILY 타입인 경우
-        if ("DAILY".equals(remindRequest.getType())) {
-            LocalDateTime currentDateTime = remindRequest.getRemindDateTime();
-            List<Long> remindIds = new ArrayList<>();
-            while (!currentDateTime.isAfter(schedule.getEndDateTime())) {
-                Remind savedRemind = saveSingleRemind(currentDateTime, schedule);
-                remindIds.add(savedRemind.getRemindId());
-                currentDateTime = currentDateTime.plusDays(1);
-            }
-            return new ApiResponse(true, "일별 리마인드 등록에 성공하였습니다.", remindIds);
-        } else if ("ONCE".equals(remindRequest.getType())) {
-            // 일반 리마인드인 경우
-            Remind savedRemind = saveSingleRemind(remindRequest.getRemindDateTime(), schedule);
-            return new ApiResponse(true, "리마인드 등록에 성공하였습니다.", savedRemind.getRemindId());
-        } else {
-            // 잘못 들어온 경우
-            throw new InvalidValueException(ErrorCode.INVALID_USAGE, "usage", remindRequest.getType());
+        // ! 3. 알림 중복 체크
+        if (remindRepository.existsDuplicateRemind(schedule.getScheduleId(), remindRequest.getRemindTypeCd(), remindRequest.getRemindDateTime())) {
+            String errorMessage = "DAILY".equals(remindRequest.getRemindTypeCd()) ? "해당 시간에 이미 매일 알림이 설정되어 있습니다." : "이미 해당 시점에 알림이 설정되어 있습니다.";
+            throw new DuplicateValueException(ErrorCode.REMIND_ALREADY_EXISTS, errorMessage, remindRequest.getRemindDateTime().toString());
         }
+
+        // ! 4. Remind 생성 및 저장
+        Remind remind = remindConverter.toRemind(remindRequest);
+        schedule.addRemind(remind);
+        Remind savedRemind = remindRepository.save(remind);
+
+        // ! 5. Response 반환
+        return new ApiResponse(true, "알림 등록에 성공하였습니다.", remindConverter.toRemindSummary(savedRemind));
     }
 
     @Override
     public ApiResponse deleteRemind(Long userId, Long remindId) {
-        Remind remind = remindRepository.findById(remindId)
-                                        .orElseThrow(() -> new ResourceNotFoundException(
-                                                ErrorCode.REMIND_NOT_FOUND,
-                                                "해당 알림을 찾을 수 없습니다.",
-                                                remindId.toString()));
-        // 리마인드 소유자 권한 검증
-        Schedule schedule = remind.getSchedule();
-        if (!schedule.getUserId().equals(userId)) {
-            throw new InvalidAuthorizationException(
-                    ErrorCode.INVALID_AUTHORIZATION,
-                    "userId",
-                    userId);
-        }
+        // ! 1. Remind 조회
+        Remind remind = remindRepository.findById(remindId).orElseThrow(() -> new ResourceNotFoundException(
+                ErrorCode.REMIND_NOT_FOUND, "해당 알림을 찾을 수 없습니다.", remindId.toString()));
 
-        // Essential 리마인드 삭제 방지
-        if ("Y".equals(remind.getIsEssentialYn())) {
-            throw new InvalidValueException(
-                    ErrorCode.INVALID_REMIND_OPERATION,
-                    "필수 리마인드는 삭제할 수 없습니다.",
-                    remindId.toString()
-            );
-        }
+        // ! 2. 일정 조회 및 권한 검증
+        findAndValidateSchedule(userId, remind.getScheduleId(), RemindAuthType.DELETE);
 
+        // ! 3. 알림 삭제
         remindRepository.delete(remind);
-        return new ApiResponse(true, "리마인드가 성공적으로 삭제되었습니다.", remindId);
+
+        // ! 4. Response 반환
+        return new ApiResponse(true, "알림이 성공적으로 삭제되었습니다.", remindId);
     }
 
-    private Remind saveSingleRemind(LocalDateTime remindDateTime, Schedule schedule) {
-        if (remindRepository.existsByScheduleIdAndRemindDateTime(schedule.getScheduleId(), remindDateTime)) {
-            throw new DuplicateValueException(
-                    ErrorCode.REMIND_ALREADY_EXISTS,
-                    "이미 해당 시간에 알림이 존재합니다.",
-                    remindDateTime.toString());
+    /**
+     * 일정 조회 및 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용하는 메서드
+     */
+    private Schedule findAndValidateSchedule(Long userId, Long scheduleId, RemindAuthType authType) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
+                ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", scheduleId));
+
+        boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId, Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
+
+        if (!schedule.getUserId().equals(userId) && !isAdmin) {
+            throw new InvalidAuthorizationException(authType.getErrorCode(), authType.getMessage(), userId);
         }
-
-        RemindRequest singleRequest = new RemindRequest();
-        singleRequest.setScheduleId(schedule.getScheduleId());
-        singleRequest.setRemindDateTime(remindDateTime);
-
-        Remind remind = remindConverter.toRemind(singleRequest);
-        schedule.addRemind(remind);
-        return remindRepository.save(remind);
+        return schedule;
     }
 }
