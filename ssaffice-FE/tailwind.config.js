@@ -58,6 +58,9 @@ export default {
         'color-bg-interactive-success': 'var(--color-green-600)',
         'color-bg-interactive-success-hover': 'var(--color-green-700)',
         'color-bg-interactive-success-press': 'var(--color-green-800)',
+        'color-bg-interactive-disabled': 'var(--color-neutral-500)',
+        'color-bg-interactive-disabled-hover': 'var(--color-neutral-600)',
+        'color-bg-interactive-disabled-press': 'var(--color-neutral-700)',
 
         /* Border */
         'color-border-primary': 'var(--color-neutral-400)',
