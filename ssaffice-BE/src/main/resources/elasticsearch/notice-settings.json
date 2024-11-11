@@ -1,0 +1,34 @@
+{
+  "number_of_shards": 1,
+  "number_of_replicas": 2,
+  "refresh_interval": "30s",
+  "max_ngram_diff": 19,
+  "codec": "best_compression",
+  "routing": {
+    "allocation": {
+      "include": { "_tier_preference": "data_content" }
+    }
+  },
+  "analysis": {
+    "filter": {
+      "my_ngram_filter": {
+        "type": "ngram",
+        "min_gram": 1,
+        "max_gram": 20
+      }
+    },
+    "tokenizer": {
+      "my_nori_tokenizer": {
+        "type": "nori_tokenizer",
+        "decompound_mode": "mixed"
+      }
+    },
+    "analyzer": {
+      "jetty_notice_analyzer": {
+        "type": "custom",
+        "tokenizer": "my_nori_tokenizer",
+        "filter": ["my_ngram_filter"]
+      }
+    }
+  }
+}
