@@ -1,5 +1,7 @@
+import { FoldUp, SpreadDown } from '@/assets/svg'
 import { AnnouncementItemDisplayType, useArticleClicked } from '@/features/announcementTab'
-import { useDateFormatter } from '@/shared/model'
+import { useCustomEmojiRemover, useDateFormatter } from '@/shared/model'
+import Markdown from 'react-markdown'
 
 type AnnouncementItemParam = {
   announcementItem: AnnouncementItemDisplayType
@@ -70,9 +72,14 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
             {announcementItem.title}
           </div>
         </div>
-        <div className='flex justify-end items-end'>
+        <div
+          className='
+          flex justify-end self-end
+          w-spacing-16 h-spacing-16
+          '
+        >
           {/* 드롭다운/업 SVG */}
-          {isClicked ? '▲' : '▼'}
+          {isClicked ? <FoldUp /> : <SpreadDown />}
         </div>
       </div>
 
@@ -80,12 +87,12 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
       {isClicked && (
         <div
           className='
-          flex
+          flex flex-col
           pl-spacing-48 pr-spacing-24 pb-spacing-16
           text-color-text-primary body-sm-medium'
         >
           {/* markdown */}
-          {announcementItem.content}
+          <Markdown>{useCustomEmojiRemover(announcementItem.content)}</Markdown>
         </div>
       )}
     </div>

@@ -118,7 +118,16 @@ export const dummyAnnouncements: AnnouncementItemDisplayType[] = [
     user: { userId: 4, name: 'Bob Brown' },
     createdAt: new Date('2024-08-15T14:00:00'),
     title: '공지 제목 14',
-    content: '공지 내용 14번입니다. 긴급 시스템 점검 안내입니다.',
+    content: `
+  \\[자율PJT 자치회 선발 안내\\]\n-------------------\n\n**베스트 일레븐!** 11기 여러분
+ 안녕하세요!! 이번 **자율PJT 자치회**를 모집합니다! **나와 우리 팀원들을 위해 더 나은 SSAFY 
+를 함께 만들어 갈 여러분을 기다립니다. :man-gesturing-ok:** 관심있는 11기 교육생의 많은 지원
+ 바랍니다 :breeze\\_flower:\n\n#### **:bangbang:\xa0반 별 자치회**\n\n:black\\_small\\_square: **임기**: 선발 후 자율PJT 6주간 활동 :black\\_small\\_square: **주요 업무**: SSAFY DAY 및
+ 반 별 이벤트, 지역 내 회의 참석, 간식 지급 및 관리, 반 학습 분위기 조성 :black\\_small\\_square: **혜택**: 주차 별 마일리지 지급\n\n**SSAFY에서 우리 캠퍼스, 우리 반을 대표하여 다양한 
+역량을 키울 기회를 놓치지 마세요!!** **지원을 희망하는 교육생은 10/17일(목)까지 본인 반담당 
+프로님에게 문의해주세요! :heart\\_ogu:**\n\n**자치회 관련 문의사항은 @원강재(교육프로) 에게 
+문의해주세요!**
+  `,
     noticeId: 14,
   },
   {
@@ -146,7 +155,25 @@ export const dummyAnnouncements: AnnouncementItemDisplayType[] = [
     user: { userId: 3, name: 'Alice Johnson' },
     createdAt: new Date('2024-08-25T16:30:00'),
     title: '공지 제목 18',
-    content: '공지 내용 18번입니다. 성능 개선 작업 공지입니다.',
+    content: `@here 
+
+# EVENT 행운을 나눠주세요 :gg-clover: 
+
+서울 6반 모든 교육생들에게 행운이 깃들길!
+우리반에 숨겨진 행운을 찾아주세요! :loopy-face2: 
+11월 7일 목요일! 서울 6반의 행운이벤트가 진행됩니다! 기대하는 마음으로 목요일에 만나요 :)
+
+### :gg-clover: 진행일자: 11월 7일 목요일 아침
+### :gg-clover: 참여방법
+ ** :platinum_1: 당일 아침! 강의장 내에 있는 행운의 쪽지를 찾아주세요! **
+ ** :platinum_2: 쪽지를 찾았다면! 인증샷을 찍고 함께 행운을 공유하고 싶은 교육생을 생각해주세요! 간단한 응원 메시지를 남겨도 좋겠죠?**
+ ** :platinum_3: [SSAFY 소통채널](https://meeting.ssafy.com/s11public/channels/off-topic)에 행운을 공유할 교육생 태그하고 인증샷과 응원 메시지를 올려주세요! ** 
+
+### :gg-clover: 유의사항
+** * 당일 찾은 쪽지만 인정해드립니다**
+** * 1인 1개 쪽지만 유효합니다**
+** * 행운을 나눠주고 싶은 교육생을 꼭! 태그해주셔야 상품이 지급됩니다! 혼자만 행운을 간직하면 상품은 없어요!  :d_bear:  **
+** * 행운을 공유하고 싶은 다른 반 교육생을 태그해주셔도 됩니다! **`,
     noticeId: 18,
   },
   {
@@ -174,7 +201,16 @@ export const dummyAnnouncements: AnnouncementItemDisplayType[] = [
     user: { userId: 2, name: 'Jane Smith' },
     createdAt: new Date('2024-08-20T08:30:00'),
     title: '공지 제목 22',
-    content: '공지 내용 22번입니다. 긴급 업데이트 안내입니다.',
+    content: `
+  [자율 프로젝트 계획서 
+및 2차 교보재 신청서 작성 및 제출안내]\n1차 교보재가 금일부터 순차적으로 지급중에 있습니다.\n2차 교보재는 사전 안내된 바와 같이 자유주제를 선택하신 팀과 1차 교보재를 신청하지 않은 팀에
+ 한하여 신청하실 수 있습니다.\n\n :round_pushpin: 계획서 및 신청서 두 서류에 모두 사용하실  
+교보재 리스트가 기재돼 있어야 합니다. (계획서 and 신청서 :o:  , 계획서 or 신청서 :x: )\n :round_pushpin: 팀별 논의 및 반 담당 컨설턴트님 코칭을 받아서 작성해주시고\n :round_pushpin: 10/28(월) 11시까지 팀장님이 반담당프로님에게 제출해주세요 :slightly_smiling_face: \n :white_small_square: 기업연계팀도 각 반 담당 프로님께 제출해주시면 됩니다.\n :round_pushpin: 프로젝트
+ 시점을 감안했을 때, 학습보충용 교보재(이러닝 및 도서)는 2차 교보재로 지급되지않습니다. \n :round_pushpin: 프로젝트에 직접 사용되는 장비/라이선스/서버 등은 신청가능합니다.\n :round_pushpin: 모든 교보재는 프로젝트 종료 후, 반납 필수 (파손 시, 본인부담)입니다.\n\n교보재 승인은 
+팀별이 아닌, 신청팀 전체 대상이므로 \n한 팀이라도 제출이 지연될 경우, 다른 팀에 본의아니게  
+피해를 줄 수 있어요 :smiling_face_with_tear: \n궁금한 점은 반담당 프로님, 컨설턴트님, 코치님
+의 도움을 적극적으로 받아주세요 :dance_kkeobi:
+  `,
     noticeId: 22,
   },
   {

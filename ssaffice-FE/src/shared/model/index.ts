@@ -16,6 +16,8 @@ export { findModalByName } from './CommonModal/findModalByName'
 
 export { useDateFormatter } from './useDateFormatter'
 
+export { useCustomEmojiRemover } from './useCustomEmojiRemover'
+
 export {
   useIsTabOpenStore,
   useSetIsTabOpenStore,
