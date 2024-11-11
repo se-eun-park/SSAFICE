@@ -27,7 +27,9 @@ template = PromptTemplate(
     다음의 메시지 리스트를 보면서 일정 여부를을 파악하여 JSON형태로 출력하라.
     일정이란 해당 메시지에 해야할 task가 주어져 있거나 특정 시간이 주어져 있는 모든 메시지를 의미한다.    
 
-    오늘 날짜는 {today_date} 년 이라는 것을 고려하여 schedule 의 일정을 파악해라.
+    오늘 날짜는 {today_date} 라는 것을 고려하여 schedule 의 start_time과 end_time을 파악해라.
+    한 주의 시작은 일요일이다. 
+    오늘 요일을 파악해서 이번주, 다음주에 해당하는 날짜를 파악해라.
     
     JSON 형태는 list라는 배열안에 넣어서 출력한다.
     해당 메시지가 일정이라고 판단되는 경우:
@@ -35,8 +37,8 @@ template = PromptTemplate(
     'isTodo': 'o',
     'title': '할 일을 1문장으로 작성',
     'content' : 할 일을 하는 방법을 3문장 내외로 작성,
-    'schedule_start_time': 할 일의 시작 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성. 시작 시간을 알 수 없으면 날짜는 {today_date},시간은 00:00으로 작성
-    'schedule_end_time': 할 일의 마감 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성 마감 일자를 알 수 없으면 null. 마감 시간을 알 수 없으면 'YYYY-MM-DD 00:00'
+    'schedule_start_time': 할 일의 시작 시간을 'YYYY-MM-DD HH:mm' 형식으로 작성. 시작 date를 알 수 없으면 날짜는 {today_date}, 시작 time을 알 수 없으면 시간은 00:00.
+    'schedule_end_time': 할 일의 마감 시간을 'YYYY-MM-DD HH:mm' 형식으로 end date를 알 수 없으면 null. end time을 알 수 없으면 시간은 00:00.
 
     해당 메시지가 일정이 아니라고 판단되는 경우:
     'id': id,
@@ -227,7 +229,17 @@ def get_file_by_file_id(token, file_id):
     else:
         print("Failed to get file with status code:", response.status_code)
         return None
-    
+
+def get_file_info_by_file_id(token, file_id):
+    headers = get_headers(token)
+    response = session.get(f"{mm_baseurl}/files/{file_id}/info", headers=headers)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Failed to get file with status code:", response.status_code)
+        return None
+
 def get_channel_members_count(token, channel_id):
     headers = get_headers(token)
     response = session.get(f"{mm_baseurl}/channels/{channel_id}/stats", headers=headers)

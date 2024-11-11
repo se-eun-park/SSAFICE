@@ -27,3 +27,9 @@ def insert_remind(remind):
         db.add(remind)
         db.commit()
         return remind.remind_id
+
+def insert_file(file):
+    with get_db() as db:
+        db.add(file)
+        db.commit()
+        return file.file_id

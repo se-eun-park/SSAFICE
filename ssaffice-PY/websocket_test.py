@@ -26,15 +26,23 @@ def on_message(ws, message):
             if notice["isTodo"] == "o":
                 # db에 저장할 notice entity 만들기
                 notice_entity = make_notice_entity(data, notice)
-
-                # 파일 업로드 하면서 동시에 task_type을 확인하기
-                file_upload_if_file_exist(token, data)
-                # if is_file:
-                #     notice_entity.task_type = "FILE"
-
                 # notice를 DB에 저장
                 notice_db_id = insert_notice(notice_entity)
                 print("공지 등록 완료, notice_id :", notice_db_id)
+
+                # 파일 업로드 하면서 동시에 db에 파일 정보 삽입
+                metadatas = get_file_metadata_from_data(data)               
+                if metadatas != None:                    
+                    order_idx = 0
+                    for metadata in metadatas:
+                        response = get_file_by_file_id(token, metadata['id'])
+                        upload_file_to_s3(response)      
+                        file = make_file_entity(notice_db_id, response, metadata, order_idx)
+                        file_db_id = insert_file(file)
+                        print("file db 삽입 완료 : ", file_db_id)
+                        order_idx+=1
+                else:
+                    print("metadata가 none이었네요")
 
                 # notice_channel을 DB에 저장
                 notice_channel_entity = make_notice_channel_entity(data, notice_db_id)
