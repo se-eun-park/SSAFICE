@@ -1,11 +1,12 @@
 ### 변수 설정
-@scheduleId = 1
+@scheduleId = 2
 @remindId = 4
+@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxNDIzOTI2fQ.NhHWX7vjIbiDtqj9iNLgDIfxYM-_CiCNTOaFcpX_-H2-b2bVgQM6mpUKzpyD78rUEQuZIOpE2v9CWkLJi-Ag1w
 
 ### 알림 등록
 POST http://localhost:9090/api/schedules/{{scheduleId}}/reminds
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxMzMzNzkwfQ.sDiQRlvThWkQTWGQMtN06JKJhfq5iAtoRcmahCsrq6aBF7r1KWzZ8xhomVwOg4x7nS5WN0zpIp6oOWXbwueqhQ
+Authorization: Bearer {{JWT}}
 
 {
   "isEssentialYn": "N",
@@ -16,4 +17,4 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZ
 ### 알림 삭제
 DELETE http://localhost:9090/api/schedules/reminds/{{remindId}}
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxMzMzNzkwfQ.sDiQRlvThWkQTWGQMtN06JKJhfq5iAtoRcmahCsrq6aBF7r1KWzZ8xhomVwOg4x7nS5WN0zpIp6oOWXbwueqhQ
+Authorization: Bearer {{JWT}}
