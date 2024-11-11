@@ -9,6 +9,8 @@ export { useDateFormatter } from './useDateFormatter'
 
 export { useCustomEmojiRemover } from './useCustomEmojiRemover'
 
+export { announcementDataEmojiSelectExpression } from './regularExpressions'
+
 export {
   useIsTabOpenStore,
   useSetIsTabOpenStore,
