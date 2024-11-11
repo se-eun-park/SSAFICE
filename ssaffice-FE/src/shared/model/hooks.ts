@@ -28,11 +28,9 @@ export const useHover = <T extends HTMLElement>(): [
   const ref = useRef<T>(null)
 
   const handleMouseOver = useCallback(() => {
-    // console.log('handleMouseOver', ref.current)
     setIsHover(true)
   }, [])
   const handleMouseOut = useCallback(() => {
-    // console.log('handleMouseOut', ref.current)
     setIsHover(false)
   }, [])
 

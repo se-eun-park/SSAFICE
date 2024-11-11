@@ -31,8 +31,14 @@ export const ClickProfileButton = () => {
       </button>
 
       {/* DropDown 컴포넌트 */}
-      <DropDown isOpen={isOpen} isShadow={true} position='right-0 mt-spacing-8'>
-        <DropDown.Content>
+      <DropDown
+        isOpen={isOpen}
+        isShadow={true}
+        isDivide={true}
+        width='w-[23.25rem]'
+        position='right-0 mt-spacing-8'
+      >
+        <DropDown.Content isPaddingY={true}>
           <DropDown.Image>
             <img
               src='https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg'
@@ -44,14 +50,18 @@ export const ClickProfileButton = () => {
           <DropDown.SubTitle>seongJ@gamil.com</DropDown.SubTitle>
         </DropDown.Content>
 
-        <DropDown.Content onClickEvent={handleOnClickPasswordReset} isHover={true}>
+        <DropDown.Content
+          onClickEvent={handleOnClickPasswordReset}
+          isHover={true}
+          isPaddingY={true}
+        >
           <DropDown.Image>
             <PasswordResetIcon className='w-4' />
           </DropDown.Image>
           <DropDown.SubTitle color='text-color-text-primary'>비밀번호 변경</DropDown.SubTitle>
         </DropDown.Content>
 
-        <DropDown.Content onClickEvent={handleOnClickLogout} isHover={true}>
+        <DropDown.Content onClickEvent={handleOnClickLogout} isHover={true} isPaddingY={true}>
           <DropDown.Image>
             <LogoutIcon className='w-4' />
           </DropDown.Image>

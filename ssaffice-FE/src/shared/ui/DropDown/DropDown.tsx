@@ -37,7 +37,14 @@ function getDropDownContent(children: ReactNode) {
   return childrenArray.filter((child) => isValidElement(child) && child.type !== DropDownImageType)
 }
 
-function DropDownContent({ children, onClickEvent, isHover }: DropDownContentProps) {
+function DropDownContent({
+  children,
+  onClickEvent,
+  isHover,
+  isPaddingY,
+  isHoverHighLight,
+  isDefaultHover,
+}: DropDownContentProps) {
   const Wrapper = onClickEvent ? 'button' : 'div'
   const dropDownImage = getDropDownImage(children)
   const dropDownContent = getDropDownContent(children)
@@ -45,7 +52,7 @@ function DropDownContent({ children, onClickEvent, isHover }: DropDownContentPro
   return (
     <Wrapper
       onClick={onClickEvent}
-      className={`flex items-center px-spacing-16 py-spacing-10 ${isHover ? 'hover:bg-color-bg-tertiary' : ''}`}
+      className={`flex w-full items-center px-spacing-16 ${isDefaultHover && isHoverHighLight ? 'bg-color-bg-tertiary shadow-[inset_3px_0_0_0_rgba(29,78,216,1)]' : isDefaultHover ? 'bg-color-bg-tertiary' : ''} ${isHoverHighLight ? 'hover:shadow-[inset_3px_0_0_0_rgba(29,78,216,1)]' : ''} ${isPaddingY ? 'py-spacing-10' : 'py-spacing-4'} ${isHover ? 'hover:bg-color-bg-tertiary' : ''}`}
     >
       {dropDownImage.length > 0 && <div className='mr-spacing-12'>{dropDownImage}</div>}
       <div className='flex flex-col'>{dropDownContent}</div>
@@ -55,14 +62,22 @@ function DropDownContent({ children, onClickEvent, isHover }: DropDownContentPro
 
 // 메인 컴포넌트
 
-function DropDownMain({ children, isOpen, isShadow, position }: DropDownMainProps) {
+function DropDownMain({
+  children,
+  isOpen,
+  isShadow,
+  isDivide,
+  isPaddingY,
+  width,
+  position,
+}: DropDownMainProps) {
   if (!isOpen) {
     return null
   }
 
   return (
     <div
-      className={`absolute z-20 flex flex-col border divide-y-2 bg-color-bg-primary border-color-border-tertiary rounded-radius-8 min-w-60 ${position} ${isShadow ? 'effect-shadow' : ''}`}
+      className={`absolute z-20 flex flex-col border bg-color-bg-primary border-color-border-tertiary rounded-radius-8 ${width} ${position} ${isShadow ? 'effect-shadow' : ''} ${isDivide ? 'divide-y-2' : ''} ${isPaddingY ? 'py-spacing-10' : ''}`}
     >
       {children}
     </div>

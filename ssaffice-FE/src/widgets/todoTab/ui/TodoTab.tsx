@@ -1,9 +1,9 @@
 import { TodoList } from './TodoList'
 import { TodoBoard } from './TodoBoard'
 
-import { HoverTitle } from '@/features/todoTab'
+import { HoverTitle, SelectTodoState } from '@/features/todoTab'
 import { useIsTabOpenStore } from '@/shared/model'
-import { SearchBar, TabLayout, HoverButton } from '@/shared/ui'
+import { TabLayout, HoverButton } from '@/shared/ui'
 import { HamburgerMenuIcon, FastLeftArrowIcon, CalendarIcon, EditIcon } from '@/assets/svg'
 
 export const TodoTab = () => {
@@ -44,9 +44,7 @@ export const TodoTab = () => {
         </div>
       </TabLayout.Header>
 
-      <TabLayout.Add>
-        <SearchBar />
-      </TabLayout.Add>
+      <TabLayout.Add>{isTabOpen ? <SelectTodoState actionType='filter' /> : null}</TabLayout.Add>
 
       <TabLayout.Content>{isTabOpen ? <TodoList /> : <TodoBoard />}</TabLayout.Content>
     </TabLayout>
