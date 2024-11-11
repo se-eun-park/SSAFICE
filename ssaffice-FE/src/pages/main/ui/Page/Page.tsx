@@ -8,7 +8,7 @@ export const MainPage = () => {
   const isAnimation = useIsAnimationStore()
 
   return (
-    <main className='flex flex-col w-full h-full gap-y-spacing-32 px-spacing-32 py-spacing-40'>
+    <main className='flex flex-col w-full min-h-[calc(100vh+214px)] gap-y-spacing-32 px-spacing-32 py-spacing-40'>
       <SummaryTab />
 
       <div className={`flex gap-x-spacing-40 ${isAnimation ? ' animate-gapShrink' : ''}`}>

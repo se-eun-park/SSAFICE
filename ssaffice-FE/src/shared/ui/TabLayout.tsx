@@ -32,7 +32,7 @@ function TabLayoutContent({ children, animation }: TabLayoutProps) {
 function TabLayoutMain({ children, animation }: TabLayoutProps) {
   return (
     <section
-      className={`w-full min-h-[58rem] max-h-[58rem] p-spacing-32 flex flex-col items-center bg-color-bg-secondary rounded-radius-8 ${animation}`}
+      className={`w-full min-h-[calc(100vh-120px)] max-h-[calc(100vh-120px)] p-spacing-32 flex flex-col items-center bg-color-bg-secondary rounded-radius-8 ${animation}`}
     >
       {children}
     </section>
