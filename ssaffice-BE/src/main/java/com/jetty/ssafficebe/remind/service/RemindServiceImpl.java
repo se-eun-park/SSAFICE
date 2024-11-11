@@ -59,7 +59,7 @@ public class RemindServiceImpl implements RemindService {
         log.info("[Remind] 알림 등록 완료 - remindId={}, scheduleId={}", savedRemind.getRemindId(), schedule.getScheduleId());
 
         // ! 5. Response 반환
-        return new ApiResponse(true, "알림 등록에 성공하였습니다.", remindConverter.toRemindSummary(savedRemind));
+        return new ApiResponse(true, "알림 등록에 성공하였습니다.", savedRemind.getRemindId());
     }
 
     @Override
