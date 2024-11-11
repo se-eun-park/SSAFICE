@@ -3,16 +3,16 @@ POST http://localhost:9090/api/users
 Content-Type: application/json
 
 {
-  "email": "test5@gmail.com",
+  "email": "admin2@gmail.com",
   "password": "1234",
-  "name": "tester5",
+  "name": "admin2",
   "roleIds": [
-    "ROLE_USER"
+    "ROLE_ADMIN"
   ],
-  "cohortNum": 1,
-  "regionCd": "SEOUL",
-  "classNum": 1,
-  "trackCd": "NON_MAJOR_PYTHON"
+  "cohortNum": null,
+  "regionCd": null,
+  "classNum": null,
+  "trackCd": null
 }
 
 ### 유저 아이디로 유저 정보 검색
@@ -38,7 +38,7 @@ Content-Type: application/json
 [2]
 
 ### 유저 리스트 조회
-GET http://localhost:9090/api/users?sort=createdAt,desc
+GET http://localhost:9090/api/users
 Content-Type: application/json
 
 {

@@ -1,14 +1,13 @@
-package com.jetty.ssafficebe.common.code;
+package com.jetty.ssafficebe.notice.code;
 
 import com.jetty.ssafficebe.commoncode.CommonCode;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
+public enum NoticeType implements CommonCode {
 
-public enum ScheduleStatusType implements CommonCode {
-    TODO("해야 할 일"),
-    IN_PROGRESS("진행 중"),
-    DONE("완료"),
+    GLOBAL("전체공지"),
+    TEAM("팀공지"),
     ;
 
     private final String title;

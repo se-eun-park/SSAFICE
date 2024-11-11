@@ -3,8 +3,8 @@ POST http://localhost:9090/api/roles
 Content-Type: application/json
 
 {
-  "roleId": "ROLE_USER",
-  "description": "학생"
+  "roleId": "ROLE_ADMIN",
+  "description": "프로"
 }
 
 

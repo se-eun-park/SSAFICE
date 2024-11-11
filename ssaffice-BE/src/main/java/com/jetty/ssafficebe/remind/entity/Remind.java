@@ -1,11 +1,14 @@
 package com.jetty.ssafficebe.remind.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
+import com.jetty.ssafficebe.remind.code.RemindType;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
+import com.jetty.ssafficebe.user.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "remind")
-public class Remind {
+public class Remind extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +35,12 @@ public class Remind {
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isEssentialYn", updatable = false, insertable = false)
     private Boolean isEssential;
+
+    private String remindTypeCd;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "remindTypeCd", updatable = false, insertable = false)
+    private RemindType remindType;
 
     private LocalDateTime remindDateTime;
 

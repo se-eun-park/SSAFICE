@@ -1,5 +1,6 @@
 package com.jetty.ssafficebe.notice.payload;
 
+import com.jetty.ssafficebe.channel.payload.ChannelSummary;
 import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,8 @@ public class NoticeSummaryForList {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String isEssentialYn;
-    private String taskTypeCd;
+    private String noticeTypeCd;
     private CreatedBySummary createUser;
+    private ChannelSummary channelSummary;
 
 }

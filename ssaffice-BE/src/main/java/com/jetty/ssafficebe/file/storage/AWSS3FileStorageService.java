@@ -1,5 +1,6 @@
 package com.jetty.ssafficebe.file.storage;
 
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -31,12 +32,16 @@ public class AWSS3FileStorageService implements FileStorageService {
 
     @Override
     public String uploadFile(MultipartFile file) throws IOException {
+        // 파일 내용을 기반으로 hash값 생성.
         String hash = ResourceHashUtil.generateHash(file.getInputStream());
         ObjectMetadata objectMetaData = new ObjectMetadata();
         objectMetaData.setContentType(file.getContentType());
         objectMetaData.setContentLength(file.getSize());
-        awsS3ClientProviderForAttachment.getS3Client().putObject(new PutObjectRequest(bucket,
-                                                                                      this.getTargetPath(hash), file.getInputStream(), objectMetaData));
+        awsS3ClientProviderForAttachment.getS3Client()
+                                        .putObject(new PutObjectRequest(bucket,
+                                                                        this.getTargetPath(hash),
+                                                                        file.getInputStream(),
+                                                                        objectMetaData));
 
         return hash;
     }
@@ -44,27 +49,47 @@ public class AWSS3FileStorageService implements FileStorageService {
     @Override
     public byte[] getBytes(String hash) throws IOException {
         S3Object object =
-                awsS3ClientProviderForAttachment.getS3Client().getObject(new GetObjectRequest(bucket, this.getTargetPath(hash)));
+                awsS3ClientProviderForAttachment.getS3Client()
+                                                .getObject(new GetObjectRequest(bucket, this.getTargetPath(hash)));
         S3ObjectInputStream objectInputStream = object.getObjectContent();
         return IOUtils.toByteArray(objectInputStream);
     }
 
     @Override
     public InputStream getInputStream(String hash) {
-
         S3Object object =
-                awsS3ClientProviderForAttachment.getS3Client().getObject(new GetObjectRequest(bucket, this.getTargetPath(hash)));
+                awsS3ClientProviderForAttachment.getS3Client()
+                                                .getObject(new GetObjectRequest(bucket, this.getTargetPath(hash)));
         return object.getObjectContent();
     }
 
     @Override
     public void deleteFile(String hash) {
         this.awsS3ClientProviderForAttachment.getS3Client().deleteObject(new DeleteObjectRequest(bucket,
-                                                                                                 this.getTargetPath(hash)));
+                                                                                                 this.getTargetPath(
+                                                                                                         hash)));
     }
 
     private String getTargetPath(String hash) {
         return Paths.get(keyPrefix, ResourceHashUtil.getDirPath(hash), ResourceHashUtil.getFilePath(hash)).toString();
     }
+
+    @Override
+    public String uploadProfileImage(MultipartFile file) throws IOException {
+        String hash = ResourceHashUtil.generateHash(file.getInputStream());
+        ObjectMetadata objectMetaData = new ObjectMetadata();
+        objectMetaData.setContentType(file.getContentType());
+        objectMetaData.setContentLength(file.getSize());
+        awsS3ClientProviderForAttachment.getS3Client()
+                                        .putObject(new PutObjectRequest(bucket,
+                                                                        this.getTargetPath(hash),
+                                                                        file.getInputStream(),
+                                                                        objectMetaData).withCannedAcl(
+                                                CannedAccessControlList.PublicRead));
+
+        return awsS3ClientProviderForAttachment.getS3Client().getUrl(bucket, this.getTargetPath(hash))
+                                                        .toString();
+    }
+
 
 }

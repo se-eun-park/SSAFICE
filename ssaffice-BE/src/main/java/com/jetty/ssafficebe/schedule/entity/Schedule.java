@@ -1,8 +1,7 @@
 package com.jetty.ssafficebe.schedule.entity;
 
-import com.jetty.ssafficebe.common.code.ScheduleSourceType;
-import com.jetty.ssafficebe.common.code.ScheduleStatusType;
-import com.jetty.ssafficebe.common.code.TaskType;
+import com.jetty.ssafficebe.schedule.code.ScheduleSourceType;
+import com.jetty.ssafficebe.schedule.code.ScheduleStatusType;
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.remind.entity.Remind;
@@ -42,12 +41,6 @@ public class Schedule extends BaseEntity {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
 
-    private String taskTypeCd;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "taskTypeCd", updatable = false, insertable = false)
-    private TaskType taskType;
-
     private String scheduleSourceTypeCd;
 
     @Enumerated(EnumType.STRING)
@@ -85,10 +78,10 @@ public class Schedule extends BaseEntity {
     private Notice notice;
 
     @OneToMany(mappedBy = "scheduleId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Remind> remindList = new ArrayList<>();
+    private List<Remind> reminds = new ArrayList<>();
 
     public void addRemind(Remind remind) {
-        this.remindList.add(remind);
+        this.reminds.add(remind);
         remind.setSchedule(this);
     }
 }

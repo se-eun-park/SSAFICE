@@ -5,6 +5,7 @@ import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueExcepti
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.file.storage.FileStorageService;
 import com.jetty.ssafficebe.role.converter.RoleConverter;
 import com.jetty.ssafficebe.role.entity.Role;
 import com.jetty.ssafficebe.role.entity.UserRole;
@@ -19,6 +20,7 @@ import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserFilterRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
@@ -39,6 +42,8 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
     private final RoleConverter roleConverter;
+
+    private final FileStorageService fileStorageService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -144,5 +149,20 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
         userRepository.save(user);
         return new ApiResponse(true, HttpStatus.OK, "비밀번호 변경 성공");
+    }
+
+    @Override
+    public ApiResponse updateProfileImg(Long userId, MultipartFile profileImg) throws IOException {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+
+        // 프로필 이미지 s3 업로드 하여 hash값 가져오기
+        String profileImgUrl = fileStorageService.uploadProfileImage(profileImg);
+
+        // 프로필 이미지 url 업데이트
+        user.setProfileImgUrl(profileImgUrl);
+        userRepository.save(user);
+
+        return new ApiResponse(true, HttpStatus.OK, "프로필 이미지 변경 성공");
     }
 }
