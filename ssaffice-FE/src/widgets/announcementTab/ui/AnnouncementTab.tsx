@@ -8,6 +8,8 @@ import {
 } from '@/shared/model'
 import { SearchBar, TabLayout, HoverButton } from '@/shared/ui'
 import { FastLeftArrowIcon } from '@/assets/svg'
+import { AnnouncementList } from './AnnouncementList'
+import { useAnnouncementTabSelectView } from '@/features/announcementTab'
 
 export const AnnouncementTab = () => {
   // store
@@ -37,10 +39,27 @@ export const AnnouncementTab = () => {
     }, 400)
   }
 
+  const { isAllNoticeView, handleNoticeViewSelect, selectedStyle, unselectedStyle } =
+    useAnnouncementTabSelectView()
+
   return (
     <TabLayout animation={tabAnimationClass}>
       <TabLayout.Header animation={contentsAnimationClass}>
-        <h1>전체 공지</h1>
+        <div className='flex heading-desktop-xl'>
+          <div
+            onClick={() => handleNoticeViewSelect('미등록 공지')}
+            className={isAllNoticeView ? unselectedStyle : selectedStyle}
+          >
+            미등록 공지
+          </div>
+          <div className='text-color-text-primary'>&nbsp;|&nbsp;</div>
+          <div
+            onClick={() => handleNoticeViewSelect('전체 공지')}
+            className={isAllNoticeView ? selectedStyle : unselectedStyle}
+          >
+            전체 공지
+          </div>
+        </div>
         <HoverButton
           icon={<FastLeftArrowIcon className='w-6' />}
           tooltip='공지 접기'
@@ -48,13 +67,24 @@ export const AnnouncementTab = () => {
         />
       </TabLayout.Header>
 
-      <TabLayout.Add animation={contentsAnimationClass}>
-        <SearchBar />
-      </TabLayout.Add>
+      {isAllNoticeView && (
+        <TabLayout.Add animation={contentsAnimationClass}>
+          <SearchBar />
+        </TabLayout.Add>
+      )}
 
       <TabLayout.Content animation={contentsAnimationClass}>
-        <div className='w-full h-full rounded-radius-8 bg-color-bg-tertiary'>
-          나중엔 공지 리스트 컴포넌트가 들어감
+        <div
+          className={`
+          flex
+          ${isAllNoticeView ? 'max-h-[734px]' : 'max-h-[806px] mt-spacing-24'} pb-spacing-24 px-spacing-16
+          bg-color-bg-tertiary
+          rounded-radius-8
+          overflow-y-scroll
+          `}
+        >
+          {/* {isAllNoticeView ? <AnnouncementList /> : } */}
+          <AnnouncementList />
         </div>
       </TabLayout.Content>
     </TabLayout>
