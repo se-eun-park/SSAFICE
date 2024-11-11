@@ -26,7 +26,7 @@ function TabLayoutAdditional({ children, animation }: TabLayoutProps) {
 }
 
 function TabLayoutContent({ children, animation }: TabLayoutProps) {
-  return <div className={`w-full h-full ${animation}`}>{children}</div>
+  return <div className={`w-full h-full flex flex-col ${animation}`}>{children}</div>
 }
 
 function TabLayoutMain({ children, animation }: TabLayoutProps) {
