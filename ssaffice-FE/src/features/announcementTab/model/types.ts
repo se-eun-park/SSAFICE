@@ -22,6 +22,7 @@ export type AnnouncementListDisplayType = Record<string, AnnouncementItemDisplay
 // 날짜로 묶은 공지 items
 
 // API 연결 후 삭제해 주세요
+// MARK: datas
 export const dummyAnnouncements: AnnouncementItemDisplayType[] = [
   {
     user: { userId: 1, name: 'John Doe' },

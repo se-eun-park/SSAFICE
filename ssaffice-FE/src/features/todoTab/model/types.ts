@@ -5,8 +5,8 @@ export type TodoItemDisplayType = {
   title: string
   startDateTime?: Date
   endDateTime?: Date
-  scheduleSourceTypeCd?: string
-  scheduleStatusTypeCd?: string
+  scheduleSourceTypeCd?: 'GLOBAL' | 'TEAM' | 'PERSONAL'
+  scheduleStatusTypeCd?: 'TODO' | 'IN_PROGRESS' | 'DONE'
 
   user: createUser
 }
