@@ -29,6 +29,6 @@ public class Channel {
     @JoinColumn(name = "mmTeamId", insertable = false, updatable = false)
     private MMTeam mmTeam;
 
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY)
     private List<Notice> notices = new ArrayList<>();
 }
