@@ -1,20 +1,17 @@
 export const CardColumnData = [
   {
-    id: 'cardColumn1-todo',
+    id: 'TODO',
     label: '해야 할 일',
-    type: 'todo',
-    columnLength: 12,
+    columnLength: 5,
   },
   {
-    id: 'cardColumn2-progress',
+    id: 'IN_PROGRESS',
     label: '진행 중',
-    type: 'progress',
-    columnLength: 18,
+    columnLength: 5,
   },
   {
-    id: 'cardColumn3-done',
+    id: 'DONE',
     label: '완료',
-    type: 'done',
     columnLength: 2,
   },
 ]

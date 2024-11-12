@@ -2,13 +2,13 @@
 
 export const GetTodoData = [
   {
-    scheduleId: 'dkldkfkm',
+    scheduleId: 'dkldkdffkm',
     title:
       'As a translator, I want integrate Crowdin webhook to notify translators about changed strings',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-18T10:13:56.608543',
-    scheduleSourceTypeCd: 'my',
-    scheduleStatusTypeCd: 'todo',
+    scheduleSourceTypeCd: 'PERSONAL',
+    scheduleStatusTypeCd: 'TODO',
     createUser: {
       userId: 'ddlke',
       name: '곽성재(교육생)',
@@ -16,12 +16,12 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkg,gl3wpkfkm',
+    scheduleId: 'dkg,gl3wffpkfkm',
     title: 'As a user, I want to see actual overusage price for next download',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-18T10:13:56.608543',
-    scheduleSourceTypeCd: 'team',
-    scheduleStatusTypeCd: 'todo',
+    scheduleSourceTypeCd: 'TEAM',
+    scheduleStatusTypeCd: 'TODO',
     createUser: {
       userId: 'ddlkdfde',
       name: '용상윤[서울_5, 6반]실습코치',
@@ -29,12 +29,12 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkg,gl3wpkddssafkm',
+    scheduleId: 'dkg,gl3wpkdfadfddssafkm',
     title: 'As a user, I want to see actual overusage price for next download',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-17T10:13:56.608543',
-    scheduleSourceTypeCd: 'all',
-    scheduleStatusTypeCd: 'todo',
+    scheduleSourceTypeCd: 'GLOBAL',
+    scheduleStatusTypeCd: 'TODO',
     createUser: {
       userId: 'ddlkdfde',
       name: '용상윤[서울_5, 6반]실습코치',
@@ -42,12 +42,12 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkldfffffsdkfkm',
+    scheduleId: 'dkldfffffsharytdkfkm',
     title: 'Interate nuxt-18n in product-developers project',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-18T10:13:56.608543',
-    scheduleSourceTypeCd: 'my',
-    scheduleStatusTypeCd: 'todo',
+    scheduleSourceTypeCd: 'PERSONAL',
+    scheduleStatusTypeCd: 'TODO',
     createUser: {
       userId: 'ddlke',
       name: '곽성재(교육생)',
@@ -55,12 +55,12 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkldkfadfqeffkm',
+    scheduleId: 'dkldkfadfqeftykmfbdefkm',
     title: 'Font SCSS mixin does not recognise fallback for font-family',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-18T10:13:56.608543',
-    scheduleSourceTypeCd: 'my',
-    scheduleStatusTypeCd: 'todo',
+    scheduleSourceTypeCd: 'PERSONAL',
+    scheduleStatusTypeCd: 'TODO',
     createUser: {
       userId: 'ddlke',
       name: '곽성재(교육생)',
@@ -68,13 +68,13 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkldkfkm',
+    scheduleId: 'dkldrw4gnbfnurgkfkm',
     title:
       'As a translator, I want integrate Crowdin webhook to notify translators about changed strings',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-18T10:13:56.608543',
-    scheduleSourceTypeCd: 'my',
-    scheduleStatusTypeCd: 'progress',
+    scheduleSourceTypeCd: 'PERSONAL',
+    scheduleStatusTypeCd: 'IN_PROGRESS',
     createUser: {
       userId: 'ddlke',
       name: '곽성재(교육생)',
@@ -82,12 +82,12 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkg,gl3wpkfkm',
+    scheduleId: 'dkg,gl3wpregfgkdrdfkfkm',
     title: 'As a user, I want to see actual overusage price for next download',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-15T10:13:56.608543',
-    scheduleSourceTypeCd: 'team',
-    scheduleStatusTypeCd: 'progress',
+    scheduleSourceTypeCd: 'TEAM',
+    scheduleStatusTypeCd: 'IN_PROGRESS',
     createUser: {
       userId: 'ddlkdfde',
       name: '용상윤[서울_5, 6반]실습코치',
@@ -95,13 +95,13 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkg,gl3wpkddssafkm',
+    scheduleId: 'dkg,gl3wpkddssagfki;;fo;hjhfkm',
     title:
       'As a user, I want to see actual overusage price for next download As a user, I want to see actual overusage price for next download As a user, I want to see actual overusage price for next download',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-18T10:13:56.608543',
-    scheduleSourceTypeCd: 'all',
-    scheduleStatusTypeCd: 'progress',
+    scheduleSourceTypeCd: 'GLOBAL',
+    scheduleStatusTypeCd: 'IN_PROGRESS',
     createUser: {
       userId: 'ddlkdfde',
       name: '용상윤[서울_5, 6반]실습코치',
@@ -109,12 +109,12 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkldfffffsdkfkm',
+    scheduleId: 'dkldfffffsdkdtdjasethjfkm',
     title: 'Interate nuxt-18n in product-developers project',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-12T22:00:00',
-    scheduleSourceTypeCd: 'my',
-    scheduleStatusTypeCd: 'progress',
+    scheduleSourceTypeCd: 'PERSONAL',
+    scheduleStatusTypeCd: 'IN_PROGRESS',
     createUser: {
       userId: 'ddlke',
       name: '곽성재(교육생)',
@@ -122,12 +122,12 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkldkfadfqeffkm',
+    scheduleId: 'dkldkfadfqeffkyililssfgyjym',
     title: 'Font SCSS mixin does not recognise fallback for font-family',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-18T10:13:56.608543',
-    scheduleSourceTypeCd: 'my',
-    scheduleStatusTypeCd: 'progress',
+    scheduleSourceTypeCd: 'PERSONAL',
+    scheduleStatusTypeCd: 'IN_PROGRESS',
     createUser: {
       userId: 'ddlke',
       name: '곽성재(교육생)',
@@ -135,12 +135,12 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkldfffffsdkfkm',
+    scheduleId: 'dkldfffffsdiioiodfsgerghkfkm',
     title: 'Interate nuxt-18n in product-developers project',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-12T22:00:00',
-    scheduleSourceTypeCd: 'my',
-    scheduleStatusTypeCd: 'done',
+    scheduleSourceTypeCd: 'PERSONAL',
+    scheduleStatusTypeCd: 'DONE',
     createUser: {
       userId: 'ddlke',
       name: '곽성재(교육생)',
@@ -148,12 +148,12 @@ export const GetTodoData = [
     },
   },
   {
-    scheduleId: 'dkldkfadfqeffkm',
+    scheduleId: 'dkldkfadfqeffkuli;lidhtkm',
     title: 'Font SCSS mixin does not recognise fallback for font-family',
     startDateTime: '2024-11-05T10:13:56.608543',
     endDateTime: '2024-11-12T10:13:56.608543',
-    scheduleSourceTypeCd: 'my',
-    scheduleStatusTypeCd: 'done',
+    scheduleSourceTypeCd: 'PERSONAL',
+    scheduleStatusTypeCd: 'DONE',
     createUser: {
       userId: 'ddlke',
       name: '곽성재(교육생)',
