@@ -77,12 +77,8 @@ public class NoticeServiceImpl implements NoticeService {
         Page<Notice> noticeList;
 
         // ROLE_USER인 경우 해당 유저가 속해있는 채널의 공지사항만 조회
-        if (usage.equals("ROLE_USER")) {
+        if (usage.equals("GLOBAL_NOTICE")) {
             noticeList = noticeRepository.getNoticeList(userId, pageable);
-        }
-        // ROLE_ADMIN인 경우 해당 관리자가 작성한 공지사항 조회
-        else if (usage.equals("ROLE_ADMIN")) {
-            noticeList = noticeRepository.getNoticeListForAdmin(userId, pageable);
         } else {
             throw new InvalidValueException(ErrorCode.INVALID_USAGE, "usage", usage);
         }
