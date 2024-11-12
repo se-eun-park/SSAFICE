@@ -1,5 +1,7 @@
 package com.jetty.ssafficebe.user.controller;
 
+import com.jetty.ssafficebe.channel.payload.ChannelSummary;
+import com.jetty.ssafficebe.channel.service.ChannelService;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
@@ -35,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
     private final UserService userService;
+    private final ChannelService channelService;
 
     /**
      * 유저 등록
@@ -129,5 +132,15 @@ public class UserController {
                                                         @RequestParam MultipartFile profileImg) throws IOException {
 
         return ResponseEntity.ok().body(userService.updateProfileImg(userDetails.getUserId(), profileImg));
+    }
+
+
+    @GetMapping("/{userId}/channels")
+    public ResponseEntity<Page<ChannelSummary>> getChannelListByUserId(@PathVariable Long userId,
+        @PageableDefault(
+            size = 20,
+            sort = "channelId",
+            direction = Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(channelService.getChannelsByUserId(userId, pageable));
     }
 }
