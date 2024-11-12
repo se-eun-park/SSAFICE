@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.schedule.service;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.schedule.payload.AdminScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
@@ -21,7 +22,9 @@ public interface ScheduleService {
 
     Page<ScheduleSummary> getScheduleList(Long userId, ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
 
-    void saveSchedulesForUsers(List<Long> userIds, Long noticeId);
+    void saveSchedulesForUsers(Long noticeId, List<Long> userIds);
+
+    Page<ScheduleSummary> getSchedulesByNoticeForAdmin(Long noticeId, ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
 
     Page<ScheduleSummary> getSchedulesByNoticeForAdmin(Long noticeId, Pageable pageable);
 }

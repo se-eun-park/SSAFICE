@@ -165,8 +165,10 @@ public class ScheduleServiceImpl implements ScheduleService {
                 pageable.getPageNumber(),
                 pageable.getPageSize());
 
-        Page<Schedule> schedulesPage = scheduleRepository.getSchedulesByFilter(filterRequest, pageable);
+        // ! 1. 조건에 맞는 일정 리스트 생성
+        Page<Schedule> schedulesPage = scheduleRepository.findSchedulesByUserIdAndFilter(userId, filterRequest, pageable);
 
+        // ! 2. 응답 생성
         Page<ScheduleSummary> result = schedulesPage.map(scheduleConverter::toScheduleSummary);
 
         log.info("[Schedule] 일정 목록 조회 완료 - totalElements={}, totalPages={}", result.getTotalElements(), result.getTotalPages());
@@ -177,7 +179,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * 관리자 공지사항 등록 시 해당 교육생들에게 일정을 추가해주는 메서드
      */
     @Override
-    public void saveSchedulesForUsers(List<Long> userIds, Long noticeId) {
+    public void saveSchedulesForUsers(Long noticeId, List<Long> userIds) {
         log.info("[Schedule] 공지사항 일정 일괄 생성 시작 - noticeId={}, userCount={}", noticeId, userIds.size());
 
         // ! 1. 공지사항 조회
@@ -198,6 +200,27 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     /**
+     * [필터 O]
+     * 관리자 공지사항 조회 시 해당 교육생들의 일정을 조회하는 메서드
+     */
+    @Override
+    public Page<ScheduleSummary> getSchedulesByNoticeForAdmin(Long noticeId, ScheduleFilterRequest filterRequest, Pageable pageable) {
+        log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 시작 - noticeId={}", noticeId);
+
+        // ! 1. 해당 공지사항의 일정들 필터 조회
+        Page<Schedule> schedulePage = scheduleRepository.findSchedulesByNoticeIdAndFilter(noticeId, filterRequest, pageable);
+
+        // ! 2. ScheduleSummary 로 변환
+        Page<ScheduleSummary> result = schedulePage.map(scheduleConverter::toScheduleSummary);
+
+        log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 완료 - noticeId={}, count={}",
+                noticeId, result.getTotalElements());
+
+        return result;
+    }
+
+    /**
+     * [필터 X]
      * 관리자 공지사항 조회 시 해당 교육생들의 일정을 조회하는 메서드
      */
     @Override
@@ -205,7 +228,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("[Schedule] 공지사항 관련 교육생 일정 조회 시작 - noticeId={}", noticeId);
 
         // ! 1. 해당 공지사항의 일정들 조회
-        Page<Schedule> schedulePage = scheduleRepository.getSchedulesByNoticeId(noticeId, pageable);
+        Page<Schedule> schedulePage = scheduleRepository.findSchedulesByNoticeId(noticeId, pageable);
 
         // ! 2. ScheduleSummary 로 변환
         Page<ScheduleSummary> result = schedulePage.map(scheduleConverter::toScheduleSummary);
