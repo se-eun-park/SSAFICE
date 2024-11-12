@@ -58,4 +58,7 @@ public class ESNotice {
     @Field(type = FieldType.Text)
     private String createUserName;
 
+    @Field(type = FieldType.Keyword)
+    private String channelId;
+
 }

@@ -41,6 +41,9 @@
     "createUserName": {
       "type": "text",
       "analyzer": "jetty_notice_analyzer"
+    },
+    "channelId": {
+      "type": "keyword"
     }
   }
 }
