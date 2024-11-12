@@ -1,5 +1,6 @@
 package com.jetty.ssafficebe.schedule.payload;
 
+import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
 import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -16,5 +17,8 @@ public class ScheduleSummary {
     private LocalDateTime endDateTime;
     private String scheduleSourceTypeCd;
     private String scheduleStatusTypeCd;
+    private String isEssentialYn;
+    private String isEnrollYn;
     private CreatedBySummary createUser;
+    private NoticeSummaryForList noticeSummaryForList;
 }
