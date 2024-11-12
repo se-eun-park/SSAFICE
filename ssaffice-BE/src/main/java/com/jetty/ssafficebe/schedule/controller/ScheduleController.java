@@ -4,12 +4,11 @@ import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.schedule.payload.AdminScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
+import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
-import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -101,7 +100,7 @@ public class ScheduleController {
      * @return 조건에 맞는 일정 리스트
      */
     @GetMapping
-    public ResponseEntity<Page<ScheduleSummary>> getScheduleList(
+    public ResponseEntity<SchedulePageResponse> getScheduleList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
@@ -116,7 +115,7 @@ public class ScheduleController {
      * @return 조건에 맞는 일정 리스트
      */
     @GetMapping("/admin/notices/{noticeId}")
-    public ResponseEntity<Page<ScheduleSummary>> getSchedulesByNoticeForAdmin(
+    public ResponseEntity<SchedulePageResponse> getSchedulesByNoticeForAdmin(
             @PathVariable Long noticeId,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
