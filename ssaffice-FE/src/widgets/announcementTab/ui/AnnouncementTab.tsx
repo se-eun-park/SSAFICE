@@ -77,7 +77,7 @@ export const AnnouncementTab = () => {
         <div
           className={`
           flex
-          ${isAllNoticeView ? 'max-h-[734px]' : 'max-h-[806px] mt-spacing-24'} pb-spacing-24 px-spacing-16
+          ${isAllNoticeView ? 'mb-[132px]' : 'mt-spacing-24 mb-spacing-32'} px-spacing-16
           bg-color-bg-tertiary
           rounded-radius-8
           overflow-y-scroll
