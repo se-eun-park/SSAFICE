@@ -14,6 +14,8 @@ import org.mapstruct.ReportingPolicy;
         RemindConverter.class, NoticeConverter.class})
 public interface ScheduleConverter {
 
+    Schedule toSchedule(Long userId, Long noticeId);
+
     Schedule toSchedule(ScheduleRequest scheduleRequest);
 
     @Mapping(target = "remindDetails", source = "reminds")
