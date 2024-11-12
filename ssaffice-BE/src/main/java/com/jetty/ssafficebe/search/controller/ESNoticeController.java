@@ -1,10 +1,10 @@
-package com.jetty.ssafficebe.search.esnotice.controller;
+package com.jetty.ssafficebe.search.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
-import com.jetty.ssafficebe.search.esnotice.payload.ESNoticeRequest;
-import com.jetty.ssafficebe.search.esnotice.payload.ESNoticeSearchFilter;
-import com.jetty.ssafficebe.search.esnotice.service.ESNoticeService;
+import com.jetty.ssafficebe.search.payload.ESNoticeRequest;
+import com.jetty.ssafficebe.search.payload.ESNoticeSearchFilter;
+import com.jetty.ssafficebe.search.service.ESNoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +34,7 @@ public class ESNoticeController {
         return ResponseEntity.ok(esNoticeService.deleteNotice(noticeId));
     }
 
+    // TODO : Response Type 설정
     @GetMapping
     public ResponseEntity<Page<?>> searchGlobalNotice(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                       @RequestBody ESNoticeSearchFilter filter) {

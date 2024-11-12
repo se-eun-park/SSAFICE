@@ -1,4 +1,4 @@
-package com.jetty.ssafficebe.search.esnotice.payload;
+package com.jetty.ssafficebe.search.payload;
 
 import java.time.LocalDateTime;
 import lombok.Getter;

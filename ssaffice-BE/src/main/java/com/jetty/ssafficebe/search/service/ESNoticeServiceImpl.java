@@ -1,11 +1,11 @@
-package com.jetty.ssafficebe.search.esnotice.service;
+package com.jetty.ssafficebe.search.service;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
-import com.jetty.ssafficebe.search.esnotice.converter.ESNoticeConverter;
-import com.jetty.ssafficebe.search.esnotice.document.ESNotice;
-import com.jetty.ssafficebe.search.esnotice.payload.ESNoticeRequest;
-import com.jetty.ssafficebe.search.esnotice.payload.ESNoticeSearchFilter;
-import com.jetty.ssafficebe.search.esnotice.repository.ESNoticeRepository;
+import com.jetty.ssafficebe.search.converter.ESNoticeConverter;
+import com.jetty.ssafficebe.search.document.ESNotice;
+import com.jetty.ssafficebe.search.payload.ESNoticeRequest;
+import com.jetty.ssafficebe.search.payload.ESNoticeSearchFilter;
+import com.jetty.ssafficebe.search.repository.ESNoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
