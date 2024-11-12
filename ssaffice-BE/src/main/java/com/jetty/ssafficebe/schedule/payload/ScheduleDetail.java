@@ -1,8 +1,7 @@
 package com.jetty.ssafficebe.schedule.payload;
 
-import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
-import com.jetty.ssafficebe.remind.payload.RemindDetail;
+import com.jetty.ssafficebe.remind.payload.RemindSummary;
 import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import java.time.LocalDateTime;
 import java.util.List;

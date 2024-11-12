@@ -50,15 +50,17 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("[Schedule] 일정 등록 시작 - userId={}, requestUserId={}", userId, scheduleRequest.getUserId());
 
         // ! 1. 권한 검증
-        validateAuthorization(userId, scheduleRequest.getUserId());
+        Long targetUserId = scheduleRequest.getUserId() != null ? scheduleRequest.getUserId() : userId;
+        validateAuthorization(userId, targetUserId);
 
         // ! 2. Schedule 엔티티 생성 및 연관관계 설정
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
         schedule.setIsEnrollYn("Y");
 
         // 일정 소유자 설정
-        schedule.setUser(userRepository.findById(scheduleRequest.getUserId()).orElseThrow(() -> new ResourceNotFoundException(
-                ErrorCode.USER_NOT_FOUND, "해당 사용자를 찾을 수 없습니다.", scheduleRequest.getUserId())));
+        schedule.setUserId(targetUserId);
+        schedule.setUser(userRepository.findById(targetUserId).orElseThrow(() -> new ResourceNotFoundException(
+                ErrorCode.USER_NOT_FOUND, "해당 사용자를 찾을 수 없습니다.", targetUserId)));
 
         if (scheduleRequest.getNoticeId() != null) {
             schedule.setNotice(noticeRepository.findById(scheduleRequest.getNoticeId()).orElseThrow(() -> new ResourceNotFoundException(
@@ -86,7 +88,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", scheduleId));
 
         // ! 2. 권한 검증
-        validateAuthorization(userId, scheduleRequest.getUserId());
+        validateAuthorization(userId, schedule.getUserId());
 
         // ! 3. Schedule 기본 정보 업데이트 - 요청에 있는 필드만 수정
         Optional.ofNullable(scheduleRequest.getTitle())
@@ -101,9 +103,10 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .ifPresent(schedule::setScheduleSourceTypeCd);
         Optional.ofNullable(scheduleRequest.getScheduleStatusTypeCd())
                 .ifPresent(schedule::setScheduleStatusTypeCd);
-
-        // isEnrollYn은 update 요청시 항상 'Y'로 설정
-        schedule.setIsEnrollYn("Y");
+        Optional.ofNullable(scheduleRequest.getIsEssentialYn())
+                .ifPresent(schedule::setIsEssentialYn);
+        Optional.ofNullable(scheduleRequest.getIsEnrollYn())
+                .ifPresent(schedule::setIsEnrollYn);
 
         // ! 4. Remind 정보 갱신 - reminds 요청에 있을 때만 수정
         if (scheduleRequest.getRemindRequests() != null) {
@@ -127,7 +130,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", scheduleId));
 
         // ! 2. 권한 검증
-        validateAuthorization(userId, schedule.getUser().getUserId());
+        validateAuthorization(userId, schedule.getUserId());
 
         // ! 3. Response 반환
         log.info("[Schedule] 일정 조회 완료 - scheduleId={}, title={}", scheduleId, schedule.getTitle());
@@ -143,12 +146,12 @@ public class ScheduleServiceImpl implements ScheduleService {
                 ErrorCode.SCHEDULE_NOT_FOUND, "해당 일정을 찾을 수 없습니다.", scheduleId));
 
         // ! 2. 권한 검증
-        validateAuthorization(userId, schedule.getUser().getUserId());
+        validateAuthorization(userId, schedule.getUserId());
 
         // ! 3. 관리자 권한 검증
         boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId, Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
 
-        if (!schedule.getIsEssential() && !isAdmin) {
+        if (schedule.getIsEssential() && !isAdmin) {
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "scheduleId", scheduleId);
         }
 

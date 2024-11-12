@@ -31,9 +31,9 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     /**
-     * 개인 일정 등록
+     * 일정 등록
      *
-     * @param scheduleRequest : 일정 정보 + 리마인드 정보
+     * @param scheduleRequest : 일정 요청 정보 + 리마인드 요청 정보
      * @return 등록된 일정 정보
      */
     @PostMapping
