@@ -19,10 +19,13 @@ export const useDateFormatter = (type: useDateFormatterParam, date?: Date): stri
   const hours12: number = hours24 % 12 === 0 ? 12 : hours24 % 12
   const ampm: string = hours24 >= 12 ? 'PM' : 'AM'
   const minutes: string = String(date.getMinutes()).padStart(2, '0')
-  const seconds: string = String(date.getSeconds()).padStart(2, '0')
+  // const seconds: string = String(date.getSeconds()).padStart(2, '0')
 
   const getDateDifference = (targetDate: Date): string => {
     const currentDate = new Date()
+
+    // D-Day에 시간 계산을 위해 오늘 날짜 백업
+    const backupCurrentDate = new Date()
 
     // 시간 무시하고 날짜 단위로 계산
     currentDate.setHours(0, 0, 0, 0)
@@ -32,7 +35,13 @@ export const useDateFormatter = (type: useDateFormatterParam, date?: Date): stri
     const dayDifference = Math.floor(timeDifference / (1000 * 3600 * 24))
 
     if (dayDifference === 0) {
-      return 'D-Day'
+      const hoursDifference = hours24 - backupCurrentDate.getHours()
+
+      if (hoursDifference > 0) {
+        return `${hoursDifference}시간 전`
+      } else {
+        return 'D-Day'
+      }
     }
 
     if (dayDifference > 0) {
