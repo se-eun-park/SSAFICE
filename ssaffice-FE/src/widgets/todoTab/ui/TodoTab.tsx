@@ -44,7 +44,11 @@ export const TodoTab = () => {
         </div>
       </TabLayout.Header>
 
-      <TabLayout.Add>{isTabOpen ? <SelectTodoState actionType='filter' /> : null}</TabLayout.Add>
+      {isTabOpen ? (
+        <TabLayout.Add>
+          <SelectTodoState actionType='filter' />
+        </TabLayout.Add>
+      ) : null}
 
       <TabLayout.Content>{isTabOpen ? <TodoList /> : <TodoBoard />}</TabLayout.Content>
     </TabLayout>
