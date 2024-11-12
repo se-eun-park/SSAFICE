@@ -32,7 +32,10 @@
     "createUserId": {
       "type": "keyword"
     },
-    "profileImageUrl": {
+    "createUserEmail": {
+      "type": "keyword"
+    },
+    "createUserProfileImgUrl": {
       "type": "keyword"
     },
     "createUserName": {
