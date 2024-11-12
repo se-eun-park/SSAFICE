@@ -53,6 +53,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 2. Schedule 엔티티 생성 및 연관관계 설정
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
+        schedule.setIsEnrollYn("Y");
 
         // 일정 소유자 설정
         schedule.setUser(userRepository.findById(scheduleRequest.getUserId()).orElseThrow(() -> new ResourceNotFoundException(
@@ -136,7 +137,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 3. 관리자 권한 검증
         boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId, Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
 
-        if ("Y".equals(schedule.getIsEssentialYn()) && !isAdmin) {
+        if (!schedule.getIsEssential() && !isAdmin) {
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "scheduleId", scheduleId);
         }
 
