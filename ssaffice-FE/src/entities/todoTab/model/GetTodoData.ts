@@ -1,0 +1,163 @@
+// api가 아직 없어서 더미데이터로 대체
+
+export const GetTodoData = [
+  {
+    scheduleId: 'dkldkfkm',
+    title:
+      'As a translator, I want integrate Crowdin webhook to notify translators about changed strings',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-18T10:13:56.608543',
+    scheduleSourceTypeCd: 'my',
+    scheduleStatusTypeCd: 'todo',
+    createUser: {
+      userId: 'ddlke',
+      name: '곽성재(교육생)',
+      profileImgUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkg,gl3wpkfkm',
+    title: 'As a user, I want to see actual overusage price for next download',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-18T10:13:56.608543',
+    scheduleSourceTypeCd: 'team',
+    scheduleStatusTypeCd: 'todo',
+    createUser: {
+      userId: 'ddlkdfde',
+      name: '용상윤[서울_5, 6반]실습코치',
+      profileImgUrl: 'https://i.pinimg.com/236x/a5/73/59/a5735920142505068fd1e5ebd0ce86f1.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkg,gl3wpkddssafkm',
+    title: 'As a user, I want to see actual overusage price for next download',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-17T10:13:56.608543',
+    scheduleSourceTypeCd: 'all',
+    scheduleStatusTypeCd: 'todo',
+    createUser: {
+      userId: 'ddlkdfde',
+      name: '용상윤[서울_5, 6반]실습코치',
+      profileImgUrl: 'https://i.pinimg.com/236x/a5/73/59/a5735920142505068fd1e5ebd0ce86f1.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkldfffffsdkfkm',
+    title: 'Interate nuxt-18n in product-developers project',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-18T10:13:56.608543',
+    scheduleSourceTypeCd: 'my',
+    scheduleStatusTypeCd: 'todo',
+    createUser: {
+      userId: 'ddlke',
+      name: '곽성재(교육생)',
+      profileImgUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkldkfadfqeffkm',
+    title: 'Font SCSS mixin does not recognise fallback for font-family',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-18T10:13:56.608543',
+    scheduleSourceTypeCd: 'my',
+    scheduleStatusTypeCd: 'todo',
+    createUser: {
+      userId: 'ddlke',
+      name: '곽성재(교육생)',
+      profileImgUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkldkfkm',
+    title:
+      'As a translator, I want integrate Crowdin webhook to notify translators about changed strings',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-18T10:13:56.608543',
+    scheduleSourceTypeCd: 'my',
+    scheduleStatusTypeCd: 'progress',
+    createUser: {
+      userId: 'ddlke',
+      name: '곽성재(교육생)',
+      profileImgUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkg,gl3wpkfkm',
+    title: 'As a user, I want to see actual overusage price for next download',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-15T10:13:56.608543',
+    scheduleSourceTypeCd: 'team',
+    scheduleStatusTypeCd: 'progress',
+    createUser: {
+      userId: 'ddlkdfde',
+      name: '용상윤[서울_5, 6반]실습코치',
+      profileImgUrl: 'https://i.pinimg.com/236x/a5/73/59/a5735920142505068fd1e5ebd0ce86f1.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkg,gl3wpkddssafkm',
+    title:
+      'As a user, I want to see actual overusage price for next download As a user, I want to see actual overusage price for next download As a user, I want to see actual overusage price for next download',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-18T10:13:56.608543',
+    scheduleSourceTypeCd: 'all',
+    scheduleStatusTypeCd: 'progress',
+    createUser: {
+      userId: 'ddlkdfde',
+      name: '용상윤[서울_5, 6반]실습코치',
+      profileImgUrl: 'https://i.pinimg.com/236x/a5/73/59/a5735920142505068fd1e5ebd0ce86f1.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkldfffffsdkfkm',
+    title: 'Interate nuxt-18n in product-developers project',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-12T22:00:00',
+    scheduleSourceTypeCd: 'my',
+    scheduleStatusTypeCd: 'progress',
+    createUser: {
+      userId: 'ddlke',
+      name: '곽성재(교육생)',
+      profileImgUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkldkfadfqeffkm',
+    title: 'Font SCSS mixin does not recognise fallback for font-family',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-18T10:13:56.608543',
+    scheduleSourceTypeCd: 'my',
+    scheduleStatusTypeCd: 'progress',
+    createUser: {
+      userId: 'ddlke',
+      name: '곽성재(교육생)',
+      profileImgUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkldfffffsdkfkm',
+    title: 'Interate nuxt-18n in product-developers project',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-12T22:00:00',
+    scheduleSourceTypeCd: 'my',
+    scheduleStatusTypeCd: 'done',
+    createUser: {
+      userId: 'ddlke',
+      name: '곽성재(교육생)',
+      profileImgUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
+    },
+  },
+  {
+    scheduleId: 'dkldkfadfqeffkm',
+    title: 'Font SCSS mixin does not recognise fallback for font-family',
+    startDateTime: '2024-11-05T10:13:56.608543',
+    endDateTime: '2024-11-12T10:13:56.608543',
+    scheduleSourceTypeCd: 'my',
+    scheduleStatusTypeCd: 'done',
+    createUser: {
+      userId: 'ddlke',
+      name: '곽성재(교육생)',
+      profileImgUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
+    },
+  },
+]
