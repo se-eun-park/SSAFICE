@@ -4,11 +4,6 @@
   "refresh_interval": "30s",
   "max_ngram_diff": 19,
   "codec": "best_compression",
-  "routing": {
-    "allocation": {
-      "include": { "_tier_preference": "data_content" }
-    }
-  },
   "analysis": {
     "filter": {
       "my_nori_filter": {
@@ -19,15 +14,15 @@
         ]
       },
       "my_ngram_filter": {
-        "type": "ngram",
+        "type": "edge_ngram",
         "min_gram": 1,
-        "max_gram": 20
+        "max_gram": 10
       }
     },
     "tokenizer": {
       "my_nori_tokenizer": {
         "type": "nori_tokenizer",
-        "decompound_mode": "mixed"
+        "decompound_mode": "none"
       }
     },
     "analyzer": {
