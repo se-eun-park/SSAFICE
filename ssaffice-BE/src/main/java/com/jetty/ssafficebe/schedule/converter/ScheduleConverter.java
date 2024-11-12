@@ -21,8 +21,8 @@ public interface ScheduleConverter {
 
     Schedule toSchedule(ScheduleRequest scheduleRequest);
 
-    @Mapping(target = "remindDetails", source = "reminds")
-    @Mapping(target = "noticeDetail", source = "notice")
+    @Mapping(target = "remindSummarys", source = "reminds")
+    @Mapping(target = "noticeSummaryForList", source = "notice")
     @Mapping(target = "createUser", source = "user")
     ScheduleDetail toScheduleDetail(Schedule schedule);
 

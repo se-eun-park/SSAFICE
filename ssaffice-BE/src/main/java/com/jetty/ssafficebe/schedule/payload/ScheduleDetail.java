@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.schedule.payload;
 
 import com.jetty.ssafficebe.notice.payload.NoticeDetail;
+import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
 import com.jetty.ssafficebe.remind.payload.RemindDetail;
 import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import java.time.LocalDateTime;
@@ -23,6 +24,6 @@ public class ScheduleDetail {
     private String isEssentialYn;
     private String isEnrollYn;
     private CreatedBySummary createUser;
-    private NoticeDetail noticeDetail;
-    private List<RemindDetail> remindDetails;
+    private NoticeSummaryForList noticeSummaryForList;
+    private List<RemindSummary> remindSummarys;
 }
