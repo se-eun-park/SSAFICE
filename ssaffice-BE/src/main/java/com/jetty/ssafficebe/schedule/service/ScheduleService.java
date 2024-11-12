@@ -19,7 +19,9 @@ public interface ScheduleService {
 
     ApiResponse deleteSchedule(Long userId, Long scheduleId);
 
-    Page<ScheduleSummary> getScheduleList(ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
+    Page<ScheduleSummary> getScheduleList(Long userId, ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
 
     void saveSchedulesForUsers(List<Long> userIds, Long noticeId);
+
+    Page<ScheduleSummary> getSchedulesByNoticeForAdmin(Long noticeId, Pageable pageable);
 }

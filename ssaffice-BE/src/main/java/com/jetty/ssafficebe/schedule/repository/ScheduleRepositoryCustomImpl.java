@@ -47,4 +47,14 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
 
         return getPageImpl(query, pageable);
     }
+
+    @Override
+    public Page<Schedule> getSchedulesByNoticeId(Long noticeId, Pageable pageable) {
+        QSchedule schedule = QSchedule.schedule;
+        JPQLQuery<Schedule> query = queryFactory
+                .selectFrom(schedule)
+                .where(schedule.noticeId.eq(noticeId));
+
+        return getPageImpl(query, pageable);
+    }
 }

@@ -19,13 +19,9 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
-import com.jetty.ssafficebe.user.entity.User;
-import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -159,7 +155,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Page<ScheduleSummary> getScheduleList(ScheduleFilterRequest filterRequest, Pageable pageable) {
+    public Page<ScheduleSummary> getScheduleList(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable) {
         log.info("[Schedule] 일정 목록 조회 시작 - filter=[isEnroll={}, sourceType={}, statusType={}, startDt={}, endDt={}], page={}, size={}",
                 filterRequest.getIsEnrollYn(),
                 filterRequest.getScheduleSourceTypeCd(),
@@ -171,21 +167,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Page<Schedule> schedulesPage = scheduleRepository.getSchedulesByFilter(filterRequest, pageable);
 
-        Page<ScheduleSummary> result = schedulesPage.map(schedule -> {
-            ScheduleSummary summary = scheduleConverter.toScheduleSummary(schedule);
-
-            if (schedule.getNotice() != null && schedule.getNotice().getCreateUser() != null) {
-                User createUser = schedule.getNotice().getCreateUser();
-                summary.setCreateUser(CreatedBySummary.builder()
-                                                      .userId(createUser.getUserId())
-                                                      .name(createUser.getName())
-                                                      .email(createUser.getEmail())
-                                                      .profileImgUrl(createUser.getProfileImgUrl())
-                                                      .build());
-            }
-
-            return summary;
-        });
+        Page<ScheduleSummary> result = schedulesPage.map(scheduleConverter::toScheduleSummary);
 
         log.info("[Schedule] 일정 목록 조회 완료 - totalElements={}, totalPages={}", result.getTotalElements(), result.getTotalPages());
         return result;
@@ -213,6 +195,25 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<Schedule> savedSchedules = scheduleRepository.saveAll(schedules);
 
         log.info("[Schedule] 공지사항 일정 일괄 생성 완료 - 전체={}, 성공={}", userIds.size(), savedSchedules.size());
+    }
+
+    /**
+     * 관리자 공지사항 조회 시 해당 교육생들의 일정을 조회하는 메서드
+     */
+    @Override
+    public Page<ScheduleSummary> getSchedulesByNoticeForAdmin(Long noticeId, Pageable pageable) {
+        log.info("[Schedule] 공지사항 관련 교육생 일정 조회 시작 - noticeId={}", noticeId);
+
+        // ! 1. 해당 공지사항의 일정들 조회
+        Page<Schedule> schedulePage = scheduleRepository.getSchedulesByNoticeId(noticeId, pageable);
+
+        // ! 2. ScheduleSummary 로 변환
+        Page<ScheduleSummary> result = schedulePage.map(scheduleConverter::toScheduleSummary);
+
+        log.info("[Schedule] 공지사항 관련 교육생 일정 조회 완료 - noticeId={}, count={}",
+                noticeId, result.getTotalElements());
+
+        return result;
     }
 
     /**

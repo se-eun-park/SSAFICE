@@ -7,5 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ScheduleRepositoryCustom {
 
-    Page<Schedule> getSchedulesByFilter(ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
+     Page<Schedule> getSchedulesByFilter(ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
+
+     Page<Schedule> getSchedulesByNoticeId(Long noticeId, Pageable pageable);
 }
