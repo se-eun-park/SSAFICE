@@ -2,7 +2,7 @@ import { SearchIcon } from '@/assets/svg'
 import { useSearchInput } from '../model'
 
 export const SearchBar = () => {
-  const { value, handleValue } = useSearchInput()
+  const { value, handleValue, keyPressHandler } = useSearchInput()
 
   return (
     <div
@@ -33,6 +33,7 @@ export const SearchBar = () => {
       '
         value={value}
         onChange={(e) => handleValue(e.target.value)}
+        onKeyDown={(e) => keyPressHandler(e.key)}
       />
     </div>
   )

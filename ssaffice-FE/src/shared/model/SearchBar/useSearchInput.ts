@@ -8,19 +8,26 @@ export const useSearchInput = () => {
     // 추후 API 로직을 여기에 넣어 주세요.
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (value) {
-        searchApi(value)
-      }
-    }, 500)
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     if (value) {
+  //       searchApi(value)
+  //     }
+  //   }, 500)
 
-    return () => clearTimeout(timer)
-  }, [value])
+  //   return () => clearTimeout(timer)
+  // }, [value]) // 디바운싱 로직
+
+  const keyPressHandler = (keyName: string) => {
+    if (keyName === 'Enter') {
+      searchApi(value)
+      setValue('')
+    }
+  }
 
   const handleValue = (keyword: string) => {
     setValue(keyword)
   }
 
-  return { value, handleValue }
+  return { value, handleValue, keyPressHandler }
 }
