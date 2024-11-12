@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +33,8 @@ public class ESNoticeController {
         return ResponseEntity.ok(esNoticeService.deleteNotice(noticeId));
     }
 
-    // TODO : Response Type 설정
-    @GetMapping
+    // TODO : 로직 구현 및 Response Type 설정
+    @PostMapping("/global")
     public ResponseEntity<Page<?>> searchGlobalNotice(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                       @RequestBody ESNoticeSearchFilter filter) {
         return ResponseEntity.ok(esNoticeService.searchGlobalNotice(userDetails.getUserId(), filter));
