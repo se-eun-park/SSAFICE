@@ -1,6 +1,6 @@
 import { createUser } from '@/features/announcementTab'
 
-export type todoItemDisplayType = {
+export type TodoItemDisplayType = {
   scheduleId: number
   title: string
   startDateTime?: Date

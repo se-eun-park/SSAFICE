@@ -1,1 +1,1 @@
-export type { unscheduledItemDisplayType } from './model/types'
+export type { UnscheduledItemDisplayType } from './model/types'
