@@ -21,10 +21,7 @@ public class ESNoticeServiceImpl implements ESNoticeService {
 
     @Override
     public ApiResponse saveNotice(ESNoticeRequest request) {
-
-        ESNotice esNotice = esNoticeConverter.toESNotice(request);
-        ESNotice saved = esNoticeRepository.save(esNotice);
-
+        ESNotice saved = esNoticeRepository.save(esNoticeConverter.toESNotice(request));
         return new ApiResponse(true, "ES에 추가 성공", saved.getNoticeId());
     }
 

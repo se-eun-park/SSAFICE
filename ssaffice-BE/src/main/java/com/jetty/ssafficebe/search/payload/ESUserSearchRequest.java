@@ -5,7 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ESNoticeSearchFilter {
+public class ESUserSearchRequest {
 
-    private String keyword;
+    private String Keyword;
+    private String channelId;
 }
