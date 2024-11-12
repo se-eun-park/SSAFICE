@@ -39,7 +39,10 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
             <img
               src={announcementItem?.user?.profileImageUrl}
               alt='사진 없음'
-              className='w-full h-full'
+              className='
+              w-full h-full 
+              aspect-square rounded-full
+              '
             />
           )}
         </div>

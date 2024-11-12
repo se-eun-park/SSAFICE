@@ -10,6 +10,7 @@ import { SearchBar, TabLayout, HoverButton } from '@/shared/ui'
 import { FastLeftArrowIcon } from '@/assets/svg'
 import { AnnouncementList } from './AnnouncementList'
 import { useAnnouncementTabSelectView } from '@/features/announcementTab'
+import { UnscheduledList } from '@/widgets/unscheduledTab'
 
 export const AnnouncementTab = () => {
   // store
@@ -83,8 +84,8 @@ export const AnnouncementTab = () => {
           overflow-y-scroll
           `}
         >
-          {/* {isAllNoticeView ? <AnnouncementList /> : } */}
-          <AnnouncementList />
+          {isAllNoticeView ? <AnnouncementList /> : <UnscheduledList />}
+          {/* <AnnouncementList /> */}
         </div>
       </TabLayout.Content>
     </TabLayout>

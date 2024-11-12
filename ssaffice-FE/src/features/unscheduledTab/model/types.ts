@@ -3,7 +3,7 @@ import { createUser } from '@/features/announcementTab'
 // API 응답에서 데이터 계층구조가 변동되어 유저가 공지/일정에 소속되지 않고 독립적으로 오는 경우 사용해 주세요
 
 import { AnnouncementItemDisplayType } from '@/features/announcementTab'
-import { TodoItemDisplayType } from '@/features/todoTab/model/types'
+import { TodoItemDisplayType } from '@/features/todoTab'
 
 // 미등록 공지 타입은 일정 + 공지가 더해진 형태의 타입입니다.
 export type UnscheduledItemDisplayType = {
@@ -12,7 +12,7 @@ export type UnscheduledItemDisplayType = {
   // user: createUser // 유저 정보가 일정/공지에서 독립되어 오는 경우
 }
 
-export type UnscheduledListDisplayType = Record<string, UnscheduledItemDisplayType>
+export type UnscheduledListDisplayType = Record<string, UnscheduledItemDisplayType[]>
 // 날짜로 묶은 미등록 공지 items
 
 // 더미 데이터 배열입니다.
@@ -30,7 +30,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 101,
         email: 'alice@example.com',
         name: 'Alice Johnson',
-        profileImageUrl: 'https://example.com/images/alice.jpg',
       },
     },
     announcement: {
@@ -38,7 +37,7 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 101,
         email: 'alice@example.com',
         name: 'Alice Johnson',
-        profileImageUrl: 'https://example.com/images/alice.jpg',
+        profileImageUrl: 'https://picsum.photos/id/38/400/400',
       },
       createdAt: new Date('2024-11-10T09:00:00'),
       title: '예정된 미팅 일정 안내',
@@ -58,7 +57,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 102,
         email: 'bob@example.com',
         name: 'Bob Lee',
-        profileImageUrl: 'https://example.com/images/bob.jpg',
       },
     },
     announcement: {
@@ -66,7 +64,7 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 102,
         email: 'bob@example.com',
         name: 'Bob Lee',
-        profileImageUrl: 'https://example.com/images/bob.jpg',
+        profileImageUrl: 'https://picsum.photos/id/39/400/400',
       },
       createdAt: new Date('2024-11-10T12:00:00'),
       title: '점심 미팅 알림',
@@ -86,7 +84,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 103,
         email: 'carol@example.com',
         name: 'Carol Smith',
-        profileImageUrl: 'https://example.com/images/carol.jpg',
       },
     },
     announcement: {
@@ -94,7 +91,7 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 103,
         email: 'carol@example.com',
         name: 'Carol Smith',
-        profileImageUrl: 'https://example.com/images/carol.jpg',
+        profileImageUrl: 'https://picsum.photos/id/40/400/400',
       },
       createdAt: new Date('2024-11-12T10:00:00'),
       title: '브레인스토밍 세션 안내',
@@ -114,7 +111,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 104,
         email: 'david@example.com',
         name: 'David Wang',
-        profileImageUrl: 'https://example.com/images/david.jpg',
       },
     },
     announcement: {
@@ -122,7 +118,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 104,
         email: 'david@example.com',
         name: 'David Wang',
-        profileImageUrl: 'https://example.com/images/david.jpg',
       },
       createdAt: new Date('2024-11-14T15:00:00'),
       title: '병원 예약 알림',
@@ -142,7 +137,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 105,
         email: 'eve@example.com',
         name: 'Eve Adams',
-        profileImageUrl: 'https://example.com/images/eve.jpg',
       },
     },
     announcement: {
@@ -150,7 +144,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 105,
         email: 'eve@example.com',
         name: 'Eve Adams',
-        profileImageUrl: 'https://example.com/images/eve.jpg',
       },
       createdAt: new Date('2024-11-13T11:30:00'),
       title: '코드 리뷰 회의 안내',
@@ -170,7 +163,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 106,
         email: 'frank@example.com',
         name: 'Frank Miller',
-        profileImageUrl: 'https://example.com/images/frank.jpg',
       },
     },
     announcement: {
@@ -178,7 +170,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 106,
         email: 'frank@example.com',
         name: 'Frank Miller',
-        profileImageUrl: 'https://example.com/images/frank.jpg',
       },
       createdAt: new Date('2024-11-15T08:00:00'),
       title: '월간 보고서 제출 안내',
@@ -198,7 +189,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 107,
         email: 'grace@example.com',
         name: 'Grace Lee',
-        profileImageUrl: 'https://example.com/images/grace.jpg',
       },
     },
     announcement: {
@@ -206,7 +196,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 107,
         email: 'grace@example.com',
         name: 'Grace Lee',
-        profileImageUrl: 'https://example.com/images/grace.jpg',
       },
       createdAt: new Date('2024-11-16T14:30:00'),
       title: '팀 회식 안내',
@@ -226,7 +215,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 108,
         email: 'hannah@example.com',
         name: 'Hannah Scott',
-        profileImageUrl: 'https://example.com/images/hannah.jpg',
       },
     },
     announcement: {
@@ -234,7 +222,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 108,
         email: 'hannah@example.com',
         name: 'Hannah Scott',
-        profileImageUrl: 'https://example.com/images/hannah.jpg',
       },
       createdAt: new Date('2024-11-17T10:00:00'),
       title: '정기 점검 공지',
@@ -254,7 +241,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 109,
         email: 'ian@example.com',
         name: 'Ian Thomas',
-        profileImageUrl: 'https://example.com/images/ian.jpg',
       },
     },
     announcement: {
@@ -262,7 +248,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 109,
         email: 'ian@example.com',
         name: 'Ian Thomas',
-        profileImageUrl: 'https://example.com/images/ian.jpg',
       },
       createdAt: new Date('2024-11-18T11:30:00'),
       title: '오픈 소스 기여 회의 안내',
@@ -282,7 +267,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 110,
         email: 'jackson@example.com',
         name: 'Jackson Brooks',
-        profileImageUrl: 'https://example.com/images/jackson.jpg',
       },
     },
     announcement: {
@@ -290,7 +274,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 110,
         email: 'jackson@example.com',
         name: 'Jackson Brooks',
-        profileImageUrl: 'https://example.com/images/jackson.jpg',
       },
       createdAt: new Date('2024-11-19T13:00:00'),
       title: '헬스장 트레이닝 알림',
@@ -310,7 +293,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 111,
         email: 'karen@example.com',
         name: 'Karen Wilson',
-        profileImageUrl: 'https://example.com/images/karen.jpg',
       },
     },
     announcement: {
@@ -318,7 +300,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 111,
         email: 'karen@example.com',
         name: 'Karen Wilson',
-        profileImageUrl: 'https://example.com/images/karen.jpg',
       },
       createdAt: new Date('2024-11-20T08:00:00'),
       title: '웹사이트 업데이트 공지',
@@ -339,7 +320,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 112,
         email: 'lily@example.com',
         name: 'Lily Green',
-        profileImageUrl: 'https://example.com/images/lily.jpg',
       },
     },
     announcement: {
@@ -347,7 +327,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 112,
         email: 'lily@example.com',
         name: 'Lily Green',
-        profileImageUrl: 'https://example.com/images/lily.jpg',
       },
       createdAt: new Date('2024-11-21T14:00:00'),
       title: '영어 회화 클래스 안내',
@@ -367,7 +346,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 113,
         email: 'michael@example.com',
         name: 'Michael Scott',
-        profileImageUrl: 'https://example.com/images/michael.jpg',
       },
     },
     announcement: {
@@ -375,7 +353,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 113,
         email: 'michael@example.com',
         name: 'Michael Scott',
-        profileImageUrl: 'https://example.com/images/michael.jpg',
       },
       createdAt: new Date('2024-11-22T09:00:00'),
       title: '회의 준비 안내',
@@ -395,7 +372,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 114,
         email: 'nancy@example.com',
         name: 'Nancy Davis',
-        profileImageUrl: 'https://example.com/images/nancy.jpg',
       },
     },
     announcement: {
@@ -403,7 +379,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 114,
         email: 'nancy@example.com',
         name: 'Nancy Davis',
-        profileImageUrl: 'https://example.com/images/nancy.jpg',
       },
       createdAt: new Date('2024-11-23T10:30:00'),
       title: '소셜 미디어 홍보 일정 안내',
@@ -423,7 +398,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 115,
         email: 'olivia@example.com',
         name: 'Olivia Turner',
-        profileImageUrl: 'https://example.com/images/olivia.jpg',
       },
     },
     announcement: {
@@ -431,7 +405,6 @@ export const dummyUnschedules: UnscheduledItemDisplayType[] = [
         userId: 115,
         email: 'olivia@example.com',
         name: 'Olivia Turner',
-        profileImageUrl: 'https://example.com/images/olivia.jpg',
       },
       createdAt: new Date('2024-11-24T13:00:00'),
       title: '기술 워크숍 안내',
