@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RemindSummary {
+public class RemindDetail {
 
     private Long remindId;
     private String isEssentialYn;
