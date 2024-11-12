@@ -1,14 +1,19 @@
 import { FoldUp, SpreadDown } from '@/assets/svg'
 import { UnscheduledItemDisplayType } from '@/features/unscheduledTab'
-import { useArticleClicked } from '@/features/announcementTab'
-import { useCustomEmojiRemover, useDateFormatter } from '@/shared/model'
+import {
+  useCursorHovered,
+  useClickedToggle,
+  useCustomEmojiRemover,
+  useDateFormatter,
+} from '@/shared/model'
 import Markdown from 'react-markdown'
 
 type UnscheduledItemParam = {
   unscheduledItem: UnscheduledItemDisplayType
 }
 export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemParam) => {
-  const { isClicked, handleIsClicked } = useArticleClicked()
+  const { isClicked, handleIsClicked } = useClickedToggle()
+  const { isHovered, mouseEntered, mouseLeft } = useCursorHovered()
 
   return (
     <div
@@ -27,6 +32,8 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemParam) => {
         h-[76px]
         ${isClicked && 'pb-0'}`}
         onClick={() => handleIsClicked()}
+        onMouseEnter={mouseEntered}
+        onMouseLeave={mouseLeft}
       >
         <div
           className='
