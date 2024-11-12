@@ -5,6 +5,8 @@ import com.jetty.ssafficebe.search.esnotice.payload.ESNoticeRequest;
 import com.jetty.ssafficebe.search.esnotice.service.ESNoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,5 +22,10 @@ public class ESNoticeController {
     @PostMapping
     public ResponseEntity<ApiResponse> saveNotice(@RequestBody ESNoticeRequest request) {
         return ResponseEntity.ok(esNoticeService.saveNotice(request));
+    }
+
+    @DeleteMapping("/{noticeId}")
+    public ResponseEntity<ApiResponse> deleteNotice(@PathVariable Long noticeId) {
+        return ResponseEntity.ok(esNoticeService.deleteNotice(noticeId));
     }
 }

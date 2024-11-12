@@ -6,4 +6,6 @@ import com.jetty.ssafficebe.search.esnotice.payload.ESNoticeRequest;
 public interface ESNoticeService {
 
     ApiResponse saveNotice(ESNoticeRequest request);
+
+    ApiResponse deleteNotice(Long noticeId);
 }

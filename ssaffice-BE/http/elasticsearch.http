@@ -16,3 +16,6 @@ Content-Type: application/json
   "createUserName": "John Doe",
   "createUserProfileImgUrl": "http://example.com/profile.jpg"
 }
+
+### delete Notice
+DELETE http://localhost:9090/api/search/notice/2
