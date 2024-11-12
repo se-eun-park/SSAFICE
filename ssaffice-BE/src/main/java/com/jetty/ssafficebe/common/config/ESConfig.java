@@ -3,21 +3,23 @@ package com.jetty.ssafficebe.common.config;
 import co.elastic.clients.transport.TransportUtils;
 import javax.net.ssl.SSLContext;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
 
+@Configuration
 public class ESConfig extends ElasticsearchConfiguration {
 
-    @Value("${elasticsearch.url}")
+    @Value("${spring.elasticsearch.uris}")
     private String host;
 
-    @Value("${elasticsearch.username}")
+    @Value("${spring.elasticsearch.username}")
     private String username;
 
-    @Value("${elasticsearch.password}")
+    @Value("${spring.elasticsearch.password}")
     private String password;
 
-    @Value("${elasticsearch.fingerprint}")
+    @Value("${spring.elasticsearch.fingerprint}")
     private String fingerprint;
 
 

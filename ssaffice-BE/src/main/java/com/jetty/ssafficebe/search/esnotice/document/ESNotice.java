@@ -1,9 +1,9 @@
-package com.jetty.ssafficebe.search.document;
+package com.jetty.ssafficebe.search.esnotice.document;
 
-import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
