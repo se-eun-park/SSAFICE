@@ -1,23 +1,44 @@
+import { useDraggable } from '@dnd-kit/core'
+
+import type { GetTodoDataProps } from '@/entities/todoTab'
 import { CardSourceTypeElements } from '../model/CardSourceTypeElements'
 import { CardEndDateElements } from '../model/CardEndDateElements'
 
-type CardProps = {
-  title: string
-  endDateTime: string
-  scheduleSourceType: string
-  createUser: {
-    userId: string
-    name: string
-    profileImgUrl: string
-  }
-}
+export const Card = ({
+  scheduleId,
+  title,
+  endDateTime,
+  scheduleStatusTypeCd,
+  scheduleSourceTypeCd,
+  createUser,
+}: GetTodoDataProps) => {
+  const cardSourceTag = CardSourceTypeElements({ scheduleSourceTypeCd })
+  const cardEndDate = CardEndDateElements({ endDateTime, scheduleStatusTypeCd })
 
-export const Card = ({ title, endDateTime, scheduleSourceType, createUser }: CardProps) => {
-  const cardSourceTag = CardSourceTypeElements({ scheduleSourceType })
-  const cardEndDate = CardEndDateElements({ endDateTime })
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: scheduleId,
+    data: {
+      status: scheduleStatusTypeCd,
+    },
+  })
+
+  const style = transform
+    ? {
+        transform: `translate(${transform.x}px, ${transform.y}px)`,
+        maskImage:
+          'linear-gradient(to bottom right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%)',
+        zIndex: 10,
+      }
+    : undefined
 
   return (
-    <div className='flex flex-col w-full effect-card-shadow p-spacing-16 h-fit gap-y-spacing-12 bg-color-bg-primary rounded-radius-6'>
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      className='flex flex-col w-full effect-card-shadow p-spacing-16 h-fit gap-y-spacing-12 bg-color-bg-primary rounded-radius-6'
+      style={style}
+    >
       <h1 className='w-full break-words body-md-medium text-color-text-primary line-clamp-2 text-ellipsis'>
         {title}
       </h1>
