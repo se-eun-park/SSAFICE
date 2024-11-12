@@ -19,5 +19,6 @@ class Notice(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now())
     created_by = Column(Integer, ForeignKey("user.user_id"))
+    channel_id = Column(String(50), ForeignKey("channel.channel_id"))
 
     created_user = relationship("User", back_populates="notices")
