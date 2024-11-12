@@ -24,7 +24,6 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
         className={`
         flex gap-spacing-12
         p-spacing-16
-        h-[76px]
         ${isClicked && 'pb-0'}`}
         onClick={() => handleIsClicked()}
       >
@@ -78,7 +77,7 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
         </div>
         <div
           className='
-          flex justify-end self-end
+          flex self-end
           w-spacing-16 h-spacing-16
           '
         >
@@ -92,7 +91,7 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
         <div
           className='
           flex flex-col
-          pl-spacing-48 pr-spacing-24 pb-spacing-16
+          pl-spacing-48 pr-spacing-24 pb-spacing-16 mt-spacing-4
           text-color-text-primary body-sm-medium'
         >
           {/* markdown */}
