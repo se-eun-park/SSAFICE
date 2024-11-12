@@ -1,6 +1,6 @@
 ### 변수 설정
-@scheduleId = 1
-@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxMzM4MDQwfQ.Fll411V8nJZFjR00YTwLhvrsl1pSy73HvPI1_mqniAfoe6mUauFUyDyfqTxwlfZ6JhBshlieP407K6bUtvt2xg
+@scheduleId = 2
+@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxNDIzOTI2fQ.NhHWX7vjIbiDtqj9iNLgDIfxYM-_CiCNTOaFcpX_-H2-b2bVgQM6mpUKzpyD78rUEQuZIOpE2v9CWkLJi-Ag1w
 
 ### 일정 등록
 POST http://localhost:9090/api/schedules
@@ -57,7 +57,7 @@ DELETE http://localhost:9090/api/schedules/{{scheduleId}}
 Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
-### 일정 조회
+### 일정 리스트 조회
 GET http://localhost:9090/api/schedules
 Content-Type: application/json
 

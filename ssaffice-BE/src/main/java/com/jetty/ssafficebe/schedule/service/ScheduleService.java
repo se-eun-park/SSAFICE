@@ -1,9 +1,10 @@
 package com.jetty.ssafficebe.schedule.service;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
-import com.jetty.ssafficebe.schedule.payload.ScheduleSummaryForList;
+import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,9 +14,9 @@ public interface ScheduleService {
 
     ApiResponse updateSchedule(Long userId, Long scheduleId, ScheduleRequest scheduleRequest);
 
-    ApiResponse getSchedule(Long userId, Long scheduleId);
+    ScheduleDetail getSchedule(Long userId, Long scheduleId);
 
     ApiResponse deleteSchedule(Long userId, Long scheduleId);
 
-    Page<ScheduleSummaryForList> getScheduleList(ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
+    Page<ScheduleSummary> getScheduleList(ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
 }
