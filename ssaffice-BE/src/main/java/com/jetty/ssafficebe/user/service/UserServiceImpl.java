@@ -165,4 +165,21 @@ public class UserServiceImpl implements UserService {
 
         return new ApiResponse(true, HttpStatus.OK, "프로필 이미지 변경 성공");
     }
+
+    // channelId로 해당 channel에 속하는 userList를 조회하는 메서드
+    @Override
+    public Page<UserSummary> getUsersByChannelId(String channelId, Pageable pageable) {
+        Page<User> usersPageByFilter = userRepository.findUsersByChannelId(channelId, pageable);
+        return usersPageByFilter.map(user -> {
+            UserSummary userSummary = this.userConverter.toUserSummary(user);
+            List<RoleSummarySimple> userRoles = user.getUserRoles().stream().map(userRole -> {
+                Role role = userRole.getRole();
+                return roleConverter.toRoleSummarySimple(role);
+            }).toList();
+
+            userSummary.setRoles(userRoles);
+
+            return userSummary;
+        });
+    }
 }

@@ -27,4 +27,6 @@ public interface UserService {
     ApiResponse updatePassword(Long userId, UpdatePasswordRequest updatePasswordRequest);
 
     ApiResponse updateProfileImg(Long userId, MultipartFile profileImg) throws IOException;
+
+    Page<UserSummary> getUsersByChannelId(String channelId, Pageable pageable);
 }

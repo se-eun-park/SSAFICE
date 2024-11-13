@@ -1,5 +1,6 @@
 package com.jetty.ssafficebe.notice.entity;
 
+import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.notice.code.NoticeType;
 import com.jetty.ssafficebe.user.entity.BaseEntity;
@@ -8,10 +9,13 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -49,5 +53,11 @@ public class Notice extends BaseEntity {
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isEssentialYn", updatable = false, insertable = false)
     private Boolean isEssential;
+
+    private String channelId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "channelId", insertable = false, updatable = false)
+    private Channel channel;
 
 }

@@ -1,5 +1,6 @@
 package com.jetty.ssafficebe.user.entity;
 
+import com.jetty.ssafficebe.channel.entity.UserChannel;
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.role.entity.UserRole;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
@@ -64,5 +65,8 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserRole> userRoles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<UserChannel> userChannels = new ArrayList<>();
 
 }
