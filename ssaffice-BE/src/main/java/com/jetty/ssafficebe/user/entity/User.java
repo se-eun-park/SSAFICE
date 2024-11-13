@@ -18,6 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -62,6 +63,9 @@ public class User extends BaseEntity {
     private Region region;
 
     private Integer classNum;
+
+    // TODO : mm 채널 동기화 버튼 눌렀을때 시간 갱신하는 로직 구현
+    private LocalDateTime recentMmChannelSyncTime;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserRole> userRoles = new ArrayList<>();
