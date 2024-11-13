@@ -1,22 +1,21 @@
 import { FoldUp, SpreadDown } from '@/assets/svg'
-import { UnscheduledItemDisplayType } from '@/features/unscheduledTab'
-import {
-  useCursorHovered,
-  useClickedToggle,
-  useCustomEmojiRemover,
-  useDateFormatter,
-} from '@/shared/model'
+import type { UnscheduledItemDisplay } from '@/features/unscheduledTab'
+import { useClickedToggle, useCustomEmojiRemover, useDateFormatter, useHover } from '@/shared/model'
 import Markdown from 'react-markdown'
 
-type UnscheduledItemParam = {
-  unscheduledItem: UnscheduledItemDisplayType
+type UnscheduledItemProps = {
+  unscheduledItem: UnscheduledItemDisplay
 }
-export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemParam) => {
+
+export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemProps) => {
   const { isClicked, handleIsClicked } = useClickedToggle()
-  const { isHovered, mouseEntered, mouseLeft } = useCursorHovered()
+
+  // useHover 훅을 사용하여 ref, isHovered, setIsHovered 값 가져오기
+  const [hoverRef, isHovered] = useHover<HTMLDivElement>()
 
   return (
     <div
+      ref={hoverRef}
       className='
       flex flex-col gap-spacing-4
       bg-color-bg-primary
@@ -30,8 +29,6 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemParam) => {
         flex gap-spacing-12
         p-spacing-16 h-[76px] ${isClicked && 'pb-0'}`}
         onClick={() => handleIsClicked()}
-        onMouseEnter={mouseEntered}
-        onMouseLeave={mouseLeft}
       >
         <div
           className='
@@ -85,16 +82,17 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemParam) => {
         <div
           className='
           flex flex-col items-end 
+          h-[44px]
           '
         >
           <div
-            className={`
-                flex gap-spacing-10 self-start items-center justify-around
+            className={`${
+              isHovered ? 'visible' : 'invisible'
+            } flex gap-spacing-10 self-start items-center justify-around
                 w-[88px] h-[24px] px-spacing-8 py-spacing-2
                 text-color-text-interactive-inverse body-xs-medium
-                bg-color-bg-interactive-primary hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press
-                rounded-radius-8 ${isHovered || 'invisible'}
-              `}
+                bg-color-bg-interactive-primary hover:bg-color-bg-interactive-primary-hover active:bg-color-bg-interactive-primary-press
+                rounded-radius-8`}
           >
             <div>등록하기</div>
             {/* '등록하기' 클릭 이벤트 시 propagation stop 꼭 넣어주세요! 지금은 이벤트 연동 전이라 탭 열리고 닫힙니다 */}
@@ -105,16 +103,15 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemParam) => {
           {/* 드롭다운/업 SVG */}
           <div
             className='
-            flex self-end 
+            flex self-end justify-end items-end
             w-spacing-16 h-spacing-16
             '
           >
-            {isClicked ? <FoldUp /> : <SpreadDown />}
+            <div className='w-[7px] h-[3px]'>{isClicked ? <FoldUp /> : <SpreadDown />}</div>
           </div>
         </div>
       </div>
 
-      {/* 공지 상세보기 영역 */}
       {isClicked && (
         <div
           className='

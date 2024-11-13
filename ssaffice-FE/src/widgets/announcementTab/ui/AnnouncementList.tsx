@@ -1,9 +1,10 @@
 import { AnnouncementDateGroup } from './AnnouncementDateGroup'
 import { useSortingAnnouncement } from '@/features/announcementTab'
-import { AnnouncementListDisplayType, dummyAnnouncements } from '@/features/announcementTab'
+import type { AnnouncementListDisplay } from '@/features/announcementTab'
+import { dummyAnnouncements } from '@/features/announcementTab'
 
 export const AnnouncementList = () => {
-  const datas: AnnouncementListDisplayType = useSortingAnnouncement(dummyAnnouncements)
+  const datas: AnnouncementListDisplay = useSortingAnnouncement(dummyAnnouncements)
 
   return (
     <div

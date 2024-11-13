@@ -1,13 +1,13 @@
 import { FoldUp, SpreadDown } from '@/assets/svg'
-import { AnnouncementItemDisplayType } from '@/features/announcementTab'
+import type { AnnouncementItemDisplay } from '@/features/announcementTab'
 import { useClickedToggle } from '@/shared/model'
 import { useCustomEmojiRemover, useDateFormatter } from '@/shared/model'
 import Markdown from 'react-markdown'
 
-type AnnouncementItemParam = {
-  announcementItem: AnnouncementItemDisplayType
+type AnnouncementItemProps = {
+  announcementItem: AnnouncementItemDisplay
 }
-export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) => {
+export const AnnouncementItem = ({ announcementItem }: AnnouncementItemProps) => {
   const { isClicked, handleIsClicked } = useClickedToggle()
 
   return (

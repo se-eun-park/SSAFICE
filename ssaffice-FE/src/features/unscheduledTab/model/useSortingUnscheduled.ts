@@ -1,12 +1,12 @@
 import { useDateFormatter } from '@/shared/model'
-import { UnscheduledItemDisplayType, UnscheduledListDisplayType } from './types'
+import type { UnscheduledItemDisplay, UnscheduledListDisplay } from './types'
 
 export const useSortingUnscheduled = (
-  datas: UnscheduledItemDisplayType[],
+  datas: UnscheduledItemDisplay[],
   type: 'by deadline' | 'by registration', //
-): UnscheduledListDisplayType => {
+): UnscheduledListDisplay => {
   // 여기부터 작성하면 됨
-  const result: UnscheduledListDisplayType = {}
+  const result: UnscheduledListDisplay = {}
 
   datas.forEach((each) => {
     let keyDate: string = '1970-01-01' // 임의 기본값
@@ -30,7 +30,7 @@ export const useSortingUnscheduled = (
     result[keyDate].push(each)
   })
 
-  const sortedResult: UnscheduledListDisplayType = {}
+  const sortedResult: UnscheduledListDisplay = {}
 
   Object.keys(result)
     .sort((a, b) => {

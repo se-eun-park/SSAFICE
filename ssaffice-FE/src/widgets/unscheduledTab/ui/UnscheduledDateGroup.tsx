@@ -1,12 +1,12 @@
-import { UnscheduledItemDisplayType } from '@/features/unscheduledTab'
+import type { UnscheduledItemDisplay } from '@/features/unscheduledTab'
 import { UnscheduledItem } from './UnscheduledItem'
 import { useDateFormatter } from '@/shared/model'
 
-type UnscheduledDateGroupParam = {
+type UnscheduledDateGroupProps = {
   date: string
-  dailyUnschedules: UnscheduledItemDisplayType[]
+  dailyUnschedules: UnscheduledItemDisplay[]
 }
-export const UnscheduledDateGroup = ({ date, dailyUnschedules }: UnscheduledDateGroupParam) => {
+export const UnscheduledDateGroup = ({ date, dailyUnschedules }: UnscheduledDateGroupProps) => {
   return (
     <div
       className='

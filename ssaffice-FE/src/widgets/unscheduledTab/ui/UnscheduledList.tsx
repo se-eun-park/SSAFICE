@@ -1,9 +1,10 @@
 import { useSortingUnscheduled } from '@/features/unscheduledTab'
 import { UnscheduledDateGroup } from './UnscheduledDateGroup'
-import { UnscheduledListDisplayType, dummyUnschedules } from '@/features/unscheduledTab'
+import type { UnscheduledListDisplay } from '@/features/unscheduledTab'
+import { dummyUnschedules } from '@/features/unscheduledTab'
 
 export const UnscheduledList = () => {
-  const datas: UnscheduledListDisplayType = useSortingUnscheduled(dummyUnschedules, 'by deadline')
+  const datas: UnscheduledListDisplay = useSortingUnscheduled(dummyUnschedules, 'by deadline')
   return (
     <div
       className='

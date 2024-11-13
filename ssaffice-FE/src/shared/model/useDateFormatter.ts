@@ -1,4 +1,4 @@
-type useDateFormatterParam =
+type useDateFormatterProps =
   | 'YYYY-MM-DD(string)'
   | 'YYYY-MM-DD(date)'
   | 'PM/AM HH:MM'
@@ -7,7 +7,7 @@ type useDateFormatterParam =
   | 'D-?'
 
 // D-? formatting의 경우 date를 꼭 기재해 주세요.
-export const useDateFormatter = (type: useDateFormatterParam, date?: Date): string | Date => {
+export const useDateFormatter = (type: useDateFormatterProps, date?: Date): string | Date => {
   if (!date) date = new Date() // date 파라메터가 전달되지 않은 경우 현재 시각 기준으로 리턴합니다.
 
   const yyyy: string = String(date.getFullYear())
