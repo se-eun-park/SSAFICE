@@ -5,7 +5,7 @@ export type createUser = {
   profileImageUrl?: string
 } // 임시 타입입니다, user 타입이 따로 생기면 추후 교체해 주세요
 
-export type AnnouncementItemDisplayType = {
+export type AnnouncementItemDisplay = {
   // API 응답 그대로 매칭
   user: createUser // 작성자
   createdAt: Date // display 시 시간 formatting하는 유틸함수 붙여서 쓰는 걸로
@@ -15,14 +15,15 @@ export type AnnouncementItemDisplayType = {
   endDateTime?: Date
   noticeId: number
   isEssential?: boolean // 나중에 essential parameter로 바꾸던지 (일단 지금은 선택)
-  taskTypeCd?: string
+  noticeTypeCd?: string
 }
 
-export type AnnouncementListDisplayType = Record<string, AnnouncementItemDisplayType[]>
+export type AnnouncementListDisplay = Record<string, AnnouncementItemDisplay[]>
 // 날짜로 묶은 공지 items
 
 // API 연결 후 삭제해 주세요
-export const dummyAnnouncements: AnnouncementItemDisplayType[] = [
+// MARK: datas
+export const dummyAnnouncements: AnnouncementItemDisplay[] = [
   {
     user: { userId: 1, name: 'John Doe' },
     createdAt: new Date('2024-09-12T08:45:00'),

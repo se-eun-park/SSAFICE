@@ -1,12 +1,12 @@
-import { AnnouncementItemDisplayType } from '@/features/announcementTab'
+import type { AnnouncementItemDisplay } from '@/features/announcementTab'
 import { AnnouncementItem } from './AnnouncementItem'
 import { useDateFormatter } from '@/shared/model'
 
-type AnnouncementDateGroupParam = {
+type AnnouncementDateGroupProps = {
   date: string
-  dailyAnnouncements: AnnouncementItemDisplayType[]
+  dailyAnnouncements: AnnouncementItemDisplay[]
 }
-export const AnnouncementDateGroup = ({ date, dailyAnnouncements }: AnnouncementDateGroupParam) => {
+export const AnnouncementDateGroup = ({ date, dailyAnnouncements }: AnnouncementDateGroupProps) => {
   return (
     <div
       className='

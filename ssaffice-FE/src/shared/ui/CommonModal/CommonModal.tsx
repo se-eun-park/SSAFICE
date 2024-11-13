@@ -1,13 +1,13 @@
 import ReactModal from 'react-modal'
 import { findModalByName, ModalName } from '@/shared/model'
 
-type CommonModalParams = {
+type CommonModalProps = {
   name: ModalName
   opened: boolean // 모달의 열림 상태
   closeRequest: () => void // 모달을 닫을 수 있는 함수
 }
 
-export const CommonModal = ({ name, opened, closeRequest }: CommonModalParams) => {
+export const CommonModal = ({ name, opened, closeRequest }: CommonModalProps) => {
   const modal = findModalByName(name, closeRequest) // 모달을 이름으로 찾아 매치합니다.
   if (!modal) {
     throw new Error(`Modal with name '${name}' not found.`) // name이 유효하지 않으면 에러를 던짐
