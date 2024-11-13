@@ -1,3 +1,5 @@
+export { useLockScrollX } from './model/hooks'
+
 export { HoverTitle } from './ui/HoverTitle'
 export { SelectTodoState } from './ui/SelectTodoState'
 export { Card } from './ui/Card'

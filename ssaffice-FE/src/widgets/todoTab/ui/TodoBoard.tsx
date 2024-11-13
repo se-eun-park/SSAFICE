@@ -2,11 +2,16 @@ import { useState } from 'react'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { restrictToFirstScrollableAncestor } from '@dnd-kit/modifiers'
 
+import { useLockScrollX } from '@/features/todoTab/model/hooks'
 import { Card, CardColumn } from '@/features/todoTab'
 import { GetTodoData, CardColumnData } from '@/entities/todoTab'
 import type { GetTodoDataProps } from '@/entities/todoTab'
 
 export const TodoBoard = () => {
+  // hook
+  useLockScrollX('.grid')
+
+  // state
   const [tasks, setTasks] = useState<GetTodoDataProps[]>(GetTodoData)
   const [columnLength, setColumnLength] = useState(
     CardColumnData.reduce(
@@ -18,6 +23,7 @@ export const TodoBoard = () => {
     ),
   )
 
+  // event
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
 
@@ -53,7 +59,7 @@ export const TodoBoard = () => {
   }
 
   return (
-    <div className='grid w-full h-full grid-cols-3 overflow-y-scroll overscroll-contain mt-spacing-24 gap-x-spacing-10'>
+    <div className='grid w-full h-full grid-cols-3 overflow-x-hidden overflow-y-scroll overscroll-contain mt-spacing-24 gap-x-spacing-10'>
       <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToFirstScrollableAncestor]}>
         {CardColumnData.map((column) => (
           <CardColumn
