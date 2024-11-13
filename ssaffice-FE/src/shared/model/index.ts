@@ -9,6 +9,8 @@ export { useDateFormatter } from './useDateFormatter'
 
 export { useCustomEmojiRemover } from './useCustomEmojiRemover'
 
+export { useClickedToggle } from './useClickedToggle'
+
 export { announcementDataEmojiSelectExpression } from './regularExpressions'
 
 export {

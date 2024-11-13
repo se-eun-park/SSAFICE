@@ -2,13 +2,13 @@ import { SearchIcon } from '@/assets/svg'
 import { useSearchInput } from '../model'
 
 export const SearchBar = () => {
-  const { value, handleValue } = useSearchInput()
+  const { value, handleValue, keyPressHandler } = useSearchInput()
 
   return (
     <div
       className='
         flex justify-start gap-spacing-16
-        w-full h-[56px] p-spacing-16
+        w-full h-[56px] px-spacing-16 py-spacing-12
         bg-color-bg-primary
         border border-color-border-disabled border-spacing-1
         rounded-radius-16
@@ -33,6 +33,7 @@ export const SearchBar = () => {
       '
         value={value}
         onChange={(e) => handleValue(e.target.value)}
+        onKeyDown={(e) => keyPressHandler(e.key)}
       />
     </div>
   )

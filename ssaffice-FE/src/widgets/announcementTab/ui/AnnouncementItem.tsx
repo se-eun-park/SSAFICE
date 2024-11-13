@@ -1,13 +1,14 @@
 import { FoldUp, SpreadDown } from '@/assets/svg'
-import { AnnouncementItemDisplayType, useArticleClicked } from '@/features/announcementTab'
+import type { AnnouncementItemDisplay } from '@/features/announcementTab'
+import { useClickedToggle } from '@/shared/model'
 import { useCustomEmojiRemover, useDateFormatter } from '@/shared/model'
 import Markdown from 'react-markdown'
 
-type AnnouncementItemParam = {
-  announcementItem: AnnouncementItemDisplayType
+type AnnouncementItemProps = {
+  announcementItem: AnnouncementItemDisplay
 }
-export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) => {
-  const { isClicked, handleIsClicked } = useArticleClicked()
+export const AnnouncementItem = ({ announcementItem }: AnnouncementItemProps) => {
+  const { isClicked, handleIsClicked } = useClickedToggle()
 
   return (
     <div
@@ -23,7 +24,6 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
         className={`
         flex gap-spacing-12
         p-spacing-16
-        h-[76px]
         ${isClicked && 'pb-0'}`}
         onClick={() => handleIsClicked()}
       >
@@ -39,7 +39,10 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
             <img
               src={announcementItem?.user?.profileImageUrl}
               alt='사진 없음'
-              className='w-full h-full'
+              className='
+              w-full h-full 
+              aspect-square rounded-full
+              '
             />
           )}
         </div>
@@ -74,12 +77,12 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
         </div>
         <div
           className='
-          flex justify-end self-end
+          flex self-end items-end justify-end
           w-spacing-16 h-spacing-16
           '
         >
           {/* 드롭다운/업 SVG */}
-          {isClicked ? <FoldUp /> : <SpreadDown />}
+          <div className='w-[7px] h-[3px]'>{isClicked ? <FoldUp /> : <SpreadDown />}</div>
         </div>
       </div>
 
@@ -88,7 +91,7 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemParam) =>
         <div
           className='
           flex flex-col
-          pl-spacing-48 pr-spacing-24 pb-spacing-16
+          pl-spacing-48 pr-spacing-24 pb-spacing-16 mt-spacing-4
           text-color-text-primary body-sm-medium'
         >
           {/* markdown */}
