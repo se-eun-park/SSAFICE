@@ -77,12 +77,12 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemProps) =>
         </div>
         <div
           className='
-          flex self-end
+          flex self-end items-end justify-end
           w-spacing-16 h-spacing-16
           '
         >
           {/* 드롭다운/업 SVG */}
-          {isClicked ? <FoldUp /> : <SpreadDown />}
+          <div className='w-[7px] h-[3px]'>{isClicked ? <FoldUp /> : <SpreadDown />}</div>
         </div>
       </div>
 
