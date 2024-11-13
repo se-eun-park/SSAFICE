@@ -48,7 +48,8 @@ public class MattermostUtil {
 				.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 		List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-//		// StringConverter 테스트코드 시작
+//		Todo. 나중에 지울 코드임
+//		StringConverter 테스트코드 시작
 //		StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(
 //			StandardCharsets.UTF_8);
 //		messageConverters.add(stringConverter);
@@ -99,4 +100,43 @@ public class MattermostUtil {
 
 		return mmUriCompBuilder.build().toUri();
 	}
+
+	// mattermostApi 의 Token을 발급하는 메서드(이 위 까지는 SSAFY API와 관한 메서드임)
+	public String makeMMAccessToken(String username, String password){
+		String loginUrl = mattermostUrl + "/users/login";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		String loginRequestBody = String.format("{\"login_id\": \"%s\", \"password\": \"%s\"}", username, password);
+		HttpEntity<String> requestEntity = new HttpEntity<>(loginRequestBody, headers);
+
+		try{
+			ResponseEntity<String> response = this.restTemplate.exchange(loginUrl, HttpMethod.POST, requestEntity, String.class);
+			if(response.getStatusCode() == HttpStatus.OK){
+				authToken = response.getHeaders().getFirst("Token");
+				return this.authToken;
+			}
+		} catch (HttpStatusCodeException e){
+			System.out.println(e.getMessage());
+		} return null;
+	}
+
+
+	// Token을 통해 MM Api를 불러옴
+	public ResponseEntity<String> callMattermostApi(String endpoint, HttpMethod method) {
+		String apiUrl = mattermostUrl + endpoint;
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(authToken);  // 토큰을 Bearer 형식으로 헤더에 설정
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+		try {
+			return restTemplate.exchange(apiUrl, method, requestEntity, String.class);
+		} catch (Exception e) {
+			System.err.println("API 호출 실패: " + e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }
