@@ -9,9 +9,9 @@ export const TodoList = () => {
   return (
     <div
       className='
-      w-full max-h-[455px]
+      w-full mb-[99px] 
       bg-color-bg-tertiary
-      rounded-radius-8 
+      rounded-radius-8
       overflow-y-scroll
     '
     >
