@@ -1,3 +1,4 @@
 export { HoverTitle } from './ui/HoverTitle'
 export { SelectTodoState } from './ui/SelectTodoState'
-export type { TodoItemDisplay } from './model/types'
+export { dummyTodos } from './model/types'
+export type { TodoItemDisplay, TodoListDisplay, ScheduleItemDisplay } from './model/types'

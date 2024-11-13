@@ -1,7 +1,11 @@
 import { AddIcon } from '@/assets/svg'
+import { dummyTodos } from '@/features/todoTab'
 import { useDateFormatter } from '@/shared/model'
+import { TodoItem } from './TodoItem'
 
 export const TodoList = () => {
+  const datas = dummyTodos
+
   return (
     <div className='w-full h-full rounded-radius-8 bg-color-bg-tertiary'>
       <div
@@ -33,7 +37,8 @@ export const TodoList = () => {
             rounded-radius-circle
           '
           >
-            {/* count of TODOs */}2
+            {/* count of TODOs */}
+            {datas.statusCounts[0]}
           </div>
 
           <div
@@ -45,7 +50,8 @@ export const TodoList = () => {
             rounded-radius-circle
           '
           >
-            {/* count of IN_PROGRESS */}3
+            {/* count of IN_PROGRESS */}
+            {datas.statusCounts[1]}
           </div>
 
           <div
@@ -57,7 +63,8 @@ export const TodoList = () => {
             rounded-radius-circle
           '
           >
-            {/* count of DONEs */} 12
+            {/* count of DONEs */}
+            {datas.statusCounts[2]}
           </div>
         </div>
 
@@ -92,6 +99,9 @@ export const TodoList = () => {
           </div>
 
           {/* todoItems */}
+          {datas.todos.map((each) => (
+            <TodoItem todo={each} />
+          ))}
         </div>
       </div>
     </div>

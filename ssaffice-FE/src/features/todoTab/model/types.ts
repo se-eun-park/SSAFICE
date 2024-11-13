@@ -356,5 +356,5 @@ export const dummyTodos: TodoListDisplay = {
       },
     },
   ],
-  statusCounts: [18, 15, 16], // TODO: 18개, IN_PROGRESS: 15개, DONE: 16개
+  statusCounts: [2, 1, 12], // TODO: 18개, IN_PROGRESS: 15개, DONE: 16개
 }
