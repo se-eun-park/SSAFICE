@@ -32,12 +32,18 @@
     "createUserId": {
       "type": "keyword"
     },
-    "profileImageUrl": {
+    "createUserEmail": {
+      "type": "keyword"
+    },
+    "createUserProfileImgUrl": {
       "type": "keyword"
     },
     "createUserName": {
       "type": "text",
       "analyzer": "jetty_notice_analyzer"
+    },
+    "channelId": {
+      "type": "keyword"
     }
   }
 }

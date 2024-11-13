@@ -50,9 +50,15 @@ public class ESNotice {
     private Long createUserId;
 
     @Field(type = FieldType.Keyword)
-    private String profileImageUrl;
+    private String createUserEmail;
+
+    @Field(type = FieldType.Keyword)
+    private String createUserProfileImgUrl;
 
     @Field(type = FieldType.Text)
     private String createUserName;
+
+    @Field(type = FieldType.Keyword)
+    private String channelId;
 
 }
