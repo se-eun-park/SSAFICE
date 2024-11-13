@@ -1,0 +1,43 @@
+{
+  "properties": {
+    "noticeId": {
+      "type": "keyword"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "jetty_notice_analyzer"
+    },
+    "content": {
+      "type": "text",
+      "analyzer": "jetty_notice_analyzer"
+    },
+    "createdAt": {
+      "type": "date",
+      "format": "yyyy-MM-dd'T'HH:mm:ss||epoch_millis"
+    },
+    "startDateTime": {
+      "type": "date",
+      "format": "yyyy-MM-dd'T'HH:mm:ss||epoch_millis"
+    },
+    "endDateTime": {
+      "type": "date",
+      "format": "yyyy-MM-dd'T'HH:mm:ss||epoch_millis"
+    },
+    "isEssentialYn": {
+      "type": "keyword"
+    },
+    "noticeTypeCd": {
+      "type": "keyword"
+    },
+    "createUserId": {
+      "type": "keyword"
+    },
+    "profileImageUrl": {
+      "type": "keyword"
+    },
+    "createUserName": {
+      "type": "text",
+      "analyzer": "jetty_notice_analyzer"
+    }
+  }
+}
