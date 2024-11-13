@@ -30,18 +30,18 @@ export const dummyUnschedules: UnscheduledItemDisplay[] = [
       user: {
         userId: 101,
         email: 'alice@example.com',
-        name: 'Alice Johnson',
+        name: '안인석(교육프로)',
       },
     },
     announcement: {
       user: {
         userId: 101,
         email: 'alice@example.com',
-        name: 'Alice Johnson',
+        name: '안인석(교육프로)',
         profileImageUrl: 'https://picsum.photos/id/38/400/400',
       },
       createdAt: new Date('2024-11-10T09:00:00'),
-      title: '예정된 미팅 일정 안내',
+      title: '자율PJT 영상 포트폴리오 담당자 설문제출 안내',
       content: `[자율PJT 영상 포트폴리오 담당자 설문제출 안내]
  자율PJT 영상 포트폴리오 경진대회가 진행됩니다.
  이에 따라 팀별 영상 포트폴리오 담당자를 선정해 주시기 바랍니다!
@@ -82,11 +82,11 @@ export const dummyUnschedules: UnscheduledItemDisplay[] = [
       user: {
         userId: 102,
         email: 'bob@example.com',
-        name: 'Bob Lee',
+        name: '김싸피(교육프로)',
         profileImageUrl: 'https://picsum.photos/id/39/400/400',
       },
       createdAt: new Date('2024-11-10T12:00:00'),
-      title: '점심 미팅 알림',
+      title: 'SSAFY 청년멘토링 시청',
       content: `[SSAFY 청년멘토링 시청의 건]
  내일 SSAFY 교육생 대상으로 청년멘토링이 서울캠퍼스 18층에서 15시부터 진행됩니다.
  18층 현장참여 교육생 외 교육생과 지역캠퍼스 교육생은 라이브방송을 통해 시청 및 참여가 가능합니다. :slightly_smiling_face:
@@ -104,7 +104,7 @@ export const dummyUnschedules: UnscheduledItemDisplay[] = [
   {
     todo: {
       scheduleId: 3,
-      title: '팀 브레인스토밍 세션',
+      title: '최종 팀미팅을 신청해 주세요!',
       startDateTime: new Date('2024-11-18T14:00:00'),
       endDateTime: new Date('2024-11-18T16:00:00'),
       scheduleSourceTypeCd: 'TEAM', // 팀 일정
@@ -119,11 +119,11 @@ export const dummyUnschedules: UnscheduledItemDisplay[] = [
       user: {
         userId: 103,
         email: 'carol@example.com',
-        name: 'Carol Smith',
+        name: '정싸피(컨설턴트)',
         profileImageUrl: 'https://picsum.photos/id/40/400/400',
       },
       createdAt: new Date('2024-11-12T10:00:00'),
-      title: '브레인스토밍 세션 안내',
+      title: '최종 팀미팅을 신청해 주세요!',
       content: '브레인스토밍 세션은 11월 18일 오후 2시에 진행됩니다.',
       noticeId: 3,
     },
