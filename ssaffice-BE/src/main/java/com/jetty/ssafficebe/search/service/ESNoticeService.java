@@ -1,8 +1,8 @@
-package com.jetty.ssafficebe.search.esnotice.service;
+package com.jetty.ssafficebe.search.service;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
-import com.jetty.ssafficebe.search.esnotice.payload.ESNoticeRequest;
-import com.jetty.ssafficebe.search.esnotice.payload.ESNoticeSearchFilter;
+import com.jetty.ssafficebe.search.payload.ESNoticeRequest;
+import com.jetty.ssafficebe.search.payload.ESNoticeSearchFilter;
 import org.springframework.data.domain.Page;
 
 public interface ESNoticeService {

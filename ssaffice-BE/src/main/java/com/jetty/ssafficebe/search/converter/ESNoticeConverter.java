@@ -1,7 +1,7 @@
-package com.jetty.ssafficebe.search.esnotice.converter;
+package com.jetty.ssafficebe.search.converter;
 
-import com.jetty.ssafficebe.search.esnotice.document.ESNotice;
-import com.jetty.ssafficebe.search.esnotice.payload.ESNoticeRequest;
+import com.jetty.ssafficebe.search.document.ESNotice;
+import com.jetty.ssafficebe.search.payload.ESNoticeRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
