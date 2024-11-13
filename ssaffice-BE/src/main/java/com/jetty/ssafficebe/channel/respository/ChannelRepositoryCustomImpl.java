@@ -20,7 +20,7 @@ public class ChannelRepositoryCustomImpl extends AbstractQueryDslRepository impl
 
 		JPQLQuery<Channel> query = from(channel)
 			.join(channel.userChannels, userChannel)
-			.where(userChannel.user.userId.eq(userId))
+			.where(userChannel.userId.eq(userId))
 			.select(channel);
 
 		return getPageImpl(query, pageable);
