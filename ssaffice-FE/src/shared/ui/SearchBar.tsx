@@ -8,7 +8,7 @@ export const SearchBar = () => {
     <div
       className='
         flex justify-start gap-spacing-16
-        w-full h-[56px] p-spacing-16
+        w-full h-[56px] px-spacing-16 py-spacing-12
         bg-color-bg-primary
         border border-color-border-disabled border-spacing-1
         rounded-radius-16
