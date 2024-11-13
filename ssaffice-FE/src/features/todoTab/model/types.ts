@@ -6,7 +6,7 @@ export type TodoItemDisplay = {
   startDateTime?: Date
   endDateTime?: Date
   scheduleSourceTypeCd?: 'GLOBAL' | 'TEAM' | 'PERSONAL'
-  scheduleStatusTypeCd?: 'TODO' | 'IN_PROGRESS' | 'DONE'
+  scheduleStatusTypeCd: 'TODO' | 'IN_PROGRESS' | 'DONE'
   isEssential?: boolean
   isEnroll?: boolean
 
@@ -35,7 +35,7 @@ export const dummyTodos: TodoListDisplay = {
     {
       todo: {
         scheduleId: 1,
-        title: '팀 미팅 준비',
+        title: '[SSAFY] 청년 멘토링 시청하기',
         startDateTime: new Date('2024-11-13T09:00:00'),
         endDateTime: new Date('2024-11-13T10:00:00'),
         scheduleSourceTypeCd: 'TEAM',
@@ -50,7 +50,7 @@ export const dummyTodos: TodoListDisplay = {
       announcement: {
         user: { userId: 2, name: '박영희' },
         createdAt: new Date('2024-11-13T08:00:00'),
-        title: '팀 미팅 일정 공지',
+        title: 'SSAFY SUPER APP 팀미팅',
         content: '팀 미팅이 2024년 11월 13일 오전 9시에 진행됩니다.',
         noticeId: 1,
       },
@@ -58,7 +58,7 @@ export const dummyTodos: TodoListDisplay = {
     {
       todo: {
         scheduleId: 2,
-        title: '회식 장소 예약',
+        title: 'SSAFY SUPER APP 리소스 신청서 금주 접수',
         startDateTime: new Date('2024-11-13T10:00:00'),
         endDateTime: new Date('2024-11-13T11:00:00'),
         scheduleSourceTypeCd: 'PERSONAL',
@@ -81,7 +81,7 @@ export const dummyTodos: TodoListDisplay = {
     {
       todo: {
         scheduleId: 3,
-        title: '프로젝트 리뷰',
+        title: '[live] 서비스 성능 및 안정성 향상을 위한 Message Queue 도입',
         startDateTime: new Date('2024-11-13T11:00:00'),
         endDateTime: new Date('2024-11-13T12:00:00'),
         scheduleSourceTypeCd: 'GLOBAL',

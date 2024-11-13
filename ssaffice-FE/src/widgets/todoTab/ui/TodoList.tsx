@@ -71,8 +71,8 @@ export const TodoList = () => {
         <div
           className='
           flex flex-col gap-spacing-16
-          max-h-full 
-          overflow-y-scroll
+          h-[616px]
+          overflow-y-auto
         '
         >
           {/* overflow-y-scroll이 담당하는 영역이 '할일 등록하기' 버튼도 포함인지 물어봐야 함 */}
