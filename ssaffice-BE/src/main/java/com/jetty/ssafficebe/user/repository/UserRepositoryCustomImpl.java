@@ -1,5 +1,6 @@
 package com.jetty.ssafficebe.user.repository;
 
+import com.jetty.ssafficebe.channel.entity.QUserChannel;
 import com.jetty.ssafficebe.common.jpa.AbstractQueryDslRepository;
 import com.jetty.ssafficebe.role.entity.QUserRole;
 import com.jetty.ssafficebe.user.entity.QUser;
@@ -50,6 +51,19 @@ public class UserRepositoryCustomImpl extends AbstractQueryDslRepository impleme
         if (userFilterRequest.getDisabledYn() != null) {
             query.where(user.isDisabledYn.eq(userFilterRequest.getDisabledYn()));
         }
+
+        return getPageImpl(query, pageable);
+    }
+
+    @Override
+    public Page<User> findUsersByChannelId(String channelId, Pageable pageable) {
+        QUser user = QUser.user;
+        QUserChannel userChannel = QUserChannel.userChannel;
+
+        JPQLQuery<User> query = from(user)
+            .join(user.userChannels, userChannel)
+                .where(userChannel.channel.channelId.eq(channelId))
+                .select(user);
 
         return getPageImpl(query, pageable);
     }

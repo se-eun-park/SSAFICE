@@ -18,9 +18,13 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
     }
 
     @Override
-    public Page<Schedule> getSchedulesByFilter(ScheduleFilterRequest scheduleFilterRequest, Pageable pageable) {
+    public Page<Schedule> findSchedulesByUserIdAndFilter(Long userId, ScheduleFilterRequest scheduleFilterRequest,
+                                                         Pageable pageable) {
         QSchedule schedule = QSchedule.schedule;
         JPQLQuery<Schedule> query = from(schedule);
+
+        // 유저 id 필터
+        query.where(schedule.userId.eq(userId));
 
         // 미등록 공지 필터
         if (scheduleFilterRequest.getIsEnrollYn() != null) {
@@ -44,6 +48,51 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
         if (scheduleFilterRequest.getFilterEndDateTime() != null) {
             query.where(schedule.endDateTime.loe(scheduleFilterRequest.getFilterEndDateTime()));
         }
+
+        return getPageImpl(query, pageable);
+    }
+
+    @Override
+    public Page<Schedule> findSchedulesByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest scheduleFilterRequest,
+                                                           Pageable pageable) {
+        QSchedule schedule = QSchedule.schedule;
+        JPQLQuery<Schedule> query = from(schedule);
+
+        // 공지 id 필터
+        query.where(schedule.userId.eq(noticeId));
+
+        // 미등록 공지 필터
+        if (scheduleFilterRequest.getIsEnrollYn() != null) {
+            query.where(schedule.isEnrollYn.eq(scheduleFilterRequest.getIsEnrollYn()));
+        }
+
+        // 일정 상태 필터
+        if (scheduleFilterRequest.getScheduleStatusTypeCd() != null) {
+            query.where(schedule.scheduleStatusTypeCd.eq(scheduleFilterRequest.getScheduleStatusTypeCd()));
+        }
+
+        // 일정 출처 필터
+        if (scheduleFilterRequest.getScheduleSourceTypeCd() != null) {
+            query.where(schedule.scheduleSourceTypeCd.eq(scheduleFilterRequest.getScheduleSourceTypeCd()));
+        }
+
+        // 기간 필터
+        if (scheduleFilterRequest.getFilterStartDateTime() != null) {
+            query.where(schedule.startDateTime.goe(scheduleFilterRequest.getFilterStartDateTime()));
+        }
+        if (scheduleFilterRequest.getFilterEndDateTime() != null) {
+            query.where(schedule.endDateTime.loe(scheduleFilterRequest.getFilterEndDateTime()));
+        }
+
+        return getPageImpl(query, pageable);
+    }
+
+    @Override
+    public Page<Schedule> findSchedulesByNoticeId(Long noticeId, Pageable pageable) {
+        QSchedule schedule = QSchedule.schedule;
+        JPQLQuery<Schedule> query = queryFactory
+                .selectFrom(schedule)
+                .where(schedule.noticeId.eq(noticeId));
 
         return getPageImpl(query, pageable);
     }

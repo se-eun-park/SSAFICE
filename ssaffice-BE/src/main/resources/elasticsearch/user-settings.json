@@ -1,0 +1,36 @@
+{
+  "number_of_shards": 1,
+  "number_of_replicas": 2,
+  "refresh_interval": "30s",
+  "max_ngram_diff": 19,
+  "codec": "best_compression",
+  "analysis": {
+    "filter": {
+      "my_nori_filter": {
+        "type": "nori_part_of_speech",
+        "stoptags": [
+          "NR", "J", "E", "MAJ", "MM", "SP", "NA", "XSA", "NNB", "NNBC", "SC",
+          "SE", "SF", "SH", "SN", "SSC", "SSO", "SY", "UNA", "VCN", "VCP", "VSV"
+        ]
+      },
+      "my_ngram_filter": {
+        "type": "edge_ngram",
+        "min_gram": 1,
+        "max_gram": 10
+      }
+    },
+    "tokenizer": {
+      "my_nori_tokenizer": {
+        "type": "nori_tokenizer",
+        "decompound_mode": "none"
+      }
+    },
+    "analyzer": {
+      "my_custom_analyzer": {
+        "type": "custom",
+        "tokenizer": "my_nori_tokenizer",
+        "filter": ["my_nori_filter", "my_ngram_filter"]
+      }
+    }
+  }
+}
