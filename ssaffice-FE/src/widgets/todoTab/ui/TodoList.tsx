@@ -7,7 +7,14 @@ export const TodoList = () => {
   const datas = dummyTodos
 
   return (
-    <div className='w-full h-full rounded-radius-8 bg-color-bg-tertiary'>
+    <div
+      className='
+      w-full max-h-[455px]
+      bg-color-bg-tertiary
+      rounded-radius-8 
+      overflow-y-scroll
+    '
+    >
       <div
         className='
         flex flex-col gap-spacing-16
@@ -71,8 +78,6 @@ export const TodoList = () => {
         <div
           className='
           flex flex-col gap-spacing-16
-          h-[616px]
-          overflow-y-auto
         '
         >
           {/* overflow-y-scroll이 담당하는 영역이 '할일 등록하기' 버튼도 포함인지 물어봐야 함 */}
@@ -80,11 +85,12 @@ export const TodoList = () => {
             className='
             flex gap-spacing-8 items-center
             h-[56px] p-spacing-16
+            hover:bg-color-bg-interactive-secondary-hover
           '
           >
             <div
               className='
-              w-[14px] h-[14px]
+              w-[24px] h-[24px] p-[5px]
             '
             >
               <AddIcon />

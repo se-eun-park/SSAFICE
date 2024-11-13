@@ -1,5 +1,5 @@
 import { TodoFlag } from '@/assets/svg'
-import type { ScheduleItemDisplay } from '@/features/todoTab'
+import { SelectTodoState, type ScheduleItemDisplay } from '@/features/todoTab'
 
 type TodoItemProps = {
   todo: ScheduleItemDisplay
@@ -12,7 +12,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
       flex justify-between
       p-spacing-16
       bg-color-bg-primary
-      border-color-border-tertiary border-spacing-1
+      border border-color-border-tertiary border-spacing-1
       rounded-radius-8
     '
     >
@@ -45,7 +45,15 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
         </div>
       </div>
 
-      <div className=''>{/* 할 일 상태 드롭다운 파트 */}</div>
+      {/* 할 일 상태 드롭다운 파트 */}
+      <SelectTodoState
+        state={
+          todo.todo.scheduleStatusTypeCd === 'IN_PROGRESS'
+            ? 'progress'
+            : todo.todo.scheduleStatusTypeCd.toLowerCase()
+        }
+        actionType='modify'
+      />
     </div>
   )
 }
