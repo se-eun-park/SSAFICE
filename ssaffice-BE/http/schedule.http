@@ -1,6 +1,6 @@
 ### 변수 설정
 @scheduleId = 2
-@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxNDIzOTI2fQ.NhHWX7vjIbiDtqj9iNLgDIfxYM-_CiCNTOaFcpX_-H2-b2bVgQM6mpUKzpyD78rUEQuZIOpE2v9CWkLJi-Ag1w
+@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxNTE4Mjc4fQ.SmQHF6xgggXYcHJ1EZmm87IRGLX9dLSAFvvY8zg0XoRZMV2MVeY-XeNqe_FW_Mw1HtSJ0oXTX_zpKuKDGn-TyQ
 
 ### 일정 등록
 POST http://localhost:9090/api/schedules
@@ -8,14 +8,14 @@ Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
 {
-  "title": "테스트1",
-  "memo": "테스트내용1",
+  "title": "개인 일정 테스트",
+  "memo": "개인 일정 테스트",
   "startDateTime": "2024-11-01T14:44:00",
   "endDateTime": "2024-11-12T18:00:00",
-  "scheduleSourceTypeCd": "TEAM",
+  "scheduleSourceTypeCd": "PERSONAL",
   "scheduleStatusTypeCd": "TODO",
-  "userId": 1,
-  "noticeId": null,
+  "isEssentialYn": "N",
+  "noticeId": 1,
   "remindRequests": [
     {
       "isEssentialYn": "N",
@@ -25,7 +25,7 @@ Authorization: Bearer {{JWT}}
   ]
 }
 
-### 일정 수정
+### 일정 수정 1
 PUT http://localhost:9090/api/schedules/{{scheduleId}}
 Content-Type: application/json
 Authorization: Bearer {{JWT}}
@@ -47,6 +47,15 @@ Authorization: Bearer {{JWT}}
   ]
 }
 
+### 일정 수정 2
+PUT http://localhost:9090/api/schedules/{{scheduleId}}
+Content-Type: application/json
+Authorization: Bearer {{JWT}}
+
+{
+  "isEnrollYn": "N"
+}
+
 ### 일정 조회
 GET http://localhost:9090/api/schedules/{{scheduleId}}
 Content-Type: application/json
@@ -60,6 +69,20 @@ Authorization: Bearer {{JWT}}
 ### 일정 리스트 조회
 GET http://localhost:9090/api/schedules
 Content-Type: application/json
+Authorization: Bearer {{JWT}}
+
+{
+  "isEnrollYn": null,
+  "scheduleStatusTypeCd": null,
+  "scheduleSourceTypeCd": null,
+  "filterStartDateTime": null,
+  "filterEndDateTime": null
+}
+
+### 관리자의 일정 리스트 조회
+GET http://localhost:9090/api/schedules/admin/notices/{{noticeId}}
+Content-Type: application/json
+Authorization: Bearer {{JWT}}
 
 {
   "isEnrollYn": null,

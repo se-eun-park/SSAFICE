@@ -2,13 +2,13 @@ package com.jetty.ssafficebe.schedule.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
+import com.jetty.ssafficebe.schedule.payload.AdminScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
+import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
-import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -33,14 +33,25 @@ public class ScheduleController {
     /**
      * 일정 등록
      *
-     * @param scheduleRequest : 일정 정보 + 공지사항 id(개인 일정의 경우: null) + 리마인드 정보
+     * @param scheduleRequest : 일정 요청 정보 + 리마인드 요청 정보
      * @return 등록된 일정 정보
      */
     @PostMapping
     public ResponseEntity<ApiResponse> saveSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                     @RequestBody ScheduleRequest scheduleRequest) {
-        ApiResponse apiResponse = scheduleService.saveSchedule(userDetails.getUserId(), scheduleRequest);
-        return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+        return ResponseEntity.ok(scheduleService.saveSchedule(userDetails.getUserId(), scheduleRequest));
+    }
+
+    /**
+     * 관리자 일정 등록 : 공지사항 등록 시 해당 사용자들에게 일정 추가
+     *
+     * @param adminScheduleRequest : List<Long> userIds, noticeId
+     * @return 성공 메세지
+     */
+    @PostMapping("/admin")
+    public ResponseEntity<ApiResponse> saveSchedulesForUsers(AdminScheduleRequest adminScheduleRequest) {
+        scheduleService.saveSchedulesForUsers(adminScheduleRequest.getNoticeId(), adminScheduleRequest.getUserIds());
+        return ResponseEntity.ok(new ApiResponse(true, "교육생 일정 등록에 성공하였습니다."));
     }
 
     /**
@@ -54,8 +65,7 @@ public class ScheduleController {
     public ResponseEntity<ApiResponse> updateSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                       @PathVariable("scheduleId") Long scheduleId,
                                                       @RequestBody ScheduleRequest scheduleRequest) {
-        ApiResponse apiResponse = scheduleService.updateSchedule(userDetails.getUserId(), scheduleId, scheduleRequest);
-        return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+        return ResponseEntity.ok(scheduleService.updateSchedule(userDetails.getUserId(), scheduleId, scheduleRequest));
     }
 
     /**
@@ -83,22 +93,32 @@ public class ScheduleController {
     }
 
     /**
-     * (ROLE_USER) 개인 일정 조회
+     * (ROLE_USER) 개인 일정 리스트 조회
      *
-     * @param pageable              : 20개씩 / 마감 임박순
-     * @param scheduleFilterRequest :미등록 공지 여부, 상태, 일정 출처
+     * @param pageable              : 기본값 (20개씩 / 마감 임박순)
+     * @param scheduleFilterRequest :미등록 공지 여부, 상태, 일정 출처, 시작/종료 시간
      * @return 조건에 맞는 일정 리스트
-     * TODO : (개인) 현재 로그인한 id 에 맞는 일정 리스트
      */
     @GetMapping
-    public ResponseEntity<Page<ScheduleSummary>> getScheduleList(
+    public ResponseEntity<SchedulePageResponse> getScheduleList(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(scheduleService.getScheduleList(scheduleFilterRequest, pageable));
+        return ResponseEntity.ok(scheduleService.getScheduleList(userDetails.getUserId(), scheduleFilterRequest, pageable));
     }
 
     /**
-     * (ROLE_ADMIN) 관리자의 일정 조회
-     * TODO : 관리자가 작성한 공지에 대한 해당 유저들의 일정 조회 (등록 여부, 완료 여부, 등 ...)
+     * (ROLE_ADMIN) 관리자의 공지 파생 일정 조회
+     *
+     * @param pageable              : 기본값 (20개씩 / 마감 임박순)
+     * @param scheduleFilterRequest :미등록 공지 여부, 상태, 일정 출처, 시작/종료 시간
+     * @return 조건에 맞는 일정 리스트
      */
+    @GetMapping("/admin/notices/{noticeId}")
+    public ResponseEntity<SchedulePageResponse> getSchedulesByNoticeForAdmin(
+            @PathVariable Long noticeId,
+            @RequestBody ScheduleFilterRequest scheduleFilterRequest,
+            @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(scheduleService.getSchedulesByNoticeForAdmin(noticeId, scheduleFilterRequest, pageable));
+    }
 }
