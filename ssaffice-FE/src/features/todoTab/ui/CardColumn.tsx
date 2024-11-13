@@ -1,14 +1,8 @@
 import { useDroppable } from '@dnd-kit/core'
-import { ReactNode } from 'react'
 
-type CardColumnProps = {
-  children: ReactNode
-  id: string
-  label: string
-  columnLength: number
-}
+import type { CardColumnResponse } from '@/entities/todoTab'
 
-export const CardColumn = ({ children, id, label, columnLength }: CardColumnProps) => {
+export const CardColumn = ({ children, id, label, columnLength }: CardColumnResponse) => {
   const { isOver, setNodeRef } = useDroppable({
     id: id,
   })

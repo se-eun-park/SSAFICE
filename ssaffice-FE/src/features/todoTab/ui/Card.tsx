@@ -1,6 +1,6 @@
 import { useDraggable } from '@dnd-kit/core'
 
-import type { GetTodoDataProps } from '@/entities/todoTab'
+import type { GetTodoResponse } from '@/entities/todoTab'
 import { CardSourceTypeElements } from '../model/CardSourceTypeElements'
 import { CardEndDateElements } from '../model/CardEndDateElements'
 
@@ -11,7 +11,7 @@ export const Card = ({
   scheduleStatusTypeCd,
   scheduleSourceTypeCd,
   createUser,
-}: GetTodoDataProps) => {
+}: GetTodoResponse) => {
   const cardSourceTag = CardSourceTypeElements({ scheduleSourceTypeCd })
   const cardEndDate = CardEndDateElements({ endDateTime, scheduleStatusTypeCd })
 

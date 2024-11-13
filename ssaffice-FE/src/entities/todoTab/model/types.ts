@@ -1,4 +1,6 @@
-export type GetTodoDataProps = {
+import { ReactNode } from 'react'
+
+export type GetTodoResponse = {
   scheduleId: string
   title: string
   startDateTime?: string
@@ -12,7 +14,8 @@ export type GetTodoDataProps = {
   }
 }
 
-export type CardColumnDataProps = {
+export type CardColumnResponse = {
+  children: ReactNode
   id: string
   label: string
   columnLength: number

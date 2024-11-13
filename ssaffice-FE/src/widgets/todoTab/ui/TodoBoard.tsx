@@ -5,14 +5,14 @@ import { restrictToFirstScrollableAncestor } from '@dnd-kit/modifiers'
 import { useLockScrollX } from '@/features/todoTab/model/hooks'
 import { Card, CardColumn } from '@/features/todoTab'
 import { GetTodoData, CardColumnData } from '@/entities/todoTab'
-import type { GetTodoDataProps } from '@/entities/todoTab'
+import type { GetTodoResponse } from '@/entities/todoTab'
 
 export const TodoBoard = () => {
   // hook
   useLockScrollX('.grid')
 
   // state
-  const [tasks, setTasks] = useState<GetTodoDataProps[]>(GetTodoData)
+  const [tasks, setTasks] = useState<GetTodoResponse[]>(GetTodoData)
   const [columnLength, setColumnLength] = useState(
     CardColumnData.reduce(
       (acc, column) => {
@@ -31,7 +31,7 @@ export const TodoBoard = () => {
 
     const taskId = active.id as string
     const oldStatus = active.data.current?.status
-    const newStatus = over.id as GetTodoDataProps['scheduleStatusTypeCd']
+    const newStatus = over.id as GetTodoResponse['scheduleStatusTypeCd']
 
     if (oldStatus === newStatus) return
 
