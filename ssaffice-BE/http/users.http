@@ -3,9 +3,9 @@ POST http://localhost:9090/api/users
 Content-Type: application/json
 
 {
-  "email": "admin2@gmail.com",
+  "email": "admin1@gmail.com",
   "password": "1234",
-  "name": "admin2",
+  "name": "admin1",
   "roleIds": [
     "ROLE_ADMIN"
   ],
