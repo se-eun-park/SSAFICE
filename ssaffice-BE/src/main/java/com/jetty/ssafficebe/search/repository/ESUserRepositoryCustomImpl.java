@@ -19,13 +19,16 @@ public class ESUserRepositoryCustomImpl implements ESUserRepositoryCustom {
 
     @Override
     public List<ESUser> searchUsers(String keyword) throws IOException {
-        Query boolQuery = BoolQuery.of(bool -> bool.should(s -> s.term(t -> t.field("name").value(keyword)))
-                                                   .should(s -> s.term(t -> t.field("email").value(keyword))))
+        Query boolQuery = BoolQuery.of(bool -> bool.should(s -> s.match(t -> t.field("name").query(keyword)))
+                                                   .should(s -> s.term(t -> t.field("name.keyword").value(keyword)))
+                                                    .should(s -> s.match(t -> t.field("email").query(keyword)))
+                                                   .should(s -> s.term(t -> t.field("email.keyword").value(keyword))))
                                    ._toQuery();
 
         SearchRequest searchRequest = SearchRequest.of(request -> request.index("user").query(boolQuery));
 
         SearchResponse<ESUser> searchResponse = elasticsearchClient.search(searchRequest, ESUser.class);
+
         return searchResponse.hits().hits().stream()
                              .map(Hit::source)
                              .filter(user -> user != null)
