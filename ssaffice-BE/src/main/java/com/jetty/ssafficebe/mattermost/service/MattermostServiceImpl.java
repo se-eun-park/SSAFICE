@@ -95,19 +95,17 @@ public class MattermostServiceImpl implements MattermostService {
         String token = user.getMattermostToken();
 
         // 2. token 과 mmId로 ChannelSummary 를 배열로 가져오기
-        if (token == null || token.isEmpty()) {
-            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND, "mattermostToken", null);
-        }
-        ResponseEntity<ChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
-                "/users/" + mmUserId + "/channels", HttpMethod.GET, null, ChannelSummary[].class, token);
+        try {
+            ResponseEntity<ChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
+                    "/users/" + mmUserId + "/channels", HttpMethod.GET, null, ChannelSummary[].class, token);
 
-        ChannelSummary[] channelSummaries = response.getBody();
-        if (channelSummaries == null) {
-            return null;
+            ChannelSummary[] channelSummaries = response.getBody();
+            // 3. ChannelId가 기존의 DB에 있는지 확인하고 없으면 DB에 저장
+            // MM 에서 가져온 ChannelSummary 에서 id만 추출해서 해당 id로 db의 내용과 중복체크
+            return channelSummaries;
+        } catch (InvalidTokenException e) {
+            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND, "mattermostToken", token);
         }
-        // 3. ChannelId가 기존의 DB에 있는지 확인하고 없으면 DB에 저장
-        // MM 에서 가져온 ChannelSummary 에서 id만 추출해서 해당 id로 db의 내용과 중복체크
-        return response.getBody();
     }
 
     // db에 없는 채널리스트 가져오기
