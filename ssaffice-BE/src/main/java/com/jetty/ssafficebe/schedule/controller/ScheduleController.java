@@ -31,10 +31,11 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     /**
-     * 일정 등록
+     * 개인 일정 등록
      *
-     * @param scheduleRequest : 일정 요청 정보 + 리마인드 요청 정보
-     * @return 등록된 일정 정보
+     * @param scheduleRequest : 일정 요청 정보 + 리마인드 정보 (리마인드 존재시)
+     * @return 등록된 일정 id
+     * TODO: ROLE_USER 접근만 허용 추가
      */
     @PostMapping
     public ResponseEntity<ApiResponse> saveSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
