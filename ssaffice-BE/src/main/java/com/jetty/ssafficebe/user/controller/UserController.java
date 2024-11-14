@@ -4,6 +4,7 @@ import com.jetty.ssafficebe.channel.payload.ChannelSummary;
 import com.jetty.ssafficebe.channel.service.ChannelService;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
+import com.jetty.ssafficebe.search.service.ESUserService;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
@@ -38,6 +39,7 @@ public class UserController {
 
     private final UserService userService;
     private final ChannelService channelService;
+    private final ESUserService esUserService;
 
     /**
      * 유저 등록
@@ -137,10 +139,10 @@ public class UserController {
 
     @GetMapping("/{userId}/channels")
     public ResponseEntity<Page<ChannelSummary>> getChannelListByUserId(@PathVariable Long userId,
-        @PageableDefault(
-            size = 20,
-            sort = "channelId",
-            direction = Direction.ASC) Pageable pageable) {
+                                                                       @PageableDefault(
+                                                                               size = 20,
+                                                                               sort = "channelId",
+                                                                               direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(channelService.getChannelsByUserId(userId, pageable));
     }
 }
