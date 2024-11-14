@@ -23,6 +23,4 @@ public interface ScheduleService {
     void saveSchedulesForUsers(Long noticeId, List<Long> userIds);
 
     SchedulePageResponse getSchedulesByNoticeForAdmin(Long noticeId, ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
-
-    SchedulePageResponse getSchedulesByNoticeForAdmin(Long noticeId, Pageable pageable);
 }

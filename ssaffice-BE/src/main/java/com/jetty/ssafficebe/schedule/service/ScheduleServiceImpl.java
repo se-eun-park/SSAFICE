@@ -284,46 +284,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     /**
-     * [필터 X] 관리자 공지사항 조회 시 해당 교육생들의 일정을 조회하는 메서드
-     */
-    @Override
-    public SchedulePageResponse getSchedulesByNoticeForAdmin(Long noticeId, Pageable pageable) {
-        log.info("[Schedule] 공지사항 관련 교육생 일정 조회 시작 - noticeId={}", noticeId);
-
-        // ! 1. 해당 공지사항의 전체 일정들 조회하여 상태 카운트 계산
-        List<Schedule> allNoticeSchedules = scheduleRepository.findAllByNoticeId(noticeId);
-
-        long todoCount = allNoticeSchedules.stream()
-                                           .filter(s -> "TODO".equals(s.getScheduleStatusTypeCd()))
-                                           .count();
-
-        long inProgressCount = allNoticeSchedules.stream()
-                                                 .filter(s -> "IN_PROGRESS".equals(s.getScheduleStatusTypeCd()))
-                                                 .count();
-
-        long doneCount = allNoticeSchedules.stream()
-                                           .filter(s -> "DONE".equals(s.getScheduleStatusTypeCd()))
-                                           .count();
-
-        List<Integer> statusCounts = Arrays.asList(
-                (int) todoCount,
-                (int) inProgressCount,
-                (int) doneCount
-        );
-
-        // ! 2. 해당 공지사항의 일정들 조회
-        Page<Schedule> schedulePage = scheduleRepository.findSchedulesByNoticeId(noticeId, pageable);
-
-        // ! 3. ScheduleSummary 로 변환
-        Page<ScheduleSummary> result = schedulePage.map(scheduleConverter::toScheduleSummary);
-
-        log.info("[Schedule] 공지사항 관련 교육생 일정 조회 완료 - noticeId={}, count={}",
-                noticeId, result.getTotalElements());
-
-        return scheduleConverter.toSchedulePageResponse(result, statusCounts);
-    }
-
-    /**
      * 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용하는 메서드
      */
     private void validateAuthorization(Long userId, Long requestUserId) {
