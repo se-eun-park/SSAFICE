@@ -69,6 +69,43 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ApiResponse(true, "개인 일정 등록에 성공하였습니다.", savedSchedule.getScheduleId());
     }
 
+    /**
+     * 관리자 공지사항 등록 시 해당 교육생들에게 일정을 추가해주는 메서드
+     */
+    @Override
+    public void saveSchedulesForUsers(Long noticeId, List<Long> userIds) {
+        log.info("[Schedule] 공지사항 일정 일괄 생성 시작 - noticeId={}, userCount={}", noticeId, userIds.size());
+
+        // ! 1. 공지사항 조회
+        Notice notice = noticeRepository.getReferenceById(noticeId);
+
+        // ! 2. 모든 Schedule 생성 및 저장
+        List<Schedule> schedules = userIds.stream().map(userId -> {
+                                                 Schedule schedule = scheduleConverter.toSchedule(userId, noticeId);
+                                                 schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
+                                                 schedule.setIsEssentialYn(notice.getIsEssentialYn());
+                                                 if (notice.getIsEssential()) {
+                                                     schedule.setIsEnrollYn("Y");
+                                                 }
+                                                 return schedule;
+                                             })
+                                          .toList();
+        List<Schedule> savedSchedules = scheduleRepository.saveAll(schedules);
+
+        if (notice.getIsEssential() && (notice.getStartDateTime() != null || notice.getEndDateTime() != null)) {
+            LocalDateTime remindDateTime = notice.getEndDateTime() != null
+                                           ? notice.getEndDateTime().minusHours(1)
+                                           : notice.getStartDateTime().minusHours(1);
+
+            savedSchedules.forEach(schedule -> {
+                saveScheduleReminds(schedule.getUserId(),
+                        List.of(remindConverter.toRemindRequest("Y", "ONCE", remindDateTime)),
+                        schedule.getScheduleId());
+            });
+        }
+
+        log.info("[Schedule] 공지사항 일정 일괄 생성 완료 - 전체={}, 성공={}", userIds.size(), savedSchedules.size());
+    }
 
     @Override
     public ApiResponse updateSchedule(Long userId, Long scheduleId, ScheduleRequest scheduleRequest) {
@@ -202,44 +239,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("[Schedule] 일정 목록 조회 완료 - totalElements={}, totalPages={}", result.getTotalElements(),
                 result.getTotalPages());
         return scheduleConverter.toSchedulePageResponse(result, statusCounts);
-    }
-
-    /**
-     * 관리자 공지사항 등록 시 해당 교육생들에게 일정을 추가해주는 메서드
-     */
-    @Override
-    public void saveSchedulesForUsers(Long noticeId, List<Long> userIds) {
-        log.info("[Schedule] 공지사항 일정 일괄 생성 시작 - noticeId={}, userCount={}", noticeId, userIds.size());
-
-        // ! 1. 공지사항 조회
-        Notice notice = noticeRepository.getReferenceById(noticeId);
-
-        // ! 2. 모든 Schedule 생성 및 저장
-        List<Schedule> schedules = userIds.stream().map(userId -> {
-                                              Schedule schedule = scheduleConverter.toSchedule(userId, noticeId);
-                                              schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
-                                              schedule.setIsEssentialYn(notice.getIsEssentialYn());
-                                              if (notice.getIsEssential()) {
-                                                  schedule.setIsEnrollYn("Y");
-                                              }
-                                              return schedule;
-                                          })
-                                          .toList();
-        List<Schedule> savedSchedules = scheduleRepository.saveAll(schedules);
-
-        if (notice.getIsEssential() && (notice.getStartDateTime() != null || notice.getEndDateTime() != null)) {
-            LocalDateTime remindDateTime = notice.getEndDateTime() != null
-                                           ? notice.getEndDateTime().minusHours(1)
-                                           : notice.getStartDateTime().minusHours(1);
-
-            savedSchedules.forEach(schedule -> {
-                saveScheduleReminds(schedule.getUserId(),
-                        List.of(remindConverter.toRemindRequest("Y", "ONCE", remindDateTime)),
-                        schedule.getScheduleId());
-            });
-        }
-
-        log.info("[Schedule] 공지사항 일정 일괄 생성 완료 - 전체={}, 성공={}", userIds.size(), savedSchedules.size());
     }
 
     /**

@@ -2,12 +2,12 @@ package com.jetty.ssafficebe.schedule.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
-import com.jetty.ssafficebe.schedule.payload.AdminScheduleRequest;
+import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
-import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -46,12 +46,14 @@ public class ScheduleController {
     /**
      * 관리자 일정 등록 : 공지사항 등록 시 해당 사용자들에게 일정 추가
      *
-     * @param adminScheduleRequest : List<Long> userIds, noticeId
+     * @param noticeId : 공지사항 id
+     * @param userIds  : 교육생들 id
      * @return 성공 메세지
      */
-    @PostMapping("/admin")
-    public ResponseEntity<ApiResponse> saveSchedulesForUsers(AdminScheduleRequest adminScheduleRequest) {
-        scheduleService.saveSchedulesForUsers(adminScheduleRequest.getNoticeId(), adminScheduleRequest.getUserIds());
+    @PostMapping("/admin/notices/{noticeId}")
+    public ResponseEntity<ApiResponse> saveSchedulesForUsers(@PathVariable("noticeId") Long noticeId,
+                                                             @RequestBody List<Long> userIds) {
+        scheduleService.saveSchedulesForUsers(noticeId, userIds);
         return ResponseEntity.ok(new ApiResponse(true, "교육생 일정 등록에 성공하였습니다."));
     }
 
@@ -105,7 +107,8 @@ public class ScheduleController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(scheduleService.getScheduleList(userDetails.getUserId(), scheduleFilterRequest, pageable));
+        return ResponseEntity.ok(
+                scheduleService.getScheduleList(userDetails.getUserId(), scheduleFilterRequest, pageable));
     }
 
     /**
@@ -120,6 +123,7 @@ public class ScheduleController {
             @PathVariable Long noticeId,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(scheduleService.getSchedulesByNoticeForAdmin(noticeId, scheduleFilterRequest, pageable));
+        return ResponseEntity.ok(
+                scheduleService.getSchedulesByNoticeForAdmin(noticeId, scheduleFilterRequest, pageable));
     }
 }

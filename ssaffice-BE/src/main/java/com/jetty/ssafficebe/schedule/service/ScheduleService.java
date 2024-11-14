@@ -12,6 +12,8 @@ public interface ScheduleService {
 
     ApiResponse saveSchedule(Long userId, ScheduleRequest scheduleRequest);
 
+    void saveSchedulesForUsers(Long noticeId, List<Long> userIds);
+
     ApiResponse updateSchedule(Long userId, Long scheduleId, ScheduleRequest scheduleRequest);
 
     ScheduleDetail getSchedule(Long userId, Long scheduleId);
@@ -19,8 +21,6 @@ public interface ScheduleService {
     ApiResponse deleteSchedule(Long userId, Long scheduleId);
 
     SchedulePageResponse getScheduleList(Long userId, ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
-
-    void saveSchedulesForUsers(Long noticeId, List<Long> userIds);
 
     SchedulePageResponse getSchedulesByNoticeForAdmin(Long noticeId, ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
 }
