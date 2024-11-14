@@ -12,7 +12,9 @@ public interface ScheduleService {
 
     ApiResponse saveSchedule(Long userId, ScheduleRequest scheduleRequest);
 
-    void saveSchedulesForUsers(Long noticeId, List<Long> userIds);
+    ApiResponse saveSchedulesByAdmin(List<Long> userIds, ScheduleRequest scheduleRequest);
+
+    ApiResponse saveSchedulesFromNotice(Long noticeId, List<Long> userIds);
 
     ApiResponse updateSchedule(Long userId, Long scheduleId, ScheduleRequest scheduleRequest);
 

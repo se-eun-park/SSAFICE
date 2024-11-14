@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.schedule.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
+import com.jetty.ssafficebe.schedule.payload.AdminScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
@@ -35,12 +36,23 @@ public class ScheduleController {
      *
      * @param scheduleRequest : 일정 요청 정보 + 리마인드 정보 (리마인드 존재시)
      * @return 등록된 일정 id
-     * TODO: ROLE_USER 접근만 허용 추가
      */
     @PostMapping
     public ResponseEntity<ApiResponse> saveSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                     @RequestBody ScheduleRequest scheduleRequest) {
         return ResponseEntity.ok(scheduleService.saveSchedule(userDetails.getUserId(), scheduleRequest));
+    }
+
+    /**
+     * 관리자의 개별 일정 등록
+     *
+     * @param adminScheduleRequest : scheduleRequest, List<Long> userIds
+     * @return 성공 메세지
+     */
+    @PostMapping("/admin")
+    public ResponseEntity<ApiResponse> saveSchedulesByAdmin(@RequestBody AdminScheduleRequest adminScheduleRequest) {
+        return ResponseEntity.ok(scheduleService.saveSchedulesByAdmin(adminScheduleRequest.getUserIds(),
+                adminScheduleRequest.getScheduleRequest()));
     }
 
     /**
@@ -51,10 +63,9 @@ public class ScheduleController {
      * @return 성공 메세지
      */
     @PostMapping("/admin/notices/{noticeId}")
-    public ResponseEntity<ApiResponse> saveSchedulesForUsers(@PathVariable("noticeId") Long noticeId,
-                                                             @RequestBody List<Long> userIds) {
-        scheduleService.saveSchedulesForUsers(noticeId, userIds);
-        return ResponseEntity.ok(new ApiResponse(true, "교육생 일정 등록에 성공하였습니다."));
+    public ResponseEntity<ApiResponse> saveSchedulesFromNotice(@PathVariable("noticeId") Long noticeId,
+                                                               @RequestBody List<Long> userIds) {
+        return ResponseEntity.ok(scheduleService.saveSchedulesFromNotice(noticeId, userIds));
     }
 
     /**
@@ -95,6 +106,7 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.deleteSchedule(userDetails.getUserId(), scheduleId));
     }
 
+    // TODO : 리스트 조회 관련 로직, api 구체화 및 구현
     /**
      * (ROLE_USER) 개인 일정 리스트 조회
      *

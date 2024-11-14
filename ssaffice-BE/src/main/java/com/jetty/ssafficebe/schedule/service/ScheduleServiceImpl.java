@@ -3,6 +3,7 @@ package com.jetty.ssafficebe.schedule.service;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidAuthorizationException;
+import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.notice.entity.Notice;
@@ -22,6 +23,7 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -52,9 +54,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 1. Schedule 엔티티 생성 및 연관관계 설정
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
-        schedule.setScheduleSourceTypeCd("PERSONAL");
-        schedule.setIsEssentialYn("N");
-        schedule.setIsEnrollYn("Y");
         schedule.setUserId(userId);
 
         // ! 2. Schedule 저장
@@ -69,29 +68,59 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ApiResponse(true, "개인 일정 등록에 성공하였습니다.", savedSchedule.getScheduleId());
     }
 
+    @Override
+    public ApiResponse saveSchedulesByAdmin(List<Long> userIds, ScheduleRequest scheduleRequest) {
+        log.info("[Schedule] 관리자의 개별 일정 등록 시작 - 대상 사용자 수={}", userIds.size());
+
+        // ! 1. 입력값 검증
+        if (userIds.isEmpty()) {
+            throw new InvalidValueException(ErrorCode.INVALID_USER_IDS, "등록할 사용자 목록이 비어있습니다.", 0);
+        }
+
+        // ! 2. 모든 일정 생성 및 저장
+        List<Long> savedScheduleIds = new ArrayList<>();
+        for (Long userId : userIds) {
+            ApiResponse response = saveSchedule(userId, scheduleRequest);
+            if (response.isSuccess()) {
+                savedScheduleIds.add((Long) response.getData());
+            }
+        }
+
+        // ! 3. 결과 반환
+        log.info("[Schedule] 관리자의 개별 일정 등록 완료 - 전체={}, 성공={}", userIds.size(), savedScheduleIds.size());
+        return new ApiResponse(true, String.format("%d명의 사용자에게 일정이 등록되었습니다.", savedScheduleIds.size()),
+                savedScheduleIds);
+    }
+
     /**
      * 관리자 공지사항 등록 시 해당 교육생들에게 일정을 추가해주는 메서드
      */
     @Override
-    public void saveSchedulesForUsers(Long noticeId, List<Long> userIds) {
+    public ApiResponse saveSchedulesFromNotice(Long noticeId, List<Long> userIds) {
         log.info("[Schedule] 공지사항 일정 일괄 생성 시작 - noticeId={}, userCount={}", noticeId, userIds.size());
 
-        // ! 1. 공지사항 조회
+        // ! 1. 입력값 검증
+        if (userIds.isEmpty()) {
+            throw new InvalidValueException(ErrorCode.INVALID_USER_IDS, "등록할 사용자 목록이 비어있습니다.", 0);
+        }
+
+        // ! 2. 공지사항 조회
         Notice notice = noticeRepository.getReferenceById(noticeId);
 
-        // ! 2. 모든 Schedule 생성 및 저장
+        // ! 3. 모든 Schedule 생성 및 저장
         List<Schedule> schedules = userIds.stream().map(userId -> {
-                                                 Schedule schedule = scheduleConverter.toSchedule(userId, noticeId);
-                                                 schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
-                                                 schedule.setIsEssentialYn(notice.getIsEssentialYn());
-                                                 if (notice.getIsEssential()) {
-                                                     schedule.setIsEnrollYn("Y");
-                                                 }
-                                                 return schedule;
-                                             })
+                                              Schedule schedule = scheduleConverter.toSchedule(userId, noticeId);
+                                              schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
+                                              schedule.setIsEssentialYn(notice.getIsEssentialYn());
+                                              if (notice.getIsEssential()) {
+                                                  schedule.setIsEnrollYn("Y");
+                                              }
+                                              return schedule;
+                                          })
                                           .toList();
         List<Schedule> savedSchedules = scheduleRepository.saveAll(schedules);
 
+        // ! 4. 필수 공지사항인 경우 리마인드 생성
         if (notice.getIsEssential() && (notice.getStartDateTime() != null || notice.getEndDateTime() != null)) {
             LocalDateTime remindDateTime = notice.getEndDateTime() != null
                                            ? notice.getEndDateTime().minusHours(1)
@@ -104,7 +133,10 @@ public class ScheduleServiceImpl implements ScheduleService {
             });
         }
 
+        // ! 5. 결과 반환
         log.info("[Schedule] 공지사항 일정 일괄 생성 완료 - 전체={}, 성공={}", userIds.size(), savedSchedules.size());
+        return new ApiResponse(true, String.format("%d명의 사용자에게 일정이 등록되었습니다.", savedSchedules.size()),
+                savedSchedules.stream().map(Schedule::getScheduleId).toList());
     }
 
     @Override
