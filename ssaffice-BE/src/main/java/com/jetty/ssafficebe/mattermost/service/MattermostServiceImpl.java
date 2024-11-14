@@ -1,9 +1,12 @@
 package com.jetty.ssafficebe.mattermost.service;
 
+import com.jetty.ssafficebe.channel.entity.Channel;
+import com.jetty.ssafficebe.channel.respository.ChannelRepository;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidTokenException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.mattermost.payload.ChannelSummary;
 import com.jetty.ssafficebe.mattermost.payload.DeleteSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
@@ -29,6 +32,7 @@ public class MattermostServiceImpl implements MattermostService {
     private static final String END_POINT_FOR_POST = "posts";
     private final MattermostUtil mattermostUtil;
     private final UserRepository userRepository;
+    private final ChannelRepository channelRepository;
 
     @Override
     public PostSummary getPost(String postId) {
@@ -81,33 +85,50 @@ public class MattermostServiceImpl implements MattermostService {
         return (response.getBody() != null) ? response.getBody().getUsers() : null;
     }
 
+    // userId를 조회해서 해당 User 가 속한 전체 채널을 MM API 를 통해 가져옴
     @Override
-    public String getTeams() {
-        String Token = this.mattermostUtil.makeMMAccessToken("rlawogus258@naver.com", "Srlawogus258@naver.com11");
-        if (Token != null) {
-            ResponseEntity<String> response = this.mattermostUtil.callMattermostApi("/users/me/teams", HttpMethod.GET,
-                                                                                    Token);
-            System.out.println(response.getBody());
-            return response.getBody();
-        } else {
-            System.out.println("로그인 실패");
-        }
-        return null;
-    }
-
-    @Override
-    public String getChannelsByUserId(Long userId) {
+    public ChannelSummary[] getChannelsByUserIdFromMM(Long userId) {
+        // 1. userId로 user 조회하여 mattermostId와 Token 가져오기
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+        String mmUserId = user.getMattermostUserId();
         String token = user.getMattermostToken();
+
+        // 2. token 과 mmId로 ChannelSummary 를 배열로 가져오기
         if (token == null || token.isEmpty()) {
             throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND, "mattermostToken", null);
         }
-        ResponseEntity<String> response = this.mattermostUtil.callMattermostApi("/users/" + userId + "/channels",
-                                                                                HttpMethod.GET, token);
-        System.out.println(response.getBody());
+        ResponseEntity<ChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
+                "/users/" + mmUserId + "/channels", HttpMethod.GET, null, ChannelSummary[].class, token);
+
+        ChannelSummary[] channelSummaries = response.getBody();
+        if (channelSummaries == null) {
+            return null;
+        }
+        // 3. ChannelId가 기존의 DB에 있는지 확인하고 없으면 DB에 저장
+        // MM 에서 가져온 ChannelSummary 에서 id만 추출해서 해당 id로 db의 내용과 중복체크
         return response.getBody();
     }
 
+    // db에 없는 채널리스트 가져오기
+    @Override
+    public List<Channel> getNonDuplicateChannels(List<ChannelSummary> channelSummaries) {
+        List<String> channelIds = channelSummaries.stream().map(ChannelSummary::getId).toList();
+        List<String> existingChannelIds = channelRepository.findByChannelIdIn(channelIds).stream()
+                                                           .map(Channel::getChannelId).toList();
+        return channelSummaries.stream().filter(channelSummary -> !existingChannelIds.contains(channelSummary.getId()))
+                               .map(channelSummary -> {
+                                   Channel channel = new Channel();
+                                   channel.setChannelId(channelSummary.getId());
+                                   channel.setChannelName(channelSummary.getDisplayName());
+                                   return channel;
+                               }).toList();
+    }
 
+    @Override
+    public ApiResponse saveAllChannelsByMMChannelList(List<Channel> channelList) {
+        channelRepository.saveAll(channelList);
+        return new ApiResponse(true, HttpStatus.OK, "Channel saved successfully",
+                               channelList.stream().map(Channel::getChannelId).toList());
+    }
 }
