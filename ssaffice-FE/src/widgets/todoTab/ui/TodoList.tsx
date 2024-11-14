@@ -1,9 +1,10 @@
 import { AddIcon } from '@/assets/svg'
 import { dummyTodos } from '@/features/todoTab'
-import { useDateFormatter } from '@/shared/model'
+import { useClickedToggle, useDateFormatter } from '@/shared/model'
 import { TodoItem } from './TodoItem'
 
 export const TodoList = () => {
+  const { isClicked, handleIsClicked } = useClickedToggle()
   const datas = dummyTodos
 
   return (
@@ -75,34 +76,38 @@ export const TodoList = () => {
           </div>
         </div>
 
-        <div
-          className='
-          flex flex-col gap-spacing-16
-        '
-        >
-          {/* overflow-y-scroll이 담당하는 영역이 '할일 등록하기' 버튼도 포함인지 물어봐야 함 */}
-          <div
-            className='
-            flex gap-spacing-8 items-center
-            h-[56px] p-spacing-16
-            hover:bg-color-bg-interactive-secondary-hover
-          '
-          >
+        <div className='flex flex-col gap-spacing-16'>
+          {isClicked ? (
             <div
               className='
-              w-[24px] h-[24px] p-[5px]
-            '
+              flex gap-spacing-8 items-center
+              h-[56px]
+              '
             >
-              <AddIcon />
+              {/* 
+                11/13 여기까지
+                이 라인이랑, TodoItem todo 없는 케이스 작업하면 됨
+                지금은 newTodo(새로 등록하는 경우)에서 hover 시 바탕화면 색 빼는 등등의 작업 필요
+                조건부렌더링 가독성 에바면 컴포를 아예 새로 하나 만들던가 
+              
+              */}
+              <TodoItem />
             </div>
+          ) : (
             <div
               className='
-              text-color-text-primary body-md-medium
-            '
+              flex gap-spacing-8 items-center
+              h-[56px] p-spacing-16
+              hover:bg-color-bg-interactive-secondary-hover
+              '
+              onClick={handleIsClicked}
             >
-              할일 등록하기
+              <div className='w-[24px] h-[24px] p-[5px]'>
+                <AddIcon />
+              </div>
+              <div className='text-color-text-primary body-md-medium'>할일 등록하기</div>
             </div>
-          </div>
+          )}
 
           {/* todoItems */}
           {datas.todos.map((each) => (
