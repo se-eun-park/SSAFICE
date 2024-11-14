@@ -5,11 +5,13 @@
     },
     "email": {
       "type": "text",
-      "analyzer": "standard"
+      "analyzer": "my_ngram_analyzer",
+      "search_analyzer": "my_ngram_analyzer"
     },
     "name": {
       "type": "text",
-      "analyzer": "standard"
+      "analyzer": "my_nori_ngram_analyzer",
+      "search_analyzer": "my_nori_ngram_analyzer"
     },
     "profileImgUrl": {
       "type": "keyword"
