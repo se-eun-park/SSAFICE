@@ -3,6 +3,8 @@ package com.jetty.ssafficebe.mattermost.util;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.jetty.ssafficebe.common.exception.ErrorCode;
+import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidTokenException;
 import jakarta.annotation.PostConstruct;
 import java.net.URI;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -46,7 +49,7 @@ public class MattermostUtil {
                                                                  false);
 
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-//		Todo. 나중에 지울 코드임
+//		Todo : 나중에 지울 코드임
 //		StringConverter 테스트코드 시작
 //		StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(
 //			StandardCharsets.UTF_8);
@@ -66,6 +69,7 @@ public class MattermostUtil {
         try {
             RequestEntity<U> requestEntity = RequestEntity.method(method, this.generateMMUri(path, queryParameters))
                                                           .contentType(MediaType.APPLICATION_JSON).body(body);
+//			Todo : 나중에 지울 코드임
 //			// responseTest Code 시작
 //			ResponseEntity<String> responseEntity = this.restTemplate.exchange(requestEntity, String.class);
 //			System.out.println(responseEntity.getBody());
@@ -112,7 +116,7 @@ public class MattermostUtil {
 
 
     // Token을 통해 MM Api를 불러옴
-    public ResponseEntity<String> callMattermostApi(String endpoint, HttpMethod method) {
+    public ResponseEntity<String> callMattermostApi(String endpoint, HttpMethod method, String authToken) {
         String apiUrl = mattermostUrl + endpoint;
 
         HttpHeaders headers = new HttpHeaders();
@@ -123,7 +127,9 @@ public class MattermostUtil {
 
         try {
             return restTemplate.exchange(apiUrl, method, requestEntity, String.class);
-        } catch (Exception e) {
+        } catch (HttpClientErrorException.Unauthorized e) {
+            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND, "mattermostToken", authToken);
+        } catch (Exception e){
             System.err.println("API 호출 실패: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
