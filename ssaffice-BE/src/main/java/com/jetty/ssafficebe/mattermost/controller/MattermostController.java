@@ -54,4 +54,9 @@ public class MattermostController {
     return ResponseEntity.ok(this.mattermostService.getTeams());
 //    return ResponseEntity.ok("getUserAutocomplete");
   }
+
+  @GetMapping("/{userId}/channels")
+  public ResponseEntity<String> getChannelsByUserId(@PathVariable Long userId) {
+    return ResponseEntity.ok(this.mattermostService.getChannelsByUserId(userId));
+  }
 }

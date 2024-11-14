@@ -22,6 +22,7 @@ public interface MattermostService {
 
 	String getTeams();
 
+	String getChannelsByUserId(Long userId);
 
 
 }
