@@ -219,8 +219,9 @@ public class ScheduleServiceImpl implements ScheduleService {
                                               Schedule schedule = scheduleConverter.toSchedule(userId, noticeId);
                                               schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
                                               schedule.setIsEssentialYn(notice.getIsEssentialYn());
-                                              schedule.setIsEnrollYn("Y");
-
+                                              if (notice.getIsEssential()) {
+                                                  schedule.setIsEnrollYn("Y");
+                                              }
                                               return schedule;
                                           })
                                           .toList();
