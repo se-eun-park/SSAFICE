@@ -12,6 +12,8 @@ import com.jetty.ssafficebe.role.entity.UserRole;
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
 import com.jetty.ssafficebe.role.repository.UserRoleRepository;
+import com.jetty.ssafficebe.search.payload.ESUserRequest;
+import com.jetty.ssafficebe.search.service.ESUserService;
 import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
@@ -45,6 +47,8 @@ public class UserServiceImpl implements UserService {
 
     private final FileStorageService fileStorageService;
 
+    private final ESUserService esUserService;
+
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -70,6 +74,11 @@ public class UserServiceImpl implements UserService {
                                                 .build());
             }
         }
+
+        // Elasticsearch에 유저 정보 추가
+        ESUserRequest esUserRequest = userConverter.toESUserRequest(savedUser);
+        esUserService.saveUser(esUserRequest);
+
 
         return new ApiResponse(true, HttpStatus.CREATED, "유저 추가 성공", user.getUserId());
     }
@@ -114,6 +123,8 @@ public class UserServiceImpl implements UserService {
                 user.setIsDisabledYn("Y");
                 userRepository.save(user);
             }
+
+            esUserService.deleteUser(userId);
         }
         return new ApiResponse(true, HttpStatus.OK, "유저 삭제 성공");
     }
@@ -162,6 +173,10 @@ public class UserServiceImpl implements UserService {
         // 프로필 이미지 url 업데이트
         user.setProfileImgUrl(profileImgUrl);
         userRepository.save(user);
+
+        // Elasticsearch에 유저 정보 업데이트
+        ESUserRequest esUserRequest = userConverter.toESUserRequest(user);
+        esUserService.saveUser(esUserRequest);
 
         return new ApiResponse(true, HttpStatus.OK, "프로필 이미지 변경 성공");
     }
