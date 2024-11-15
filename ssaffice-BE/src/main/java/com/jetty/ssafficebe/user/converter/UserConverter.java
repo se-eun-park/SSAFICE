@@ -6,6 +6,7 @@ import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
@@ -23,4 +24,5 @@ public interface UserConverter {
 
     ESUserRequest toESUserRequest(User savedUser);
 
+    List<UserSummary> toUserSummaryList(List<User> userList);
 }
