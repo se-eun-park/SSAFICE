@@ -18,7 +18,7 @@ export const SelectedStateElements = ({
       case 'default':
         return {
           label: '상태',
-          bgClass: `w-fit rounded-radius-8 ${isOpen ? 'bg-color-bg-interactive-secondary-press' : 'bg-color-bg-interactive-secondary hover:bg-color-bg-interactive-secondary-hover'}`,
+          bgClass: `w-fit px-spacing-8 py-spacing-4 rounded-radius-8 ${isOpen ? 'bg-color-bg-interactive-secondary-press' : 'bg-color-bg-interactive-secondary hover:bg-color-bg-interactive-secondary-hover'}`,
           labelClass: 'body-sm-medium text-color-text-primary',
           contents: [
             {
