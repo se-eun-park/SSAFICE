@@ -56,19 +56,6 @@ public class ScheduleController {
     }
 
     /**
-     * 관리자 일정 등록 : 공지사항 등록 시 해당 사용자들에게 일정 추가
-     *
-     * @param noticeId : 공지사항 id
-     * @param userIds  : 교육생들 id
-     * @return 성공 메세지
-     */
-    @PostMapping("/admin/notices/{noticeId}")
-    public ResponseEntity<ApiResponse> saveSchedulesFromNotice(@PathVariable("noticeId") Long noticeId,
-                                                               @RequestBody List<Long> userIds) {
-        return ResponseEntity.ok(scheduleService.saveSchedulesFromNotice(noticeId, userIds));
-    }
-
-    /**
      * 일정 수정
      *
      * @param scheduleId      : 수정할 일정 id

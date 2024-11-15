@@ -7,7 +7,6 @@ import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.notice.entity.Notice;
-import com.jetty.ssafficebe.notice.repository.NoticeRepository;
 import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.remind.payload.RemindRequest;
 import com.jetty.ssafficebe.remind.repository.RemindRepository;
@@ -23,9 +22,9 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -45,12 +44,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final RemindConverter remindConverter;
     private final RemindRepository remindRepository;
     private final RemindService remindService;
-    private final NoticeRepository noticeRepository;
     private final UserRoleRepository userRoleRepository;
 
     @Override
     public ApiResponse saveSchedule(Long userId, ScheduleRequest scheduleRequest) {
-        log.info("[Schedule] 개인 일정 등록 시작 - userId={}", userId);
+        log.info("[Schedule] 일정 등록 시작 - userId={}", userId);
 
         // ! 1. Schedule 엔티티 생성 및 연관관계 설정
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
@@ -58,14 +56,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 2. Schedule 저장
         Schedule savedSchedule = scheduleRepository.save(schedule);
-        log.info("[Schedule] 개인 일정 등록 완료 - scheduleId={}, title={}", savedSchedule.getScheduleId(),
-                savedSchedule.getTitle());
+        log.info("[Schedule] 일정 등록 완료 - scheduleId={}, title={}", savedSchedule.getScheduleId(),
+                 savedSchedule.getTitle());
 
-        // ! 3. Remind 엔티티 생성 및 연관관계 설정
+        // ! 3. 일정에 리마인드 추가하는 메서드 호출
         saveScheduleReminds(userId, scheduleRequest.getRemindRequests(), savedSchedule.getScheduleId());
 
         // ! 4. Response 반환
-        return new ApiResponse(true, "개인 일정 등록에 성공하였습니다.", savedSchedule.getScheduleId());
+        return new ApiResponse(true, "일정 등록에 성공하였습니다.", savedSchedule.getScheduleId());
     }
 
     @Override
@@ -78,38 +76,40 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         // ! 2. 모든 일정 생성 및 저장
-        List<Long> savedScheduleIds = new ArrayList<>();
-        for (Long userId : userIds) {
-            ApiResponse response = saveSchedule(userId, scheduleRequest);
-            if (response.isSuccess()) {
-                savedScheduleIds.add((Long) response.getData());
-            }
-        }
+        List<Long> savedScheduleIds = userIds.stream().map(userId -> {
+                                                 try {
+                                                     ApiResponse response = saveSchedule(userId, scheduleRequest);
+                                                     return response.isSuccess() ? (Long) response.getData() : null;
+                                                 } catch (Exception e) {
+                                                     log.error("[Schedule] 사용자({})의 일정 등록 실패: {}", userId,
+                                                               e.getMessage());
+                                                     return null;
+                                                 }
+                                             })
+                                             .filter(Objects::nonNull)
+                                             .toList();
 
         // ! 3. 결과 반환
         log.info("[Schedule] 관리자의 개별 일정 등록 완료 - 전체={}, 성공={}", userIds.size(), savedScheduleIds.size());
         return new ApiResponse(true, String.format("%d명의 사용자에게 일정이 등록되었습니다.", savedScheduleIds.size()),
-                savedScheduleIds);
+                               savedScheduleIds);
     }
 
     /**
      * 관리자 공지사항 등록 시 해당 교육생들에게 일정을 추가해주는 메서드
      */
     @Override
-    public ApiResponse saveSchedulesFromNotice(Long noticeId, List<Long> userIds) {
-        log.info("[Schedule] 공지사항 일정 일괄 생성 시작 - noticeId={}, userCount={}", noticeId, userIds.size());
+    public void saveSchedulesFromNotice(Notice notice, List<Long> userIds) {
+        log.info("[Schedule] 공지사항 일정 일괄 생성 시작 - noticeId={}, userCount={}", notice.getNoticeId(), userIds.size());
 
         // ! 1. 입력값 검증
         if (userIds.isEmpty()) {
             throw new InvalidValueException(ErrorCode.INVALID_USER_IDS, "등록할 사용자 목록이 비어있습니다.", 0);
         }
 
-        // ! 2. 공지사항 조회
-        Notice notice = noticeRepository.getReferenceById(noticeId);
-
-        // ! 3. 모든 Schedule 생성 및 저장
+        // ! 2. 모든 Schedule 생성 및 저장
         List<Schedule> schedules = userIds.stream().map(userId -> {
-                                              Schedule schedule = scheduleConverter.toSchedule(userId, noticeId);
+                                              Schedule schedule = scheduleConverter.toSchedule(userId, notice.getNoticeId());
                                               schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
                                               schedule.setIsEssentialYn(notice.getIsEssentialYn());
                                               if (notice.getIsEssential()) {
@@ -120,7 +120,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                                           .toList();
         List<Schedule> savedSchedules = scheduleRepository.saveAll(schedules);
 
-        // ! 4. 필수 공지사항인 경우 리마인드 생성
+        // ! 3. 필수 공지사항인 경우 리마인드 request 생성 후 해당 일정에 리마인드 추가하는 메서드 호출
         if (notice.getIsEssential() && (notice.getStartDateTime() != null || notice.getEndDateTime() != null)) {
             LocalDateTime remindDateTime = notice.getEndDateTime() != null
                                            ? notice.getEndDateTime().minusHours(1)
@@ -128,21 +128,18 @@ public class ScheduleServiceImpl implements ScheduleService {
 
             savedSchedules.forEach(schedule -> {
                 saveScheduleReminds(schedule.getUserId(),
-                        List.of(remindConverter.toRemindRequest("Y", "ONCE", remindDateTime)),
-                        schedule.getScheduleId());
+                                    List.of(remindConverter.toRemindRequest("Y", "ONCE", remindDateTime)),
+                                    schedule.getScheduleId());
             });
         }
 
-        // ! 5. 결과 반환
         log.info("[Schedule] 공지사항 일정 일괄 생성 완료 - 전체={}, 성공={}", userIds.size(), savedSchedules.size());
-        return new ApiResponse(true, String.format("%d명의 사용자에게 일정이 등록되었습니다.", savedSchedules.size()),
-                savedSchedules.stream().map(Schedule::getScheduleId).toList());
     }
 
     @Override
     public ApiResponse updateSchedule(Long userId, Long scheduleId, ScheduleRequest scheduleRequest) {
         log.info("[Schedule] 일정 수정 시작 - scheduleId={}, userId={}, requestUserId={}", scheduleId, userId,
-                scheduleRequest.getUserId());
+                 scheduleRequest.getUserId());
 
         // ! 1. 수정할 Schedule 조회
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
@@ -175,7 +172,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 5. Schedule 저장 및 Response 반환
         Schedule savedSchedule = scheduleRepository.save(schedule);
         log.info("[Schedule] 일정 수정 완료 - scheduleId={}, title={}", savedSchedule.getScheduleId(),
-                savedSchedule.getTitle());
+                 savedSchedule.getTitle());
         return new ApiResponse(true, "일정 수정에 성공하였습니다.", schedule.getScheduleId());
     }
 
@@ -208,7 +205,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 3. 관리자 권한 검증
         boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId,
-                Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
+                                                                       Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
 
         if (schedule.getIsEssential() && !isAdmin) {
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "scheduleId", scheduleId);
@@ -263,13 +260,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 2. 조건에 맞는 일정 리스트 생성
         Page<Schedule> schedulesPage = scheduleRepository.findSchedulesByUserIdAndFilter(userId, filterRequest,
-                pageable);
+                                                                                         pageable);
 
         // ! 3. 응답 생성
         Page<ScheduleSummary> result = schedulesPage.map(scheduleConverter::toScheduleSummary);
 
         log.info("[Schedule] 일정 목록 조회 완료 - totalElements={}, totalPages={}", result.getTotalElements(),
-                result.getTotalPages());
+                 result.getTotalPages());
         return scheduleConverter.toSchedulePageResponse(result, statusCounts);
     }
 
@@ -304,13 +301,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 2. 해당 공지사항의 일정들 필터 조회
         Page<Schedule> schedulePage = scheduleRepository.findSchedulesByNoticeIdAndFilter(noticeId, filterRequest,
-                pageable);
+                                                                                          pageable);
 
         // ! 3. ScheduleSummary 로 변환
         Page<ScheduleSummary> result = schedulePage.map(scheduleConverter::toScheduleSummary);
 
         log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 완료 - noticeId={}, count={}",
-                noticeId, result.getTotalElements());
+                 noticeId, result.getTotalElements());
 
         return scheduleConverter.toSchedulePageResponse(result, statusCounts);
     }
@@ -320,7 +317,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     private void validateAuthorization(Long userId, Long requestUserId) {
         boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId,
-                Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
+                                                                       Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
 
         if (!requestUserId.equals(userId) && !isAdmin) {
             log.warn("[Authorization] 권한 없음 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId, isAdmin);
@@ -330,10 +327,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     /**
-     * 해당 일정에 알람을 생성/저장 하는 메서드
+     * 해당 일정에 알람을 생성/저장 하는 remindService 의 saveRemind 를 호출하는 메서드
      */
     private void saveScheduleReminds(Long userId, List<RemindRequest> remindRequests, Long scheduleId) {
-        if (remindRequests == null) {
+        if (remindRequests == null || remindRequests.isEmpty()) {
+            log.info("[Schedule] 알림 요청 없음 - scheduleId={}", scheduleId);
             return;
         }
 
@@ -344,7 +342,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 remindService.saveRemind(userId, remindRequest);
             } catch (DuplicateValueException e) {
                 log.warn("[Schedule] 알림 중복 발생 - scheduleId={}, remindTime={}", scheduleId,
-                        remindRequest.getRemindDateTime());
+                         remindRequest.getRemindDateTime());
                 if (e.getErrorCode() != ErrorCode.REMIND_ALREADY_EXISTS) {
                     throw e;
                 }
