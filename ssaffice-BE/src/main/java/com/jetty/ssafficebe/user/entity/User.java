@@ -74,4 +74,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserChannel> userChannels = new ArrayList<>();
 
+    // mattermostId와 Token값을 저장하기 위한 필드
+    private String mattermostToken;
+
+    private String mattermostUserId;
+
 }

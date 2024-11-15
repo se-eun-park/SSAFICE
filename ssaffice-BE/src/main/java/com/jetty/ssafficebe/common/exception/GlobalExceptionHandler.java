@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.common.exception;
 
 import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidAuthorizationException;
+import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidTokenException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
@@ -41,6 +42,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidAuthorizationException.class)
     protected ResponseEntity<ApiResponse> handleInvalidAuthorizationException(InvalidAuthorizationException e) {
+        HttpStatus status = e.getErrorCode().getStatus();
+
+        return ResponseEntity.status(status)
+                             .body(new ApiResponse(false, status, e.getMessage(), e.getData()));
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    protected ResponseEntity<ApiResponse> handleInvalidTokenException(InvalidTokenException e) {
         HttpStatus status = e.getErrorCode().getStatus();
 
         return ResponseEntity.status(status)

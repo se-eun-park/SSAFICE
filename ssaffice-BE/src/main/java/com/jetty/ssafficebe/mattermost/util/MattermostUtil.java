@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import jakarta.annotation.PostConstruct;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
@@ -46,12 +48,9 @@ public class MattermostUtil {
                                                                  false);
 
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-//		Todo. 나중에 지울 코드임
-//		StringConverter 테스트코드 시작
-//		StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(
-//			StandardCharsets.UTF_8);
-//		messageConverters.add(stringConverter);
-//		// StringConverter 테스트코드 끝
+//      Response가 String형태로 넘어올 때 확인할 수 있도록 converter에 추가
+        StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
+        messageConverters.add(stringConverter);
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter(objectMapper);
         messageConverters.add(converter);
 
@@ -66,10 +65,6 @@ public class MattermostUtil {
         try {
             RequestEntity<U> requestEntity = RequestEntity.method(method, this.generateMMUri(path, queryParameters))
                                                           .contentType(MediaType.APPLICATION_JSON).body(body);
-//			// responseTest Code 시작
-//			ResponseEntity<String> responseEntity = this.restTemplate.exchange(requestEntity, String.class);
-//			System.out.println(responseEntity.getBody());
-//			// responseTest Code 끝
             response = this.restTemplate.exchange(requestEntity, responseType);
         } catch (HttpStatusCodeException exception) {
             response = new ResponseEntity<>(exception.getStatusCode());
@@ -110,23 +105,24 @@ public class MattermostUtil {
         return null;
     }
 
-
     // Token을 통해 MM Api를 불러옴
-    public ResponseEntity<String> callMattermostApi(String endpoint, HttpMethod method) {
+    public <T, U> ResponseEntity<T> callMattermostApi(String endpoint, HttpMethod method, U body, Class<T> responseType,
+                                                      String authToken) {
         String apiUrl = mattermostUrl + endpoint;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(authToken);  // 토큰을 Bearer 형식으로 헤더에 설정
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-
+        ResponseEntity<T> response;
         try {
-            return restTemplate.exchange(apiUrl, method, requestEntity, String.class);
-        } catch (Exception e) {
-            System.err.println("API 호출 실패: " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            RequestEntity<U> requestEntity = RequestEntity.method(method, apiUrl).headers(headers).body(body);
+            System.out.println(requestEntity.getBody());
+            response = this.restTemplate.exchange(requestEntity, responseType);
+        } catch (HttpStatusCodeException exception) {
+            response = new ResponseEntity<>(exception.getStatusCode());
         }
+        return response;
     }
 
 }

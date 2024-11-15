@@ -11,6 +11,7 @@ public enum ErrorCode {
     NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공지사항을 찾을 수 없습니다."),
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 일정을 찾을 수 없습니다."),
     REMIND_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 알림을 찾을 수 없습니다."),
+    TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 토큰을 찾을 수 없습니다."),
 
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 사용중인 이메일입니다."),
     ROLE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 역할입니다."),
@@ -19,6 +20,7 @@ public enum ErrorCode {
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     INVALID_USAGE(HttpStatus.BAD_REQUEST, "usage 값이 잘못되었습니다."),
     INVALID_REMIND_OPERATION(HttpStatus.BAD_REQUEST, "필수 알림은 삭제할 수 없습니다."),
+    INVALID_USER_IDS(HttpStatus.BAD_REQUEST, "등록할 사용자 목록이 비어있습니다."),
 
     INVALID_AUTHORIZATION(HttpStatus.FORBIDDEN, "해당 리소스에 대한 권한이 없습니다."),
     ;
