@@ -1,4 +1,4 @@
-import { act, useMemo } from 'react'
+import { useMemo } from 'react'
 
 type SelectedStateElementsProps = {
   selectedState: string
