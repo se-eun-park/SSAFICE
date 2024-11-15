@@ -13,6 +13,7 @@ import com.jetty.ssafficebe.user.service.UserService;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Log4j2
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -40,12 +42,19 @@ public class UserController {
     private final ChannelService channelService;
 
     /**
-     * 유저 등록
+     * (관리자 권한) 유저 등록
+     * TODO : 관리자인 경우만 허용하도록 변경
      */
     @PostMapping
     public ResponseEntity<ApiResponse> saveUser(@RequestBody SaveUserRequest saveUserRequest) {
-        ApiResponse apiResponse = userService.saveUser(saveUserRequest);
+        ApiResponse apiResponse = userService.saveUser(null, saveUserRequest);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
+    }
+
+    @PostMapping("/{userId}")
+    public ResponseEntity<ApiResponse> saveUser(@PathVariable Long userId, SaveUserRequest saveUserRequest) {
+        log.info("[User] SSO 연동 회원가입 시작");
+        return ResponseEntity.ok().body(userService.saveUser(userId, saveUserRequest));
     }
 
     /**
@@ -61,7 +70,7 @@ public class UserController {
     }
 
     /**
-     * 유저 정보 조회
+     * (관리자 권한) 유저 정보 조회
      * TODO : 관리자인 경우만 허용하도록 변경
      */
     @GetMapping("/{userId}")
@@ -84,7 +93,6 @@ public class UserController {
 
     /**
      * 유저 정보 수정. 역할 변경, 비밀번호 변경 로직은 다른 API로 분리.
-     * TODO : 관리자인 경우만 허용하도록 변경
      */
     @PutMapping("/{userId}")
     public ResponseEntity<ApiResponse> updateUser(@PathVariable Long userId,

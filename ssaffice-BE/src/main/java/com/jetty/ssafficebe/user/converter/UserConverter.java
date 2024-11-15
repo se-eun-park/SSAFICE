@@ -13,6 +13,8 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserConverter {
 
+    void updateUserForSSO(User user, SaveUserRequest saveUserRequest);
+
     User toUser(SaveUserRequest saveUserRequest);
 
     UserSummary toUserSummary(User user);
