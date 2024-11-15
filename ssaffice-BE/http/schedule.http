@@ -1,6 +1,7 @@
 ### 변수 설정
-@scheduleId = 6
-@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxNjQwNDMzfQ.1GbNJMEZDjVmM0Wnuk65Hu10jRn8NuE8eoJi4TsyWYtTHbeqlEb4_HVZ4hjk9Ewi6D7HyQGeEi06kirnkYJ_Gg
+@scheduleId = 15
+@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1YWRtaW4xQGdtYWlsLmNvbSIsImV4cCI6MTczMTY1ODk1N30._bEV8vNyhehL5UnIr9lZ5js2RbjZRCJsatgDvrvcl2i0NJvSfm1oEzzowdGW18cbigA9ta8IJqA76rUn--tjOw
+@noticeId = 3
 
 ### 개인 일정 등록
 POST http://localhost:9090/api/schedules
@@ -12,7 +13,9 @@ Authorization: Bearer {{JWT}}
   "memo": "개인 일정 테스트",
   "startDateTime": "2024-11-13T14:44:00",
   "endDateTime": "2024-11-17T18:00:00",
+  "scheduleSourceTypeCd": "PERSONAL",
   "scheduleStatusTypeCd": "TODO",
+  "isEssentialYn": "N",
   "remindRequests": [
     {
       "isEssentialYn": "N",
@@ -21,6 +24,40 @@ Authorization: Bearer {{JWT}}
     }
   ]
 }
+
+### 관리자의 개별 일정 등록
+POST http://localhost:9090/api/schedules/admin
+Content-Type: application/json
+Authorization: Bearer {{JWT}}
+
+{
+  "scheduleRequest": {
+    "title": "관리자 개별 일정 테스트3",
+    "memo": "관리자 개별 일정 테스트 내용3",
+    "startDateTime": "2024-11-13T14:44:00",
+    "endDateTime": "2024-11-17T18:00:00",
+    "scheduleSourceTypeCd": "TEAM",
+    "scheduleStatusTypeCd": "TODO",
+    "isEssentialYn": "N",
+    "isEnrollYn": "Y",
+    "remindRequests": [
+      {
+        "isEssentialYn": "N",
+        "remindTypeCd": "ONCE",
+        "remindDateTime": "2024-11-07T15:00:00"
+      }
+    ]
+  },
+  "userIds": [2, 3]
+}
+
+### 관리자의 공지에서 파생된 일정 일괄 등록
+POST http://localhost:9090/api/schedules/admin/notices/{{noticeId}}
+Content-Type: application/json
+Authorization: Bearer {{JWT}}
+
+[2, 3]
+
 
 ### 일정 수정 1
 PUT http://localhost:9090/api/schedules/{{scheduleId}}
