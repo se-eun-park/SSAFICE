@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
-    ApiResponse saveUser(SaveUserRequest saveUserRequest);
+    ApiResponse saveUser(Long userId, SaveUserRequest saveUserRequest);
 
     UserSummary getUserSummary(Long userId);
 

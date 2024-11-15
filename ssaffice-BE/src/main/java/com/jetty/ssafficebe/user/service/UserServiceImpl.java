@@ -55,33 +55,54 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ApiResponse saveUser(SaveUserRequest saveUserRequest) {
+    public ApiResponse saveUser(Long userId, SaveUserRequest saveUserRequest) {
         if (userRepository.existsByEmail(saveUserRequest.getEmail())) {
             throw new DuplicateValueException(ErrorCode.EMAIL_ALREADY_EXISTS, "email", saveUserRequest.getEmail());
         }
 
-        // request정보로 User객체 생성.
-        User user = userConverter.toUser(saveUserRequest);
+        User user;
 
-        // 비밀번호 암호화
+        if (userId == null) {
+            // 일반 유저 생성
+            user = userConverter.toUser(saveUserRequest);
+        } else {
+            // SSO 유저 생성
+            user = userRepository.findById(userId).orElseThrow(
+                    () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+            userConverter.updateUserForSSO(user, saveUserRequest);
+            user.setIsDisabledYn("N");
+        }
+
         user.setPassword(passwordEncoder.encode(saveUserRequest.getPassword()));
+
         User savedUser = userRepository.save(user);
 
         // 유저-역할 테이블에 유저-역할 매핑 추가. 잘못된 역할 입력 시 skip.
-        for (String roleId : saveUserRequest.getRoleIds()) {
-            if (roleRepository.existsById(roleId)) {
-                userRoleRepository.save(UserRole.builder()
-                                                .userId(savedUser.getUserId())
-                                                .roleId(roleId)
-                                                .build());
-            }
-        }
+        this.assignRolesToUser(savedUser.getUserId(), saveUserRequest.getRoleIds());
 
         // Elasticsearch에 유저 정보 추가
         ESUserRequest esUserRequest = userConverter.toESUserRequest(savedUser);
         esUserService.saveUser(esUserRequest);
 
         return new ApiResponse(true, HttpStatus.CREATED, "유저 추가 성공", user.getUserId());
+    }
+
+    /**
+     * 사용자와 역할을 매핑하는 메서드
+     */
+    private void assignRolesToUser(Long userId, List<String> roleIds) {
+        // 기존 역할 제거
+        userRoleRepository.deleteAllByUserId(userId);
+
+        // 새로운 역할 추가
+        for (String roleId : roleIds) {
+            if (roleRepository.existsById(roleId)) {
+                userRoleRepository.save(UserRole.builder()
+                                                .userId(userId)
+                                                .roleId(roleId)
+                                                .build());
+            }
+        }
     }
 
     @Override
@@ -200,7 +221,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * SSO 로그인 처리 메서드 ! 현재는 User테이블의 SsafyUUID로 로그인 처리하도록 구현되어 있지만 ! 실제로는 DB에 여러개의 SSO 서버(네이버, 구글, 카카오 등)의 유저Id를 저장하고 !
+     * SSO 로그인 처리 메서드.
+     * 현재는 User테이블의 SsafyUUID로 로그인 처리하도록 구현되어 있지만,
+     * 실제로는 DB에 여러개의 SSO 서버(네이버, 구글, 카카오 등)의 유저Id를 저장하고
      * SSOId 리스트를 가져와 확인하는 로그인 처리를 위한 로직을 구현해야 함.
      */
     @Override
