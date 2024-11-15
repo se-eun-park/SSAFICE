@@ -20,6 +20,7 @@ import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserFilterRequest;
+import com.jetty.ssafficebe.user.payload.UserRequestForSso;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import java.io.IOException;
@@ -78,7 +79,6 @@ public class UserServiceImpl implements UserService {
         // Elasticsearch에 유저 정보 추가
         ESUserRequest esUserRequest = userConverter.toESUserRequest(savedUser);
         esUserService.saveUser(esUserRequest);
-
 
         return new ApiResponse(true, HttpStatus.CREATED, "유저 추가 성공", user.getUserId());
     }
@@ -196,5 +196,23 @@ public class UserServiceImpl implements UserService {
 
             return userSummary;
         });
+    }
+
+    /**
+     * SSO 로그인 처리 메서드 ! 현재는 User테이블의 SsafyUUID로 로그인 처리하도록 구현되어 있지만 ! 실제로는 DB에 여러개의 SSO 서버(네이버, 구글, 카카오 등)의 유저Id를 저장하고 !
+     * SSOId 리스트를 가져와 확인하는 로그인 처리를 위한 로직을 구현해야 함.
+     */
+    @Override
+    public String handleSsoLogin(UserRequestForSso userRequest) {
+        User existingUser = userRepository.findBySsafyUUID(userRequest.getUserId()).orElse(null);
+        return existingUser != null ? existingUser.getEmail() : null;
+    }
+
+    @Override
+    public User saveUserForSSO(String ssoId) {
+        User user = new User();
+        user.setSsafyUUID(ssoId);
+        user.setIsDisabledYn("N");
+        return this.userRepository.save(user);
     }
 }
