@@ -1,7 +1,9 @@
 package com.jetty.ssafficebe.mattermost.service;
 
 
+import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.mattermost.payload.ChannelSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
@@ -20,8 +22,11 @@ public interface MattermostService {
 
 	List<UserAutocompleteSummary> getUserAutocomplete(String name);
 
-	String getTeams();
+	ChannelSummary[] getChannelsByUserIdFromMM(Long userId);
 
+	ApiResponse saveAllChannelsByMMChannelList(List<Channel> channelList);
+
+	List<Channel> getNonDuplicateChannels(List<ChannelSummary> channelSummaries);
 
 
 }

@@ -12,7 +12,4 @@ public interface ChannelConverter {
 	@Mapping(source = "mmTeam.mmTeamId", target = "mmTeamId")
 	@Mapping(source = "mmTeam.mmTeamName", target = "mmTeamName")
 	ChannelSummary toChannelSummary(Channel channel);
-
-
-
 }

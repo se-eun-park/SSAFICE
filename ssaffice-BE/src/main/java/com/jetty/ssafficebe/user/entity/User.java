@@ -3,7 +3,6 @@ package com.jetty.ssafficebe.user.entity;
 import com.jetty.ssafficebe.channel.entity.UserChannel;
 import com.jetty.ssafficebe.common.jpa.BooleanToYNConverter;
 import com.jetty.ssafficebe.role.entity.UserRole;
-import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.user.code.Region;
 import com.jetty.ssafficebe.user.code.Track;
 import jakarta.persistence.CascadeType;
@@ -72,5 +71,10 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserChannel> userChannels = new ArrayList<>();
+
+    // mattermostId와 Token값을 저장하기 위한 필드
+    private String mattermostToken;
+
+    private String mattermostUserId;
 
 }
