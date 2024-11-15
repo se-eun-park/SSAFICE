@@ -43,6 +43,8 @@ public class User extends BaseEntity {
 
     private String profileImgUrl;
 
+    private String ssafyUUID;
+
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "isDisabledYn", updatable = false, insertable = false)
     private boolean isDisabled;
