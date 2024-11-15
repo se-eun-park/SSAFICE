@@ -19,7 +19,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -72,7 +74,7 @@ public class User extends BaseEntity {
     private List<UserRole> userRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<UserChannel> userChannels = new ArrayList<>();
+    private Set<UserChannel> userChannels = new HashSet<>();
 
     // mattermostId와 Token값을 저장하기 위한 필드
     private String mattermostToken;
