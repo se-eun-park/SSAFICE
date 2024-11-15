@@ -6,7 +6,7 @@ import { useClickOutsideToggle, useHover } from '@/shared/model'
 import { useEffect, useRef, useState } from 'react'
 import { DropDown } from '@/shared/ui'
 import { SelectedSortConditionElements } from '../model/SelectedSortConditionElements'
-import { SpreadDown } from '@/assets/svg'
+import { DownArrowIcon, SpreadDown } from '@/assets/svg'
 
 export const SelectTodoSortCondition = ({
   state = 'by deadline',
@@ -58,21 +58,15 @@ export const SelectTodoSortCondition = ({
           <p className={selectedSortConditionElements?.labelClass}>
             {selectedSortConditionElements?.label}
           </p>
-          <div
-            className='
-            flex justify-center items-center
-            w-[16px] h-[16px]
-          '
-          >
-            <div className='w-[7px] h-[3px]'>
-              <SpreadDown />
-            </div>
+
+          <div className='w-4'>
+            <DownArrowIcon />
           </div>
         </div>
       </button>
 
       <div ref={hoverRef}>
-        <DropDown isOpen={isOpen} position='top-8' width='w-[12.5rem]' isPaddingY={true}>
+        <DropDown isOpen={isOpen} position='top-8 right-0' width='w-[12.5rem]' isPaddingY={true}>
           {selectedSortConditionElements?.contents.map((content, index) => (
             <DropDown.Content
               key={index}

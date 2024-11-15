@@ -21,13 +21,13 @@ export const SelectedSortConditionElements = ({
               label: '등록 순',
               type: 'by registration',
               isDefaultHover: true,
-              classname: 'bg-color-black',
+              classname: 'bg-color-black body-xs-medium',
             },
             {
               label: '미완료 일정 순',
               type: 'by unfinished',
               isDefaultHover: false,
-              classname: 'bg-color-blue',
+              classname: 'bg-color-blue body-xs-medium',
             },
           ],
         }
@@ -42,13 +42,13 @@ export const SelectedSortConditionElements = ({
               label: '마감 임박 순',
               type: 'by deadline',
               isDefaultHover: true,
-              classname: 'bg-color-black',
+              classname: 'bg-color-black body-xs-medium',
             },
             {
               label: '미완료 일정 순',
               type: 'by unfinished',
               isDefaultHover: false,
-              classname: 'bg-color-blue',
+              classname: 'bg-color-blue body-xs-medium',
             },
           ],
         }
@@ -63,13 +63,13 @@ export const SelectedSortConditionElements = ({
               label: '마감 임박 순',
               type: 'by deadline',
               isDefaultHover: true,
-              classname: 'bg-color-blue',
+              classname: 'bg-color-blue body-xs-medium',
             },
             {
               label: '등록 순',
               type: 'by registration',
               isDefaultHover: false,
-              classname: 'bg-color-black',
+              classname: 'bg-color-black body-xs-medium',
             },
           ],
         }

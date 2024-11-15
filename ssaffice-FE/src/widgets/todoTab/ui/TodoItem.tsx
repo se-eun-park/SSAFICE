@@ -42,36 +42,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
           )
         ) : (
           // 새 할 일 만들기, 라벨 + 드롭다운
-          <div
-            className='
-            flex gap-spacing-4 items-center
-            rounded-radius-8
-            hover:bg-color-bg-interactive-secondary-hover
-            active:bg-color-bg-interactive-secondary-press
-          '
-          >
-            <div
-              className='
-              flex justify-center items-center
-              w-spacing-24 h-spacing-24 
-              '
-            >
-              <div className='flex w-[14px] h-[18px]'>
-                <TodoFlag type='TODO' />
-              </div>
-            </div>
-
-            <div
-              className='
-                  flex justify-center items-center
-                  w-spacing-16 h-spacing-16
-                '
-            >
-              <div className='flex items-center w-[7px] h-[3px]'>
-                <SpreadDown />
-              </div>
-            </div>
-          </div>
+          <SelectTodoState state='todo' actionType='create' />
         )}
 
         {todo ? (
