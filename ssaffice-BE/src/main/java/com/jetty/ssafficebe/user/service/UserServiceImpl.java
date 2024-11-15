@@ -25,6 +25,7 @@ import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -205,12 +206,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public String handleSsoLogin(UserRequestForSso userRequest) {
         User existingUser = userRepository.findBySsafyUUID(userRequest.getUserId()).orElse(null);
-        return existingUser != null ? existingUser.getEmail() : null;
+        if (Objects.isNull(existingUser)) {
+            return null;
+        }
+        return existingUser.getEmail();
     }
 
     @Override
     public User saveUserForSSO(String ssoId) {
-        User user = new User();
+        User user = userRepository.findBySsafyUUID(ssoId).orElse(new User());
         user.setSsafyUUID(ssoId);
         user.setIsDisabledYn("N");
         return this.userRepository.save(user);
