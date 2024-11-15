@@ -19,6 +19,7 @@ export type ScheduleItemDisplay = {
 }
 
 // 선택적 파라메터는 테스트 후 필수로 바꾸어 주세요
+export type ScheduleListDisplay = Record<string, ScheduleItemDisplay[]>
 
 export type TodoListDisplay = {
   // 일정 조회 API response
@@ -353,6 +354,29 @@ export const dummyTodos: TodoListDisplay = {
         title: '고객 미팅 일정 공지',
         content: '고객 미팅 준비가 2024년 11월 14일 오후 3시에 시작됩니다.',
         noticeId: 14,
+      },
+    },
+    {
+      todo: {
+        scheduleId: 15,
+        title: '고객 미팅 준비',
+        startDateTime: new Date('2024-11-14T15:00:00'),
+        endDateTime: new Date('2024-11-15T16:00:00'),
+        scheduleSourceTypeCd: 'PERSONAL',
+        scheduleStatusTypeCd: 'TODO',
+        isEssential: true,
+        isEnroll: true,
+        user: {
+          userId: 13,
+          name: '윤상호',
+        },
+      },
+      announcement: {
+        user: { userId: 15, name: '강태형' },
+        createdAt: new Date('2024-11-14T14:00:00'),
+        title: '고객 미팅 일정 공지',
+        content: '고객 미팅 준비가 2024년 11월 14일 오후 3시에 시작됩니다.',
+        noticeId: 15,
       },
     },
   ],

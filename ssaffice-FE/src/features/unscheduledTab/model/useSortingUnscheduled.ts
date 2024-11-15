@@ -1,11 +1,11 @@
 import { useDateFormatter } from '@/shared/model'
-import type { UnscheduledItemDisplay, UnscheduledListDisplay } from './types'
+import type { UnscheduledListDisplay } from './types'
+import type { ScheduleItemDisplay } from '@/features/todoTab'
 
 export const useSortingUnscheduled = (
-  datas: UnscheduledItemDisplay[],
+  datas: ScheduleItemDisplay[],
   type: 'by deadline' | 'by registration', //
 ): UnscheduledListDisplay => {
-  // 여기부터 작성하면 됨
   const result: UnscheduledListDisplay = {}
 
   datas.forEach((each) => {
