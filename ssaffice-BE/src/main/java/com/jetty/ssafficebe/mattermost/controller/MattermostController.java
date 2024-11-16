@@ -2,7 +2,7 @@ package com.jetty.ssafficebe.mattermost.controller;
 
 import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
-import com.jetty.ssafficebe.mattermost.payload.ChannelSummary;
+import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
@@ -61,7 +61,7 @@ public class MattermostController {
     // userId를 받아와서 속한 채널을 DB에 저장하는 endpoint
     @GetMapping("/{userId}/channels")
     public ResponseEntity<ApiResponse> saveChannelsByUserId(@PathVariable Long userId) {
-        ChannelSummary[] channelSummaries = this.mattermostService.getChannelsByUserIdFromMM(userId);
+        MMChannelSummary[] channelSummaries = this.mattermostService.getChannelsByUserIdFromMM(userId);
         List<Channel> nonDuplicateChannels = this.mattermostService.getNonDuplicateChannels(
                 Arrays.asList(channelSummaries));
         return ResponseEntity.ok(this.mattermostService.saveAllChannelsByMMChannelList(nonDuplicateChannels));

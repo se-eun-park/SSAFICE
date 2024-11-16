@@ -6,7 +6,7 @@ import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidTokenException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
-import com.jetty.ssafficebe.mattermost.payload.ChannelSummary;
+import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
 import com.jetty.ssafficebe.mattermost.payload.DeleteSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
@@ -87,7 +87,7 @@ public class MattermostServiceImpl implements MattermostService {
 
     // userId를 조회해서 해당 User 가 속한 전체 채널을 MM API 를 통해 가져옴
     @Override
-    public ChannelSummary[] getChannelsByUserIdFromMM(Long userId) {
+    public MMChannelSummary[] getChannelsByUserIdFromMM(Long userId) {
         // 1. userId로 user 조회하여 mattermostId와 Token 가져오기
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
@@ -96,10 +96,10 @@ public class MattermostServiceImpl implements MattermostService {
 
         // 2. token 과 mmId로 ChannelSummary 를 배열로 가져오기
         try {
-            ResponseEntity<ChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
-                    "/users/" + mmUserId + "/channels", HttpMethod.GET, null, ChannelSummary[].class, token);
+            ResponseEntity<MMChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
+                    "/users/" + mmUserId + "/channels", HttpMethod.GET, null, MMChannelSummary[].class, token);
 
-            ChannelSummary[] channelSummaries = response.getBody();
+            MMChannelSummary[] channelSummaries = response.getBody();
             // 3. ChannelId가 기존의 DB에 있는지 확인하고 없으면 DB에 저장
             // MM 에서 가져온 ChannelSummary 에서 id만 추출해서 해당 id로 db의 내용과 중복체크
             return channelSummaries;
@@ -110,15 +110,15 @@ public class MattermostServiceImpl implements MattermostService {
 
     // db에 없는 채널리스트 가져오기
     @Override
-    public List<Channel> getNonDuplicateChannels(List<ChannelSummary> channelSummaries) {
-        List<String> channelIds = channelSummaries.stream().map(ChannelSummary::getId).toList();
+    public List<Channel> getNonDuplicateChannels(List<MMChannelSummary> channelSummaries) {
+        List<String> channelIds = channelSummaries.stream().map(MMChannelSummary::getId).toList();
         List<String> existingChannelIds = channelRepository.findByChannelIdIn(channelIds).stream()
                                                            .map(Channel::getChannelId).toList();
-        return channelSummaries.stream().filter(channelSummary -> !existingChannelIds.contains(channelSummary.getId()))
-                               .map(channelSummary -> {
+        return channelSummaries.stream().filter(MMChannelSummary -> !existingChannelIds.contains(MMChannelSummary.getId()))
+                               .map(MMChannelSummary -> {
                                    Channel channel = new Channel();
-                                   channel.setChannelId(channelSummary.getId());
-                                   channel.setChannelName(channelSummary.getDisplayName());
+                                   channel.setChannelId(MMChannelSummary.getId());
+                                   channel.setChannelName(MMChannelSummary.getDisplayName());
                                    return channel;
                                }).toList();
     }
