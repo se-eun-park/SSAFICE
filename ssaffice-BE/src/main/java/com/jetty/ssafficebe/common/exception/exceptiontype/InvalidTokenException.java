@@ -1,7 +1,6 @@
 package com.jetty.ssafficebe.common.exception.exceptiontype;
 
 import com.jetty.ssafficebe.common.exception.ErrorCode;
-import com.jetty.ssafficebe.common.exception.errordetail.ErrorDetail;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
