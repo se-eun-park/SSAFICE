@@ -30,5 +30,5 @@ public interface ScheduleConverter {
     @Mapping(target = "noticeSummaryForList", source = "notice")
     ScheduleSummary toScheduleSummary(Schedule schedule);
 
-    SchedulePageResponse toSchedulePageResponse(Page<ScheduleSummary> scheduleSummaryPage, List<Integer> statusCounts);
+    SchedulePageResponse toSchedulePageResponse(Page<ScheduleSummary> scheduleSummaryPage, List<Long> statusCounts);
 }
