@@ -1,6 +1,5 @@
 package com.jetty.ssafficebe.notice.service;
 
-import com.jetty.ssafficebe.channel.service.ChannelService;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidAuthorizationException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
