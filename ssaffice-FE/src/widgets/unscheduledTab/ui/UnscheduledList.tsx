@@ -18,8 +18,13 @@ export const UnscheduledList = () => {
           w-full h-full 
       '
       >
-        {Object.entries(datas).map(([date, dailyUnschedules]) => (
-          <UnscheduledDateGroup key={date} date={date} dailyUnschedules={dailyUnschedules} />
+        {Object.entries(datas).map(([date, dailyUnschedules], index) => (
+          <UnscheduledDateGroup
+            key={date}
+            date={date}
+            dailyUnschedules={dailyUnschedules}
+            isLast={index === Object.entries(datas).length - 1}
+          />
         ))}
       </div>
     </div>

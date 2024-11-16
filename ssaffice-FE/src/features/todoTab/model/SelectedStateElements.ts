@@ -3,9 +3,16 @@ import { useMemo } from 'react'
 type SelectedStateElementsProps = {
   selectedState: string
   isOpen: boolean
+
+  actionType?: 'narrow plain' | 'with label'
+  // 차례대로 좁은 상태 편집 드롭다운(개별 할일 상태), 할일 간편 등록
 }
 
-export const SelectedStateElements = ({ selectedState, isOpen }: SelectedStateElementsProps) =>
+export const SelectedStateElements = ({
+  selectedState,
+  isOpen,
+  actionType,
+}: SelectedStateElementsProps) =>
   useMemo(() => {
     switch (selectedState) {
       case 'default':
@@ -40,8 +47,8 @@ export const SelectedStateElements = ({ selectedState, isOpen }: SelectedStateEl
       case 'todo':
         return {
           label: '해야 할 일',
-          bgClass: `w-fit px-spacing-8 py-spacing-4 rounded-radius-8 ${isOpen ? 'bg-color-bg-interactive-disabled-press' : 'bg-color-bg-interactive-disabled hover:bg-color-bg-interactive-disabled-hover'}`,
-          labelClass: 'body-sm-medium text-color-text-interactive-inverse',
+          bgClass: `w-fit  ${actionType === 'narrow plain' ? 'px-spacing-6 py-spacing-2 h-[20px]' : 'px-spacing-8 py-spacing-4'}  rounded-radius-8 ${isOpen ? 'bg-color-bg-interactive-disabled-press' : 'bg-color-bg-interactive-disabled hover:bg-color-bg-interactive-disabled-hover'}`,
+          labelClass: `${actionType === 'narrow plain' ? 'body-xs-medium' : 'body-sm-medium'} text-color-text-interactive-inverse`,
           contents: [
             {
               label: '진행 중',
@@ -62,8 +69,8 @@ export const SelectedStateElements = ({ selectedState, isOpen }: SelectedStateEl
       case 'progress':
         return {
           label: '진행 중',
-          bgClass: `w-fit px-spacing-8 py-spacing-4 rounded-radius-8 ${isOpen ? 'bg-color-bg-interactive-primary-press' : 'bg-color-bg-interactive-primary hover:bg-color-bg-interactive-primary-hover'}`,
-          labelClass: 'body-sm-medium text-color-text-interactive-inverse',
+          bgClass: `w-fit  ${actionType === 'narrow plain' ? 'px-spacing-6 py-spacing-2 h-[20px]' : 'px-spacing-8 py-spacing-4'}  rounded-radius-8 ${isOpen ? 'bg-color-bg-interactive-primary-press' : 'bg-color-bg-interactive-primary hover:bg-color-bg-interactive-primary-hover'}`,
+          labelClass: `${actionType === 'narrow plain' ? 'body-xs-medium' : 'body-sm-medium'} text-color-text-interactive-inverse`,
           contents: [
             {
               label: '해야 할 일',
@@ -84,8 +91,8 @@ export const SelectedStateElements = ({ selectedState, isOpen }: SelectedStateEl
       case 'done':
         return {
           label: '완료',
-          bgClass: `w-fit px-spacing-8 py-spacing-4 rounded-radius-8 ${isOpen ? 'bg-color-bg-interactive-success-press' : 'bg-color-bg-interactive-success hover:bg-color-bg-interactive-success-hover'}`,
-          labelClass: 'body-sm-medium text-color-text-disabled-soft',
+          bgClass: `w-fit  ${actionType === 'narrow plain' ? 'px-spacing-6 py-spacing-2 h-[20px]' : 'px-spacing-8 py-spacing-4'}  rounded-radius-8 ${isOpen ? 'bg-color-bg-interactive-success-press' : 'bg-color-bg-interactive-success hover:bg-color-bg-interactive-success-hover'}`,
+          labelClass: `${actionType === 'narrow plain' ? 'body-xs-medium' : 'body-sm-medium'} text-color-text-interactive-inverse`,
           contents: [
             {
               label: '해야 할 일',

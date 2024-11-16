@@ -78,14 +78,13 @@ export const AnnouncementTab = () => {
         <div
           className={`
           flex
-          ${isAllNoticeView ? 'mb-[132px]' : 'mt-spacing-24 mb-spacing-32'} px-spacing-16
+          ${isAllNoticeView ? 'mb-[132px]' : 'mt-spacing-24 mb-spacing-32'} px-spacing-16 pb-spacing-16 
           bg-color-bg-tertiary
           rounded-radius-8
           overflow-y-scroll
           `}
         >
           {isAllNoticeView ? <AnnouncementList /> : <UnscheduledList />}
-          {/* <AnnouncementList /> */}
         </div>
       </TabLayout.Content>
     </TabLayout>

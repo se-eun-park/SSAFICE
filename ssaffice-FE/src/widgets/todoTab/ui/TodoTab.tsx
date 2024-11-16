@@ -5,6 +5,7 @@ import { HoverTitle, SelectTodoState } from '@/features/todoTab'
 import { useIsTabOpenStore } from '@/shared/model'
 import { TabLayout, HoverButton } from '@/shared/ui'
 import { HamburgerMenuIcon, FastLeftArrowIcon, CalendarIcon, EditIcon } from '@/assets/svg'
+import { SelectTodoSortCondition } from '@/features/todoTab/ui/SelectTodoSortCondition'
 
 export const TodoTab = () => {
   // store
@@ -46,7 +47,11 @@ export const TodoTab = () => {
 
       {isTabOpen ? (
         <TabLayout.Add>
-          <SelectTodoState actionType='filter' />
+          <div className='flex gap-spacing-16'>
+            <SelectTodoState actionType='filter' />
+            {/* 여기에 filter dropdown select 태그 넣어주세여 */}
+            <SelectTodoSortCondition />
+          </div>
         </TabLayout.Add>
       ) : null}
 
