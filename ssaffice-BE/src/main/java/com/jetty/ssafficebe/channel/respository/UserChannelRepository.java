@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserChannelRepository extends JpaRepository<UserChannel, Long> {
 
     List<UserChannel> findDistinctByUserId(Long userId);
+
+    List<UserChannel> findDistinctByChannelId(String channelId);
 }
