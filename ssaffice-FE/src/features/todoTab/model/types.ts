@@ -6,7 +6,7 @@ export type TodoItemDisplay = {
   startDateTime?: Date
   endDateTime?: Date
   scheduleSourceTypeCd?: 'GLOBAL' | 'TEAM' | 'PERSONAL'
-  scheduleStatusTypeCd?: 'TODO' | 'IN_PROGRESS' | 'DONE'
+  scheduleStatusTypeCd: 'TODO' | 'IN_PROGRESS' | 'DONE'
   isEssential?: boolean
   isEnroll?: boolean
 
@@ -19,6 +19,7 @@ export type ScheduleItemDisplay = {
 }
 
 // 선택적 파라메터는 테스트 후 필수로 바꾸어 주세요
+export type ScheduleListDisplay = Record<string, ScheduleItemDisplay[]>
 
 export type TodoListDisplay = {
   // 일정 조회 API response
@@ -35,7 +36,7 @@ export const dummyTodos: TodoListDisplay = {
     {
       todo: {
         scheduleId: 1,
-        title: '팀 미팅 준비',
+        title: '[SSAFY] 청년 멘토링 시청하기',
         startDateTime: new Date('2024-11-13T09:00:00'),
         endDateTime: new Date('2024-11-13T10:00:00'),
         scheduleSourceTypeCd: 'TEAM',
@@ -50,7 +51,7 @@ export const dummyTodos: TodoListDisplay = {
       announcement: {
         user: { userId: 2, name: '박영희' },
         createdAt: new Date('2024-11-13T08:00:00'),
-        title: '팀 미팅 일정 공지',
+        title: 'SSAFY SUPER APP 팀미팅',
         content: '팀 미팅이 2024년 11월 13일 오전 9시에 진행됩니다.',
         noticeId: 1,
       },
@@ -58,7 +59,7 @@ export const dummyTodos: TodoListDisplay = {
     {
       todo: {
         scheduleId: 2,
-        title: '회식 장소 예약',
+        title: 'SSAFY SUPER APP 리소스 신청서 금주 접수',
         startDateTime: new Date('2024-11-13T10:00:00'),
         endDateTime: new Date('2024-11-13T11:00:00'),
         scheduleSourceTypeCd: 'PERSONAL',
@@ -81,7 +82,7 @@ export const dummyTodos: TodoListDisplay = {
     {
       todo: {
         scheduleId: 3,
-        title: '프로젝트 리뷰',
+        title: '[live] 서비스 성능 및 안정성 향상을 위한 Message Queue 도입',
         startDateTime: new Date('2024-11-13T11:00:00'),
         endDateTime: new Date('2024-11-13T12:00:00'),
         scheduleSourceTypeCd: 'GLOBAL',
@@ -355,6 +356,29 @@ export const dummyTodos: TodoListDisplay = {
         noticeId: 14,
       },
     },
+    {
+      todo: {
+        scheduleId: 15,
+        title: '고객 미팅 준비',
+        startDateTime: new Date('2024-11-14T15:00:00'),
+        endDateTime: new Date('2024-11-15T16:00:00'),
+        scheduleSourceTypeCd: 'PERSONAL',
+        scheduleStatusTypeCd: 'TODO',
+        isEssential: true,
+        isEnroll: true,
+        user: {
+          userId: 13,
+          name: '윤상호',
+        },
+      },
+      announcement: {
+        user: { userId: 15, name: '강태형' },
+        createdAt: new Date('2024-11-14T14:00:00'),
+        title: '고객 미팅 일정 공지',
+        content: '고객 미팅 준비가 2024년 11월 14일 오후 3시에 시작됩니다.',
+        noticeId: 15,
+      },
+    },
   ],
-  statusCounts: [18, 15, 16], // TODO: 18개, IN_PROGRESS: 15개, DONE: 16개
+  statusCounts: [2, 1, 12], // TODO: 18개, IN_PROGRESS: 15개, DONE: 16개
 }

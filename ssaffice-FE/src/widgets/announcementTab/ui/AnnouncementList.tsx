@@ -9,18 +9,23 @@ export const AnnouncementList = () => {
   return (
     <div
       className='
-        w-full h-full 
+        w-full h-full
       '
     >
       <div
         className='
             relative
             flex flex-col
-            w-full h-full 
+            w-full h-full
         '
       >
-        {Object.entries(datas).map(([date, dailyAnnouncements]) => (
-          <AnnouncementDateGroup key={date} date={date} dailyAnnouncements={dailyAnnouncements} />
+        {Object.entries(datas).map(([date, dailyAnnouncements], index) => (
+          <AnnouncementDateGroup
+            key={date}
+            date={date}
+            dailyAnnouncements={dailyAnnouncements}
+            isLast={index === Object.entries(datas).length - 1}
+          />
         ))}
       </div>
     </div>
