@@ -1,13 +1,15 @@
 package com.jetty.ssafficebe.mattermost.service;
 
 import com.jetty.ssafficebe.channel.entity.Channel;
+import com.jetty.ssafficebe.channel.entity.UserChannel;
 import com.jetty.ssafficebe.channel.respository.ChannelRepository;
+import com.jetty.ssafficebe.channel.respository.UserChannelRepository;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidTokenException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
-import com.jetty.ssafficebe.mattermost.payload.ChannelSummary;
 import com.jetty.ssafficebe.mattermost.payload.DeleteSummary;
+import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
@@ -16,7 +18,10 @@ import com.jetty.ssafficebe.mattermost.payload.UserAutocompleteSummary;
 import com.jetty.ssafficebe.mattermost.util.MattermostUtil;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -33,6 +38,7 @@ public class MattermostServiceImpl implements MattermostService {
     private final MattermostUtil mattermostUtil;
     private final UserRepository userRepository;
     private final ChannelRepository channelRepository;
+    private final UserChannelRepository userChannelRepository;
 
     @Override
     public PostSummary getPost(String postId) {
@@ -85,9 +91,9 @@ public class MattermostServiceImpl implements MattermostService {
         return (response.getBody() != null) ? response.getBody().getUsers() : null;
     }
 
-    // userId를 조회해서 해당 User 가 속한 전체 채널을 MM API 를 통해 가져옴
+    // // userId를 이용해 MM 에서 해당 user 가 속한 채널리스트를 가져옴
     @Override
-    public ChannelSummary[] getChannelsByUserIdFromMM(Long userId) {
+    public List<MMChannelSummary> getChannelsByUserIdFromMM(Long userId) {
         // 1. userId로 user 조회하여 mattermostId와 Token 가져오기
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
@@ -96,37 +102,71 @@ public class MattermostServiceImpl implements MattermostService {
 
         // 2. token 과 mmId로 ChannelSummary 를 배열로 가져오기
         try {
-            ResponseEntity<ChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
-                    "/users/" + mmUserId + "/channels", HttpMethod.GET, null, ChannelSummary[].class, token);
+            ResponseEntity<MMChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
+                    "/users/" + mmUserId + "/channels", HttpMethod.GET, null, MMChannelSummary[].class, token);
 
-            ChannelSummary[] channelSummaries = response.getBody();
-            // 3. ChannelId가 기존의 DB에 있는지 확인하고 없으면 DB에 저장
-            // MM 에서 가져온 ChannelSummary 에서 id만 추출해서 해당 id로 db의 내용과 중복체크
-            return channelSummaries;
+            return Arrays.asList(Objects.requireNonNull(response.getBody()));
         } catch (InvalidTokenException e) {
-            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND, "mattermostToken", token);
+            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND);
         }
     }
 
-    // db에 없는 채널리스트 가져오기
+    // 가져온 채널 리스트 중 Notice(공지사항) 채널만 필터링
     @Override
-    public List<Channel> getNonDuplicateChannels(List<ChannelSummary> channelSummaries) {
-        List<String> channelIds = channelSummaries.stream().map(ChannelSummary::getId).toList();
+    public List<MMChannelSummary> filteredNoticeChannels(List<MMChannelSummary> mmChannelSummaryList) {
+        List<MMChannelSummary> mmChannelSummaries = new ArrayList<>();
+        for (MMChannelSummary channelSummary : mmChannelSummaryList) {
+            if (channelSummary.getDisplayName().contains("공지사항")) {
+                mmChannelSummaries.add(channelSummary);
+            }
+        }
+        return mmChannelSummaries;
+    }
+
+
+    // 기존 채널 db에 저장되어있지 않은 채널만 가져옴
+    @Override
+    public List<Channel> getNonDuplicateChannels(List<MMChannelSummary> channelSummaries) {
+        List<String> channelIds = channelSummaries.stream().map(MMChannelSummary::getId).toList();
         List<String> existingChannelIds = channelRepository.findByChannelIdIn(channelIds).stream()
                                                            .map(Channel::getChannelId).toList();
-        return channelSummaries.stream().filter(channelSummary -> !existingChannelIds.contains(channelSummary.getId()))
-                               .map(channelSummary -> {
+        return channelSummaries.stream()
+                               .filter(MMChannelSummary -> !existingChannelIds.contains(MMChannelSummary.getId()))
+                               .map(MMChannelSummary -> {
                                    Channel channel = new Channel();
-                                   channel.setChannelId(channelSummary.getId());
-                                   channel.setChannelName(channelSummary.getDisplayName());
+                                   channel.setChannelId(MMChannelSummary.getId());
+                                   channel.setChannelName(MMChannelSummary.getDisplayName());
                                    return channel;
                                }).toList();
     }
 
+    // 가져온 채널리스트를 Channel 테이블에 저장
     @Override
     public ApiResponse saveAllChannelsByMMChannelList(List<Channel> channelList) {
         channelRepository.saveAll(channelList);
         return new ApiResponse(true, HttpStatus.OK, "Channel saved successfully",
                                channelList.stream().map(Channel::getChannelId).toList());
+    }
+
+    // MM 에서 가져온 채널리스트 중 UserChannel 테이블에 해당 userId로 찾았을 때 저장되어있지 않은 채널만 가져옴
+    @Override
+    public List<MMChannelSummary> getNonDuplicateChannelsByUserId(Long userId,
+                                                                  List<MMChannelSummary> mmChannelSummaryList) {
+        List<UserChannel> existingUserChannelList = userChannelRepository.findAllByUserId(userId);
+        List<String> existingUserChannelIds = existingUserChannelList.stream().map(UserChannel::getChannelId).toList();
+
+        return mmChannelSummaryList.stream().filter(channel -> !existingUserChannelIds.contains(channel.getId()))
+                                   .toList();
+    }
+
+    // 가져온 채널리스트를 UserChannel 테이블에 저장
+    @Override
+    public ApiResponse saveChannelListToUserChannelByUserId(Long userId, List<MMChannelSummary> mmChannelSummaryList) {
+        List<UserChannel> userChannelsToSave = mmChannelSummaryList.stream().map(channel -> new UserChannel(userId,
+                                                                                                            channel.getId()))
+                                                                   .toList();
+        userChannelRepository.saveAll(userChannelsToSave);
+        return new ApiResponse(true, HttpStatus.OK, "Channel saved successfuly into UserChannel",
+                               userChannelsToSave.stream().map(UserChannel::getChannelId).toList());
     }
 }
