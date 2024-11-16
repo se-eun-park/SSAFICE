@@ -6,9 +6,10 @@ import { TodoItem } from './TodoItem'
 type TodoDateGroupProps = {
   date: string
   dailySchedules: ScheduleItemDisplay[]
+  isLast?: boolean
 }
 
-export const TodoDateGroup = ({ date, dailySchedules }: TodoDateGroupProps) => {
+export const TodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupProps) => {
   const { isClicked, handleIsClicked } = useClickedToggle()
   const statusCounts: number[] = useCalculateStatusCounts(dailySchedules)
   return (
@@ -71,7 +72,7 @@ export const TodoDateGroup = ({ date, dailySchedules }: TodoDateGroupProps) => {
         </div>
       </div>
 
-      <div className='flex flex-col gap-spacing-16'>
+      <div className={`flex flex-col gap-spacing-16 ${isLast ? 'pb-spacing-16' : ''}`}>
         {isClicked ? (
           <div
             className='

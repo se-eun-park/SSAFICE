@@ -66,7 +66,7 @@ export const SelectTodoSortCondition = ({
       </button>
 
       <div ref={hoverRef}>
-        <DropDown isOpen={isOpen} position='top-8 right-0' width='w-[12.5rem]' isPaddingY={true}>
+        <DropDown isOpen={isOpen} position='top-8' width='w-[12.5rem]' isPaddingY={true}>
           {selectedSortConditionElements?.contents.map((content, index) => (
             <DropDown.Content
               key={index}

@@ -26,8 +26,13 @@ export const TodoList = () => {
           relative
         '
         >
-          {Object.entries(sortedTodos).map(([date, dailySchedules]) => (
-            <TodoDateGroup key={date} date={date} dailySchedules={dailySchedules} />
+          {Object.entries(sortedTodos).map(([date, dailySchedules], index) => (
+            <TodoDateGroup
+              key={date}
+              date={date}
+              dailySchedules={dailySchedules}
+              isLast={index === Object.entries(sortedTodos).length - 1}
+            />
           ))}
         </div>
       </div>

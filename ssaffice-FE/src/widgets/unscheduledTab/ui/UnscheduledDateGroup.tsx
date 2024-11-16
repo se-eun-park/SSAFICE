@@ -5,14 +5,19 @@ import { useDateFormatter } from '@/shared/model'
 type UnscheduledDateGroupProps = {
   date: string
   dailyUnschedules: UnscheduledItemDisplay[]
+  isLast?: boolean
 }
-export const UnscheduledDateGroup = ({ date, dailyUnschedules }: UnscheduledDateGroupProps) => {
+export const UnscheduledDateGroup = ({
+  date,
+  dailyUnschedules,
+  isLast,
+}: UnscheduledDateGroupProps) => {
   return (
     <div
-      className='
-        flex flex-col
-        relative
-      '
+      className={`
+          flex flex-col relative 
+          ${isLast ? 'pb-spacing-16' : ''}
+        `}
     >
       <div
         className='
