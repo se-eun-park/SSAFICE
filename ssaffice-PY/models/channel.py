@@ -6,8 +6,8 @@ from .base import Base
 class Channel(Base):
     __tablename__ = "channel"
 
-    channel_id = Column(String(50), primary_key=True, index=True)
-    mm_team_id = Column(String(50), ForeignKey("mm_team.mm_team_id"))
-    name = Column(String(50))
+    channel_id = Column(String(255), primary_key=True, index=True)
+    mm_team_id = Column(String(255), ForeignKey("mm_team.mm_team_id"))
+    name = Column(String(255))
 
     team = relationship("MM_Team")

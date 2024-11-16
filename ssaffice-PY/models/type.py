@@ -8,8 +8,8 @@ class NoticeType(enum.Enum):
     TEAM = "TEAM"
 
 class ScheduleSourceType(enum.Enum):
-    GLOBAL_NOTICE = "GLOBAL_NOTICE"
-    TEAM_NOTICE = "TEAM_NOTICE"
+    GLOBAL_NOTICE = "GLOBAL"
+    TEAM_NOTICE = "TEAM"
     PERSONAL = "PERSONAL"
 
 class ScheduleStatusType(enum.Enum):
@@ -17,11 +17,13 @@ class ScheduleStatusType(enum.Enum):
     IN_PROGRESS = "IN_PROGRESS"
     DONE = "DONE"
 
+class RemindType(enum.Enum):
+    DAILY = "DAILY"
+    ONCE = "ONCE"
 
 # Boolean to Y/N 변환기
 class BooleanToYN(TypeDecorator):
     impl = String(1)
-
     def process_bind_param(self, value, dialect):
         return "Y" if value else "N"
 
