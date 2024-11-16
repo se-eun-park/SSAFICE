@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserChannelRepository extends JpaRepository<UserChannel, Long> {
 
-    List<UserChannel> findByUserId(Long userId);
+    List<UserChannel> findDistinctByUserId(Long userId);
 }
