@@ -1,3 +1,5 @@
 export { ProSelectTabMenu } from './ui/ProSelectTabMenu'
 export { useProSelectTabMenu } from './model/useProSelectTabMenu'
 export { TeamSelectDropdown } from './ui/TeamSelectDropdown'
+export type { MattermostChannel, MattermostTeam } from './model/types'
+export { dummyMattermostTeams } from './model/types'
