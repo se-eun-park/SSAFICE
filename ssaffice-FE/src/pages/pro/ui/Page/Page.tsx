@@ -9,17 +9,17 @@ export const ProPage = () => {
   return (
     <main
       className='
-      flex flex-col
-      w-full h-full
-    '
+        flex flex-col
+        w-full h-full
+      '
     >
       <ProSelectTabMenu selected={selected} handleSelect={handleSelect} />
 
       <section
         className='
-        flex flex-col
-        w-full h-full px-spacing-48
-      '
+          flex flex-col
+          w-full h-full px-spacing-48
+        '
       >
         {selected === 'manageMembers' ? (
           <ManageMembersTab />
