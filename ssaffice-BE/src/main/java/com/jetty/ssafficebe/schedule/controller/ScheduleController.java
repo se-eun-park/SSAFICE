@@ -7,9 +7,10 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
+import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -52,7 +53,7 @@ public class ScheduleController {
     @PostMapping("/admin")
     public ResponseEntity<ApiResponse> saveSchedulesByAdmin(@RequestBody AdminScheduleRequest adminScheduleRequest) {
         return ResponseEntity.ok(scheduleService.saveSchedulesByAdmin(adminScheduleRequest.getUserIds(),
-                adminScheduleRequest.getScheduleRequest()));
+                                                                      adminScheduleRequest.getScheduleRequest()));
     }
 
     /**
@@ -94,15 +95,29 @@ public class ScheduleController {
     }
 
     // TODO : 리스트 조회 관련 로직, api 구체화 및 구현
+
+    /**
+     * (ROLE_USER) 미등록 공지 조회
+     */
+    @GetMapping("/unregistered")
+    public ResponseEntity<Page<ScheduleSummary>> getUnregisteredNoticeSchedules(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody ScheduleFilterRequest scheduleFilterRequest,
+            @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(
+                scheduleService.getUnregisteredNoticeSchedules(userDetails.getUserId(), scheduleFilterRequest,
+                                                               pageable));
+    }
+
     /**
      * (ROLE_USER) 개인 일정 리스트 조회
      *
      * @param pageable              : 기본값 (20개씩 / 마감 임박순)
      * @param scheduleFilterRequest :미등록 공지 여부, 상태, 일정 출처, 시작/종료 시간
-     * @return 조건에 맞는 일정 리스트
+     * @return 조건에 맞는 일정 리스트 +
      */
     @GetMapping
-    public ResponseEntity<SchedulePageResponse> getScheduleList(
+    public ResponseEntity<SchedulePageResponse> getSchedules(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
@@ -124,5 +139,21 @@ public class ScheduleController {
             @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
                 scheduleService.getSchedulesByNoticeForAdmin(noticeId, scheduleFilterRequest, pageable));
+    }
+
+    /**
+     * (ROLE_ADMIN) 관리자가 부여한 일정 조회 (개인/팀)
+     *
+     * @param pageable              : 기본값 (20개씩 / 마감 임박순)
+     * @param scheduleFilterRequest : 상태, 일정 출처(ASSIGNED_PERSONAL/ASSIGNED_TEAM), 시작/종료 시간
+     * @return 조건에 맞는 일정 리스트 + 완료율
+     */
+    @GetMapping("/admin/assigned")
+    public ResponseEntity<SchedulePageResponse> getAssignedSchedules(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody ScheduleFilterRequest scheduleFilterRequest,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(
+                scheduleService.getAssignedSchedules(userDetails.getUserId(), scheduleFilterRequest, pageable));
     }
 }

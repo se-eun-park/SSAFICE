@@ -312,6 +312,18 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleConverter.toSchedulePageResponse(result, statusCounts);
     }
 
+    @Override
+    public Page<ScheduleSummary> getUnregisteredNoticeSchedules(Long userId, ScheduleFilterRequest scheduleFilterRequest,
+                                                               Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public SchedulePageResponse getAssignedSchedules(Long userId, ScheduleFilterRequest scheduleFilterRequest,
+                                                     Pageable pageable) {
+        return null;
+    }
+
     /**
      * 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용하는 메서드
      */
