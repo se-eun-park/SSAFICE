@@ -7,6 +7,7 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
+import com.jetty.ssafficebe.schedule.payload.UpdateScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -60,14 +61,15 @@ public class ScheduleController {
      * 일정 수정
      *
      * @param scheduleId      : 수정할 일정 id
-     * @param scheduleRequest : schedule 정보
+     * @param updateScheduleRequest : schedule 정보
      * @return 수정된 일정 정보
      */
     @PutMapping("/{scheduleId}")
     public ResponseEntity<ApiResponse> updateSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                       @PathVariable("scheduleId") Long scheduleId,
-                                                      @RequestBody ScheduleRequest scheduleRequest) {
-        return ResponseEntity.ok(scheduleService.updateSchedule(userDetails.getUserId(), scheduleId, scheduleRequest));
+                                                      @RequestBody UpdateScheduleRequest updateScheduleRequest) {
+        return ResponseEntity.ok(scheduleService.updateSchedule(userDetails.getUserId(), scheduleId,
+                                                                updateScheduleRequest));
     }
 
     /**

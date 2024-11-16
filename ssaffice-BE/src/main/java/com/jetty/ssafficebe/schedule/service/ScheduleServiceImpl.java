@@ -19,6 +19,7 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
+import com.jetty.ssafficebe.schedule.payload.UpdateScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
@@ -137,9 +138,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ApiResponse updateSchedule(Long userId, Long scheduleId, ScheduleRequest scheduleRequest) {
+    public ApiResponse updateSchedule(Long userId, Long scheduleId, UpdateScheduleRequest updateScheduleRequest) {
         log.info("[Schedule] 일정 수정 시작 - scheduleId={}, userId={}, requestUserId={}", scheduleId, userId,
-                 scheduleRequest.getUserId());
+                 updateScheduleRequest.getUserId());
 
         // ! 1. 수정할 Schedule 조회
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
@@ -149,24 +150,24 @@ public class ScheduleServiceImpl implements ScheduleService {
         validateAuthorization(userId, schedule.getUserId());
 
         // ! 3. Schedule 기본 정보 업데이트 - 요청에 있는 필드만 수정
-        Optional.ofNullable(scheduleRequest.getTitle())
+        Optional.ofNullable(updateScheduleRequest.getTitle())
                 .ifPresent(schedule::setTitle);
-        Optional.ofNullable(scheduleRequest.getMemo())
+        Optional.ofNullable(updateScheduleRequest.getMemo())
                 .ifPresent(schedule::setMemo);
-        Optional.ofNullable(scheduleRequest.getStartDateTime())
+        Optional.ofNullable(updateScheduleRequest.getStartDateTime())
                 .ifPresent(schedule::setStartDateTime);
-        Optional.ofNullable(scheduleRequest.getEndDateTime())
+        Optional.ofNullable(updateScheduleRequest.getEndDateTime())
                 .ifPresent(schedule::setEndDateTime);
-        Optional.ofNullable(scheduleRequest.getScheduleStatusTypeCd())
+        Optional.ofNullable(updateScheduleRequest.getScheduleStatusTypeCd())
                 .ifPresent(schedule::setScheduleStatusTypeCd);
-        Optional.ofNullable(scheduleRequest.getIsEnrollYn())
+        Optional.ofNullable(updateScheduleRequest.getIsEnrollYn())
                 .ifPresent(schedule::setIsEnrollYn);
 
         // ! 4. Remind 정보 갱신 - reminds 요청에 있을 때만 수정
-        if (scheduleRequest.getRemindRequests() != null) {
+        if (updateScheduleRequest.getRemindRequests() != null) {
             remindRepository.deleteByScheduleId(scheduleId);
             schedule.getReminds().clear();
-            saveScheduleReminds(userId, scheduleRequest.getRemindRequests(), schedule.getScheduleId());
+            saveScheduleReminds(userId, updateScheduleRequest.getRemindRequests(), schedule.getScheduleId());
         }
 
         // ! 5. Schedule 저장 및 Response 반환

@@ -6,6 +6,7 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
+import com.jetty.ssafficebe.schedule.payload.UpdateScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public interface ScheduleService {
 
     void saveSchedulesFromNotice(Notice notice, List<Long> userIds);
 
-    ApiResponse updateSchedule(Long userId, Long scheduleId, ScheduleRequest scheduleRequest);
+    ApiResponse updateSchedule(Long userId, Long scheduleId, UpdateScheduleRequest updateScheduleRequest);
 
     ScheduleDetail getSchedule(Long userId, Long scheduleId);
 
