@@ -1,3 +1,6 @@
+import { TeamSelectDropdown } from '@/features/pro'
+import { RefreshMattermostConnection } from '@/shared/ui'
+
 export const ManageMembersTab = () => {
   return (
     <>
@@ -7,7 +10,9 @@ export const ManageMembersTab = () => {
           w-full h-[66px]
         '
       >
-        팀 선택 & MM refresh 영역
+        {/* 팀 선택 & MM refresh 영역 */}
+        <TeamSelectDropdown />
+        <RefreshMattermostConnection />
       </div>
 
       <div

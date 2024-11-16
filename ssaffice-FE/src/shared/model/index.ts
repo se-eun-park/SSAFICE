@@ -11,6 +11,8 @@ export { useCustomEmojiRemover } from './useCustomEmojiRemover'
 
 export { useClickedToggle } from './useClickedToggle'
 
+export { useRefreshMattermostConnection } from './useRefreshMattermostConnection'
+
 export { announcementDataEmojiSelectExpression } from './regularExpressions'
 
 export {
