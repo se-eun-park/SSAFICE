@@ -23,9 +23,11 @@ public interface ScheduleConverter {
 
     @Mapping(target = "remindSummarys", source = "reminds")
     @Mapping(target = "noticeSummaryForList", source = "notice")
-    @Mapping(target = "createUser", source = "user")
+    @Mapping(target = "createUser", source = "schedule.createUser")
     ScheduleDetail toScheduleDetail(Schedule schedule);
 
+    @Mapping(target = "createUser", source = "schedule.createUser")
+    @Mapping(target = "noticeSummaryForList", source = "notice")
     ScheduleSummary toScheduleSummary(Schedule schedule);
 
     SchedulePageResponse toSchedulePageResponse(Page<ScheduleSummary> scheduleSummaryPage, List<Integer> statusCounts);

@@ -6,12 +6,15 @@ import com.jetty.ssafficebe.user.payload.CreatedBySummary;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface UserConverter {
+
+    void updateUserForSSO(@MappingTarget User user, SaveUserRequest saveUserRequest);
 
     User toUser(SaveUserRequest saveUserRequest);
 
@@ -23,4 +26,5 @@ public interface UserConverter {
 
     ESUserRequest toESUserRequest(User savedUser);
 
+    List<UserSummary> toUserSummaryList(List<User> userList);
 }

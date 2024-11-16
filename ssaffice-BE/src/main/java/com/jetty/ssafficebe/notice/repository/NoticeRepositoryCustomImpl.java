@@ -17,7 +17,7 @@ public class NoticeRepositoryCustomImpl extends AbstractQueryDslRepository imple
     }
 
     @Override
-    public Page<Notice> getNoticeList(Long userId, Pageable pageable) {
+    public Page<Notice> getNoticePage(Long userId, Pageable pageable) {
         QNotice notice = QNotice.notice;
 
         JPQLQuery<Notice> query = from(notice);
@@ -30,7 +30,7 @@ public class NoticeRepositoryCustomImpl extends AbstractQueryDslRepository imple
     }
 
     @Override
-    public Page<Notice> getNoticeListForAdmin(Long userId, Pageable pageable) {
+    public Page<Notice> getNoticePageForAdmin(Long userId, Pageable pageable) {
         QNotice notice = QNotice.notice;
 
         JPQLQuery<Notice> query = from(notice)

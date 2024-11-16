@@ -20,6 +20,7 @@ public enum ErrorCode {
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     INVALID_USAGE(HttpStatus.BAD_REQUEST, "usage 값이 잘못되었습니다."),
     INVALID_REMIND_OPERATION(HttpStatus.BAD_REQUEST, "필수 알림은 삭제할 수 없습니다."),
+    INVALID_USER_IDS(HttpStatus.BAD_REQUEST, "등록할 사용자 목록이 비어있습니다."),
 
     INVALID_AUTHORIZATION(HttpStatus.FORBIDDEN, "해당 리소스에 대한 권한이 없습니다."),
     ;

@@ -6,8 +6,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface NoticeRepositoryCustom {
 
-    Page<Notice> getNoticeList(Long userId, Pageable pageable);
+    Page<Notice> getNoticePage(Long userId, Pageable pageable);
 
-    Page<Notice> getNoticeListForAdmin(Long userId, Pageable pageable);
+    Page<Notice> getNoticePageForAdmin(Long userId, Pageable pageable);
 
 }

@@ -3,11 +3,12 @@ package com.jetty.ssafficebe.schedule.controller;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.schedule.payload.AdminScheduleRequest;
+import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
-import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -35,7 +36,6 @@ public class ScheduleController {
      *
      * @param scheduleRequest : 일정 요청 정보 + 리마인드 정보 (리마인드 존재시)
      * @return 등록된 일정 id
-     * TODO: ROLE_USER 접근만 허용 추가
      */
     @PostMapping
     public ResponseEntity<ApiResponse> saveSchedule(@AuthenticationPrincipal CustomUserDetails userDetails,
@@ -44,15 +44,15 @@ public class ScheduleController {
     }
 
     /**
-     * 관리자 일정 등록 : 공지사항 등록 시 해당 사용자들에게 일정 추가
+     * 관리자의 개별 일정 등록
      *
-     * @param adminScheduleRequest : List<Long> userIds, noticeId
+     * @param adminScheduleRequest : scheduleRequest, List<Long> userIds
      * @return 성공 메세지
      */
     @PostMapping("/admin")
-    public ResponseEntity<ApiResponse> saveSchedulesForUsers(AdminScheduleRequest adminScheduleRequest) {
-        scheduleService.saveSchedulesForUsers(adminScheduleRequest.getNoticeId(), adminScheduleRequest.getUserIds());
-        return ResponseEntity.ok(new ApiResponse(true, "교육생 일정 등록에 성공하였습니다."));
+    public ResponseEntity<ApiResponse> saveSchedulesByAdmin(@RequestBody AdminScheduleRequest adminScheduleRequest) {
+        return ResponseEntity.ok(scheduleService.saveSchedulesByAdmin(adminScheduleRequest.getUserIds(),
+                adminScheduleRequest.getScheduleRequest()));
     }
 
     /**
@@ -93,6 +93,7 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.deleteSchedule(userDetails.getUserId(), scheduleId));
     }
 
+    // TODO : 리스트 조회 관련 로직, api 구체화 및 구현
     /**
      * (ROLE_USER) 개인 일정 리스트 조회
      *
@@ -105,7 +106,8 @@ public class ScheduleController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(scheduleService.getScheduleList(userDetails.getUserId(), scheduleFilterRequest, pageable));
+        return ResponseEntity.ok(
+                scheduleService.getScheduleList(userDetails.getUserId(), scheduleFilterRequest, pageable));
     }
 
     /**
@@ -120,6 +122,7 @@ public class ScheduleController {
             @PathVariable Long noticeId,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(size = 20, sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(scheduleService.getSchedulesByNoticeForAdmin(noticeId, scheduleFilterRequest, pageable));
+        return ResponseEntity.ok(
+                scheduleService.getSchedulesByNoticeForAdmin(noticeId, scheduleFilterRequest, pageable));
     }
 }

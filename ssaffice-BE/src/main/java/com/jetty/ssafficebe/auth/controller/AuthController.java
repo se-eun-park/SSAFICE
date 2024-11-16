@@ -30,6 +30,7 @@ public class AuthController {
 
         return AuthenticationResponse.builder()
                                      .jwt(jwtProvider.generateToken(authentication.getName()))
+                                     .isSuccess(true)
                                      .build();
     }
 }

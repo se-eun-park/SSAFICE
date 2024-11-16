@@ -1,10 +1,12 @@
 package com.jetty.ssafficebe.user.service;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserFilterRequest;
+import com.jetty.ssafficebe.user.payload.UserRequestForSso;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import java.io.IOException;
 import java.util.List;
@@ -14,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
-    ApiResponse saveUser(SaveUserRequest saveUserRequest);
+    ApiResponse saveUser(Long userId, SaveUserRequest saveUserRequest);
 
     UserSummary getUserSummary(Long userId);
 
@@ -28,5 +30,9 @@ public interface UserService {
 
     ApiResponse updateProfileImg(Long userId, MultipartFile profileImg) throws IOException;
 
-    Page<UserSummary> getUsersByChannelId(String channelId, Pageable pageable);
+    List<Long> getUserIdsByChannelId(String channelId);
+
+    String handleSsoLogin(UserRequestForSso userRequest);
+
+    User saveUserForSSO(String userId);
 }
