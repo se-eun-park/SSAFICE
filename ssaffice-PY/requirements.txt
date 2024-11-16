@@ -1,0 +1,11 @@
+APScheduler==3.10.4
+fastapi==0.115.4
+langchain==0.3.6
+langchain_community==0.3.4
+langchain_openai==0.2.4
+openai==1.53.0
+Path==17.0.0
+pydantic==2.9.2
+python-dotenv==1.0.1
+Requests==2.32.3
+SQLAlchemy==2.0.33
