@@ -204,6 +204,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // channelId로 해당 channel에 속하는 userSummaryList를 조회하는 메서드
+    // TODO : UserChannel 테이블을 통해 조회하는 방식으로 변경 필요
     @Override
     public List<UserSummary> getUsersByChannelId(String channelId) {
         List<User> distinctByUserChannelsChannelId = userRepository.findDistinctByUserChannels_ChannelId(channelId);
