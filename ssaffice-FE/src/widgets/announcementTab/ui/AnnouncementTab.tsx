@@ -6,7 +6,7 @@ import {
   useIsFirstRenderStore,
   useSetIsFirstRenderStore,
 } from '@/shared/model'
-import { SearchBar, TabLayout, HoverButton } from '@/shared/ui'
+import { SearchBar, TabLayout, HoverButton, RefreshMattermostConnection } from '@/shared/ui'
 import { FastLeftArrowIcon } from '@/assets/svg'
 import { AnnouncementList } from './AnnouncementList'
 import { useAnnouncementTabSelectView } from '@/features/announcementTab'
@@ -68,17 +68,21 @@ export const AnnouncementTab = () => {
         />
       </TabLayout.Header>
 
-      {isAllNoticeView && (
-        <TabLayout.Add animation={contentsAnimationClass}>
+      <TabLayout.Add animation={contentsAnimationClass}>
+        {isAllNoticeView ? (
           <SearchBar />
-        </TabLayout.Add>
-      )}
+        ) : (
+          <div className='pb-spacing-8'>
+            <RefreshMattermostConnection />
+          </div>
+        )}
+      </TabLayout.Add>
 
       <TabLayout.Content animation={contentsAnimationClass}>
         <div
           className={`
           flex
-          ${isAllNoticeView ? 'mb-[132px]' : 'mt-spacing-24 mb-spacing-32'} px-spacing-16 pb-spacing-16 
+          ${isAllNoticeView ? 'mb-[130px]' : 'mb-[100px]'} px-spacing-16 pb-spacing-16 
           bg-color-bg-tertiary
           rounded-radius-8
           overflow-y-scroll

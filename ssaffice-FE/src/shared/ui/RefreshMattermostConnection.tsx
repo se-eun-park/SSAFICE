@@ -9,7 +9,7 @@ export const RefreshMattermostConnection = () => {
         flex gap-spacing-8 items-center
     '
     >
-      {/* refresh SVG로 바꿔주세요. 데탑에서 svgr 작동 안 돼서 public/svg에 파일만 넣어둠 ㅜㅜ */}
+      {/* refresh SVG(RefreshIcon)로 바꿔주세요. 데탑에서 svgr 작동 안 돼서 public/svg에 파일만 넣어둠 ㅜㅜ */}
       <button
         className='
         w-spacing-12 h-spacing-12
