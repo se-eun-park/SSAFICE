@@ -17,7 +17,7 @@ public interface NoticeService {
 
     ApiResponse deleteNotice(Long userId, Long noticeId);
 
-    Page<NoticeSummaryForList> getNoticeList(Long userId, String usage, Pageable pageable);
+    Page<NoticeSummaryForList> getNoticeList(Long userId, Pageable pageable);
 
     NoticeDetail getNotice(Long userId, Long noticeId);
 }
