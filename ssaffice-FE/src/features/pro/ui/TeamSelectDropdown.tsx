@@ -120,6 +120,7 @@ export const TeamSelectDropdown = () => {
                       type='checkbox'
                       name='checkChannel'
                       value={each.channelId}
+                      checked={selectedChannelList.includes(each.channelId)}
                       onChange={(e) => handleSelectChannel(each.channelId, e.target.checked)}
                     />
                   </label>
@@ -127,7 +128,7 @@ export const TeamSelectDropdown = () => {
               ))}
             </div>
           </div>
-          {selectedChannelList.size !== 0 && (
+          {selectedChannelList.length && (
             <button
               className='
                 flex self-end justify-center items-center
