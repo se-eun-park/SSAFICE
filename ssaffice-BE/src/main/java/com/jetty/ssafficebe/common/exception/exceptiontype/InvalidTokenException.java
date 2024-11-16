@@ -10,14 +10,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class InvalidTokenException extends CustomException{
 
-    private final ErrorDetail data;
-
-    public InvalidTokenException(ErrorCode errorCode, String fieldName, String value) {
+    public InvalidTokenException(ErrorCode errorCode) {
         super(errorCode);
-        data = ErrorDetail.builder()
-                          .errorCode(errorCode.name())
-                          .fieldName(fieldName)
-                          .value(value).build();
     }
 
 }
