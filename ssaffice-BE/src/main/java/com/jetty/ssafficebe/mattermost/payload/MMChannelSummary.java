@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChannelSummary {
+public class MMChannelSummary {
     private String id;
     private String teamId;
     private String type;
