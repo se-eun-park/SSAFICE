@@ -1,5 +1,7 @@
 package com.jetty.ssafficebe.user.service;
 
+import com.jetty.ssafficebe.channel.entity.UserChannel;
+import com.jetty.ssafficebe.channel.respository.UserChannelRepository;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
@@ -46,6 +48,8 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
     private final RoleConverter roleConverter;
+
+    private final UserChannelRepository userChannelRepository;
 
     private final FileStorageService fileStorageService;
 
@@ -203,12 +207,12 @@ public class UserServiceImpl implements UserService {
         return new ApiResponse(true, HttpStatus.OK, "프로필 이미지 변경 성공");
     }
 
-    // channelId로 해당 channel에 속하는 userSummaryList를 조회하는 메서드
-    // TODO : UserChannel 테이블을 통해 조회하는 방식으로 변경 필요
     @Override
-    public List<UserSummary> getUsersByChannelId(String channelId) {
-        List<User> distinctByUserChannelsChannelId = userRepository.findDistinctByUserChannels_ChannelId(channelId);
-        return userConverter.toUserSummaryList(distinctByUserChannelsChannelId);
+    public List<Long> getUserIdsByChannelId(String channelId) {
+        List<UserChannel> distinctByChannelId = this.userChannelRepository.findDistinctByChannelId(channelId);
+        return distinctByChannelId.stream()
+                                  .map(UserChannel::getUserId)
+                                  .toList();
     }
 
     /**

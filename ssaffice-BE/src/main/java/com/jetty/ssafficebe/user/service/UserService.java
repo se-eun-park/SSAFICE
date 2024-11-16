@@ -30,7 +30,7 @@ public interface UserService {
 
     ApiResponse updateProfileImg(Long userId, MultipartFile profileImg) throws IOException;
 
-    List<UserSummary> getUsersByChannelId(String channelId);
+    List<Long> getUserIdsByChannelId(String channelId);
 
     String handleSsoLogin(UserRequestForSso userRequest);
 
