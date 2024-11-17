@@ -1,5 +1,9 @@
-import { dummyMattermostTeams, TeamSelectDropdown } from '@/features/pro'
-import { useTeamSelectDropdown } from '@/features/pro/model/useTeamSelectDropdown'
+import {
+  dummyMattermostTeams,
+  ManageMembersTabContent,
+  TeamSelectDropdown,
+} from '@/features/ManageMembersTab'
+import { useTeamSelectDropdown } from '@/features/ManageMembersTab/model/useTeamSelectDropdown'
 import { RefreshMattermostConnection } from '@/shared/ui'
 
 export const ManageMembersTab = () => {
@@ -45,13 +49,15 @@ export const ManageMembersTab = () => {
           이 영역은 나중에 screen에 맞추어서 반응형으로 잡고 
           center 정렬하면 좋을 것 같음 / h-65vh 잡으면 딱 예쁘게 나옵니다
         */}
-        {selectedChannel ? (
-          <div>
-            <div></div>
-          </div>
-        ) : (
-          '팀과 채널을 먼저 선택해주세요.'
-        )}
+
+        {/* 왜 렌더링 기점이 selectedChannel이 아니라 tabName이냐면, 
+            tabName은 사용자가 '적용' 버튼을 누른 후에 반영되기 때문입니다. 
+            selectedChannel을 기준으로 하면 '적용' 버튼 클릭 전에 업데이트되기 때문에, 
+            API 요청 시점과 일치하지 않습니다.
+        */}
+        {tabName
+          ? selectedChannel && <ManageMembersTabContent channel={selectedChannel} />
+          : '팀과 채널을 먼저 선택해주세요.'}
       </div>
     </>
   )
