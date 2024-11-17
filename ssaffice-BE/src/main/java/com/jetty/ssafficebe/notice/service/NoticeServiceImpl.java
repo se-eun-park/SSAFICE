@@ -10,8 +10,9 @@ import com.jetty.ssafficebe.file.service.AttachmentFileService;
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
 import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.notice.payload.NoticeDetail;
+import com.jetty.ssafficebe.notice.payload.NoticeFilterRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
-import com.jetty.ssafficebe.notice.payload.NoticeSummaryForList;
+import com.jetty.ssafficebe.notice.payload.NoticeSummary;
 import com.jetty.ssafficebe.notice.repository.NoticeRepository;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
 import com.jetty.ssafficebe.user.converter.UserConverter;
@@ -22,6 +23,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +85,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public Page<NoticeSummaryForList> getNoticeList(Long userId, Pageable pageable) {
+    public Page<NoticeSummary> getNoticePage(Long userId, Pageable pageable) {
         if (userRepository.existsById(userId)) {
             throw new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.", userId);
         }
@@ -101,7 +103,7 @@ public class NoticeServiceImpl implements NoticeService {
         // 2. 채널 아이디로 공지사항 조회
         Page<Notice> noticePage = noticeRepository.findByChannelIdIn(channelIds, pageable);
 
-        return noticePage.map(noticeConverter::toNoticeSummaryForList);
+        return noticePage.map(noticeConverter::toNoticeSummary);
     }
 
     @Override
@@ -123,5 +125,14 @@ public class NoticeServiceImpl implements NoticeService {
         noticeDetail.setAttachmentFiles(attachmentFileService.getAttachmentFilesSummaryByRefId(noticeId));
 
         return noticeDetail;
+    }
+
+    @Override
+    public List<NoticeSummary> getNoticePageByCreateUser(Long userId, NoticeFilterRequest noticeFilterRequest,
+                                                         Sort sort) {
+
+        List<Notice> result = noticeRepository.getNoticeListByCreateUserAndFilter(userId, noticeFilterRequest, sort);
+
+        return noticeConverter.toNoticeSummaryList(result);
     }
 }
