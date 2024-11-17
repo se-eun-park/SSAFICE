@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.Querydsl;
 
 @RequiredArgsConstructor
@@ -48,5 +49,14 @@ public class AbstractQueryDslRepository {
 
     protected <T> JPQLQuery<T> from(EntityPath<T> path) {
         return queryFactory.selectFrom(path);
+    }
+
+    /**
+     * Sort를 적용한 리스트 조회
+     * @param query : 정렬조건을 추가할 쿼리 몸통
+     * @param sort : 정렬 조건
+     */
+    protected <T> List<T> getSortedList(JPQLQuery<T> query, Sort sort) {
+        return getQuerydsl(query.getType()).applySorting(sort, query).fetch();
     }
 }
