@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -106,17 +107,14 @@ public class ScheduleController {
      * @return 조건에 맞는 일정 리스트
      */
     @GetMapping("/unregistered")
-    public ResponseEntity<Page<ScheduleSummary>> getUnregisteredNoticeSchedules(
+    public ResponseEntity<Page<ScheduleSummary>> getUnregisteredSchedulePage(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
-                scheduleService.getUnregisteredNoticeSchedules(userDetails.getUserId(), scheduleFilterRequest,
-                                                               pageable));
+                scheduleService.getUnregisteredSchedulePage(userDetails.getUserId(), scheduleFilterRequest,
+                                                            pageable));
     }
-
-    // TODO : 상태 리스트 응답 List<Long> -> 상태별로 알아보기 쉽게 수정 필요
-    // ex. List<Long> statusCounts : [3,5,2]
 
     /**
      * (ROLE_USER) 개인 일정 리스트 조회
@@ -126,12 +124,12 @@ public class ScheduleController {
      * @return 조건에 맞는 일정 리스트 + 상태(해야할일,진행중,완료) 카운트 리스트
      */
     @GetMapping
-    public ResponseEntity<SchedulePageResponse> getSchedules(
+    public ResponseEntity<SchedulePageResponse> getScheduleList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
-            @PageableDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
+            @SortDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
-                scheduleService.getSchedules(userDetails.getUserId(), scheduleFilterRequest, pageable));
+                scheduleService.getScheduleList(userDetails.getUserId(), scheduleFilterRequest, pageable));
     }
 
     /**
@@ -142,12 +140,12 @@ public class ScheduleController {
      * @return 조건에 맞는 일정 리스트 + 상태(등록O, 등록O+완료) 카운트 리스트
      */
     @GetMapping("/admin/notices/{noticeId}")
-    public ResponseEntity<SchedulePageResponse> getSchedulesByNoticeForAdmin(
+    public ResponseEntity<SchedulePageResponse> getScheduleListByNoticeForAdmin(
             @PathVariable Long noticeId,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
-            @PageableDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
+            @SortDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
-                scheduleService.getSchedulesByNoticeForAdmin(noticeId, scheduleFilterRequest, pageable));
+                scheduleService.getScheduleListByNoticeForAdmin(noticeId, scheduleFilterRequest, pageable));
     }
 
     /**
@@ -158,11 +156,11 @@ public class ScheduleController {
      * @return 조건에 맞는 일정 리스트 + 상태(등록O, 등록O+완료) 카운트 리스트
      */
     @GetMapping("/admin/assigned")
-    public ResponseEntity<SchedulePageResponse> getAssignedSchedules(
+    public ResponseEntity<SchedulePageResponse> getAssignedScheduleList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
-            @PageableDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
+            @SortDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
-                scheduleService.getAssignedSchedules(userDetails.getUserId(), scheduleFilterRequest, pageable));
+                scheduleService.getAssignedScheduleList(userDetails.getUserId(), scheduleFilterRequest, pageable));
     }
 }

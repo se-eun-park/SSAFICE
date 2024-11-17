@@ -229,7 +229,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public SchedulePageResponse getSchedules(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable) {
+    public SchedulePageResponse getScheduleList(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable) {
         log.info("[Schedule] 개인 일정 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 조건에 맞는 일정 리스트 생성
@@ -253,8 +253,8 @@ public class ScheduleServiceImpl implements ScheduleService {
      * 관리자 공지사항 조회 시 해당 교육생들의 일정을 조회하는 메서드
      */
     @Override
-    public SchedulePageResponse getSchedulesByNoticeForAdmin(Long noticeId, ScheduleFilterRequest filterRequest,
-                                                             Pageable pageable) {
+    public SchedulePageResponse getScheduleListByNoticeForAdmin(Long noticeId, ScheduleFilterRequest filterRequest,
+                                                                Pageable pageable) {
         log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 시작 - noticeId={}", noticeId);
 
         // ! 1. 해당 공지사항의 일정들 필터 조회
@@ -276,9 +276,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Page<ScheduleSummary> getUnregisteredNoticeSchedules(Long userId,
-                                                                ScheduleFilterRequest scheduleFilterRequest,
-                                                                Pageable pageable) {
+    public Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId,
+                                                             ScheduleFilterRequest scheduleFilterRequest,
+                                                             Pageable pageable) {
         log.info("[Schedule] 미등록 공지 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 미등록 공지사항 일정 조회
@@ -294,8 +294,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public SchedulePageResponse getAssignedSchedules(Long userId, ScheduleFilterRequest scheduleFilterRequest,
-                                                     Pageable pageable) {
+    public SchedulePageResponse getAssignedScheduleList(Long userId, ScheduleFilterRequest scheduleFilterRequest,
+                                                        Pageable pageable) {
         log.info("[Schedule] 관리자 할당 일정 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 관리자 할당 일정 조회
@@ -317,7 +317,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleEnrolledCount getEnrollCount(Long noticeId) {
+    public ScheduleEnrolledCount getEnrolledCount(Long noticeId) {
         log.info("[Schedule] 공지사항 파생 일정 등록, 완료 카운트 시작 - noticeId={}", noticeId);
 
         List<Schedule> schedules = scheduleRepository.findAllByNoticeId(noticeId);
