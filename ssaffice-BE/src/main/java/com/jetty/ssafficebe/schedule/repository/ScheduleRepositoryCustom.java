@@ -7,12 +7,15 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleStatusCount;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 public interface ScheduleRepositoryCustom {
 
-    Page<Schedule> findSchedulesByUserIdAndFilter(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable);
+    List<Schedule> findScheduleListByUserIdAndFilter(Long userId, ScheduleFilterRequest filterRequest, Sort sort);
 
-    Page<Schedule> findSchedulesByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest filterRequest, Pageable pageable);
+    List<Schedule> findScheduleListByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest filterRequest, Sort sort);
+
+    Page<Schedule> findSchedulePageByUserIdAndFilter(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable);
 
     ScheduleStatusCount getStatusCounts(List<Schedule> schedules);
 
