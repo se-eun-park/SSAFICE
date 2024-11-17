@@ -1,6 +1,5 @@
 package com.jetty.ssafficebe.user.controller;
 
-import com.jetty.ssafficebe.channel.service.ChannelService;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
@@ -38,7 +37,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
     private final UserService userService;
-    private final ChannelService channelService;
 
     /**
      * (관리자 권한) 유저 등록

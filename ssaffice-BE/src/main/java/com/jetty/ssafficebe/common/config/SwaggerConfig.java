@@ -108,8 +108,16 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi searchApi() {
         return GroupedOpenApi.builder()
-                             .group("search")
-                             .pathsToMatch("/api/search/**")
+                             .group("elasticsearch")
+                             .pathsToMatch("/api/es/**")
+                             .build();
+    }
+
+    @Bean
+    public GroupedOpenApi SSOApi() {
+        return GroupedOpenApi.builder()
+                             .group("SSAFY SSO")
+                             .pathsToMatch("/api/sso/**")
                              .build();
     }
 
