@@ -16,8 +16,10 @@ import com.jetty.ssafficebe.schedule.code.ScheduleSourceType;
 import com.jetty.ssafficebe.schedule.converter.ScheduleConverter;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
+import com.jetty.ssafficebe.schedule.payload.ScheduleEnrolledCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
+import com.jetty.ssafficebe.schedule.payload.ScheduleStatusCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.UpdateScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
@@ -235,14 +237,16 @@ public class ScheduleServiceImpl implements ScheduleService {
                                                                                          pageable);
 
         // ! 2. 조회된 일정에서 상태별 카운트 계산
-        List<Long> statusCounts = scheduleRepository.getStatusCounts(schedulesPage.getContent());
+        ScheduleStatusCount scheduleStatusCount = scheduleRepository.getStatusCounts(schedulesPage.getContent());
 
         // ! 3. 응답 생성
-        Page<ScheduleSummary> result = schedulesPage.map(scheduleConverter::toScheduleSummary);
+        Page<ScheduleSummary> scheduleSummaryPage = schedulesPage.map(scheduleConverter::toScheduleSummary);
 
-        log.info("[Schedule] 일정 목록 조회 완료 - totalElements={}, totalPages={}", result.getTotalElements(),
-                 result.getTotalPages());
-        return scheduleConverter.toSchedulePageResponse(result, statusCounts);
+        log.info("[Schedule] 일정 목록 조회 완료 - totalElements={}, totalPages={}", scheduleSummaryPage.getTotalElements(),
+                 scheduleSummaryPage.getTotalPages());
+        return SchedulePageResponse.builder()
+                                   .scheduleSummaryPage(scheduleSummaryPage)
+                                   .scheduleStatusCount(scheduleStatusCount).build();
     }
 
     /**
@@ -258,14 +262,17 @@ public class ScheduleServiceImpl implements ScheduleService {
                                                                                           pageable);
 
         // ! 2. 조회된 일정에서 일정 상태별 카운트
-        List<Long> statusCounts = scheduleRepository.getCompletionCounts(schedulePage.getContent());
+        ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(schedulePage.getContent());
 
         // ! 3. 응답 생성
-        Page<ScheduleSummary> result = schedulePage.map(scheduleConverter::toScheduleSummary);
+        Page<ScheduleSummary> scheduleSummaryPage = schedulePage.map(scheduleConverter::toScheduleSummary);
 
-        log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 완료 - totalElements={}, totalPages={}", result.getTotalElements(),
-                 result.getTotalPages());
-        return scheduleConverter.toSchedulePageResponse(result, statusCounts);
+        log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 완료 - totalElements={}, totalPages={}",
+                 scheduleSummaryPage.getTotalElements(),
+                 scheduleSummaryPage.getTotalPages());
+        return SchedulePageResponse.builder()
+                                   .scheduleSummaryPage(scheduleSummaryPage)
+                                   .scheduleEnrolledCount(scheduleEnrolledCount).build();
     }
 
     @Override
@@ -296,15 +303,19 @@ public class ScheduleServiceImpl implements ScheduleService {
                                                                                         pageable);
 
         // ! 2. 조회된 일정에서 등록 상태별 카운트
-        List<Long> statusCounts = scheduleRepository.getCompletionCounts(schedulePage.getContent());
+        ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(schedulePage.getContent());
 
         // ! 3. 응답 생성
-        Page<ScheduleSummary> result = schedulePage.map(scheduleConverter::toScheduleSummary);
+        Page<ScheduleSummary> scheduleSummaryPage = schedulePage.map(scheduleConverter::toScheduleSummary);
 
-        log.info("[Schedule] 관리자 할당 일정 목록 조회 완료 - totalElements={}, totalPages={}", result.getTotalElements(),
-                 result.getTotalPages());
-        return scheduleConverter.toSchedulePageResponse(result, statusCounts);
+        log.info("[Schedule] 관리자 할당 일정 목록 조회 완료 - totalElements={}, totalPages={}",
+                 scheduleSummaryPage.getTotalElements(),
+                 scheduleSummaryPage.getTotalPages());
+        return SchedulePageResponse.builder()
+                                   .scheduleSummaryPage(scheduleSummaryPage)
+                                   .scheduleEnrolledCount(scheduleEnrolledCount).build();
     }
+
 
     /**
      * 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용하는 메서드

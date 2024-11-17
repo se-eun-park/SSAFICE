@@ -4,12 +4,12 @@ import com.jetty.ssafficebe.common.jpa.AbstractQueryDslRepository;
 import com.jetty.ssafficebe.schedule.code.ScheduleStatusType;
 import com.jetty.ssafficebe.schedule.entity.QSchedule;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
+import com.jetty.ssafficebe.schedule.payload.ScheduleEnrolledCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
+import com.jetty.ssafficebe.schedule.payload.ScheduleStatusCount;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,7 +51,7 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
 
     // 해야할일/진행중/완료 카운트
     @Override
-    public List<Long> getStatusCounts(List<Schedule> schedules) {
+    public ScheduleStatusCount getStatusCounts(List<Schedule> schedules) {
         // 필터링된 일정 리스트에서 상태별 카운트
         long todoCount = schedules.stream()
                                   .filter(s -> ScheduleStatusType.TODO.equals(s.getScheduleStatusType()))
@@ -65,12 +65,15 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
                                   .filter(s -> ScheduleStatusType.DONE.equals(s.getScheduleStatusType()))
                                   .count();
 
-        return Arrays.asList(todoCount, inProgressCount, doneCount);
-    }
+        return ScheduleStatusCount.builder()
+                                  .todoCount(todoCount)
+                                  .inProgressCount(inProgressCount)
+                                  .doneCount(doneCount)
+                                  .build();    }
 
     // 등록 true+완료 / 등록 true 카운트
     @Override
-    public List<Long> getCompletionCounts(List<Schedule> schedules) {
+    public ScheduleEnrolledCount getEnrolledCounts(List<Schedule> schedules) {
         // 등록된 일정 수
         long enrolledCount = schedules.stream()
                                       .filter(Schedule::getIsEnroll)
@@ -82,7 +85,10 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
                                        .filter(s -> ScheduleStatusType.DONE.equals(s.getScheduleStatusType()))
                                        .count();
 
-        return Arrays.asList(enrolledCount, completedCount);
+        return ScheduleEnrolledCount.builder()
+                                    .enrolledCount(enrolledCount)
+                                    .completedCount(completedCount)
+                                    .build();
     }
 
     // 필터 처리
