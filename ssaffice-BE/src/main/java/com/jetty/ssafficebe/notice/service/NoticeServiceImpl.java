@@ -139,7 +139,7 @@ public class NoticeServiceImpl implements NoticeService {
         return noticeSummaryList.stream().map(noticeSummary -> {
             NoticeSummaryForAdmin noticeSummaryForAdmin = new NoticeSummaryForAdmin();
             noticeSummaryForAdmin.setNoticeSummary(noticeSummary);
-            noticeSummaryForAdmin.setScheduleEnrolledCount(scheduleService.getEnrollCount(noticeSummary.getNoticeId()));
+            noticeSummaryForAdmin.setScheduleEnrolledCount(scheduleService.getEnrolledCount(noticeSummary.getNoticeId()));
             return noticeSummaryForAdmin;
         }).toList();
     }
