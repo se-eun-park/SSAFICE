@@ -2,25 +2,31 @@ import { CheckedCircle, DownArrowIcon, ExitButton, SpreadRight } from '@/assets/
 import { useClickedToggle, useClickOutsideToggle } from '@/shared/model'
 import { DropDown } from '@/shared/ui'
 import { useRef } from 'react'
-import { dummyMattermostTeams } from '../model/types'
+import { dummyMattermostTeams, MattermostChannel } from '../model/types'
 import { useTeamSelectDropdown } from '../model/useTeamSelectDropdown'
 
-export const TeamSelectDropdown = () => {
+type TeamSelectDropdownProps = {
+  handleSelectedIndex: (index: number) => void
+  selectedIndex: number | undefined
+  channelList: MattermostChannel[] | undefined
+  saveSelectedChannels: (closeRequest: () => void) => void
+  handleSelectChannel: (channel: MattermostChannel, checked: boolean) => void
+  selectedChannel: MattermostChannel | null
+  tabName: string | null
+}
+export const TeamSelectDropdown = ({
+  handleSelectedIndex,
+  selectedIndex,
+  channelList,
+  saveSelectedChannels,
+  handleSelectChannel,
+  selectedChannel,
+  tabName,
+}: TeamSelectDropdownProps) => {
   const { isClicked, setIsClicked, handleIsClicked } = useClickedToggle()
   const dropDownRef = useRef<HTMLDivElement | null>(null)
 
   useClickOutsideToggle(dropDownRef, setIsClicked)
-
-  const {
-    handleSelectedIndex,
-    selectedIndex,
-    channelList,
-    saveSelectedChannels, // '적용' 버튼에 들어갈 onClick 로직
-    handleSelectChannel, // 채널 선택 시
-    selectedChannel, // 선택된 채널
-    selectedTeam, // 선택된 팀
-    tabName, // 탭 이름('적용' 버튼 누르면 업데이트)
-  } = useTeamSelectDropdown(dummyMattermostTeams)
 
   return (
     <div ref={dropDownRef} className='relative'>
