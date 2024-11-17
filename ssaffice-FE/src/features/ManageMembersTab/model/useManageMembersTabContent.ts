@@ -25,6 +25,10 @@ export const useManageMembersTabContent = (channel: MattermostChannel) => {
     fetchUserInChannelList()
   }, [])
 
+  useEffect(() => {
+    console.log(selectedUserInChannelList)
+  }, [selectedUserInChannelList])
+
   const handleSelectedUserInChannelList = (user: SsafyUser, checked: boolean) => {
     checked
       ? setSelectedUserInChannelList((prev) => [...prev, user])

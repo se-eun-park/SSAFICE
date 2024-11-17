@@ -22,12 +22,63 @@ export type SsafyUser = {
   name: string
   profileImage?: string
   cohortNum?: number // 프로의 경우에는 없음
-  regionCd: string // 지역
+  // regionCd: string // 지역
+  regionCd: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'DAEGU' | 'GWANGJU'
   classNum?: number // 반
-  trackCd?: string // 트랙
+  // trackCd?: string // 트랙
+  trackCd?: 'NON_MAJOR_PYTHON' | 'NON_MAJOR_JAVA' | 'MAJOR_JAVA' | 'EMBEDDED' | 'MOBILE' | 'DATA'
   curriculumCd?: string // 공통/특화/자율
   disabledYn?: boolean // 비활성화 유저인가
   roles: SsafyUserRoles
+}
+
+export type CodeToWordTrackCdProps = {
+  fieldName: 'trackCd'
+  fieldValue: 'NON_MAJOR_PYTHON' | 'NON_MAJOR_JAVA' | 'MAJOR_JAVA' | 'EMBEDDED' | 'MOBILE' | 'DATA'
+}
+
+export type CodeToWordRegionCdProps = {
+  fieldName: 'regionCd'
+  fieldValue: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'DAEGU' | 'GWANGJU'
+}
+
+export type CodeToWordProps = {
+  field: CodeToWordTrackCdProps | CodeToWordRegionCdProps
+}
+
+export const codeToWord = (param: CodeToWordProps): string => {
+  switch (param.field.fieldName) {
+    case 'regionCd': {
+      switch (param.field.fieldValue) {
+        case 'BU_UL_GYEONG':
+          return '부울경'
+        case 'DAEGU':
+          return '대구'
+        case 'DAEJEON':
+          return '대전'
+        case 'GWANGJU':
+          return '광주'
+        case 'SEOUL':
+          return '서울'
+      }
+    }
+    case 'trackCd': {
+      switch (param.field.fieldValue) {
+        case 'DATA':
+          return '데이터'
+        case 'EMBEDDED':
+          return '임베디드'
+        case 'MAJOR_JAVA':
+          return '전공 자바'
+        case 'MOBILE':
+          return '모바일'
+        case 'NON_MAJOR_JAVA':
+          return '비전공 자바'
+        case 'NON_MAJOR_PYTHON':
+          return '비전공 파이썬'
+      }
+    }
+  }
 }
 
 // MARK: DATAS
@@ -36,10 +87,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 1,
     email: 'user1@ssafy.com',
     name: 'John Doe',
-    regionCd: 'Seoul',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 11,
     classNum: 3,
-    trackCd: 'SEOUL',
+    trackCd: 'MOBILE', // 대체
     roles: {
       description: '학생',
     },
@@ -48,10 +99,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 2,
     email: 'user2@ssafy.com',
     name: 'Jane Smith',
-    regionCd: 'Busan',
+    regionCd: 'BU_UL_GYEONG', // 수정
     cohortNum: 12,
     classNum: 1,
-    trackCd: 'DAEGU',
+    trackCd: 'DATA', // 대체
     roles: {
       description: '학생',
     },
@@ -60,10 +111,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 3,
     email: 'user3@ssafy.com',
     name: 'Michael Johnson',
-    regionCd: 'Incheon',
+    regionCd: 'GWANGJU', // 수정
     cohortNum: 11,
     classNum: 2,
-    trackCd: 'BU_UL_GYEONG',
+    trackCd: 'NON_MAJOR_PYTHON', // 대체
     roles: {
       description: '프로',
     },
@@ -72,10 +123,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 4,
     email: 'user4@ssafy.com',
     name: 'Emily Davis',
-    regionCd: 'Seoul',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 12,
     classNum: 5,
-    trackCd: 'GWANGJU',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '학생',
     },
@@ -84,10 +135,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 5,
     email: 'user5@ssafy.com',
     name: 'David Lee',
-    regionCd: 'Daejeon',
+    regionCd: 'DAEJEON', // 수정
     cohortNum: 11,
     classNum: 6,
-    trackCd: 'DAEJEON',
+    trackCd: 'EMBEDDED', // 대체
     roles: {
       description: '프로',
     },
@@ -96,10 +147,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 6,
     email: 'user6@ssafy.com',
     name: 'Sophia Kim',
-    regionCd: 'Seoul',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 12,
     classNum: 4,
-    trackCd: 'SEOUL',
+    trackCd: 'DATA', // 대체
     roles: {
       description: '학생',
     },
@@ -108,10 +159,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 7,
     email: 'user7@ssafy.com',
     name: 'James Brown',
-    regionCd: 'Gwangju',
+    regionCd: 'DAEGU', // 수정
     cohortNum: 11,
     classNum: 7,
-    trackCd: 'DAEGU',
+    trackCd: 'MOBILE', // 대체
     roles: {
       description: '학생',
     },
@@ -120,10 +171,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 8,
     email: 'user8@ssafy.com',
     name: 'Olivia Wilson',
-    regionCd: 'Ulsan',
+    regionCd: 'BU_UL_GYEONG', // 수정
     cohortNum: 12,
     classNum: 8,
-    trackCd: 'BU_UL_GYEONG',
+    trackCd: 'NON_MAJOR_JAVA', // 대체
     roles: {
       description: '프로',
     },
@@ -132,10 +183,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 9,
     email: 'user9@ssafy.com',
     name: 'Liam Taylor',
-    regionCd: 'Busan',
+    regionCd: 'GWANGJU', // 수정
     cohortNum: 11,
     classNum: 9,
-    trackCd: 'GWANGJU',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '프로',
     },
@@ -144,10 +195,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 10,
     email: 'user10@ssafy.com',
     name: 'Isabella Moore',
-    regionCd: 'Seoul',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 12,
     classNum: 5,
-    trackCd: 'DAEJEON',
+    trackCd: 'DATA', // 대체
     roles: {
       description: '학생',
     },
@@ -156,10 +207,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 11,
     email: 'user11@ssafy.com',
     name: 'Ethan Anderson',
-    regionCd: 'Incheon',
+    regionCd: 'DAEJEON', // 수정
     cohortNum: 11,
     classNum: 2,
-    trackCd: 'SEOUL',
+    trackCd: 'NON_MAJOR_PYTHON', // 대체
     roles: {
       description: '학생',
     },
@@ -168,10 +219,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 12,
     email: 'user12@ssafy.com',
     name: 'Ava Thomas',
-    regionCd: 'Daejeon',
+    regionCd: 'DAEGU', // 수정
     cohortNum: 12,
     classNum: 1,
-    trackCd: 'DAEGU',
+    trackCd: 'EMBEDDED', // 대체
     roles: {
       description: '프로',
     },
@@ -180,10 +231,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 13,
     email: 'user13@ssafy.com',
     name: 'Mason Jackson',
-    regionCd: 'Seoul',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 11,
     classNum: 6,
-    trackCd: 'BU_UL_GYEONG',
+    trackCd: 'MOBILE', // 대체
     roles: {
       description: '학생',
     },
@@ -192,10 +243,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 14,
     email: 'user14@ssafy.com',
     name: 'Charlotte Harris',
-    regionCd: 'Gwangju',
+    regionCd: 'BU_UL_GYEONG', // 수정
     cohortNum: 12,
     classNum: 7,
-    trackCd: 'GWANGJU',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '프로',
     },
@@ -204,10 +255,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 15,
     email: 'user15@ssafy.com',
     name: 'Amelia Clark',
-    regionCd: 'Incheon',
+    regionCd: 'GWANGJU', // 수정
     cohortNum: 11,
     classNum: 8,
-    trackCd: 'DAEJEON',
+    trackCd: 'DATA', // 대체
     roles: {
       description: '학생',
     },
@@ -216,10 +267,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 16,
     email: 'user16@ssafy.com',
     name: 'Benjamin Lewis',
-    regionCd: 'Ulsan',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 12,
-    classNum: 9,
-    trackCd: 'SEOUL',
+    classNum: 4,
+    trackCd: 'NON_MAJOR_JAVA', // 대체
     roles: {
       description: '프로',
     },
@@ -228,10 +279,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 17,
     email: 'user17@ssafy.com',
     name: 'Harper Young',
-    regionCd: 'Busan',
+    regionCd: 'DAEJEON', // 수정
     cohortNum: 11,
     classNum: 4,
-    trackCd: 'DAEGU',
+    trackCd: 'NON_MAJOR_PYTHON', // 대체
     roles: {
       description: '학생',
     },
@@ -240,10 +291,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 18,
     email: 'user18@ssafy.com',
     name: 'Jack Walker',
-    regionCd: 'Seoul',
+    regionCd: 'DAEGU', // 수정
     cohortNum: 12,
     classNum: 3,
-    trackCd: 'BU_UL_GYEONG',
+    trackCd: 'NON_MAJOR_JAVA', // 대체
     roles: {
       description: '프로',
     },
@@ -252,10 +303,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 19,
     email: 'user19@ssafy.com',
     name: 'Lily Perez',
-    regionCd: 'Gwangju',
+    regionCd: 'GWANGJU', // 수정
     cohortNum: 11,
     classNum: 5,
-    trackCd: 'GWANGJU',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '학생',
     },
@@ -264,10 +315,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 20,
     email: 'user20@ssafy.com',
     name: 'Lucas Hall',
-    regionCd: 'Daejeon',
+    regionCd: 'BU_UL_GYEONG', // 수정
     cohortNum: 12,
     classNum: 2,
-    trackCd: 'DAEJEON',
+    trackCd: 'MOBILE', // 대체
     roles: {
       description: '학생',
     },
@@ -276,10 +327,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 21,
     email: 'user21@ssafy.com',
     name: 'Mila Allen',
-    regionCd: 'Seoul',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 11,
     classNum: 6,
-    trackCd: 'SEOUL',
+    trackCd: 'DATA', // 대체
     roles: {
       description: '프로',
     },
@@ -288,10 +339,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 22,
     email: 'user22@ssafy.com',
     name: 'Oliver Scott',
-    regionCd: 'Busan',
+    regionCd: 'DAEJEON', // 수정
     cohortNum: 12,
     classNum: 8,
-    trackCd: 'DAEGU',
+    trackCd: 'EMBEDDED', // 대체
     roles: {
       description: '학생',
     },
@@ -300,10 +351,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 23,
     email: 'user23@ssafy.com',
     name: 'Emma King',
-    regionCd: 'Incheon',
+    regionCd: 'GWANGJU', // 수정
     cohortNum: 11,
     classNum: 7,
-    trackCd: 'BU_UL_GYEONG',
+    trackCd: 'MOBILE', // 대체
     roles: {
       description: '학생',
     },
@@ -312,10 +363,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 24,
     email: 'user24@ssafy.com',
     name: 'Henry Wright',
-    regionCd: 'Seoul',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 12,
     classNum: 9,
-    trackCd: 'DAEJEON',
+    trackCd: 'NON_MAJOR_PYTHON', // 대체
     roles: {
       description: '프로',
     },
@@ -324,10 +375,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 25,
     email: 'user25@ssafy.com',
     name: 'Evelyn Lee',
-    regionCd: 'Gwangju',
+    regionCd: 'BU_UL_GYEONG', // 수정
     cohortNum: 11,
     classNum: 2,
-    trackCd: 'SEOUL',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '학생',
     },
@@ -336,10 +387,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 26,
     email: 'user26@ssafy.com',
     name: 'James Harris',
-    regionCd: 'Ulsan',
+    regionCd: 'DAEJEON', // 수정
     cohortNum: 12,
     classNum: 3,
-    trackCd: 'DAEGU',
+    trackCd: 'DATA', // 대체
     roles: {
       description: '학생',
     },
@@ -348,10 +399,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 27,
     email: 'user27@ssafy.com',
     name: 'Maddison Clark',
-    regionCd: 'Daejeon',
+    regionCd: 'GWANGJU', // 수정
     cohortNum: 11,
     classNum: 6,
-    trackCd: 'BU_UL_GYEONG',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '프로',
     },
@@ -360,10 +411,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 28,
     email: 'user28@ssafy.com',
     name: 'Alexander Turner',
-    regionCd: 'Seoul',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 12,
     classNum: 1,
-    trackCd: 'GWANGJU',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '학생',
     },
@@ -372,10 +423,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 29,
     email: 'user29@ssafy.com',
     name: 'Zoe Carter',
-    regionCd: 'Busan',
+    regionCd: 'BU_UL_GYEONG', // 수정
     cohortNum: 11,
     classNum: 7,
-    trackCd: 'DAEJEON',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '프로',
     },
@@ -384,10 +435,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 30,
     email: 'user30@ssafy.com',
     name: 'Leo Perez',
-    regionCd: 'Incheon',
+    regionCd: 'DAEJEON', // 수정
     cohortNum: 12,
     classNum: 4,
-    trackCd: 'SEOUL',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '학생',
     },
@@ -396,10 +447,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 31,
     email: 'user31@ssafy.com',
     name: 'Chloe Evans',
-    regionCd: 'Seoul',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 11,
     classNum: 9,
-    trackCd: 'DAEGU',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '프로',
     },
@@ -408,10 +459,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 32,
     email: 'user32@ssafy.com',
     name: 'Sebastian Edwards',
-    regionCd: 'Gwangju',
+    regionCd: 'GWANGJU', // 수정
     cohortNum: 12,
     classNum: 5,
-    trackCd: 'BU_UL_GYEONG',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '학생',
     },
@@ -420,10 +471,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 33,
     email: 'user33@ssafy.com',
     name: 'Luna Collins',
-    regionCd: 'Ulsan',
+    regionCd: 'DAEJEON', // 수정
     cohortNum: 11,
     classNum: 2,
-    trackCd: 'SEOUL',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '프로',
     },
@@ -432,10 +483,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 34,
     email: 'user34@ssafy.com',
     name: 'Aiden Morris',
-    regionCd: 'Daejeon',
+    regionCd: 'BU_UL_GYEONG', // 수정
     cohortNum: 12,
     classNum: 8,
-    trackCd: 'DAEJEON',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '학생',
     },
@@ -444,10 +495,10 @@ export const dummySsafyUsers: SsafyUser[] = [
     userId: 35,
     email: 'user35@ssafy.com',
     name: 'Madeline Murphy',
-    regionCd: 'Seoul',
+    regionCd: 'SEOUL', // 수정
     cohortNum: 11,
     classNum: 4,
-    trackCd: 'GWANGJU',
+    trackCd: 'MAJOR_JAVA', // 대체
     roles: {
       description: '학생',
     },

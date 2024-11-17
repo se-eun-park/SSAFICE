@@ -1,5 +1,5 @@
-import { AddIcon, CheckedRoundedSquare } from '@/assets/svg'
-import type { MattermostChannel } from '@/features/ManageMembersTab'
+import { AddIcon, CheckedRoundedSquare, RemoveBinIcon, SendMessageIcon } from '@/assets/svg'
+import { codeToWord, type MattermostChannel } from '@/features/ManageMembersTab'
 import { useManageMembersTabContent } from '../model/useManageMembersTabContent'
 
 type ManageMembersTabContentProps = {
@@ -18,31 +18,31 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
 
   const headerSize: TableHeaderProps[] = [
     {
-      width: '80px',
+      width: 'w-[80px]',
       name: '기수',
     },
     {
-      width: '100px',
+      width: 'w-[100px]',
       name: '지역',
     },
     {
-      width: '130px',
+      width: 'w-[130px]',
       name: '트랙',
     },
     {
-      width: '59px',
+      width: 'w-[59px]',
       name: '반',
     },
     {
-      width: '90px',
+      width: 'w-[90px]',
       name: '역할',
     },
     {
-      width: '325px',
+      width: 'w-[325px]',
       name: '이메일',
     },
     {
-      width: '180px',
+      width: 'w-[180px]',
       name: '',
     },
   ]
@@ -81,6 +81,51 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
           </div>
         </button>
       </div>
+      {selectedUserInChannelList.length > 0 && (
+        <div
+          className='
+            flex justify-end items-center gap-spacing-16
+            pb-spacing-12 px-spacing-24
+          '
+        >
+          <div className='body-md-medium text-color-text-info'>
+            {selectedUserInChannelList.length}명 선택
+          </div>
+
+          {/* 버튼 영역 */}
+          <div className='flex gap-spacing-10 h-full'>
+            <button
+              className='
+              flex gap-spacing-2 items-center justify-center
+              w-fit h-spacing-36 px-spacing-8 py-spacing-16
+              bg-color-bg-success rounded-radius-4
+              hover:bg-color-bg-interactive-success-hover
+              active:bg-color-bg-interactive-success-press
+            '
+            >
+              <div className='w-[17px] h-[17px]'>
+                <SendMessageIcon />
+              </div>
+              <div className='text-color-text-interactive-inverse body-md-medium'>MM 보내기</div>
+            </button>
+
+            <button
+              className='
+              flex gap-spacing-2 items-center justify-center
+              w-fit h-spacing-36 px-spacing-8 py-spacing-16
+              bg-color-bg-interactive-destructive rounded-radius-4
+              hover:bg-color-bg-interactive-destructive-hover
+              active:bg-color-bg-interactive-destructive-press
+            '
+            >
+              <div className='w-[15px] h-[17px]'>
+                <RemoveBinIcon />
+              </div>
+              <div className='text-color-text-interactive-inverse body-md-medium'>멤버 삭제</div>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* 채널 참여자 리스트 */}
       <div
@@ -126,7 +171,7 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
             <div
               className={`
                 flex items-center
-                w-[${each.width}] py-spacing-12 px-spacing-24
+                ${each.width} py-spacing-12 px-spacing-24
                 text-color-text-disabled body-xs-medium
               `}
               key={each.width}
@@ -150,6 +195,7 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
               flex items-center
               w-full h-[72px]
               ${selectedUserInChannelList.includes(each) ? 'bg-color-bg-info-subtle' : ''}
+              border-b border-spacing-1 border-color-border-tertiary
               hover:bg-color-bg-info-subtle
               `}
               htmlFor={`user-${each.userId}`}
@@ -198,10 +244,32 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
                       rounded-full aspect-square'
                   />
                 )}
+                <div className='text-color-text-primary body-sm-medium'>{each.name}</div>
               </div>
+              {headerSize.map((sizes) => (
+                <div
+                  className={`
+                    flex items-center
+                    ${sizes.width} py-spacing-16 px-spacing-24
+                    text-color-text-disabled body-xs-medium
+                  `}
+                  key={sizes.width}
+                >
+                  {sizes.name === '기수' && each.cohortNum}
+                  {sizes.name === '지역' &&
+                    codeToWord({ field: { fieldName: 'regionCd', fieldValue: each.regionCd } })}
+                  {each.trackCd &&
+                    sizes.name === '트랙' &&
+                    codeToWord({ field: { fieldName: 'trackCd', fieldValue: each.trackCd } })}
+                  {sizes.name === '반' && each.classNum}
+                  {sizes.name === '역할' && each.roles.description}
+                  {sizes.name === '이메일' && each.email}
+                </div>
+              ))}
             </label>
           ))}
         </div>
+        {/* 페이지네이션 영역 */}
       </div>
     </div>
   )
