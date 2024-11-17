@@ -1,6 +1,5 @@
 package com.jetty.ssafficebe.user.controller;
 
-import com.jetty.ssafficebe.channel.service.ChannelService;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
