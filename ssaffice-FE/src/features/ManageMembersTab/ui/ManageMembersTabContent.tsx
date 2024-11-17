@@ -1,4 +1,11 @@
-import { AddIcon, CheckedRoundedSquare, RemoveBinIcon, SendMessageIcon } from '@/assets/svg'
+import {
+  AddIcon,
+  CheckedRoundedSquare,
+  PageMoveArrow,
+  PageMoveEndArrow,
+  RemoveBinIcon,
+  SendMessageIcon,
+} from '@/assets/svg'
 import { codeToWord, type MattermostChannel } from '@/features/ManageMembersTab'
 import { useManageMembersTabContent } from '../model/useManageMembersTabContent'
 
@@ -14,6 +21,8 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
     handleSelectedUserInChannelList,
     handleSelectedAllUserInChannelList,
     selectedAll,
+    pageInfo,
+    fetchUserInChannelList,
   } = useManageMembersTabContent(channel)
 
   type TableHeaderProps = {
@@ -269,8 +278,8 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
               {headerSize.map((sizes) => (
                 <div
                   className={`
-                    flex items-center
-                    ${sizes.width} py-spacing-16 px-spacing-24
+                    flex items-center ${sizes.name === '' ? 'gap-spacing-4' : ''}
+                    ${sizes.width} py-spacing-16 ${sizes.name !== '' ? 'px-spacing-24' : 'px-spacing-16'}
                     text-color-text-disabled body-xs-medium
                   `}
                   key={sizes.width}
@@ -284,6 +293,31 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
                   {sizes.name === '반' && each.classNum}
                   {sizes.name === '역할' && each.roles.description}
                   {sizes.name === '이메일' && each.email}
+                  {sizes.name === '' && (
+                    <>
+                      <button
+                        className='
+                        flex justify-center items-center
+                        w-spacing-40 h-spacing-40
+                       '
+                      >
+                        <div className='w-[17px] h-[17px]'>
+                          <SendMessageIcon color='#6B7280' />
+                        </div>
+                      </button>
+                      <button className='flex justify-center items-center w-spacing-40 h-spacing-40'>
+                        <div className='w-[15px] h-[17px]'>
+                          <RemoveBinIcon color='#6B7280' />
+                        </div>
+                      </button>
+                      <button className='flex justify-center items-center w-spacing-40 h-spacing-40'>
+                        <div className='w-[15px] h-[17px]'>
+                          {/* 추후 pencil icon으로 바꾸어 주세요! */}
+                          <RemoveBinIcon color='#6B7280' />
+                        </div>
+                      </button>
+                    </>
+                  )}
                 </div>
               ))}
             </label>
@@ -292,10 +326,69 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
         {/* 페이지네이션 영역 */}
         <div
           className='
-          flex justify-center items-center
+          flex justify-center items-center gap-spacing-16
           h-[68px] pt-spacing-12 pb-spacing-16 px-spacing-24
         '
-        ></div>
+        >
+          <div className='flex gap-spacing-8'>
+            <div
+              className='
+              flex justify-center items-center 
+              h-spacing-40 w-spacing-40'
+            >
+              <div className='w-[13px] h-[12px]'>
+                <PageMoveEndArrow />
+              </div>
+            </div>
+            <div
+              className='
+              flex justify-center items-center 
+              h-spacing-40 w-spacing-40'
+            >
+              <div className='w-[7px] h-[13px]'>
+                <PageMoveArrow />
+              </div>
+            </div>
+          </div>
+
+          <div className='flex'>
+            {pageInfo &&
+              Array.from({ length: pageInfo?.totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  className={`
+                    flex justify-center items-center
+                    w-spacing-40 h-spacing-40
+                    ${pageInfo?.pageNumber !== undefined && pageInfo?.pageNumber === index ? 'text-color-text-info' : 'text-color-text-disabled'} body-sm-medium
+                  `}
+                  onClick={() => fetchUserInChannelList(index)}
+                >
+                  {index + 1}
+                </button>
+              ))}
+          </div>
+
+          <div className='flex gap-spacing-8 transform scale-x-[-1]'>
+            <div
+              className='
+              flex justify-center items-center 
+              h-spacing-40 w-spacing-40'
+            >
+              <div className='w-[13px] h-[12px]'>
+                <PageMoveEndArrow />
+              </div>
+            </div>
+            <div
+              className='
+              flex justify-center items-center 
+              h-spacing-40 w-spacing-40'
+            >
+              <div className='w-[7px] h-[13px]'>
+                <PageMoveArrow />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

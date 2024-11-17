@@ -1,3 +1,5 @@
+import { Pageable } from '@/shared/model'
+
 export type MattermostChannel = {
   channelId: number
   name: string
@@ -34,7 +36,7 @@ export type SsafyUser = {
 
 export type SsafyUserApiResponse = {
   users: SsafyUser[]
-  pageable?: Object
+  pageable?: Pageable
   totalPages?: number
   totalElements?: number
 }
@@ -89,445 +91,500 @@ export const codeToWord = (param: CodeToWordProps): string => {
 }
 
 // MARK: DATAS
-export const dummySsafyUsers: SsafyUserApiResponse = {
-  users: [
-    {
-      userId: 1,
-      email: 'user1@ssafy.com',
-      name: 'John Doe',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 11,
-      classNum: 3,
-      trackCd: 'MOBILE', // 대체
-      roles: {
-        description: '학생',
+export const dummySsafyUsers: SsafyUserApiResponse[] = [
+  {
+    users: [
+      {
+        userId: 1,
+        email: 'user1@ssafy.com',
+        name: 'John Doe',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 11,
+        classNum: 3,
+        trackCd: 'MOBILE', // 대체
+        roles: {
+          description: '학생',
+        },
       },
-    },
-    {
-      userId: 2,
-      email: 'user2@ssafy.com',
-      name: 'Jane Smith',
-      regionCd: 'BU_UL_GYEONG', // 수정
-      cohortNum: 12,
-      classNum: 1,
-      trackCd: 'DATA', // 대체
-      roles: {
-        description: '학생',
+      {
+        userId: 2,
+        email: 'user2@ssafy.com',
+        name: 'Jane Smith',
+        regionCd: 'BU_UL_GYEONG', // 수정
+        cohortNum: 12,
+        classNum: 1,
+        trackCd: 'DATA', // 대체
+        roles: {
+          description: '학생',
+        },
       },
-    },
-    {
-      userId: 3,
-      email: 'user3@ssafy.com',
-      name: 'Michael Johnson',
-      regionCd: 'GWANGJU', // 수정
-      cohortNum: 11,
-      classNum: 2,
-      trackCd: 'NON_MAJOR_PYTHON', // 대체
-      roles: {
-        description: '프로',
+      {
+        userId: 3,
+        email: 'user3@ssafy.com',
+        name: 'Michael Johnson',
+        regionCd: 'GWANGJU', // 수정
+        cohortNum: 11,
+        classNum: 2,
+        trackCd: 'NON_MAJOR_PYTHON', // 대체
+        roles: {
+          description: '프로',
+        },
       },
-    },
-    {
-      userId: 4,
-      email: 'user4@ssafy.com',
-      name: 'Emily Davis',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 12,
-      classNum: 5,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '학생',
+      {
+        userId: 4,
+        email: 'user4@ssafy.com',
+        name: 'Emily Davis',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 12,
+        classNum: 5,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '학생',
+        },
       },
-    },
-    {
-      userId: 5,
-      email: 'user5@ssafy.com',
-      name: 'David Lee',
-      regionCd: 'DAEJEON', // 수정
-      cohortNum: 11,
-      classNum: 6,
-      trackCd: 'EMBEDDED', // 대체
-      roles: {
-        description: '프로',
+      {
+        userId: 5,
+        email: 'user5@ssafy.com',
+        name: 'David Lee',
+        regionCd: 'DAEJEON', // 수정
+        cohortNum: 11,
+        classNum: 6,
+        trackCd: 'EMBEDDED', // 대체
+        roles: {
+          description: '프로',
+        },
       },
-    },
-    {
-      userId: 6,
-      email: 'user6@ssafy.com',
-      name: 'Sophia Kim',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 12,
-      classNum: 4,
-      trackCd: 'DATA', // 대체
-      roles: {
-        description: '학생',
+      {
+        userId: 6,
+        email: 'user6@ssafy.com',
+        name: 'Sophia Kim',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 12,
+        classNum: 4,
+        trackCd: 'DATA', // 대체
+        roles: {
+          description: '학생',
+        },
       },
-    },
-    {
-      userId: 7,
-      email: 'user7@ssafy.com',
-      name: 'James Brown',
-      regionCd: 'DAEGU', // 수정
-      cohortNum: 11,
-      classNum: 7,
-      trackCd: 'MOBILE', // 대체
-      roles: {
-        description: '학생',
+      {
+        userId: 7,
+        email: 'user7@ssafy.com',
+        name: 'James Brown',
+        regionCd: 'DAEGU', // 수정
+        cohortNum: 11,
+        classNum: 7,
+        trackCd: 'MOBILE', // 대체
+        roles: {
+          description: '학생',
+        },
       },
-    },
-    {
-      userId: 8,
-      email: 'user8@ssafy.com',
-      name: 'Olivia Wilson',
-      regionCd: 'BU_UL_GYEONG', // 수정
-      cohortNum: 12,
-      classNum: 8,
-      trackCd: 'NON_MAJOR_JAVA', // 대체
-      roles: {
-        description: '프로',
+      {
+        userId: 8,
+        email: 'user8@ssafy.com',
+        name: 'Olivia Wilson',
+        regionCd: 'BU_UL_GYEONG', // 수정
+        cohortNum: 12,
+        classNum: 8,
+        trackCd: 'NON_MAJOR_JAVA', // 대체
+        roles: {
+          description: '프로',
+        },
       },
-    },
-    {
-      userId: 9,
-      email: 'user9@ssafy.com',
-      name: 'Liam Taylor',
-      regionCd: 'GWANGJU', // 수정
-      cohortNum: 11,
-      classNum: 9,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '프로',
+      {
+        userId: 9,
+        email: 'user9@ssafy.com',
+        name: 'Liam Taylor',
+        regionCd: 'GWANGJU', // 수정
+        cohortNum: 11,
+        classNum: 9,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '프로',
+        },
       },
-    },
-    {
-      userId: 10,
-      email: 'user10@ssafy.com',
-      name: 'Isabella Moore',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 12,
-      classNum: 5,
-      trackCd: 'DATA', // 대체
-      roles: {
-        description: '학생',
+      {
+        userId: 10,
+        email: 'user10@ssafy.com',
+        name: 'Isabella Moore',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 12,
+        classNum: 5,
+        trackCd: 'DATA', // 대체
+        roles: {
+          description: '학생',
+        },
       },
-    },
-    {
-      userId: 11,
-      email: 'user11@ssafy.com',
-      name: 'Ethan Anderson',
-      regionCd: 'DAEJEON', // 수정
-      cohortNum: 11,
-      classNum: 2,
-      trackCd: 'NON_MAJOR_PYTHON', // 대체
-      roles: {
-        description: '학생',
+    ],
+    pageable: {
+      sort: {
+        sorted: true,
+        unsorted: false,
+        empty: false,
       },
+      pageNumber: 0,
+      pageSize: 10,
+      offset: 0,
+      paged: true,
+      unpaged: false,
     },
-    {
-      userId: 12,
-      email: 'user12@ssafy.com',
-      name: 'Ava Thomas',
-      regionCd: 'DAEGU', // 수정
-      cohortNum: 12,
-      classNum: 1,
-      trackCd: 'EMBEDDED', // 대체
-      roles: {
-        description: '프로',
-      },
-    },
-    {
-      userId: 13,
-      email: 'user13@ssafy.com',
-      name: 'Mason Jackson',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 11,
-      classNum: 6,
-      trackCd: 'MOBILE', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 14,
-      email: 'user14@ssafy.com',
-      name: 'Charlotte Harris',
-      regionCd: 'BU_UL_GYEONG', // 수정
-      cohortNum: 12,
-      classNum: 7,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '프로',
-      },
-    },
-    {
-      userId: 15,
-      email: 'user15@ssafy.com',
-      name: 'Amelia Clark',
-      regionCd: 'GWANGJU', // 수정
-      cohortNum: 11,
-      classNum: 8,
-      trackCd: 'DATA', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 16,
-      email: 'user16@ssafy.com',
-      name: 'Benjamin Lewis',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 12,
-      classNum: 4,
-      trackCd: 'NON_MAJOR_JAVA', // 대체
-      roles: {
-        description: '프로',
-      },
-    },
-    {
-      userId: 17,
-      email: 'user17@ssafy.com',
-      name: 'Harper Young',
-      regionCd: 'DAEJEON', // 수정
-      cohortNum: 11,
-      classNum: 4,
-      trackCd: 'NON_MAJOR_PYTHON', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 18,
-      email: 'user18@ssafy.com',
-      name: 'Jack Walker',
-      regionCd: 'DAEGU', // 수정
-      cohortNum: 12,
-      classNum: 3,
-      trackCd: 'NON_MAJOR_JAVA', // 대체
-      roles: {
-        description: '프로',
-      },
-    },
-    {
-      userId: 19,
-      email: 'user19@ssafy.com',
-      name: 'Lily Perez',
-      regionCd: 'GWANGJU', // 수정
-      cohortNum: 11,
-      classNum: 5,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 20,
-      email: 'user20@ssafy.com',
-      name: 'Lucas Hall',
-      regionCd: 'BU_UL_GYEONG', // 수정
-      cohortNum: 12,
-      classNum: 2,
-      trackCd: 'MOBILE', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 21,
-      email: 'user21@ssafy.com',
-      name: 'Mila Allen',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 11,
-      classNum: 6,
-      trackCd: 'DATA', // 대체
-      roles: {
-        description: '프로',
-      },
-    },
-    {
-      userId: 22,
-      email: 'user22@ssafy.com',
-      name: 'Oliver Scott',
-      regionCd: 'DAEJEON', // 수정
-      cohortNum: 12,
-      classNum: 8,
-      trackCd: 'EMBEDDED', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 23,
-      email: 'user23@ssafy.com',
-      name: 'Emma King',
-      regionCd: 'GWANGJU', // 수정
-      cohortNum: 11,
-      classNum: 7,
-      trackCd: 'MOBILE', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 24,
-      email: 'user24@ssafy.com',
-      name: 'Henry Wright',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 12,
-      classNum: 9,
-      trackCd: 'NON_MAJOR_PYTHON', // 대체
-      roles: {
-        description: '프로',
-      },
-    },
-    {
-      userId: 25,
-      email: 'user25@ssafy.com',
-      name: 'Evelyn Lee',
-      regionCd: 'BU_UL_GYEONG', // 수정
-      cohortNum: 11,
-      classNum: 2,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 26,
-      email: 'user26@ssafy.com',
-      name: 'James Harris',
-      regionCd: 'DAEJEON', // 수정
-      cohortNum: 12,
-      classNum: 3,
-      trackCd: 'DATA', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 27,
-      email: 'user27@ssafy.com',
-      name: 'Maddison Clark',
-      regionCd: 'GWANGJU', // 수정
-      cohortNum: 11,
-      classNum: 6,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '프로',
-      },
-    },
-    {
-      userId: 28,
-      email: 'user28@ssafy.com',
-      name: 'Alexander Turner',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 12,
-      classNum: 1,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 29,
-      email: 'user29@ssafy.com',
-      name: 'Zoe Carter',
-      regionCd: 'BU_UL_GYEONG', // 수정
-      cohortNum: 11,
-      classNum: 7,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '프로',
-      },
-    },
-    {
-      userId: 30,
-      email: 'user30@ssafy.com',
-      name: 'Leo Perez',
-      regionCd: 'DAEJEON', // 수정
-      cohortNum: 12,
-      classNum: 4,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 31,
-      email: 'user31@ssafy.com',
-      name: 'Chloe Evans',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 11,
-      classNum: 9,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '프로',
-      },
-    },
-    {
-      userId: 32,
-      email: 'user32@ssafy.com',
-      name: 'Sebastian Edwards',
-      regionCd: 'GWANGJU', // 수정
-      cohortNum: 12,
-      classNum: 5,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 33,
-      email: 'user33@ssafy.com',
-      name: 'Luna Collins',
-      regionCd: 'DAEJEON', // 수정
-      cohortNum: 11,
-      classNum: 2,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '프로',
-      },
-    },
-    {
-      userId: 34,
-      email: 'user34@ssafy.com',
-      name: 'Aiden Morris',
-      regionCd: 'BU_UL_GYEONG', // 수정
-      cohortNum: 12,
-      classNum: 8,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-    {
-      userId: 35,
-      email: 'user35@ssafy.com',
-      name: 'Madeline Murphy',
-      regionCd: 'SEOUL', // 수정
-      cohortNum: 11,
-      classNum: 4,
-      trackCd: 'MAJOR_JAVA', // 대체
-      roles: {
-        description: '학생',
-      },
-    },
-  ],
-  pageable: {
-    sort: {
-      sorted: true,
-      unsorted: false,
-      empty: false,
-    },
-    pageNumber: 0,
-    pageSize: 10,
-    offset: 0,
-    paged: true,
-    unpaged: false,
+    totalPages: 4,
+    totalElements: 35,
   },
-  totalPages: 5,
-  totalElements: 50,
-}
-
+  {
+    users: [
+      {
+        userId: 11,
+        email: 'user11@ssafy.com',
+        name: 'Ethan Anderson',
+        regionCd: 'DAEJEON', // 수정
+        cohortNum: 11,
+        classNum: 2,
+        trackCd: 'NON_MAJOR_PYTHON', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 12,
+        email: 'user12@ssafy.com',
+        name: 'Ava Thomas',
+        regionCd: 'DAEGU', // 수정
+        cohortNum: 12,
+        classNum: 1,
+        trackCd: 'EMBEDDED', // 대체
+        roles: {
+          description: '프로',
+        },
+      },
+      {
+        userId: 13,
+        email: 'user13@ssafy.com',
+        name: 'Mason Jackson',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 11,
+        classNum: 6,
+        trackCd: 'MOBILE', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 14,
+        email: 'user14@ssafy.com',
+        name: 'Charlotte Harris',
+        regionCd: 'BU_UL_GYEONG', // 수정
+        cohortNum: 12,
+        classNum: 7,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '프로',
+        },
+      },
+      {
+        userId: 15,
+        email: 'user15@ssafy.com',
+        name: 'Amelia Clark',
+        regionCd: 'GWANGJU', // 수정
+        cohortNum: 11,
+        classNum: 8,
+        trackCd: 'DATA', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 16,
+        email: 'user16@ssafy.com',
+        name: 'Benjamin Lewis',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 12,
+        classNum: 4,
+        trackCd: 'NON_MAJOR_JAVA', // 대체
+        roles: {
+          description: '프로',
+        },
+      },
+      {
+        userId: 17,
+        email: 'user17@ssafy.com',
+        name: 'Harper Young',
+        regionCd: 'DAEJEON', // 수정
+        cohortNum: 11,
+        classNum: 4,
+        trackCd: 'NON_MAJOR_PYTHON', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 18,
+        email: 'user18@ssafy.com',
+        name: 'Jack Walker',
+        regionCd: 'DAEGU', // 수정
+        cohortNum: 12,
+        classNum: 3,
+        trackCd: 'NON_MAJOR_JAVA', // 대체
+        roles: {
+          description: '프로',
+        },
+      },
+      {
+        userId: 19,
+        email: 'user19@ssafy.com',
+        name: 'Lily Perez',
+        regionCd: 'GWANGJU', // 수정
+        cohortNum: 11,
+        classNum: 5,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 20,
+        email: 'user20@ssafy.com',
+        name: 'Lucas Hall',
+        regionCd: 'BU_UL_GYEONG', // 수정
+        cohortNum: 12,
+        classNum: 2,
+        trackCd: 'MOBILE', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+    ],
+    pageable: {
+      sort: {
+        sorted: true,
+        unsorted: false,
+        empty: false,
+      },
+      pageNumber: 1,
+      pageSize: 10,
+      offset: 0,
+      paged: true,
+      unpaged: false,
+    },
+    totalPages: 4,
+    totalElements: 35,
+  },
+  {
+    users: [
+      {
+        userId: 21,
+        email: 'user21@ssafy.com',
+        name: 'Mila Allen',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 11,
+        classNum: 6,
+        trackCd: 'DATA', // 대체
+        roles: {
+          description: '프로',
+        },
+      },
+      {
+        userId: 22,
+        email: 'user22@ssafy.com',
+        name: 'Oliver Scott',
+        regionCd: 'DAEJEON', // 수정
+        cohortNum: 12,
+        classNum: 8,
+        trackCd: 'EMBEDDED', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 23,
+        email: 'user23@ssafy.com',
+        name: 'Emma King',
+        regionCd: 'GWANGJU', // 수정
+        cohortNum: 11,
+        classNum: 7,
+        trackCd: 'MOBILE', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 24,
+        email: 'user24@ssafy.com',
+        name: 'Henry Wright',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 12,
+        classNum: 9,
+        trackCd: 'NON_MAJOR_PYTHON', // 대체
+        roles: {
+          description: '프로',
+        },
+      },
+      {
+        userId: 25,
+        email: 'user25@ssafy.com',
+        name: 'Evelyn Lee',
+        regionCd: 'BU_UL_GYEONG', // 수정
+        cohortNum: 11,
+        classNum: 2,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 26,
+        email: 'user26@ssafy.com',
+        name: 'James Harris',
+        regionCd: 'DAEJEON', // 수정
+        cohortNum: 12,
+        classNum: 3,
+        trackCd: 'DATA', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 27,
+        email: 'user27@ssafy.com',
+        name: 'Maddison Clark',
+        regionCd: 'GWANGJU', // 수정
+        cohortNum: 11,
+        classNum: 6,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '프로',
+        },
+      },
+      {
+        userId: 28,
+        email: 'user28@ssafy.com',
+        name: 'Alexander Turner',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 12,
+        classNum: 1,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 29,
+        email: 'user29@ssafy.com',
+        name: 'Zoe Carter',
+        regionCd: 'BU_UL_GYEONG', // 수정
+        cohortNum: 11,
+        classNum: 7,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '프로',
+        },
+      },
+      {
+        userId: 30,
+        email: 'user30@ssafy.com',
+        name: 'Leo Perez',
+        regionCd: 'DAEJEON', // 수정
+        cohortNum: 12,
+        classNum: 4,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+    ],
+    pageable: {
+      sort: {
+        sorted: true,
+        unsorted: false,
+        empty: false,
+      },
+      pageNumber: 2,
+      pageSize: 10,
+      offset: 0,
+      paged: true,
+      unpaged: false,
+    },
+    totalPages: 4,
+    totalElements: 35,
+  },
+  {
+    users: [
+      {
+        userId: 31,
+        email: 'user31@ssafy.com',
+        name: 'Chloe Evans',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 11,
+        classNum: 9,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '프로',
+        },
+      },
+      {
+        userId: 32,
+        email: 'user32@ssafy.com',
+        name: 'Sebastian Edwards',
+        regionCd: 'GWANGJU', // 수정
+        cohortNum: 12,
+        classNum: 5,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 33,
+        email: 'user33@ssafy.com',
+        name: 'Luna Collins',
+        regionCd: 'DAEJEON', // 수정
+        cohortNum: 11,
+        classNum: 2,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '프로',
+        },
+      },
+      {
+        userId: 34,
+        email: 'user34@ssafy.com',
+        name: 'Aiden Morris',
+        regionCd: 'BU_UL_GYEONG', // 수정
+        cohortNum: 12,
+        classNum: 8,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+      {
+        userId: 35,
+        email: 'user35@ssafy.com',
+        name: 'Madeline Murphy',
+        regionCd: 'SEOUL', // 수정
+        cohortNum: 11,
+        classNum: 4,
+        trackCd: 'MAJOR_JAVA', // 대체
+        roles: {
+          description: '학생',
+        },
+      },
+    ],
+    pageable: {
+      sort: {
+        sorted: true,
+        unsorted: false,
+        empty: false,
+      },
+      pageNumber: 3,
+      pageSize: 10,
+      offset: 0,
+      paged: true,
+      unpaged: false,
+    },
+    totalPages: 4,
+    totalElements: 35,
+  },
+]
 export const dummyMattermostTeams: MattermostTeam[] = [
   {
     teamId: 123456789,

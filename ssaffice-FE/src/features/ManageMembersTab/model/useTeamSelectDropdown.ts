@@ -20,7 +20,6 @@ export const useTeamSelectDropdown = (datas: MattermostTeam[]) => {
   const saveSelectedChannels = (closeRequest: () => void) => {
     // selectedChannelList를 적용하는 로직.
     // 선택한 채널의 더미 데이터를 가져오는 API 로직을 수행 + 드롭다운 닫아야 함(void 함수 형태의 파라메터로 전달받습니다.)
-    console.log(selectedChannel)
     if (selectedTeam && selectedChannel)
       setTabName(`${selectedTeam.name} • ${selectedChannel.name}`)
     closeRequest()

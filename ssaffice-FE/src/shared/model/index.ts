@@ -1,4 +1,5 @@
 export type { ModalName, ModalElement } from './CommonModal/types'
+export type { Pagenation, Pageable } from './types'
 
 export { useSearchInput } from './SearchBar/useSearchInput'
 
