@@ -60,9 +60,7 @@ public class NoticeController {
     }
 
     /**
-     * (ROLE_USER) 공지사항 조회 : 내가 속해있는 채널의 공지사항 조회.
-     * <p>
-     *  TODO : ROLE_USER인 경우에만 접근 가능하도록 security 설정 (일반 관리자 - 프로 접근 불가능)
+     * (ROLE_USER)공지사항 조회 : 내가 속해있는 채널의 공지사항을 전체 조회
      */
     @GetMapping
     public ResponseEntity<Page<NoticeSummaryForList>> getNoticeList(
@@ -70,26 +68,19 @@ public class NoticeController {
             @PageableDefault(size = 20,
                              sort = "createdAt",
                              direction = Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(noticeService.getNoticeList(userDetails.getUserId(), "ROLE_USER", pageable));
+        return ResponseEntity.ok(noticeService.getNoticeList(userDetails.getUserId(), pageable));
     }
 
     /**
-     * (ROLE_ADMIN) 공지사항 조회 : 내가 작성한 공지사항 조회 page default size : 20 page default sort : 최신순
-     * <p>
-     * TODO : ROLE_ADMIN인 경우에만 접근 가능하도록 security 설정
+     * 공지사항 상세 조회
      */
-    @GetMapping("/admin")
-    public ResponseEntity<Page<NoticeSummaryForList>> getNoticeListForAdmin(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @PageableDefault(size = 20,
-                             sort = "createdAt",
-                             direction = Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(noticeService.getNoticeList(userDetails.getUserId(), "ROLE_ADMIN", pageable));
-    }
-
     @GetMapping("/{noticeId}")
     public ResponseEntity<NoticeDetail> getNotice(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                   @PathVariable Long noticeId) {
         return ResponseEntity.ok(noticeService.getNotice(userDetails.getUserId(), noticeId));
     }
+
+    /**
+     * 내가 작성한 공지사항 리스트 조회
+     */
 }
