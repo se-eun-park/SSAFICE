@@ -1,11 +1,11 @@
 package com.jetty.ssafficebe.schedule.converter;
 
-import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
+import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
+import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
-import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -22,12 +22,12 @@ public interface ScheduleConverter {
     Schedule toSchedule(ScheduleRequest scheduleRequest);
 
     @Mapping(target = "remindSummarys", source = "reminds")
-    @Mapping(target = "noticeSummaryForList", source = "notice")
+    @Mapping(target = "noticeSummary", source = "notice")
     @Mapping(target = "createUser", source = "schedule.createUser")
     ScheduleDetail toScheduleDetail(Schedule schedule);
 
     @Mapping(target = "createUser", source = "schedule.createUser")
-    @Mapping(target = "noticeSummaryForList", source = "notice")
+    @Mapping(target = "noticeSummary", source = "notice")
     ScheduleSummary toScheduleSummary(Schedule schedule);
 
     SchedulePageResponse toSchedulePageResponse(Page<ScheduleSummary> scheduleSummaryPage, List<Integer> statusCounts);
