@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class ScheduleFilterRequest {
 
+    private String filterType;
     private String isEnrollYn;
     private String scheduleSourceTypeCd;
     private String scheduleStatusTypeCd;

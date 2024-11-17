@@ -7,12 +7,16 @@ import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.payload.ScheduleEnrolledCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleStatusCount;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository implements ScheduleRepositoryCustom {
 
@@ -23,28 +27,44 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
 
     // 기본 페이징 조회
     @Override
-    public Page<Schedule> findSchedulesByUserIdAndFilter(Long userId, ScheduleFilterRequest filterRequest,
-                                                         Pageable pageable) {
+    public List<Schedule> findScheduleListByUserIdAndFilter(Long userId, ScheduleFilterRequest filter,
+                                                            Sort sort) {
         QSchedule schedule = QSchedule.schedule;
 
+        Predicate predicate = createPredicate(filter, schedule);
+
         JPQLQuery<Schedule> query = from(schedule)
-                .where(schedule.createUser.userId.eq(userId));
+                .where(schedule.createUser.userId.eq(userId))
+                .where(predicate);
 
-        applyFilterConditions(query, filterRequest);
-
-        return getPageImpl(query, pageable);
+        return getSortedList(query, sort);
     }
 
     // 공지사항 일정 조회
     @Override
-    public Page<Schedule> findSchedulesByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest filterRequest,
-                                                           Pageable pageable) {
+    public List<Schedule> findScheduleListByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest filter,
+                                                              Sort sort) {
         QSchedule schedule = QSchedule.schedule;
 
-        JPQLQuery<Schedule> query = from(schedule)
-                .where(schedule.noticeId.eq(noticeId));
+        Predicate predicate = createPredicate(filter, schedule);
 
-        applyFilterConditions(query, filterRequest);
+        JPQLQuery<Schedule> query = from(schedule)
+                .where(schedule.noticeId.eq(noticeId))
+                .where(predicate);
+
+        return getSortedList(query, sort);
+    }
+
+    @Override
+    public Page<Schedule> findSchedulePageByUserIdAndFilter(Long userId, ScheduleFilterRequest filter,
+                                                            Pageable pageable) {
+        QSchedule schedule = QSchedule.schedule;
+
+        Predicate predicate = createPredicate(filter, schedule);
+
+        JPQLQuery<Schedule> query = from(schedule)
+                .where(schedule.createUser.userId.eq(userId))
+                .where(predicate);
 
         return getPageImpl(query, pageable);
     }
@@ -69,7 +89,8 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
                                   .todoCount(todoCount)
                                   .inProgressCount(inProgressCount)
                                   .doneCount(doneCount)
-                                  .build();    }
+                                  .build();
+    }
 
     // 등록 true+완료 / 등록 true 카운트
     @Override
@@ -91,30 +112,40 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
                                     .build();
     }
 
-    // 필터 처리
-    private void applyFilterConditions(JPQLQuery<?> query, ScheduleFilterRequest filterRequest) {
-        QSchedule schedule = QSchedule.schedule;
+    private Predicate createPredicate(ScheduleFilterRequest filter, QSchedule schedule) {
+        BooleanBuilder builder = new BooleanBuilder();
 
-        if (filterRequest.getIsEnrollYn() != null) {
-            query.where(schedule.isEnrollYn.eq(filterRequest.getIsEnrollYn()));
-        }
-        if (filterRequest.getScheduleSourceTypeCd() != null) {
-            query.where(schedule.scheduleSourceTypeCd.eq(filterRequest.getScheduleSourceTypeCd()));
-        }
-        if (filterRequest.getScheduleStatusTypeCd() != null) {
-            query.where(schedule.scheduleStatusTypeCd.eq(filterRequest.getScheduleStatusTypeCd()));
+        if (filter.getIsEnrollYn() != null) {
+            builder.and(schedule.isEnrollYn.eq(filter.getIsEnrollYn()));
         }
 
-        //  필터: 시작일이 null 이거나 필터 시작일 이후인 경우
-        if (filterRequest.getFilterStartDateTime() != null) {
-            query.where(schedule.endDateTime.isNull().or(
-                    schedule.endDateTime.goe(filterRequest.getFilterStartDateTime())));
+        if (filter.getScheduleSourceTypeCd() != null) {
+            builder.and(schedule.scheduleSourceTypeCd.eq(filter.getScheduleSourceTypeCd()));
         }
 
-        // 종료일 필터: 종료일이 null 이거나 필터 종료일 이전인 경우
-        if (filterRequest.getFilterEndDateTime() != null) {
-            query.where(schedule.endDateTime.isNull().or(
-                    schedule.endDateTime.loe(filterRequest.getFilterEndDateTime())));
+        if (filter.getScheduleStatusTypeCd() != null) {
+            builder.and(schedule.scheduleStatusTypeCd.eq(filter.getScheduleStatusTypeCd()));
         }
+
+        LocalDateTime start = filter.getFilterStartDateTime();
+        LocalDateTime end = filter.getFilterEndDateTime();
+        String filterType = filter.getFilterType();
+
+        if (filterType != null && start != null && end != null) {
+            switch (filterType) {
+                case "createdAt":
+                    builder.and(schedule.createdAt.between(start, end));
+                    break;
+                case "endDateTime":
+                    builder.and(schedule.endDateTime.between(start, end));
+                    break;
+                default:
+                    throw new IllegalArgumentException("유효하지 않은 필터 타입: " + filterType);
+            }
+        } else if (filterType != null) {
+            throw new IllegalArgumentException("필터 타입이 지정된 경우 시작 및 종료 날짜 시간이 모두 필요합니다.");
+        }
+
+        return builder;
     }
 }

@@ -22,7 +22,7 @@ public class ScheduleDetail {
     private String scheduleStatusTypeCd;
     private String isEssentialYn;
     private String isEnrollYn;
-    private CreatedBySummary user;
+    private CreatedBySummary chargeUser;
     private CreatedBySummary createUser;
     private NoticeSummary noticeSummary;
     private List<RemindSummary> remindSummarys;

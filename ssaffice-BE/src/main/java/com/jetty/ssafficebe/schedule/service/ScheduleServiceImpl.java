@@ -18,7 +18,7 @@ import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleEnrolledCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
-import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
+import com.jetty.ssafficebe.schedule.payload.ScheduleListResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleStatusCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.UpdateScheduleRequest;
@@ -33,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -229,23 +230,24 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public SchedulePageResponse getSchedules(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable) {
+    public ScheduleListResponse getScheduleList(Long userId, ScheduleFilterRequest filterRequest, Sort sort) {
         log.info("[Schedule] 개인 일정 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 조건에 맞는 일정 리스트 생성
-        Page<Schedule> schedulesPage = scheduleRepository.findSchedulesByUserIdAndFilter(userId, filterRequest,
-                                                                                         pageable);
+        List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilter(userId, filterRequest,
+                                                                                           sort);
 
         // ! 2. 조회된 일정에서 상태별 카운트 계산
-        ScheduleStatusCount scheduleStatusCount = scheduleRepository.getStatusCounts(schedulesPage.getContent());
+        ScheduleStatusCount scheduleStatusCount = scheduleRepository.getStatusCounts(scheduleList);
 
         // ! 3. 응답 생성
-        Page<ScheduleSummary> scheduleSummaryPage = schedulesPage.map(scheduleConverter::toScheduleSummary);
+        List<ScheduleSummary> scheduleSummaryList = scheduleList.stream()
+                                                                .map(scheduleConverter::toScheduleSummary)
+                                                                .toList();
 
-        log.info("[Schedule] 일정 목록 조회 완료 - totalElements={}, totalPages={}", scheduleSummaryPage.getTotalElements(),
-                 scheduleSummaryPage.getTotalPages());
-        return SchedulePageResponse.builder()
-                                   .scheduleSummaryPage(scheduleSummaryPage)
+        log.info("[Schedule] 일정 목록 조회 완료 - totalElements={}", scheduleSummaryList.size());
+        return ScheduleListResponse.builder()
+                                   .scheduleSummaries(scheduleSummaryList)
                                    .scheduleStatusCount(scheduleStatusCount).build();
     }
 
@@ -253,71 +255,74 @@ public class ScheduleServiceImpl implements ScheduleService {
      * 관리자 공지사항 조회 시 해당 교육생들의 일정을 조회하는 메서드
      */
     @Override
-    public SchedulePageResponse getSchedulesByNoticeForAdmin(Long noticeId, ScheduleFilterRequest filterRequest,
-                                                             Pageable pageable) {
+    public ScheduleListResponse getScheduleListByNoticeForAdmin(Long noticeId, ScheduleFilterRequest filterRequest,
+                                                                Sort sort) {
         log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 시작 - noticeId={}", noticeId);
 
         // ! 1. 해당 공지사항의 일정들 필터 조회
-        Page<Schedule> schedulePage = scheduleRepository.findSchedulesByNoticeIdAndFilter(noticeId, filterRequest,
-                                                                                          pageable);
+        List<Schedule> scheduleList = scheduleRepository.findScheduleListByNoticeIdAndFilter(noticeId, filterRequest,
+                                                                                             sort);
 
         // ! 2. 조회된 일정에서 일정 상태별 카운트
-        ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(schedulePage.getContent());
+        ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(scheduleList);
 
         // ! 3. 응답 생성
-        Page<ScheduleSummary> scheduleSummaryPage = schedulePage.map(scheduleConverter::toScheduleSummary);
+        List<ScheduleSummary> scheduleSummaryList = scheduleList.stream()
+                                                                .map(scheduleConverter::toScheduleSummary)
+                                                                .toList();
 
-        log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 완료 - totalElements={}, totalPages={}",
-                 scheduleSummaryPage.getTotalElements(),
-                 scheduleSummaryPage.getTotalPages());
-        return SchedulePageResponse.builder()
-                                   .scheduleSummaryPage(scheduleSummaryPage)
+        log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 완료 - totalElements={}", scheduleSummaryList.size());
+        return ScheduleListResponse.builder()
+                                   .scheduleSummaries(scheduleSummaryList)
                                    .scheduleEnrolledCount(scheduleEnrolledCount).build();
     }
 
     @Override
-    public Page<ScheduleSummary> getUnregisteredNoticeSchedules(Long userId,
-                                                                ScheduleFilterRequest scheduleFilterRequest,
-                                                                Pageable pageable) {
+    public Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId,
+                                                             ScheduleFilterRequest scheduleFilterRequest,
+                                                             Pageable pageable) {
         log.info("[Schedule] 미등록 공지 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 미등록 공지사항 일정 조회
-        Page<Schedule> schedulePage = scheduleRepository.findSchedulesByUserIdAndFilter(userId, scheduleFilterRequest,
-                                                                                        pageable);
+        Page<Schedule> schedulePage = scheduleRepository.findSchedulePageByUserIdAndFilter(userId,
+                                                                                           scheduleFilterRequest,
+                                                                                           pageable);
 
         // ! 2. 응답 생성
-        Page<ScheduleSummary> result = schedulePage.map(scheduleConverter::toScheduleSummary);
+        Page<ScheduleSummary> scheduleSummaryPage = schedulePage.map(scheduleConverter::toScheduleSummary);
 
-        log.info("[Schedule] 미등록 공지 목록 조회 완료 - totalElements={}, totalPages={}", result.getTotalElements(),
-                 result.getTotalPages());
-        return result;
+        log.info("[Schedule] 미등록 공지 목록 조회 완료 - totalElements={}, totalPages={}", scheduleSummaryPage.getTotalElements(),
+                 scheduleSummaryPage.getTotalPages());
+        return scheduleSummaryPage;
     }
 
     @Override
-    public SchedulePageResponse getAssignedSchedules(Long userId, ScheduleFilterRequest scheduleFilterRequest,
-                                                     Pageable pageable) {
+    public ScheduleListResponse getAssignedScheduleList(Long userId, ScheduleFilterRequest scheduleFilterRequest,
+                                                        Sort sort) {
         log.info("[Schedule] 관리자 할당 일정 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 관리자 할당 일정 조회
-        Page<Schedule> schedulePage = scheduleRepository.findSchedulesByUserIdAndFilter(userId, scheduleFilterRequest,
-                                                                                        pageable);
+        List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilter(userId,
+                                                                                           scheduleFilterRequest,
+                                                                                           sort);
 
         // ! 2. 조회된 일정에서 등록 상태별 카운트
-        ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(schedulePage.getContent());
+        ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(scheduleList);
 
         // ! 3. 응답 생성
-        Page<ScheduleSummary> scheduleSummaryPage = schedulePage.map(scheduleConverter::toScheduleSummary);
+        List<ScheduleSummary> scheduleSummaryList = scheduleList.stream()
+                                                                .map(scheduleConverter::toScheduleSummary)
+                                                                .toList();
 
-        log.info("[Schedule] 관리자 할당 일정 목록 조회 완료 - totalElements={}, totalPages={}",
-                 scheduleSummaryPage.getTotalElements(),
-                 scheduleSummaryPage.getTotalPages());
-        return SchedulePageResponse.builder()
-                                   .scheduleSummaryPage(scheduleSummaryPage)
+        log.info("[Schedule] 관리자 할당 일정 목록 조회 완료 - totalElements={}",
+                 scheduleSummaryList.size());
+        return ScheduleListResponse.builder()
+                                   .scheduleSummaries(scheduleSummaryList)
                                    .scheduleEnrolledCount(scheduleEnrolledCount).build();
     }
 
     @Override
-    public ScheduleEnrolledCount getEnrollCount(Long noticeId) {
+    public ScheduleEnrolledCount getEnrolledCount(Long noticeId) {
         log.info("[Schedule] 공지사항 파생 일정 등록, 완료 카운트 시작 - noticeId={}", noticeId);
 
         List<Schedule> schedules = scheduleRepository.findAllByNoticeId(noticeId);

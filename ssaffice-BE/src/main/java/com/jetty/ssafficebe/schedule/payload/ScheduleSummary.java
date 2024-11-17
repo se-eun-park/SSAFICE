@@ -19,7 +19,7 @@ public class ScheduleSummary {
     private String scheduleStatusTypeCd;
     private String isEssentialYn;
     private String isEnrollYn;
-    private CreatedBySummary user;
+    private CreatedBySummary chargeUser;
     private CreatedBySummary createUser;
     private NoticeSummary noticeSummary;
 }

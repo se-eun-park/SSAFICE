@@ -20,9 +20,11 @@ public interface ScheduleConverter {
 
     @Mapping(target = "remindSummarys", source = "reminds")
     @Mapping(target = "noticeSummary", source = "notice")
+    @Mapping(target = "chargeUser", source = "user")
     @Mapping(target = "createUser", source = "schedule.createUser")
     ScheduleDetail toScheduleDetail(Schedule schedule);
 
+    @Mapping(target = "chargeUser", source = "user")
     @Mapping(target = "createUser", source = "schedule.createUser")
     @Mapping(target = "noticeSummary", source = "notice")
     ScheduleSummary toScheduleSummary(Schedule schedule);
