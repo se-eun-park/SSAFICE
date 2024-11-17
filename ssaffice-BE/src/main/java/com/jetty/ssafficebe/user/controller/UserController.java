@@ -38,7 +38,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
     private final UserService userService;
-    private final ChannelService channelService;
 
     /**
      * (관리자 권한) 유저 등록
