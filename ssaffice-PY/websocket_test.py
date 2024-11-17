@@ -13,11 +13,16 @@ mm_websocket_url = config.MM_WEBSOCKET_URL
 websocket_url = mm_websocket_url
 token = TokenManager.get_token()
 
+
+
 # 웹소켓 이벤트 핸들러 함수
 def on_message(ws, message):
+    # print("token : ",token)
+    # print(get_user_info(token))
     data = json.loads(message)
     # event중에 글이 게시되고 해당 게시글이 올라온 채널의 이름이 공지를 포함할 때만 출력
     if is_notice(data):
+        print(data)
         # 일정인지 아닌지 분석하는 함수
         output_message = analyze_message(data)
         for notice in output_message["list"]:
@@ -26,6 +31,9 @@ def on_message(ws, message):
             if notice["isTodo"] == "o":
                 # db에 저장할 notice entity 만들기
                 notice_entity = make_notice_entity(data, notice)
+                notice_source_type = find_channel_type(data)
+                print(notice_source_type)
+                notice_entity.notice_type_cd = notice_source_type
                 # notice를 DB에 저장
                 notice_db_id = insert_notice(notice_entity)
                 print("공지 등록 완료, notice_id :", notice_db_id)
@@ -43,14 +51,6 @@ def on_message(ws, message):
                         order_idx+=1
                 else:
                     print("metadata가 none이었네요")
-
-                # notice_channel을 DB에 저장
-                notice_channel_entity = make_notice_channel_entity(data, notice_db_id)
-                notice_channel_db_id = insert_notice_channel(notice_channel_entity)
-                print(
-                    "notice_channel 등록 완료, notice_channel_id :",
-                    notice_channel_db_id,
-                )
 
                 # 일정에 해당하는 유저를 먼저 정의해야함.
                 channel_id = json.loads(data["data"]["post"])["channel_id"]
@@ -76,7 +76,7 @@ def on_message(ws, message):
                             # schedule를 DB에 저장
                             schedule_id = insert_schedule(schedule)    
                             # 필수 공지(= 필수 일정)인 경우에만 remind를 생성
-                            if schedule.is_essential == True:
+                            if schedule.is_essential_yn == True:
                                 remind = make_remind_entity(schedule_id)                                
                                 remind_id = insert_remind(remind)
                                 print("remind 등록 완료, remind_id :", remind_id)

@@ -1,6 +1,6 @@
 from mmapi import *
 from setup import config, get_db
-from models import Notice, Notice_Channel, Schedule, File, file as f
+from models import Notice, Schedule, File, file as f
 from get_datas import *
 from set_datas import *
 from datetime import datetime, timedelta
@@ -51,26 +51,18 @@ def make_notice_entity(data, notice):
     channel_id = json_data["channel_id"]
 
     response_notice = Notice(
-        message_id=notice["id"],
-        title=notice["title"],
-        original_message=original_message,
-        content=notice["content"],
-        start_date_time=notice["schedule_start_time"],
-        end_date_time=notice["schedule_end_time"],
-        is_essential=is_essential,
         created_by=user_id,
-        channel_id=channel_id
+        channel_id=channel_id,
+        content=notice["content"],
+        end_date_time=notice["schedule_end_time"],
+        is_essential_yn=is_essential,
+        mm_message_id=notice["id"],
+        start_date_time=notice["schedule_start_time"],
+        title=notice["title"],
+        # original_message=original_message,
     )
 
     return response_notice
-
-
-def make_notice_channel_entity(data, id):
-    json_data = json.loads(data["data"]["post"])
-    channel_id = json_data["channel_id"]
-    notice_channel = Notice_Channel(notice_id=id, channel_id=channel_id)
-    return notice_channel
-
 
 def get_file_metadata_from_data(data):
     json_data = json.loads(data["data"]["post"])
@@ -105,11 +97,11 @@ def find_channel_type(data):
     channel_id = json_data["channel_id"]
     channel_type = data["data"]["channel_type"]
     if channel_id == "i3ht4brt7jgu9g5rg8e4tfc98r":  # 11기 공지사항 채널id임
-        return "GLOBAL_NOTICE"
+        return "GLOBAL"
     elif (
         channel_type == "O" or channel_type == "P"
     ):  # O는 public 채널, P는 private 채널
-        return "TEAM_NOTICE"
+        return "TEAM"
     else:
         return "PERSONAL"  # mm 에서 받아오는 경우에는 PERSONAL이 쓰이는 경우는 없음
 
@@ -117,14 +109,15 @@ def find_channel_type(data):
 def make_schedule_entity(notice_id):
     notice = get_notice_by_notice_id(notice_id)
     response_schedule = Schedule(
-        title=notice.title,
-        memo=notice.content,
-        start_date_time=notice.start_date_time,
+        created_by = notice.created_by,
         end_date_time=notice.end_date_time,
-        is_essential=notice.is_essential,
-        # is_enroll의 기본값은 is_essential을 따라감.
-        is_enroll=notice.is_essential,
+        is_enroll_yn=notice.is_essential_yn,
+        is_essential_yn=notice.is_essential_yn,
+        memo=notice.content,
         notice_id=notice_id,
+        start_date_time=notice.start_date_time,
+        title=notice.title,
+        # is_enroll의 기본값은 is_essential을 따라감.
     )
     return response_schedule
 
@@ -137,9 +130,17 @@ def find_user_id_by_channel_id(token, channel_id, page_num):
 
 def make_remind_entity(schedule_id):
     schedule = get_schedule_by_schedule_id(schedule_id)
+    schedule_date_time = schedule.end_date_time
+    if(schedule.end_date_time == None):
+        schedule_date_time = schedule.start_date_time
+
+
     response_remind = Remind(
-        is_essential=schedule.is_essential,
-        remind_date_time=schedule.end_date_time - timedelta(hours=1),
+        created_at=schedule.created_at,
+        created_by=schedule.created_by,
+        is_essential_yn=schedule.is_essential_yn,
+        remind_date_time=schedule_date_time - timedelta(hours=1),
+        remind_type_cd="ONCE",
         schedule_id=schedule_id,
     )
     return response_remind
