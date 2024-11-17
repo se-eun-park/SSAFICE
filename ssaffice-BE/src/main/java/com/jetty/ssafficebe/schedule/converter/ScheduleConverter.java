@@ -4,7 +4,6 @@ import com.jetty.ssafficebe.notice.converter.NoticeConverter;
 import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
-import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import org.mapstruct.Mapper;
