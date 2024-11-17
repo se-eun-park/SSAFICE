@@ -1,12 +1,16 @@
 package com.jetty.ssafficebe.schedule.repository;
 
 import com.jetty.ssafficebe.common.jpa.AbstractQueryDslRepository;
+import com.jetty.ssafficebe.schedule.code.ScheduleStatusType;
 import com.jetty.ssafficebe.schedule.entity.QSchedule;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,83 +21,94 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
         super(queryFactory, entityManager);
     }
 
+    // 기본 페이징 조회
     @Override
-    public Page<Schedule> findSchedulesByUserIdAndFilter(Long userId, ScheduleFilterRequest scheduleFilterRequest,
+    public Page<Schedule> findSchedulesByUserIdAndFilter(Long userId, ScheduleFilterRequest filterRequest,
                                                          Pageable pageable) {
         QSchedule schedule = QSchedule.schedule;
-        JPQLQuery<Schedule> query = from(schedule);
 
-        // 유저 id 필터
-        query.where(schedule.userId.eq(userId));
+        JPQLQuery<Schedule> query = from(schedule)
+                .where(schedule.createUser.userId.eq(userId));
 
-        // 미등록 공지 필터
-        if (scheduleFilterRequest.getIsEnrollYn() != null) {
-            query.where(schedule.isEnrollYn.eq(scheduleFilterRequest.getIsEnrollYn()));
-        }
-
-        // 일정 상태 필터
-        if (scheduleFilterRequest.getScheduleStatusTypeCd() != null) {
-            query.where(schedule.scheduleStatusTypeCd.eq(scheduleFilterRequest.getScheduleStatusTypeCd()));
-        }
-
-        // 일정 출처 필터
-        if (scheduleFilterRequest.getScheduleSourceTypeCd() != null) {
-            query.where(schedule.scheduleSourceTypeCd.eq(scheduleFilterRequest.getScheduleSourceTypeCd()));
-        }
-
-        // 기간 필터
-        if (scheduleFilterRequest.getFilterStartDateTime() != null) {
-            query.where(schedule.startDateTime.goe(scheduleFilterRequest.getFilterStartDateTime()));
-        }
-        if (scheduleFilterRequest.getFilterEndDateTime() != null) {
-            query.where(schedule.endDateTime.loe(scheduleFilterRequest.getFilterEndDateTime()));
-        }
+        applyFilterConditions(query, filterRequest);
 
         return getPageImpl(query, pageable);
     }
 
+    // 공지사항 일정 조회
     @Override
-    public Page<Schedule> findSchedulesByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest scheduleFilterRequest,
+    public Page<Schedule> findSchedulesByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest filterRequest,
                                                            Pageable pageable) {
         QSchedule schedule = QSchedule.schedule;
-        JPQLQuery<Schedule> query = from(schedule);
 
-        // 공지 id 필터
-        query.where(schedule.userId.eq(noticeId));
+        JPQLQuery<Schedule> query = from(schedule)
+                .where(schedule.noticeId.eq(noticeId));
 
-        // 미등록 공지 필터
-        if (scheduleFilterRequest.getIsEnrollYn() != null) {
-            query.where(schedule.isEnrollYn.eq(scheduleFilterRequest.getIsEnrollYn()));
-        }
-
-        // 일정 상태 필터
-        if (scheduleFilterRequest.getScheduleStatusTypeCd() != null) {
-            query.where(schedule.scheduleStatusTypeCd.eq(scheduleFilterRequest.getScheduleStatusTypeCd()));
-        }
-
-        // 일정 출처 필터
-        if (scheduleFilterRequest.getScheduleSourceTypeCd() != null) {
-            query.where(schedule.scheduleSourceTypeCd.eq(scheduleFilterRequest.getScheduleSourceTypeCd()));
-        }
-
-        // 기간 필터
-        if (scheduleFilterRequest.getFilterStartDateTime() != null) {
-            query.where(schedule.startDateTime.goe(scheduleFilterRequest.getFilterStartDateTime()));
-        }
-        if (scheduleFilterRequest.getFilterEndDateTime() != null) {
-            query.where(schedule.endDateTime.loe(scheduleFilterRequest.getFilterEndDateTime()));
-        }
+        applyFilterConditions(query, filterRequest);
 
         return getPageImpl(query, pageable);
     }
 
+    // 해야할일/진행중/완료 카운트
     @Override
-    public Page<Schedule> findSchedulesByNoticeId(Long noticeId, Pageable pageable) {
-        QSchedule schedule = QSchedule.schedule;
-        JPQLQuery<Schedule> query = queryFactory
-                .selectFrom(schedule)
-                .where(schedule.noticeId.eq(noticeId));
+    public List<Long> getStatusCounts(List<Schedule> schedules) {
+        // 필터링된 일정 리스트에서 상태별 카운트
+        long todoCount = schedules.stream()
+                                  .filter(s -> ScheduleStatusType.TODO.equals(s.getScheduleStatusType()))
+                                  .count();
 
-        return getPageImpl(query, pageable);
+        long inProgressCount = schedules.stream()
+                                        .filter(s -> ScheduleStatusType.IN_PROGRESS.equals(s.getScheduleStatusType()))
+                                        .count();
+
+        long doneCount = schedules.stream()
+                                  .filter(s -> ScheduleStatusType.DONE.equals(s.getScheduleStatusType()))
+                                  .count();
+
+        return Arrays.asList(todoCount, inProgressCount, doneCount);
+    }
+
+    // 등록 true+완료 / 등록 true 카운트
+    @Override
+    public List<Long> getCompletionCounts(List<Schedule> schedules) {
+        // 등록된 일정 수
+        long enrolledCount = schedules.stream()
+                                      .filter(Schedule::getIsEnroll)
+                                      .count();
+
+        // 완료된 일정 수
+        long completedCount = schedules.stream()
+                                       .filter(Schedule::getIsEnroll)
+                                       .filter(s -> ScheduleStatusType.DONE.equals(s.getScheduleStatusType()))
+                                       .count();
+
+        return Arrays.asList(enrolledCount, completedCount);
+    }
+
+    // 필터 처리
+    private void applyFilterConditions(JPQLQuery<?> query, ScheduleFilterRequest filterRequest) {
+        QSchedule schedule = QSchedule.schedule;
+
+        if (filterRequest.getIsEnrollYn() != null) {
+            query.where(schedule.isEnrollYn.eq(filterRequest.getIsEnrollYn()));
+        }
+        if (filterRequest.getScheduleSourceTypeCd() != null) {
+            query.where(schedule.scheduleSourceTypeCd.eq(filterRequest.getScheduleSourceTypeCd()));
+        }
+        if (filterRequest.getScheduleStatusTypeCd() != null) {
+            query.where(schedule.scheduleStatusTypeCd.eq(filterRequest.getScheduleStatusTypeCd()));
+        }
+
+        //  필터: 시작일이 null 이거나 필터 시작일 이후인 경우
+        if (filterRequest.getFilterStartDateTime() != null) {
+            query.where(schedule.endDateTime.isNull().or(
+                    schedule.endDateTime.goe(filterRequest.getFilterStartDateTime())));
+        }
+
+        // 종료일 필터: 종료일이 null 이거나 필터 종료일 이전인 경우
+        if (filterRequest.getFilterEndDateTime() != null) {
+            query.where(schedule.endDateTime.isNull().or(
+                    schedule.endDateTime.loe(filterRequest.getFilterEndDateTime())));
+        }
     }
 }

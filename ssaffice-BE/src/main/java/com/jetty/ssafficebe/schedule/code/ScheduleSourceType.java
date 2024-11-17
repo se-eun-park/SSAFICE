@@ -8,6 +8,8 @@ public enum ScheduleSourceType implements CommonCode {
 
     GLOBAL("전체공지"),
     TEAM("팀공지"),
+    ASSIGNED_TEAM("관리자팀할당"),
+    ASSIGNED_PERSONAL("관리자개인할당"),
     PERSONAL("개인"),
     ;
 
