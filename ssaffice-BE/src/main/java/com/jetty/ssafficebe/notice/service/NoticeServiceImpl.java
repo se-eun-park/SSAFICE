@@ -16,6 +16,7 @@ import com.jetty.ssafficebe.notice.payload.NoticeSummary;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForAdmin;
 import com.jetty.ssafficebe.notice.repository.NoticeRepository;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
+import com.jetty.ssafficebe.search.service.ESNoticeService;
 import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import com.jetty.ssafficebe.user.service.UserService;
@@ -46,6 +47,8 @@ public class NoticeServiceImpl implements NoticeService {
     private final UserService userService;
     private final UserRepository userRepository;
 
+    private final ESNoticeService esNoticeService;
+
     @Transactional
     @Override
     public ApiResponse saveNotice(NoticeRequest noticeRequest, List<MultipartFile> files) throws IOException {
@@ -57,13 +60,14 @@ public class NoticeServiceImpl implements NoticeService {
             attachmentFileService.uploadFile(file, "notice", savedNotice.getNoticeId());
         }
 
-        // TODO : 추가 시 개인별로 일정 추가 필요
-        // 공지 대상자 일정 추가
         // 1. 채널 아이디로 공지 대상자 조회
         List<Long> usersByChannelId = userService.getUserIdsByChannelId(noticeRequest.getChannelId());
 
         // 2. 공지 대상자 일정 추가
         scheduleService.saveSchedulesFromNotice(savedNotice, usersByChannelId);
+
+        // 3. ElasticSearch에 공지 추가
+        esNoticeService.saveNotice(savedNotice);
 
         return new ApiResponse(true, HttpStatus.CREATED, "공지사항 추가 성공", savedNotice.getTitle());
     }
@@ -81,6 +85,9 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         noticeRepository.delete(notice);
+
+        // ElasticSearch에서도 삭제
+        esNoticeService.deleteNotice(noticeId);
 
         return new ApiResponse(true, HttpStatus.OK, "공지사항 삭제 성공", noticeId);
     }

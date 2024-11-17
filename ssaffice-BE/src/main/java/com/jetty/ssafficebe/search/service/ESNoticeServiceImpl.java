@@ -13,11 +13,13 @@ import com.jetty.ssafficebe.search.repository.ESNoticeRepository;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Log4j2
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -50,12 +52,13 @@ public class ESNoticeServiceImpl implements ESNoticeService {
         Page<ESNotice> esNotices = this.esNoticeRepository.searchNotices(channelIdsByUserId, filter, pageable);
 
         // 4. DTO 변환하여 리턴
-        Page<NoticeSummary> noticeSummaryList = esNotices.map(esNoticeConverter::toNoticeSummary);
-        return null;
+        return esNotices.map(esNoticeConverter::toNoticeSummary);
     }
 
     @Override
     public void saveNotice(Notice notice) {
-
+        log.info("ES에 공지사항 저장");
+        ESNotice esNotice = esNoticeConverter.toESNotice(notice);
+        esNoticeRepository.save(esNotice);
     }
 }

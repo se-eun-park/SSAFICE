@@ -17,6 +17,10 @@ public interface ESNoticeConverter {
     @Mapping(source = "createUser.email", target = "createUserEmail")
     @Mapping(source = "createUser.profileImgUrl", target = "createUserProfileImgUrl")
     @Mapping(source = "createUser.name", target = "createUserName")
+    @Mapping(source = "channel.channelId", target = "channelId")
+    @Mapping(source = "channel.channelName", target = "channelName")
+    @Mapping(source = "channel.mmTeamId", target = "mmTeamId")
+    @Mapping(source = "channel.mmTeam.mmTeamName", target = "mmTeamName")
     ESNotice toESNotice(Notice notice);
 
     @Mapping(source = "createUserId", target = "createUser.userId")
