@@ -8,6 +8,7 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,8 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
 
     // 기본 페이징 조회
     @Override
-    public Page<Schedule> findSchedulesByUserIdAndFilter(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable) {
+    public Page<Schedule> findSchedulesByUserIdAndFilter(Long userId, ScheduleFilterRequest filterRequest,
+                                                         Pageable pageable) {
         QSchedule schedule = QSchedule.schedule;
 
         JPQLQuery<Schedule> query = from(schedule)
@@ -35,7 +37,8 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
 
     // 공지사항 일정 조회
     @Override
-    public Page<Schedule> findSchedulesByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest filterRequest, Pageable pageable) {
+    public Page<Schedule> findSchedulesByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest filterRequest,
+                                                           Pageable pageable) {
         QSchedule schedule = QSchedule.schedule;
 
         JPQLQuery<Schedule> query = from(schedule)
@@ -95,11 +98,17 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
         if (filterRequest.getScheduleStatusTypeCd() != null) {
             query.where(schedule.scheduleStatusTypeCd.eq(filterRequest.getScheduleStatusTypeCd()));
         }
+
+        //  필터: 시작일이 null 이거나 필터 시작일 이후인 경우
         if (filterRequest.getFilterStartDateTime() != null) {
-            query.where(schedule.startDateTime.goe(filterRequest.getFilterStartDateTime()));
+            query.where(schedule.endDateTime.isNull().or(
+                    schedule.endDateTime.goe(filterRequest.getFilterStartDateTime())));
         }
+
+        // 종료일 필터: 종료일이 null 이거나 필터 종료일 이전인 경우
         if (filterRequest.getFilterEndDateTime() != null) {
-            query.where(schedule.endDateTime.loe(filterRequest.getFilterEndDateTime()));
+            query.where(schedule.endDateTime.isNull().or(
+                    schedule.endDateTime.loe(filterRequest.getFilterEndDateTime())));
         }
     }
 }

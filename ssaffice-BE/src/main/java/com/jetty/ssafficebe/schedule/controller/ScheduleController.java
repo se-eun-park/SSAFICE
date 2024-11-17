@@ -58,9 +58,10 @@ public class ScheduleController {
     }
 
     /**
+     * TODO : 일정 sourceType 에 따라 수정 처리 설정
      * 일정 수정
      *
-     * @param scheduleId      : 수정할 일정 id
+     * @param scheduleId            : 수정할 일정 id
      * @param updateScheduleRequest : schedule 정보
      * @return 수정된 일정 정보
      */
@@ -85,6 +86,7 @@ public class ScheduleController {
     }
 
     /**
+     * TODO : 일정 sourceType 에 따라 삭제 처리 설정
      * 일정 삭제
      *
      * @param scheduleId : 삭제할 일정 id
@@ -107,7 +109,7 @@ public class ScheduleController {
     public ResponseEntity<Page<ScheduleSummary>> getUnregisteredNoticeSchedules(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Direction.ASC) Pageable pageable) {
+            @PageableDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
                 scheduleService.getUnregisteredNoticeSchedules(userDetails.getUserId(), scheduleFilterRequest,
                                                                pageable));
@@ -115,7 +117,7 @@ public class ScheduleController {
 
     // TODO : 상태 리스트 응답 List<Long> -> 상태별로 알아보기 쉽게 수정 필요
     // ex. List<Long> statusCounts : [3,5,2]
-    // -> List<
+
     /**
      * (ROLE_USER) 개인 일정 리스트 조회
      *
@@ -127,7 +129,7 @@ public class ScheduleController {
     public ResponseEntity<SchedulePageResponse> getSchedules(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Direction.ASC) Pageable pageable) {
+            @PageableDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
                 scheduleService.getSchedules(userDetails.getUserId(), scheduleFilterRequest, pageable));
     }
@@ -143,7 +145,7 @@ public class ScheduleController {
     public ResponseEntity<SchedulePageResponse> getSchedulesByNoticeForAdmin(
             @PathVariable Long noticeId,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Direction.ASC) Pageable pageable) {
+            @PageableDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
                 scheduleService.getSchedulesByNoticeForAdmin(noticeId, scheduleFilterRequest, pageable));
     }
@@ -159,7 +161,7 @@ public class ScheduleController {
     public ResponseEntity<SchedulePageResponse> getAssignedSchedules(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
-            @PageableDefault(size = 20, sort = "createdAt", direction = Direction.ASC) Pageable pageable) {
+            @PageableDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
                 scheduleService.getAssignedSchedules(userDetails.getUserId(), scheduleFilterRequest, pageable));
     }
