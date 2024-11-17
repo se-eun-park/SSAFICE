@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/search/notice")
+@RequestMapping("/api/es/notice")
 @RequiredArgsConstructor
 public class ESNoticeController {
 
