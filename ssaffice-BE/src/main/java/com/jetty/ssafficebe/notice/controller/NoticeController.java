@@ -40,9 +40,8 @@ public class NoticeController {
     /**
      * 공지사항 추가
      * <p>
-     * TODO : ROLE_ADMIN인 경우에만 접근 가능
      */
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<ApiResponse> saveNotice(@RequestPart NoticeRequest noticeRequest,
                                                   @RequestPart(value = "files", required = false) List<MultipartFile> files)
             throws IOException {
@@ -56,16 +55,15 @@ public class NoticeController {
     /**
      * 공지사항 삭제
      * <p>
-     * TODO : ROLE_ADMIN인 경우에만 접근 가능
      */
-    @DeleteMapping("/{noticeId}")
+    @DeleteMapping("/admin/{noticeId}")
     public ResponseEntity<ApiResponse> deleteNotice(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                     @PathVariable Long noticeId) {
         return ResponseEntity.ok(noticeService.deleteNotice(userDetails.getUserId(), noticeId));
     }
 
     /**
-     * (ROLE_USER) 전체 공지사항 조회 : 내가 속해있는 채널의 공지사항을 전체 조회
+     * 전체 공지사항 조회 : 내가 속해있는 채널의 공지사항을 전체 조회
      */
     @GetMapping
     public ResponseEntity<Page<NoticeSummary>> getNoticeList(
@@ -88,7 +86,7 @@ public class NoticeController {
     /**
      * 내가 작성한 공지사항 리스트 조회
      */
-    @GetMapping("/my")
+    @GetMapping("/admin/my")
     public ResponseEntity<List<NoticeSummaryForAdmin>> getMyNoticeList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody NoticeFilterRequest noticeFilterRequest,

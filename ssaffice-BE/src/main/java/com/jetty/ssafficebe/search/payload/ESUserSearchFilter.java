@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class ESUserSearchFilter {
 
-    private String Keyword;
+    private String keyword;
 }
