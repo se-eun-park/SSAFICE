@@ -4,6 +4,7 @@ import { dummySsafyUsers, MattermostChannel, SsafyUser } from './types'
 export const useManageMembersTabContent = (channel: MattermostChannel) => {
   const [userInChannelList, setUserInChannelList] = useState<SsafyUser[]>([])
   const [selectedUserInChannelList, setSelectedUserInChannelList] = useState<SsafyUser[]>([])
+  const [selectedAll, setSelectedAll] = useState(false)
 
   // 1초 후에 데이터를 반환하는 예시 API 함수
   const fetchAPI = async (channelId: number): Promise<SsafyUser[]> => {
@@ -37,5 +38,21 @@ export const useManageMembersTabContent = (channel: MattermostChannel) => {
         )
   }
 
-  return { userInChannelList, selectedUserInChannelList, handleSelectedUserInChannelList }
+  const handleSelectedAllUserInChannelList = (checked: boolean) => {
+    if (checked) {
+      setSelectedAll(true)
+      setSelectedUserInChannelList(userInChannelList)
+    } else {
+      setSelectedAll(false)
+      setSelectedUserInChannelList([])
+    }
+  }
+
+  return {
+    userInChannelList,
+    selectedUserInChannelList,
+    handleSelectedUserInChannelList,
+    handleSelectedAllUserInChannelList,
+    selectedAll,
+  }
 }

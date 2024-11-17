@@ -8,8 +8,13 @@ type ManageMembersTabContentProps = {
 export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProps) => {
   // 컴포넌트 로드 시 교육생 리스트를 API로 가져올 수 있도록 해주세요.
   // channelId 보내면 교육생 리스트가 와야 합니다.
-  const { userInChannelList, selectedUserInChannelList, handleSelectedUserInChannelList } =
-    useManageMembersTabContent(channel)
+  const {
+    userInChannelList,
+    selectedUserInChannelList,
+    handleSelectedUserInChannelList,
+    handleSelectedAllUserInChannelList,
+    selectedAll,
+  } = useManageMembersTabContent(channel)
 
   type TableHeaderProps = {
     width: string
@@ -149,16 +154,31 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
             w-[400px] py-spacing-12 px-spacing-24
             '
           >
-            <div
-              className='
-              w-spacing-20 h-spacing-20
-              bg-color-bg-primary 
-              border border-spacing-1 border-color-border-disabled 
-              rounded-radius-6
-              '
-            >
-              {/* roundedSquareCheckbox */}
-            </div>
+            <label htmlFor='checked-selectedAll' className='flex'>
+              {selectedAll ? (
+                <div className='w-spacing-20 h-spacing-20'>
+                  <CheckedRoundedSquare />
+                </div>
+              ) : (
+                <div
+                  className='
+                  w-spacing-20 h-spacing-20
+                  bg-color-bg-primary 
+                  border border-spacing-1 border-color-border-disabled 
+                  rounded-radius-6
+                  '
+                />
+              )}
+
+              <input
+                id='checked-selectedAll'
+                className='opacity-0 w-0 h-0'
+                type='checkbox'
+                checked={selectedAll}
+                onChange={(e) => handleSelectedAllUserInChannelList(e.target.checked)}
+              />
+              {/* 여기를 눌렀을 때 전체가 다 선택되도록 해 주세요 */}
+            </label>
             <div
               className='
                 text-color-text-disabled body-xs-medium'
