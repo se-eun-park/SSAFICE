@@ -39,11 +39,12 @@ export const ManageMembersTab = () => {
       </div>
 
       <div
-        className='
+        className={`
+          
           flex flex-col justify-center items-center
-          px-[405px] py-[478px]
+          ${tabName ? '' : 'px-[405px] py-[478px]'}
           text-color-text-disabled body-lg-medium
-        '
+          `}
       >
         {/* 
           이 영역은 나중에 screen에 맞추어서 반응형으로 잡고 
