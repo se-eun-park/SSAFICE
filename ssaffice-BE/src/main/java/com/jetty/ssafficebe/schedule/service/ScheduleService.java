@@ -3,6 +3,7 @@ package com.jetty.ssafficebe.schedule.service;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
+import com.jetty.ssafficebe.schedule.payload.ScheduleEnrolledCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
@@ -33,4 +34,6 @@ public interface ScheduleService {
     Page<ScheduleSummary> getUnregisteredNoticeSchedules(Long userId, ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
 
     SchedulePageResponse getAssignedSchedules(Long userId, ScheduleFilterRequest scheduleFilterRequest, Pageable pageable);
+
+    ScheduleEnrolledCount getEnrollCount(Long noticeId);
 }
