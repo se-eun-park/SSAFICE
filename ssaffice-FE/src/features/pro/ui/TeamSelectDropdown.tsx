@@ -18,6 +18,8 @@ export const TeamSelectDropdown = () => {
     saveSelectedChannels, // '적용' 버튼에 들어갈 onClick 로직
     handleSelectChannel, // 채널 선택 시
     selectedChannel, // 선택된 채널
+    selectedTeam, // 선택된 팀
+    tabName, // 탭 이름('적용' 버튼 누르면 업데이트)
   } = useTeamSelectDropdown(dummyMattermostTeams)
 
   return (
@@ -34,7 +36,7 @@ export const TeamSelectDropdown = () => {
         text-color-text-primary heading-desktop-lg
         '
         >
-          팀 선택
+          {tabName ? tabName : '팀 선택'}
         </div>
         <div
           className='
@@ -131,10 +133,10 @@ export const TeamSelectDropdown = () => {
                       type='radio'
                       name='checkChannel'
                       value={each.channelId}
-                      checked={selectedChannel === each.channelId}
-                      onChange={(e) => handleSelectChannel(each.channelId, e.target.checked)}
+                      checked={selectedChannel?.channelId === each.channelId}
+                      onChange={(e) => handleSelectChannel(each, e.target.checked)}
                     />
-                    {selectedChannel === each.channelId ? (
+                    {selectedChannel?.channelId === each.channelId ? (
                       <CheckedCircle />
                     ) : (
                       <div
