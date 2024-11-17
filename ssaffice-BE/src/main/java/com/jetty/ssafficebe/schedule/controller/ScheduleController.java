@@ -7,8 +7,8 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleListResponse;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
-import com.jetty.ssafficebe.schedule.payload.UpdateScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
+import com.jetty.ssafficebe.schedule.payload.UpdateScheduleRequest;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -134,7 +134,7 @@ public class ScheduleController {
     }
 
     /**
-     * (ROLE_ADMIN) 관리자의 공지 파생 일정 조회
+     * (ROLE_ADMIN) 관리자의 공지 파생 일정 조회 공지 상세 보기 클릭 시 일정 완료 여부 확인하는 용도
      *
      * @param sort                  : 기본값 (마감순)
      * @param scheduleFilterRequest : 필터 타입, 미등록 여부, 상태, 일정 출처, 시작/종료 시간
