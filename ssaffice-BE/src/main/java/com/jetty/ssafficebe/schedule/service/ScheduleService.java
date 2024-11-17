@@ -28,15 +28,13 @@ public interface ScheduleService {
 
     ApiResponse deleteSchedule(Long userId, Long scheduleId);
 
-    ScheduleListResponse getScheduleList(Long userId, ScheduleFilterRequest scheduleFilterRequest, Sort sort);
+    ScheduleListResponse getScheduleList(Long userId, ScheduleFilterRequest filterRequest, Sort sort);
 
-    ScheduleListResponse getScheduleListByNoticeForAdmin(Long noticeId, ScheduleFilterRequest scheduleFilterRequest,
-                                                         Sort sort);
+    ScheduleListResponse getScheduleListByNoticeForAdmin(Long noticeId, ScheduleFilterRequest filterRequest, Sort sort);
 
-    Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId, ScheduleFilterRequest scheduleFilterRequest,
-                                                      Pageable pageable);
+    Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable);
 
-    ScheduleListResponse getAssignedScheduleList(Long userId, ScheduleFilterRequest scheduleFilterRequest, Sort sort);
+    ScheduleListResponse getAssignedScheduleList(Long userId, ScheduleFilterRequest filterRequest, Sort sort);
 
     ScheduleEnrolledCount getEnrolledCount(Long noticeId);
 }

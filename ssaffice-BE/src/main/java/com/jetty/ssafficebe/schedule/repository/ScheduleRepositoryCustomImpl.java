@@ -123,10 +123,6 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
             builder.and(schedule.scheduleSourceTypeCd.eq(filter.getScheduleSourceTypeCd()));
         }
 
-        if (filter.getScheduleStatusTypeCd() != null) {
-            builder.and(schedule.scheduleStatusTypeCd.eq(filter.getScheduleStatusTypeCd()));
-        }
-
         LocalDateTime start = filter.getFilterStartDateTime();
         LocalDateTime end = filter.getFilterEndDateTime();
         String filterType = filter.getFilterType();

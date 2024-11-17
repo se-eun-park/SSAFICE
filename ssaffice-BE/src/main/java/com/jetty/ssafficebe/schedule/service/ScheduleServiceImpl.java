@@ -56,6 +56,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 1. Schedule 엔티티 생성 및 연관관계 설정
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
+        if (scheduleRequest.getScheduleSourceTypeCd() == null) {
+            schedule.setScheduleSourceTypeCd("PERSONAL");
+        }
         schedule.setUserId(userId);
 
         // ! 2. Schedule 저장
@@ -80,6 +83,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         // ! 2. 모든 일정 생성 및 저장
+        scheduleRequest.setScheduleSourceTypeCd("ASSIGNED");
         List<Long> savedScheduleIds = userIds.stream().map(userId -> {
                                                  try {
                                                      ApiResponse response = saveSchedule(userId, scheduleRequest);
@@ -234,8 +238,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("[Schedule] 개인 일정 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 조건에 맞는 일정 리스트 생성
-        List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilter(userId, filterRequest,
-                                                                                           sort);
+        filterRequest.setIsEnrollYn("Y");
+        List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilter(userId, filterRequest, sort);
 
         // ! 2. 조회된 일정에서 상태별 카운트 계산
         ScheduleStatusCount scheduleStatusCount = scheduleRepository.getStatusCounts(scheduleList);
@@ -278,14 +282,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId,
-                                                             ScheduleFilterRequest scheduleFilterRequest,
+    public Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId, ScheduleFilterRequest filterRequest,
                                                              Pageable pageable) {
         log.info("[Schedule] 미등록 공지 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 미등록 공지사항 일정 조회
-        Page<Schedule> schedulePage = scheduleRepository.findSchedulePageByUserIdAndFilter(userId,
-                                                                                           scheduleFilterRequest,
+        filterRequest.setIsEnrollYn("N");
+        Page<Schedule> schedulePage = scheduleRepository.findSchedulePageByUserIdAndFilter(userId, filterRequest,
                                                                                            pageable);
 
         // ! 2. 응답 생성
@@ -297,13 +300,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleListResponse getAssignedScheduleList(Long userId, ScheduleFilterRequest scheduleFilterRequest,
-                                                        Sort sort) {
+    public ScheduleListResponse getAssignedScheduleList(Long userId, ScheduleFilterRequest filterRequest, Sort sort) {
         log.info("[Schedule] 관리자 할당 일정 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 관리자 할당 일정 조회
+        filterRequest.setScheduleSourceTypeCd("ASSIGNED");
         List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilter(userId,
-                                                                                           scheduleFilterRequest,
+                                                                                           filterRequest,
                                                                                            sort);
 
         // ! 2. 조회된 일정에서 등록 상태별 카운트
