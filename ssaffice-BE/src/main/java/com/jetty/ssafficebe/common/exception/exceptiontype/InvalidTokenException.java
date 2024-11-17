@@ -1,7 +1,6 @@
 package com.jetty.ssafficebe.common.exception.exceptiontype;
 
 import com.jetty.ssafficebe.common.exception.ErrorCode;
-import com.jetty.ssafficebe.common.exception.errordetail.ErrorDetail;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -10,14 +9,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class InvalidTokenException extends CustomException{
 
-    private final ErrorDetail data;
-
-    public InvalidTokenException(ErrorCode errorCode, String fieldName, String value) {
+    public InvalidTokenException(ErrorCode errorCode) {
         super(errorCode);
-        data = ErrorDetail.builder()
-                          .errorCode(errorCode.name())
-                          .fieldName(fieldName)
-                          .value(value).build();
     }
 
 }

@@ -53,6 +53,6 @@ public class GlobalExceptionHandler {
         HttpStatus status = e.getErrorCode().getStatus();
 
         return ResponseEntity.status(status)
-                             .body(new ApiResponse(false, status, e.getMessage(), e.getData()));
+                             .body(new ApiResponse(false, status, e.getMessage()));
     }
 }

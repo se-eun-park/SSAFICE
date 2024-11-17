@@ -10,7 +10,6 @@ import com.jetty.ssafficebe.mattermost.payload.UserAutocompleteSummary;
 import com.jetty.ssafficebe.mattermost.service.MattermostService;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -58,12 +57,20 @@ public class MattermostController {
         return ResponseEntity.ok(this.mattermostService.getUserAutocomplete(encodedName));
     }
 
-    // userId를 받아와서 속한 채널을 DB에 저장하는 endpoint
+    // user가 새로고침할 때 동작하는 endPoint
+    // 해당 userID를 통해 MM에서 채널리스트를 가져와 공지사항만 필터링 한 후 Channel table과 UserChannel table에 저장
     @GetMapping("/{userId}/channels")
     public ResponseEntity<ApiResponse> saveChannelsByUserId(@PathVariable Long userId) {
-        MMChannelSummary[] channelSummaries = this.mattermostService.getChannelsByUserIdFromMM(userId);
-        List<Channel> nonDuplicateChannels = this.mattermostService.getNonDuplicateChannels(
-                Arrays.asList(channelSummaries));
-        return ResponseEntity.ok(this.mattermostService.saveAllChannelsByMMChannelList(nonDuplicateChannels));
+
+        List<MMChannelSummary> mmchannelSummaryList = this.mattermostService.getChannelsByUserIdFromMM(userId);
+        List<MMChannelSummary> filteredNoticeChannels = this.mattermostService.filteredNoticeChannels(
+                mmchannelSummaryList);
+        List<Channel> nonDuplicateChannels = this.mattermostService.getNonDuplicateChannels(filteredNoticeChannels);
+        this.mattermostService.saveAllChannelsByMMChannelList(nonDuplicateChannels);
+        List<MMChannelSummary> nonDuplicateChannelsByUserId = this.mattermostService.getNonDuplicateChannelsByUserId(
+                userId, mmchannelSummaryList);
+        return ResponseEntity.ok(
+                this.mattermostService.saveChannelListToUserChannelByUserId(userId, nonDuplicateChannelsByUserId));
     }
+
 }
