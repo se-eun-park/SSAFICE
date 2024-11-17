@@ -1,6 +1,6 @@
 ### 변수 설정
 @scheduleId = 15
-@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjFAZ21haWwuY29tIiwiZXhwIjoxNzMxODUxNDY4fQ.QHkLJgCyXENQRyt90Oxl8dA-BTEcVcyLuLj9SS_cz9YV3ca55dny_e6MUZSZUK3if-JougkQbvNm-A_7S6uoyQ
+@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjFAZ21haWwuY29tIiwiZXhwIjoxNzMxOTE5NjA4fQ.N4KAxWCiajBLG3HwqdvhC1hFUkzBa8TU0ZsfMsxjeLkKZhUJHKgbrDH8netEEXSHAno55IdO3P0lYO3Tgj5xgw
 @noticeId = 1
 
 ### 개인 일정 등록
@@ -95,6 +95,7 @@ Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
 {
+  "filterType": null,
   "isEnrollYn": "N",
   "scheduleStatusTypeCd": null,
   "scheduleSourceTypeCd": null,
@@ -103,27 +104,29 @@ Authorization: Bearer {{JWT}}
 }
 
 ### 개인 일정 리스트 조회
-GET http://localhost:9090/api/schedules
+GET http://localhost:9090/api/schedules?sort=createdAt,desc
 Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
 {
+  "filterType": "createdAt",
   "isEnrollYn": null,
   "scheduleStatusTypeCd": null,
   "scheduleSourceTypeCd": null,
-  "filterStartDateTime": null,
-  "filterEndDateTime": null
+  "filterStartDateTime": "2024-11-01T09:00:00",
+  "filterEndDateTime": "2024-11-30T18:00:00"
 }
 
 ### 관리자의 일정 리스트 조회
-GET http://localhost:9090/api/schedules/admin/assigned
+GET http://localhost:9090/api/schedules/admin/assigned?sort=createdAt,desc
 Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
 {
+  "filterType": "createdAt",
   "isEnrollYn": null,
   "scheduleStatusTypeCd": null,
   "scheduleSourceTypeCd": "TEAM",
-  "filterStartDateTime": null,
-  "filterEndDateTime": null
+  "filterStartDateTime": "2024-11-01T09:00:00",
+  "filterEndDateTime": "2024-11-30T18:00:00"
 }
