@@ -6,6 +6,7 @@ import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeFilterRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummary;
+import com.jetty.ssafficebe.notice.payload.NoticeSummaryForAdmin;
 import com.jetty.ssafficebe.notice.service.NoticeService;
 import java.io.IOException;
 import java.util.Collections;
@@ -88,7 +89,7 @@ public class NoticeController {
      * 내가 작성한 공지사항 리스트 조회
      */
     @GetMapping("/my")
-    public ResponseEntity<List<NoticeSummary>> getMyNoticeList(
+    public ResponseEntity<List<NoticeSummaryForAdmin>> getMyNoticeList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody NoticeFilterRequest noticeFilterRequest,
             @SortDefault(sort = "endDateTime", direction = Sort.Direction.ASC) Sort sort) {

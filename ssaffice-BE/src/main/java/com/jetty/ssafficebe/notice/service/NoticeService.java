@@ -5,6 +5,7 @@ import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeFilterRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummary;
+import com.jetty.ssafficebe.notice.payload.NoticeSummaryForAdmin;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,6 @@ public interface NoticeService {
 
     NoticeDetail getNotice(Long userId, Long noticeId);
 
-    List<NoticeSummary> getNoticePageByCreateUser(Long userId, NoticeFilterRequest noticeFilterRequest, Sort sort);
+    List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, NoticeFilterRequest noticeFilterRequest, Sort sort);
 
 }

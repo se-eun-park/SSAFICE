@@ -13,6 +13,7 @@ import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeFilterRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummary;
+import com.jetty.ssafficebe.notice.payload.NoticeSummaryForAdmin;
 import com.jetty.ssafficebe.notice.repository.NoticeRepository;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
 import com.jetty.ssafficebe.user.converter.UserConverter;
@@ -128,11 +129,18 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public List<NoticeSummary> getNoticePageByCreateUser(Long userId, NoticeFilterRequest noticeFilterRequest,
-                                                         Sort sort) {
+    public List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, NoticeFilterRequest noticeFilterRequest,
+                                                                 Sort sort) {
 
         List<Notice> result = noticeRepository.getNoticeListByCreateUserAndFilter(userId, noticeFilterRequest, sort);
+        List<NoticeSummary> noticeSummaryList = noticeConverter.toNoticeSummaryList(result);
 
-        return noticeConverter.toNoticeSummaryList(result);
+        // 수행여부 count 추가
+        return noticeSummaryList.stream().map(noticeSummary -> {
+            NoticeSummaryForAdmin noticeSummaryForAdmin = new NoticeSummaryForAdmin();
+            noticeSummaryForAdmin.setNoticeSummary(noticeSummary);
+            noticeSummaryForAdmin.setScheduleEnrolledCount(scheduleService.getEnrollCount(noticeSummary.getNoticeId()));
+            return noticeSummaryForAdmin;
+        }).toList();
     }
 }
