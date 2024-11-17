@@ -2,7 +2,6 @@ package com.jetty.ssafficebe.common.jpa;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.PathBuilderFactory;
 import com.querydsl.jpa.JPQLQuery;
