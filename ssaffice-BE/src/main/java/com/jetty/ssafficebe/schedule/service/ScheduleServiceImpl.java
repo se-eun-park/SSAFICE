@@ -316,6 +316,17 @@ public class ScheduleServiceImpl implements ScheduleService {
                                    .scheduleEnrolledCount(scheduleEnrolledCount).build();
     }
 
+    @Override
+    public ScheduleEnrolledCount getEnrollCount(Long noticeId) {
+        log.info("[Schedule] 공지사항 파생 일정 등록, 완료 카운트 시작 - noticeId={}", noticeId);
+
+        List<Schedule> schedules = scheduleRepository.findAllByNoticeId(noticeId);
+        ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(schedules);
+
+        log.info("[Schedule] 공지사항 파생 일정 등록, 완료 카운트 완료 - enrolledCount={}, enrolledCompleteCount={}",
+                 scheduleEnrolledCount.getEnrolledCount(), scheduleEnrolledCount.getCompletedCount());
+        return scheduleEnrolledCount;
+    }
 
     /**
      * 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용하는 메서드
