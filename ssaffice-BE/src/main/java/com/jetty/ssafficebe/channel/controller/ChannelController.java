@@ -22,4 +22,9 @@ public class ChannelController {
         return ResponseEntity.ok(channelService.getChannelsByUserId(userId));
     }
 
+    @GetMapping("/ids/{userId}")
+    public ResponseEntity<List<String>> getChannelIdsByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(channelService.getChannelIdsByUserId(userId));
+    }
+
 }
