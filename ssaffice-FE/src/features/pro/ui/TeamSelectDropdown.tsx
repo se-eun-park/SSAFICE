@@ -1,4 +1,4 @@
-import { DownArrowIcon, ExitButton, SpreadRight } from '@/assets/svg'
+import { CheckedCircle, DownArrowIcon, ExitButton, SpreadRight } from '@/assets/svg'
 import { useClickedToggle, useClickOutsideToggle } from '@/shared/model'
 import { DropDown } from '@/shared/ui'
 import { useRef } from 'react'
@@ -86,7 +86,20 @@ export const TeamSelectDropdown = () => {
                   key={each.teamId}
                 >
                   <div className='text-color-text-primary body-md-medium'>{each.name}</div>
-                  <SpreadRight />
+                  <div
+                    className='
+                    flex justify-center items-center
+                    w-spacing-12 h-spacing-12
+                  '
+                  >
+                    <div
+                      className='
+                      w-spacing-6 h-spacing-10
+                    '
+                    >
+                      <SpreadRight />
+                    </div>
+                  </div>
                 </button>
               ))}
             </div>
@@ -121,12 +134,25 @@ export const TeamSelectDropdown = () => {
                       checked={selectedChannelList.includes(each.channelId)}
                       onChange={(e) => handleSelectChannel(each.channelId, e.target.checked)}
                     />
+                    {selectedChannelList.includes(each.channelId) ? (
+                      <CheckedCircle />
+                    ) : (
+                      <div
+                        className='
+                        flex 
+                        w-spacing-20 h-spacing-20 
+                        border border-spacing-1 border-color-border-secondary
+                        rounded-full aspect-square
+                        
+                      '
+                      ></div>
+                    )}
                   </label>
                 </div>
               ))}
             </div>
           </div>
-          {selectedChannelList.length && (
+          {selectedChannelList.length > 0 && (
             <button
               className='
                 flex self-end justify-center items-center
