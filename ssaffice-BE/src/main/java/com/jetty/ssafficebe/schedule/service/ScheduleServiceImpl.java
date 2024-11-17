@@ -16,9 +16,12 @@ import com.jetty.ssafficebe.schedule.code.ScheduleSourceType;
 import com.jetty.ssafficebe.schedule.converter.ScheduleConverter;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
+import com.jetty.ssafficebe.schedule.payload.ScheduleEnrolledCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.SchedulePageResponse;
+import com.jetty.ssafficebe.schedule.payload.ScheduleStatusCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
+import com.jetty.ssafficebe.schedule.payload.UpdateScheduleRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
@@ -137,9 +140,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ApiResponse updateSchedule(Long userId, Long scheduleId, ScheduleRequest scheduleRequest) {
+    public ApiResponse updateSchedule(Long userId, Long scheduleId, UpdateScheduleRequest updateScheduleRequest) {
         log.info("[Schedule] 일정 수정 시작 - scheduleId={}, userId={}, requestUserId={}", scheduleId, userId,
-                 scheduleRequest.getUserId());
+                 updateScheduleRequest.getUserId());
 
         // ! 1. 수정할 Schedule 조회
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
@@ -149,24 +152,24 @@ public class ScheduleServiceImpl implements ScheduleService {
         validateAuthorization(userId, schedule.getUserId());
 
         // ! 3. Schedule 기본 정보 업데이트 - 요청에 있는 필드만 수정
-        Optional.ofNullable(scheduleRequest.getTitle())
+        Optional.ofNullable(updateScheduleRequest.getTitle())
                 .ifPresent(schedule::setTitle);
-        Optional.ofNullable(scheduleRequest.getMemo())
+        Optional.ofNullable(updateScheduleRequest.getMemo())
                 .ifPresent(schedule::setMemo);
-        Optional.ofNullable(scheduleRequest.getStartDateTime())
+        Optional.ofNullable(updateScheduleRequest.getStartDateTime())
                 .ifPresent(schedule::setStartDateTime);
-        Optional.ofNullable(scheduleRequest.getEndDateTime())
+        Optional.ofNullable(updateScheduleRequest.getEndDateTime())
                 .ifPresent(schedule::setEndDateTime);
-        Optional.ofNullable(scheduleRequest.getScheduleStatusTypeCd())
+        Optional.ofNullable(updateScheduleRequest.getScheduleStatusTypeCd())
                 .ifPresent(schedule::setScheduleStatusTypeCd);
-        Optional.ofNullable(scheduleRequest.getIsEnrollYn())
+        Optional.ofNullable(updateScheduleRequest.getIsEnrollYn())
                 .ifPresent(schedule::setIsEnrollYn);
 
         // ! 4. Remind 정보 갱신 - reminds 요청에 있을 때만 수정
-        if (scheduleRequest.getRemindRequests() != null) {
+        if (updateScheduleRequest.getRemindRequests() != null) {
             remindRepository.deleteByScheduleId(scheduleId);
             schedule.getReminds().clear();
-            saveScheduleReminds(userId, scheduleRequest.getRemindRequests(), schedule.getScheduleId());
+            saveScheduleReminds(userId, updateScheduleRequest.getRemindRequests(), schedule.getScheduleId());
         }
 
         // ! 5. Schedule 저장 및 Response 반환
@@ -226,48 +229,24 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public SchedulePageResponse getScheduleList(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable) {
-        log.info(
-                "[Schedule] 일정 목록 조회 시작 - filter=[isEnroll={}, sourceType={}, statusType={}, startDt={}, endDt={}], page={}, size={}",
-                filterRequest.getIsEnrollYn(),
-                filterRequest.getScheduleSourceTypeCd(),
-                filterRequest.getScheduleStatusTypeCd(),
-                filterRequest.getFilterStartDateTime(),
-                filterRequest.getFilterEndDateTime(),
-                pageable.getPageNumber(),
-                pageable.getPageSize());
+    public SchedulePageResponse getSchedules(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable) {
+        log.info("[Schedule] 개인 일정 목록 조회 시작 - userId={}", userId);
 
-        // ! 1. 해당 공지사항의 전체 일정들 조회하여 상태 카운트 계산
-        List<Schedule> allNoticeSchedules = scheduleRepository.findAllByUserId(userId);
-
-        long todoCount = allNoticeSchedules.stream()
-                                           .filter(s -> "TODO".equals(s.getScheduleStatusTypeCd()))
-                                           .count();
-
-        long inProgressCount = allNoticeSchedules.stream()
-                                                 .filter(s -> "IN_PROGRESS".equals(s.getScheduleStatusTypeCd()))
-                                                 .count();
-
-        long doneCount = allNoticeSchedules.stream()
-                                           .filter(s -> "DONE".equals(s.getScheduleStatusTypeCd()))
-                                           .count();
-
-        List<Integer> statusCounts = Arrays.asList(
-                (int) todoCount,
-                (int) inProgressCount,
-                (int) doneCount
-        );
-
-        // ! 2. 조건에 맞는 일정 리스트 생성
+        // ! 1. 조건에 맞는 일정 리스트 생성
         Page<Schedule> schedulesPage = scheduleRepository.findSchedulesByUserIdAndFilter(userId, filterRequest,
                                                                                          pageable);
 
-        // ! 3. 응답 생성
-        Page<ScheduleSummary> result = schedulesPage.map(scheduleConverter::toScheduleSummary);
+        // ! 2. 조회된 일정에서 상태별 카운트 계산
+        ScheduleStatusCount scheduleStatusCount = scheduleRepository.getStatusCounts(schedulesPage.getContent());
 
-        log.info("[Schedule] 일정 목록 조회 완료 - totalElements={}, totalPages={}", result.getTotalElements(),
-                 result.getTotalPages());
-        return scheduleConverter.toSchedulePageResponse(result, statusCounts);
+        // ! 3. 응답 생성
+        Page<ScheduleSummary> scheduleSummaryPage = schedulesPage.map(scheduleConverter::toScheduleSummary);
+
+        log.info("[Schedule] 일정 목록 조회 완료 - totalElements={}, totalPages={}", scheduleSummaryPage.getTotalElements(),
+                 scheduleSummaryPage.getTotalPages());
+        return SchedulePageResponse.builder()
+                                   .scheduleSummaryPage(scheduleSummaryPage)
+                                   .scheduleStatusCount(scheduleStatusCount).build();
     }
 
     /**
@@ -278,38 +257,75 @@ public class ScheduleServiceImpl implements ScheduleService {
                                                              Pageable pageable) {
         log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 시작 - noticeId={}", noticeId);
 
-        // ! 1. 해당 공지사항의 전체 일정들 조회하여 상태 카운트 계산
-        List<Schedule> allNoticeSchedules = scheduleRepository.findAllByNoticeId(noticeId);
-
-        long todoCount = allNoticeSchedules.stream()
-                                           .filter(s -> "TODO".equals(s.getScheduleStatusTypeCd()))
-                                           .count();
-
-        long inProgressCount = allNoticeSchedules.stream()
-                                                 .filter(s -> "IN_PROGRESS".equals(s.getScheduleStatusTypeCd()))
-                                                 .count();
-
-        long doneCount = allNoticeSchedules.stream()
-                                           .filter(s -> "DONE".equals(s.getScheduleStatusTypeCd()))
-                                           .count();
-
-        List<Integer> statusCounts = Arrays.asList(
-                (int) todoCount,
-                (int) inProgressCount,
-                (int) doneCount
-        );
-
-        // ! 2. 해당 공지사항의 일정들 필터 조회
+        // ! 1. 해당 공지사항의 일정들 필터 조회
         Page<Schedule> schedulePage = scheduleRepository.findSchedulesByNoticeIdAndFilter(noticeId, filterRequest,
                                                                                           pageable);
 
-        // ! 3. ScheduleSummary 로 변환
+        // ! 2. 조회된 일정에서 일정 상태별 카운트
+        ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(schedulePage.getContent());
+
+        // ! 3. 응답 생성
+        Page<ScheduleSummary> scheduleSummaryPage = schedulePage.map(scheduleConverter::toScheduleSummary);
+
+        log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 완료 - totalElements={}, totalPages={}",
+                 scheduleSummaryPage.getTotalElements(),
+                 scheduleSummaryPage.getTotalPages());
+        return SchedulePageResponse.builder()
+                                   .scheduleSummaryPage(scheduleSummaryPage)
+                                   .scheduleEnrolledCount(scheduleEnrolledCount).build();
+    }
+
+    @Override
+    public Page<ScheduleSummary> getUnregisteredNoticeSchedules(Long userId,
+                                                                ScheduleFilterRequest scheduleFilterRequest,
+                                                                Pageable pageable) {
+        log.info("[Schedule] 미등록 공지 목록 조회 시작 - userId={}", userId);
+
+        // ! 1. 미등록 공지사항 일정 조회
+        Page<Schedule> schedulePage = scheduleRepository.findSchedulesByUserIdAndFilter(userId, scheduleFilterRequest,
+                                                                                        pageable);
+
+        // ! 2. 응답 생성
         Page<ScheduleSummary> result = schedulePage.map(scheduleConverter::toScheduleSummary);
 
-        log.info("[Schedule] 공지사항 관련 교육생 일정 필터 조회 완료 - noticeId={}, count={}",
-                 noticeId, result.getTotalElements());
+        log.info("[Schedule] 미등록 공지 목록 조회 완료 - totalElements={}, totalPages={}", result.getTotalElements(),
+                 result.getTotalPages());
+        return result;
+    }
 
-        return scheduleConverter.toSchedulePageResponse(result, statusCounts);
+    @Override
+    public SchedulePageResponse getAssignedSchedules(Long userId, ScheduleFilterRequest scheduleFilterRequest,
+                                                     Pageable pageable) {
+        log.info("[Schedule] 관리자 할당 일정 목록 조회 시작 - userId={}", userId);
+
+        // ! 1. 관리자 할당 일정 조회
+        Page<Schedule> schedulePage = scheduleRepository.findSchedulesByUserIdAndFilter(userId, scheduleFilterRequest,
+                                                                                        pageable);
+
+        // ! 2. 조회된 일정에서 등록 상태별 카운트
+        ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(schedulePage.getContent());
+
+        // ! 3. 응답 생성
+        Page<ScheduleSummary> scheduleSummaryPage = schedulePage.map(scheduleConverter::toScheduleSummary);
+
+        log.info("[Schedule] 관리자 할당 일정 목록 조회 완료 - totalElements={}, totalPages={}",
+                 scheduleSummaryPage.getTotalElements(),
+                 scheduleSummaryPage.getTotalPages());
+        return SchedulePageResponse.builder()
+                                   .scheduleSummaryPage(scheduleSummaryPage)
+                                   .scheduleEnrolledCount(scheduleEnrolledCount).build();
+    }
+
+    @Override
+    public ScheduleEnrolledCount getEnrollCount(Long noticeId) {
+        log.info("[Schedule] 공지사항 파생 일정 등록, 완료 카운트 시작 - noticeId={}", noticeId);
+
+        List<Schedule> schedules = scheduleRepository.findAllByNoticeId(noticeId);
+        ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(schedules);
+
+        log.info("[Schedule] 공지사항 파생 일정 등록, 완료 카운트 완료 - enrolledCount={}, enrolledCompleteCount={}",
+                 scheduleEnrolledCount.getEnrolledCount(), scheduleEnrolledCount.getCompletedCount());
+        return scheduleEnrolledCount;
     }
 
     /**
@@ -317,13 +333,16 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     private void validateAuthorization(Long userId, Long requestUserId) {
         boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId,
-                                                                       Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
+                                                                       Arrays.asList("ROLE_ADMIN",
+                                                                                     "ROLE_SYSADMIN"));
 
         if (!requestUserId.equals(userId) && !isAdmin) {
-            log.warn("[Authorization] 권한 없음 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId, isAdmin);
+            log.warn("[Authorization] 권한 없음 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId,
+                     isAdmin);
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "userId", userId);
         }
-        log.info("[Authorization] 권한 검증 완료 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId, isAdmin);
+        log.info("[Authorization] 권한 검증 완료 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId,
+                 isAdmin);
     }
 
     /**
