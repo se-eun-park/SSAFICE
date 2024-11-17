@@ -52,12 +52,9 @@ public class AbstractQueryDslRepository {
     }
 
     /**
-     * Sort를 OrderSpecifier로 변환
+     * Sort를 적용한 리스트 조회
      * @param query : 정렬조건을 추가할 쿼리 몸통
      * @param sort : 정렬 조건
-     *
-     * @return
-     * @param <T>
      */
     protected <T> List<T> getSortedList(JPQLQuery<T> query, Sort sort) {
         return getQuerydsl(query.getType()).applySorting(sort, query).fetch();
