@@ -137,7 +137,6 @@ export const TeamSelectDropdown = ({
                       className='opacity-0 w-0 h-0'
                       id={`radioChannel-${each.channelId}`}
                       type='radio'
-                      name='checkChannel'
                       value={each.channelId}
                       checked={selectedChannel?.channelId === each.channelId}
                       onChange={(e) => handleSelectChannel(each, e.target.checked)}
