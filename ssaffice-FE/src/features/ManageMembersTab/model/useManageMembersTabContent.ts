@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react'
-import { dummySsafyUsers, MattermostChannel, SsafyUser } from './types'
+import { dummySsafyUsers, MattermostChannel, SsafyUser, SsafyUserApiResponse } from './types'
 
 export const useManageMembersTabContent = (channel: MattermostChannel) => {
   const [userInChannelList, setUserInChannelList] = useState<SsafyUser[]>([])
   const [selectedUserInChannelList, setSelectedUserInChannelList] = useState<SsafyUser[]>([])
   const [selectedAll, setSelectedAll] = useState(false)
+  const [pageInfo, setPageInfo] = useState<{
+    pageable: Object
+    totalPages: number
+    totalElements: number
+  }>()
 
   // 1초 후에 데이터를 반환하는 예시 API 함수
-  const fetchAPI = async (channelId: number): Promise<SsafyUser[]> => {
+  const fetchAPI = async (channelId: number): Promise<SsafyUserApiResponse> => {
     return new Promise((resolve) => {
       setTimeout(() => {
         // 여기서는 더미 데이터를 반환
@@ -20,7 +25,7 @@ export const useManageMembersTabContent = (channel: MattermostChannel) => {
   useEffect(() => {
     const fetchUserInChannelList = async () => {
       const res = await fetchAPI(channel.channelId)
-      setUserInChannelList(res)
+      setUserInChannelList(res.users)
     }
 
     fetchUserInChannelList()

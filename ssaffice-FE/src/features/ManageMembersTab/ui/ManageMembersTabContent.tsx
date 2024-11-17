@@ -290,6 +290,12 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
           ))}
         </div>
         {/* 페이지네이션 영역 */}
+        <div
+          className='
+          flex justify-center items-center
+          h-[68px] pt-spacing-12 pb-spacing-16 px-spacing-24
+        '
+        ></div>
       </div>
     </div>
   )
