@@ -4,7 +4,6 @@ import com.jetty.ssafficebe.channel.converter.ChannelConverter;
 import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.channel.entity.UserChannel;
 import com.jetty.ssafficebe.channel.payload.ChannelSummary;
-import com.jetty.ssafficebe.channel.respository.ChannelRepository;
 import com.jetty.ssafficebe.channel.respository.UserChannelRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChannelServiceImpl implements ChannelService {
 
-    private final ChannelRepository channelRepository;
     private final ChannelConverter channelConverter;
 
     private final UserChannelRepository userChannelRepository;
@@ -29,5 +27,9 @@ public class ChannelServiceImpl implements ChannelService {
                                              .toList();
 
         return channelConverter.toChannelSummaryList(channels);
+    }
+
+    public List<String> getChannelIdsByUserId(Long userId) {
+        return userChannelRepository.findChannelIdsByUserId(userId);
     }
 }

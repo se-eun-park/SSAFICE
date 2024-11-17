@@ -5,11 +5,11 @@
     },
     "title": {
       "type": "text",
-      "analyzer": "jetty_notice_analyzer"
+      "analyzer": "notice_title_analyzer"
     },
     "content": {
       "type": "text",
-      "analyzer": "jetty_notice_analyzer"
+      "analyzer": "notice_content_analyzer"
     },
     "createdAt": {
       "type": "date",
@@ -40,9 +40,18 @@
     },
     "createUserName": {
       "type": "text",
-      "analyzer": "jetty_notice_analyzer"
+      "analyzer": "notice_title_analyzer"
     },
     "channelId": {
+      "type": "keyword"
+    },
+    "channelName": {
+      "type": "keyword"
+    },
+    "mmTeamId": {
+      "type": "keyword"
+    },
+    "mmTeamName": {
       "type": "keyword"
     }
   }
