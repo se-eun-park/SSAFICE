@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.common.jpa;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.PathBuilderFactory;
 import com.querydsl.jpa.JPQLQuery;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.Querydsl;
 
 @RequiredArgsConstructor
@@ -48,5 +50,17 @@ public class AbstractQueryDslRepository {
 
     protected <T> JPQLQuery<T> from(EntityPath<T> path) {
         return queryFactory.selectFrom(path);
+    }
+
+    /**
+     * Sort를 OrderSpecifier로 변환
+     * @param query : 정렬조건을 추가할 쿼리 몸통
+     * @param sort : 정렬 조건
+     *
+     * @return
+     * @param <T>
+     */
+    protected <T> List<T> getSortedList(JPQLQuery<T> query, Sort sort) {
+        return getQuerydsl(query.getType()).applySorting(sort, query).fetch();
     }
 }
