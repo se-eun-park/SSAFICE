@@ -156,19 +156,23 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 2. 권한 검증
         validateAuthorization(userId, schedule.getUserId());
 
-        // ! 3. Schedule 기본 정보 업데이트 - 요청에 있는 필드만 수정
-        Optional.ofNullable(updateScheduleRequest.getTitle())
-                .ifPresent(schedule::setTitle);
+        // ! 3. 케이스에 따라서 수정 - 개인 일정만 제목, 시작,종료일 수정 가능
         Optional.ofNullable(updateScheduleRequest.getMemo())
                 .ifPresent(schedule::setMemo);
-        Optional.ofNullable(updateScheduleRequest.getStartDateTime())
-                .ifPresent(schedule::setStartDateTime);
-        Optional.ofNullable(updateScheduleRequest.getEndDateTime())
-                .ifPresent(schedule::setEndDateTime);
         Optional.ofNullable(updateScheduleRequest.getScheduleStatusTypeCd())
                 .ifPresent(schedule::setScheduleStatusTypeCd);
-        Optional.ofNullable(updateScheduleRequest.getIsEnrollYn())
-                .ifPresent(schedule::setIsEnrollYn);
+        if (!schedule.getIsEssential() && schedule.getNoticeId() != null) {
+            Optional.ofNullable(updateScheduleRequest.getIsEnrollYn())
+                    .ifPresent(schedule::setIsEnrollYn);
+        }
+        if (schedule.getScheduleSourceType() == ScheduleSourceType.PERSONAL) {
+            Optional.ofNullable(updateScheduleRequest.getTitle())
+                    .ifPresent(schedule::setTitle);
+            Optional.ofNullable(updateScheduleRequest.getStartDateTime())
+                    .ifPresent(schedule::setStartDateTime);
+            Optional.ofNullable(updateScheduleRequest.getEndDateTime())
+                    .ifPresent(schedule::setEndDateTime);
+        }
 
         // ! 4. Remind 정보 갱신 - reminds 요청에 있을 때만 수정
         if (updateScheduleRequest.getRemindRequests() != null) {
@@ -217,7 +221,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         // ! 3-2. 공지 파생 일정일 경우 처리 및 Response 반환
-        if (schedule.getNotice() != null && !ScheduleSourceType.PERSONAL.name().equals(schedule.getScheduleSourceTypeCd())) {
+        if (schedule.getNotice() != null && !ScheduleSourceType.PERSONAL.name()
+                                                                        .equals(schedule.getScheduleSourceTypeCd())) {
             schedule.setIsEnrollYn("N");
             scheduleRepository.save(schedule);
             return new ApiResponse(true, "팀 공지 일정이 미등록 처리되었습니다.", scheduleId);
