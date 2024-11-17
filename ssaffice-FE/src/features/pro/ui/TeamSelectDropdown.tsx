@@ -2,7 +2,7 @@ import { CheckedCircle, DownArrowIcon, ExitButton, SpreadRight } from '@/assets/
 import { useClickedToggle, useClickOutsideToggle } from '@/shared/model'
 import { DropDown } from '@/shared/ui'
 import { useRef } from 'react'
-import { dummyMattermostTeams, MattermostTeam } from '../model/types'
+import { dummyMattermostTeams } from '../model/types'
 import { useTeamSelectDropdown } from '../model/useTeamSelectDropdown'
 
 export const TeamSelectDropdown = () => {
@@ -16,8 +16,8 @@ export const TeamSelectDropdown = () => {
     selectedIndex,
     channelList,
     saveSelectedChannels, // '적용' 버튼에 들어갈 onClick 로직
-    handleSelectChannel, // 채널 체크박스 선택 시 적용될 로직
-    selectedChannelList, // 체크박스로 선택된 채널 리스트
+    handleSelectChannel, // 채널 선택 시
+    selectedChannel, // 선택된 채널
   } = useTeamSelectDropdown(dummyMattermostTeams)
 
   return (
@@ -121,20 +121,20 @@ export const TeamSelectDropdown = () => {
               {channelList?.map((each) => (
                 <div key={each.channelId} className='hover:bg-color-bg-interactive-secondary-hover'>
                   <label
-                    htmlFor={`checkChannel-${each.channelId}`}
+                    htmlFor={`radioChannel-${each.channelId}`}
                     className='flex justify-between gap-spacing-10 h-[51px] p-spacing-16'
                   >
                     <div className='text-color-text-primary body-md-medium'>{each.name}</div>
                     <input
                       className='opacity-0 w-0 h-0'
-                      id={`checkChannel-${each.channelId}`}
-                      type='checkbox'
+                      id={`radioChannel-${each.channelId}`}
+                      type='radio'
                       name='checkChannel'
                       value={each.channelId}
-                      checked={selectedChannelList.includes(each.channelId)}
+                      checked={selectedChannel === each.channelId}
                       onChange={(e) => handleSelectChannel(each.channelId, e.target.checked)}
                     />
-                    {selectedChannelList.includes(each.channelId) ? (
+                    {selectedChannel === each.channelId ? (
                       <CheckedCircle />
                     ) : (
                       <div
@@ -152,7 +152,7 @@ export const TeamSelectDropdown = () => {
               ))}
             </div>
           </div>
-          {selectedChannelList.length > 0 && (
+          {selectedChannel && (
             <button
               className='
                 flex self-end justify-center items-center
@@ -163,7 +163,7 @@ export const TeamSelectDropdown = () => {
                 hover:bg-color-bg-interactive-primary-hover
                 active:bg-color-bg-interactive-primary-press
                 '
-              onClick={saveSelectedChannels}
+              onClick={() => saveSelectedChannels(handleIsClicked)}
             >
               적용
             </button>
