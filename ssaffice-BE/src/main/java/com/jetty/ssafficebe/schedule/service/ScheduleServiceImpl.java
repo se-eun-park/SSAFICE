@@ -211,22 +211,19 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 2. 권한 검증
         validateAuthorization(userId, schedule.getUserId());
 
-        // ! 3. 관리자 권한 검증
-        boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId,
-                                                                       Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
-
-        if (schedule.getIsEssential() && !isAdmin) {
+        // ! 3-1. 필수 일정이고 관리자가 아닐 경우 삭제 시도 예외처리
+        if (schedule.getIsEssential() && !isAdmin(userId)) {
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "scheduleId", scheduleId);
         }
 
-        // ! 4. 팀 공지 일정 처리 및 Response 반환
-        if (schedule.getNotice() != null && ScheduleSourceType.TEAM.name().equals(schedule.getScheduleSourceTypeCd())) {
+        // ! 3-2. 공지 파생 일정일 경우 처리 및 Response 반환
+        if (schedule.getNotice() != null && !ScheduleSourceType.PERSONAL.name().equals(schedule.getScheduleSourceTypeCd())) {
             schedule.setIsEnrollYn("N");
             scheduleRepository.save(schedule);
             return new ApiResponse(true, "팀 공지 일정이 미등록 처리되었습니다.", scheduleId);
         }
 
-        // ! 5. 개인 일정 삭제 및 Response 반환
+        // ! 3-3. 개인 일정일 경우 삭제 및 Response 반환
         scheduleRepository.delete(schedule);
         log.info("[Schedule] 일정 삭제 완료 - scheduleId={}", scheduleId);
 
@@ -340,17 +337,11 @@ public class ScheduleServiceImpl implements ScheduleService {
      * 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용하는 메서드
      */
     private void validateAuthorization(Long userId, Long requestUserId) {
-        boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId,
-                                                                       Arrays.asList("ROLE_ADMIN",
-                                                                                     "ROLE_SYSADMIN"));
-
-        if (!requestUserId.equals(userId) && !isAdmin) {
-            log.warn("[Authorization] 권한 없음 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId,
-                     isAdmin);
+        if (!requestUserId.equals(userId) && !isAdmin(userId)) {
+            log.warn("[Authorization] 권한 없음 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId, false);
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "userId", userId);
         }
-        log.info("[Authorization] 권한 검증 완료 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId,
-                 isAdmin);
+        log.info("[Authorization] 권한 검증 완료 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId, true);
     }
 
     /**
@@ -376,5 +367,12 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         });
         log.info("[Schedule] 알림 등록 완료 - scheduleId={}", scheduleId);
+    }
+
+    /**
+     * 관리자 권한 체크 메서드
+     */
+    private boolean isAdmin(Long userId) {
+        return userRoleRepository.existsByUserIdAndRoleIdIn(userId, Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
     }
 }
