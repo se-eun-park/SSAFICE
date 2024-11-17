@@ -1,4 +1,4 @@
-import { DownArrowIcon, ExitButton } from '@/assets/svg'
+import { DownArrowIcon, ExitButton, SpreadRight } from '@/assets/svg'
 import { useClickedToggle, useClickOutsideToggle } from '@/shared/model'
 import { DropDown } from '@/shared/ui'
 import { useRef } from 'react'
@@ -86,10 +86,7 @@ export const TeamSelectDropdown = () => {
                   key={each.teamId}
                 >
                   <div className='text-color-text-primary body-md-medium'>{each.name}</div>
-                  <div className='text-color-icon-primary body-md-medium'>
-                    {/* 급한대로 부등호 넣었는데 SVG로 고쳐 주세요^^! */}
-                    &gt;
-                  </div>
+                  <SpreadRight />
                 </button>
               ))}
             </div>
@@ -116,6 +113,7 @@ export const TeamSelectDropdown = () => {
                   >
                     <div className='text-color-text-primary body-md-medium'>{each.name}</div>
                     <input
+                      className='opacity-0 w-0 h-0'
                       id={`checkChannel-${each.channelId}`}
                       type='checkbox'
                       name='checkChannel'

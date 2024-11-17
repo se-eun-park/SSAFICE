@@ -34,14 +34,14 @@ export const useSortingUnscheduled = (
 
   Object.keys(result)
     .sort((a, b) => {
-      return new Date(a).getTime() - new Date(b).getTime()
+      return new Date(b).getTime() - new Date(a).getTime()
     })
     .forEach((key) => {
       switch (type) {
         case 'by deadline': {
           sortedResult[key] = result[key].sort((a, b) => {
             if (a.todo.endDateTime && b.todo.endDateTime)
-              return a.todo.endDateTime.getTime() - b.todo.endDateTime.getTime()
+              return b.todo.endDateTime.getTime() - a.todo.endDateTime.getTime()
             else return 0
           })
           break
@@ -49,7 +49,7 @@ export const useSortingUnscheduled = (
 
         case 'by registration': {
           sortedResult[key] = result[key].sort(
-            (a, b) => a.announcement.createdAt.getTime() - b.announcement.createdAt.getTime(),
+            (a, b) => b.announcement.createdAt.getTime() - a.announcement.createdAt.getTime(),
           )
           break
         }

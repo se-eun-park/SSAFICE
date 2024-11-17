@@ -1,4 +1,4 @@
-import { DownArrowIcon } from '@/assets/svg'
+import { RefreshIcon } from '@/assets/svg'
 import { useRefreshMattermostConnection } from '@/shared/model'
 
 export const RefreshMattermostConnection = () => {
@@ -16,7 +16,7 @@ export const RefreshMattermostConnection = () => {
       '
         onClick={refreshMattermostConnect}
       >
-        <DownArrowIcon />
+        <RefreshIcon />
       </button>
 
       <div
