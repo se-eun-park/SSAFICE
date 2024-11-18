@@ -56,7 +56,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 1. Schedule 엔티티 생성 및 연관관계 설정
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
-        if (scheduleRequest.getScheduleStatusType() == null) {
+        if (scheduleRequest.getScheduleStatusTypeCd() == null) {
             schedule.setScheduleStatusTypeCd("TODO");
         }
         if (scheduleRequest.getScheduleSourceTypeCd() == null) {
