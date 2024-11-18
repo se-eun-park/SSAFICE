@@ -1,11 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { restrictToFirstScrollableAncestor } from '@dnd-kit/modifiers'
 
 import { useLockScrollX } from '@/features/todoTab/model/hooks'
 import { Card, CardColumn } from '@/features/todoTab'
-import { GetTodoData, CardColumnData } from '@/entities/todoTab'
-import type { GetTodoResponse } from '@/entities/todoTab'
+import { useTraineeScheduleList, CardColumnData } from '@/entities/todoTab'
+import type { TaskResponse } from '@/entities/todoTab'
+
+type ColumnLengthProps = {
+  TODO: number
+  IN_PROGRESS: number
+  DONE: number
+}
 
 export const TodoBoard = () => {
   // hook
@@ -19,16 +25,23 @@ export const TodoBoard = () => {
   const sensors = useSensors(pointerSensor)
 
   // state
-  const [tasks, setTasks] = useState<GetTodoResponse[]>(GetTodoData)
-  const [columnLength, setColumnLength] = useState(
-    CardColumnData.reduce(
-      (acc, column) => {
-        acc[column.id] = column.columnLength
-        return acc
-      },
-      {} as { [key: string]: number },
-    ),
-  )
+  const { data } = useTraineeScheduleList('updatedAt', '2024-11-01T00:00:00', '2024-12-01T00:00:00')
+
+  const [tasks, setTasks] = useState<TaskResponse[]>(data?.scheduleSummaries)
+  const [columnLength, setColumnLength] = useState<ColumnLengthProps>({
+    TODO: data?.scheduleStatusCount.todoCount,
+    IN_PROGRESS: data?.scheduleStatusCount.inProgressCount,
+    DONE: data?.scheduleStatusCount.doneCount,
+  })
+
+  useEffect(() => {
+    setTasks(data?.scheduleSummaries)
+    setColumnLength({
+      TODO: data?.scheduleStatusCount.todoCount,
+      IN_PROGRESS: data?.scheduleStatusCount.inProgressCount,
+      DONE: data?.scheduleStatusCount.doneCount,
+    })
+  }, [data])
 
   // event
   const handleDragEnd = (event: DragEndEvent) => {
@@ -38,7 +51,7 @@ export const TodoBoard = () => {
 
     const taskId = active.id as string
     const oldStatus = active.data.current?.status
-    const newStatus = over.id as GetTodoResponse['scheduleStatusTypeCd']
+    const newStatus = over.id as TaskResponse['scheduleStatusTypeCd']
 
     if (oldStatus === newStatus) return
 
@@ -54,8 +67,8 @@ export const TodoBoard = () => {
     })
 
     setColumnLength((prev) => {
-      const prevLength = prev[oldStatus]
-      const newLength = prev[newStatus]
+      const prevLength = prev[oldStatus as keyof ColumnLengthProps]
+      const newLength = prev[newStatus as keyof ColumnLengthProps]
 
       return {
         ...prev,
@@ -72,15 +85,15 @@ export const TodoBoard = () => {
         sensors={sensors}
         modifiers={[restrictToFirstScrollableAncestor]}
       >
-        {CardColumnData.map((column) => (
+        {CardColumnData?.map((column) => (
           <CardColumn
             key={column.id}
             id={column.id}
             label={column.label}
-            columnLength={columnLength[column.id]}
+            columnLength={columnLength[column.id as keyof ColumnLengthProps]}
           >
             {tasks
-              .filter((data) => data.scheduleStatusTypeCd === column.id)
+              ?.filter((data) => data?.scheduleStatusTypeCd === column.id)
               .map((todo) => (
                 <Card
                   key={todo.scheduleId}

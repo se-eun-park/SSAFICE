@@ -1,4 +1,4 @@
-export { GetTodoData } from './model/GetTodoData'
+export { useTraineeScheduleList } from './model/useTodoQuery'
 export { CardColumnData } from './model/CardColumnData'
 
-export type { GetTodoResponse, CardColumnResponse } from './model/types'
+export type { TaskResponse, CardColumnResponse } from './model/types'
