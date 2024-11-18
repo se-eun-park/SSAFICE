@@ -56,6 +56,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 1. Schedule 엔티티 생성 및 연관관계 설정
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
+        if (scheduleRequest.getScheduleSourceTypeCd() == null) {
+            schedule.setScheduleSourceTypeCd("PERSONAL");
+        }
         schedule.setUserId(userId);
 
         // ! 2. Schedule 저장
@@ -80,6 +83,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         // ! 2. 모든 일정 생성 및 저장
+        scheduleRequest.setScheduleSourceTypeCd("ASSIGNED");
         List<Long> savedScheduleIds = userIds.stream().map(userId -> {
                                                  try {
                                                      ApiResponse response = saveSchedule(userId, scheduleRequest);
@@ -152,19 +156,23 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 2. 권한 검증
         validateAuthorization(userId, schedule.getUserId());
 
-        // ! 3. Schedule 기본 정보 업데이트 - 요청에 있는 필드만 수정
-        Optional.ofNullable(updateScheduleRequest.getTitle())
-                .ifPresent(schedule::setTitle);
+        // ! 3. 케이스에 따라서 수정 - 개인 일정만 제목, 시작,종료일 수정 가능
         Optional.ofNullable(updateScheduleRequest.getMemo())
                 .ifPresent(schedule::setMemo);
-        Optional.ofNullable(updateScheduleRequest.getStartDateTime())
-                .ifPresent(schedule::setStartDateTime);
-        Optional.ofNullable(updateScheduleRequest.getEndDateTime())
-                .ifPresent(schedule::setEndDateTime);
         Optional.ofNullable(updateScheduleRequest.getScheduleStatusTypeCd())
                 .ifPresent(schedule::setScheduleStatusTypeCd);
-        Optional.ofNullable(updateScheduleRequest.getIsEnrollYn())
-                .ifPresent(schedule::setIsEnrollYn);
+        if (!schedule.getIsEssential() && schedule.getNoticeId() != null) {
+            Optional.ofNullable(updateScheduleRequest.getIsEnrollYn())
+                    .ifPresent(schedule::setIsEnrollYn);
+        }
+        if (schedule.getScheduleSourceType() == ScheduleSourceType.PERSONAL) {
+            Optional.ofNullable(updateScheduleRequest.getTitle())
+                    .ifPresent(schedule::setTitle);
+            Optional.ofNullable(updateScheduleRequest.getStartDateTime())
+                    .ifPresent(schedule::setStartDateTime);
+            Optional.ofNullable(updateScheduleRequest.getEndDateTime())
+                    .ifPresent(schedule::setEndDateTime);
+        }
 
         // ! 4. Remind 정보 갱신 - reminds 요청에 있을 때만 수정
         if (updateScheduleRequest.getRemindRequests() != null) {
@@ -207,22 +215,20 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 2. 권한 검증
         validateAuthorization(userId, schedule.getUserId());
 
-        // ! 3. 관리자 권한 검증
-        boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId,
-                                                                       Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
-
-        if (schedule.getIsEssential() && !isAdmin) {
+        // ! 3-1. 필수 일정이고 관리자가 아닐 경우 삭제 시도 예외처리
+        if (schedule.getIsEssential() && !isAdmin(userId)) {
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "scheduleId", scheduleId);
         }
 
-        // ! 4. 팀 공지 일정 처리 및 Response 반환
-        if (schedule.getNotice() != null && ScheduleSourceType.TEAM.name().equals(schedule.getScheduleSourceTypeCd())) {
+        // ! 3-2. 공지 파생 일정일 경우 처리 및 Response 반환
+        if (schedule.getNotice() != null && !ScheduleSourceType.PERSONAL.name()
+                                                                        .equals(schedule.getScheduleSourceTypeCd())) {
             schedule.setIsEnrollYn("N");
             scheduleRepository.save(schedule);
             return new ApiResponse(true, "팀 공지 일정이 미등록 처리되었습니다.", scheduleId);
         }
 
-        // ! 5. 개인 일정 삭제 및 Response 반환
+        // ! 3-3. 개인 일정일 경우 삭제 및 Response 반환
         scheduleRepository.delete(schedule);
         log.info("[Schedule] 일정 삭제 완료 - scheduleId={}", scheduleId);
 
@@ -234,8 +240,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("[Schedule] 개인 일정 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 조건에 맞는 일정 리스트 생성
-        List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilter(userId, filterRequest,
-                                                                                           sort);
+        filterRequest.setIsEnrollYn("Y");
+        List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilter(userId, filterRequest, sort);
 
         // ! 2. 조회된 일정에서 상태별 카운트 계산
         ScheduleStatusCount scheduleStatusCount = scheduleRepository.getStatusCounts(scheduleList);
@@ -278,14 +284,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId,
-                                                             ScheduleFilterRequest scheduleFilterRequest,
+    public Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId, ScheduleFilterRequest filterRequest,
                                                              Pageable pageable) {
         log.info("[Schedule] 미등록 공지 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 미등록 공지사항 일정 조회
-        Page<Schedule> schedulePage = scheduleRepository.findSchedulePageByUserIdAndFilter(userId,
-                                                                                           scheduleFilterRequest,
+        filterRequest.setIsEnrollYn("N");
+        Page<Schedule> schedulePage = scheduleRepository.findSchedulePageByUserIdAndFilter(userId, filterRequest,
                                                                                            pageable);
 
         // ! 2. 응답 생성
@@ -297,13 +302,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleListResponse getAssignedScheduleList(Long userId, ScheduleFilterRequest scheduleFilterRequest,
-                                                        Sort sort) {
+    public ScheduleListResponse getAssignedScheduleList(Long userId, ScheduleFilterRequest filterRequest, Sort sort) {
         log.info("[Schedule] 관리자 할당 일정 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 관리자 할당 일정 조회
+        filterRequest.setScheduleSourceTypeCd("ASSIGNED");
         List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilter(userId,
-                                                                                           scheduleFilterRequest,
+                                                                                           filterRequest,
                                                                                            sort);
 
         // ! 2. 조회된 일정에서 등록 상태별 카운트
@@ -337,17 +342,11 @@ public class ScheduleServiceImpl implements ScheduleService {
      * 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용하는 메서드
      */
     private void validateAuthorization(Long userId, Long requestUserId) {
-        boolean isAdmin = userRoleRepository.existsByUserIdAndRoleIdIn(userId,
-                                                                       Arrays.asList("ROLE_ADMIN",
-                                                                                     "ROLE_SYSADMIN"));
-
-        if (!requestUserId.equals(userId) && !isAdmin) {
-            log.warn("[Authorization] 권한 없음 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId,
-                     isAdmin);
+        if (!requestUserId.equals(userId) && !isAdmin(userId)) {
+            log.warn("[Authorization] 권한 없음 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId, false);
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "userId", userId);
         }
-        log.info("[Authorization] 권한 검증 완료 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId,
-                 isAdmin);
+        log.info("[Authorization] 권한 검증 완료 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId, true);
     }
 
     /**
@@ -373,5 +372,12 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         });
         log.info("[Schedule] 알림 등록 완료 - scheduleId={}", scheduleId);
+    }
+
+    /**
+     * 관리자 권한 체크 메서드
+     */
+    private boolean isAdmin(Long userId) {
+        return userRoleRepository.existsByUserIdAndRoleIdIn(userId, Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
     }
 }

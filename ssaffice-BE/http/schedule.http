@@ -1,6 +1,6 @@
 ### 변수 설정
 @scheduleId = 15
-@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjFAZ21haWwuY29tIiwiZXhwIjoxNzMxOTE5NjA4fQ.N4KAxWCiajBLG3HwqdvhC1hFUkzBa8TU0ZsfMsxjeLkKZhUJHKgbrDH8netEEXSHAno55IdO3P0lYO3Tgj5xgw
+@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjFAZ21haWwuY29tIiwiZXhwIjoxNzMxOTQxMTMwfQ.R7dtq40mqEcndj_u2svRQvDSZA7yMW0_RWjyVni2C73Fp_JW5kPrnY15l7IvTj6o9lFyNKOMFwfpsO2AKeNV-g
 @noticeId = 1
 
 ### 개인 일정 등록
@@ -13,7 +13,6 @@ Authorization: Bearer {{JWT}}
   "memo": "개인 일정 테스트4",
   "startDateTime": "2024-11-13T14:44:00",
   "endDateTime": "2024-11-17T18:00:00",
-  "scheduleSourceTypeCd": "PERSONAL",
   "remindRequests": [
     {
       "isEssentialYn": "N",
@@ -34,7 +33,6 @@ Authorization: Bearer {{JWT}}
     "memo": "관리자 개별 일정 테스트 내용4",
     "startDateTime": "2024-11-13T14:44:00",
     "endDateTime": "2024-11-17T18:00:00",
-    "scheduleSourceTypeCd": "TEAM",
     "remindRequests": [
       {
         "isEssentialYn": "N",
@@ -56,9 +54,6 @@ Authorization: Bearer {{JWT}}
   "memo": "테스트내용수정1",
   "startDateTime": "2024-11-01T12:44:00",
   "endDateTime": "2024-11-12T16:00:00",
-  "scheduleSourceTypeCd": "PERSONAL",
-  "scheduleStatusTypeCd": "IN_PROGRESS",
-  "userId": 1,
   "remindRequests": [
     {
       "isEssentialYn": "N",
@@ -87,7 +82,7 @@ DELETE http://localhost:9090/api/schedules/{{scheduleId}}
 Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
-### [일정 리스트]
+## [일정 리스트]
 
 ### 미등록 공지 조회
 GET http://localhost:9090/api/schedules/unregistered
@@ -95,12 +90,9 @@ Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
 {
-  "filterType": null,
-  "isEnrollYn": "N",
-  "scheduleStatusTypeCd": null,
-  "scheduleSourceTypeCd": null,
-  "filterStartDateTime": null,
-  "filterEndDateTime": null
+  "filterType": "createdAt",
+  "filterStartDateTime": "2024-11-01T12:44:00",
+  "filterEndDateTime": "2024-11-17T18:00:00"
 }
 
 ### 개인 일정 리스트 조회
@@ -110,23 +102,28 @@ Authorization: Bearer {{JWT}}
 
 {
   "filterType": "createdAt",
-  "isEnrollYn": null,
-  "scheduleStatusTypeCd": null,
-  "scheduleSourceTypeCd": null,
   "filterStartDateTime": "2024-11-01T09:00:00",
   "filterEndDateTime": "2024-11-30T18:00:00"
 }
 
-### 관리자의 일정 리스트 조회
+### 관리자의 개별 일정 리스트 조회
 GET http://localhost:9090/api/schedules/admin/assigned?sort=createdAt,desc
 Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
 {
   "filterType": "createdAt",
-  "isEnrollYn": null,
-  "scheduleStatusTypeCd": null,
-  "scheduleSourceTypeCd": "TEAM",
+  "filterStartDateTime": "2024-11-01T09:00:00",
+  "filterEndDateTime": "2024-11-30T18:00:00"
+}
+
+### 관리자의 공지 파생 일정 리스트 조회
+GET http://localhost:9090/api/schedules/admin/notices/{{noticeId}}
+Content-Type: application/json
+Authorization: Bearer {{JWT}}
+
+{
+  "filterType": "createdAt",
   "filterStartDateTime": "2024-11-01T09:00:00",
   "filterEndDateTime": "2024-11-30T18:00:00"
 }
