@@ -109,7 +109,7 @@ public class UserController {
     /**
      * 유저 리스트 조회
      */
-    @GetMapping("/admin")
+    @PostMapping("/admin")
     public ResponseEntity<Page<UserSummary>> getUserPage(@RequestBody UserFilterRequest userFilterRequest,
                                                          @PageableDefault(
                                                                  size = 20,

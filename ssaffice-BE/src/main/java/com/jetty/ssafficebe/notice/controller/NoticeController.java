@@ -86,7 +86,7 @@ public class NoticeController {
     /**
      * 내가 작성한 공지사항 리스트 조회
      */
-    @GetMapping("/admin/my")
+    @PostMapping("/admin/my")
     public ResponseEntity<List<NoticeSummaryForAdmin>> getMyNoticeList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody NoticeFilterRequest noticeFilterRequest,
