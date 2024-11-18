@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export const useSearchInput = () => {
   const [value, setValue] = useState('')
+  const [searchResult, setSearchResult] = useState('')
 
   const searchApi = (keyword: string) => {
     console.log(`검색 수행: ${keyword}`)
+    setSearchResult(keyword)
     // 추후 API 로직을 여기에 넣어 주세요.
   }
 
@@ -29,5 +31,5 @@ export const useSearchInput = () => {
     setValue(keyword)
   }
 
-  return { value, handleValue, keyPressHandler }
+  return { value, handleValue, keyPressHandler, searchResult }
 }
