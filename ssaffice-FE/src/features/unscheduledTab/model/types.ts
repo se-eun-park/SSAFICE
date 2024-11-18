@@ -14,7 +14,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-15T11:00:00'),
       scheduleSourceTypeCd: 'TEAM',
       scheduleStatusTypeCd: 'IN_PROGRESS',
-      user: {
+      createUser: {
         userId: 101,
         email: 'alice@example.com',
         name: '안인석(교육프로)',
@@ -59,7 +59,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-16T13:00:00'),
       scheduleSourceTypeCd: 'PERSONAL',
       scheduleStatusTypeCd: 'TODO',
-      user: {
+      createUser: {
         userId: 102,
         email: 'bob@example.com',
         name: 'Bob Lee',
@@ -96,7 +96,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-18T16:00:00'),
       scheduleSourceTypeCd: 'TEAM', // 팀 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 103,
         email: 'carol@example.com',
         name: 'Carol Smith',
@@ -123,7 +123,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-19T10:00:00'),
       scheduleSourceTypeCd: 'PERSONAL', // 개인 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 104,
         email: 'david@example.com',
         name: 'David Wang',
@@ -149,7 +149,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-20T14:00:00'),
       scheduleSourceTypeCd: 'TEAM', // 팀 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 105,
         email: 'eve@example.com',
         name: 'Eve Adams',
@@ -175,7 +175,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-21T10:00:00'),
       scheduleSourceTypeCd: 'GLOBAL', // 전사 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 106,
         email: 'frank@example.com',
         name: 'Frank Miller',
@@ -201,7 +201,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-22T21:00:00'),
       scheduleSourceTypeCd: 'TEAM', // 팀 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 107,
         email: 'grace@example.com',
         name: 'Grace Lee',
@@ -227,7 +227,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-23T12:00:00'),
       scheduleSourceTypeCd: 'GLOBAL', // 전사 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 108,
         email: 'hannah@example.com',
         name: 'Hannah Scott',
@@ -253,7 +253,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-24T16:00:00'),
       scheduleSourceTypeCd: 'TEAM', // 팀 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 109,
         email: 'ian@example.com',
         name: 'Ian Thomas',
@@ -279,7 +279,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-25T08:00:00'),
       scheduleSourceTypeCd: 'PERSONAL', // 개인 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 110,
         email: 'jackson@example.com',
         name: 'Jackson Brooks',
@@ -305,7 +305,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-26T11:00:00'),
       scheduleSourceTypeCd: 'GLOBAL', // 전사 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 111,
         email: 'karen@example.com',
         name: 'Karen Wilson',
@@ -332,7 +332,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-27T18:00:00'),
       scheduleSourceTypeCd: 'PERSONAL', // 개인 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 112,
         email: 'lily@example.com',
         name: 'Lily Green',
@@ -358,7 +358,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-28T09:00:00'),
       scheduleSourceTypeCd: 'GLOBAL', // 전사 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 113,
         email: 'michael@example.com',
         name: 'Michael Scott',
@@ -384,7 +384,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-29T11:00:00'),
       scheduleSourceTypeCd: 'TEAM', // 팀 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 114,
         email: 'nancy@example.com',
         name: 'Nancy Davis',
@@ -410,7 +410,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
       endDateTime: new Date('2024-11-30T16:00:00'),
       scheduleSourceTypeCd: 'PERSONAL', // 개인 일정
       scheduleStatusTypeCd: 'TODO', // 해야 할 일
-      user: {
+      createUser: {
         userId: 115,
         email: 'olivia@example.com',
         name: 'Olivia Turner',

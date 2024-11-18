@@ -5,12 +5,13 @@ export type TodoItemDisplay = {
   title: string
   startDateTime?: Date
   endDateTime?: Date
-  scheduleSourceTypeCd?: 'GLOBAL' | 'TEAM' | 'PERSONAL'
+  scheduleSourceTypeCd?: 'GLOBAL' | 'TEAM' | 'PERSONAL' | 'ASSIGNED'
   scheduleStatusTypeCd: 'TODO' | 'IN_PROGRESS' | 'DONE'
   isEssential?: boolean
   isEnroll?: boolean
-
-  user: createUser
+  createdAt?: Date
+  chargeUser?: createUser // 일정을 수행하는 교육생 // 더미데이터 깨져서 선택 파라메터 처리했습니다.
+  createUser: createUser // 일정을 등록한 사람(*교육생/프로)
 }
 
 export type ScheduleItemDisplay = {
@@ -66,7 +67,11 @@ export type ScheduleListDisplay = Record<string, ScheduleItemDisplay[]>
 export type TodoListDisplay = {
   // 일정 조회 API response
   todos: ScheduleItemDisplay[]
-  statusCounts: number[] // 차례로 TODO, IN_PROGRESS, DONE의 개수가 옵니다
+  scheduleStatusCount: {
+    todoCount: number
+    inProgressCount: number
+    doneCount: number
+  }
 }
 
 // sorting은 BE에서 해주니까 빼고 작업 (날짜로 묶을 필요 없음)
@@ -85,7 +90,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: false,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 1,
           name: '김철수',
         },
@@ -108,7 +113,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'IN_PROGRESS',
         isEssential: true,
         isEnroll: false,
-        user: {
+        createUser: {
           userId: 3,
           name: '이민호',
         },
@@ -131,7 +136,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'DONE',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 5,
           name: '최영수',
         },
@@ -154,7 +159,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: false,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 7,
           name: '홍길동',
         },
@@ -177,7 +182,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'IN_PROGRESS',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 9,
           name: '박준형',
         },
@@ -200,7 +205,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'DONE',
         isEssential: false,
         isEnroll: false,
-        user: {
+        createUser: {
           userId: 11,
           name: '한지민',
         },
@@ -223,7 +228,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 13,
           name: '윤상호',
         },
@@ -247,7 +252,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: false,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 1,
           name: '김철수',
         },
@@ -270,7 +275,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'IN_PROGRESS',
         isEssential: true,
         isEnroll: false,
-        user: {
+        createUser: {
           userId: 3,
           name: '이민호',
         },
@@ -293,7 +298,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'DONE',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 5,
           name: '최영수',
         },
@@ -316,7 +321,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: false,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 7,
           name: '홍길동',
         },
@@ -339,7 +344,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'IN_PROGRESS',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 9,
           name: '박준형',
         },
@@ -362,7 +367,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'DONE',
         isEssential: false,
         isEnroll: false,
-        user: {
+        createUser: {
           userId: 11,
           name: '한지민',
         },
@@ -385,7 +390,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 13,
           name: '윤상호',
         },
@@ -408,7 +413,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 13,
           name: '윤상호',
         },
@@ -422,5 +427,9 @@ export const dummyTodos: TodoListDisplay = {
       },
     },
   ],
-  statusCounts: [2, 1, 12], // TODO: 18개, IN_PROGRESS: 15개, DONE: 16개
+  scheduleStatusCount: {
+    todoCount: 2,
+    inProgressCount: 1,
+    doneCount: 12,
+  }, // TODO: 18개, IN_PROGRESS: 15개, DONE: 16개
 }

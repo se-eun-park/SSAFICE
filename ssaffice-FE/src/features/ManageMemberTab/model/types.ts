@@ -11,31 +11,26 @@ export type MattermostTeam = {
   channels: MattermostChannel[]
 }
 
-export type SsafyUserRoles = {
-  // 여기부터 작성
-  roleId?: string
-  description: string
-}
-
 export type SsafyUser = {
   // 유저 정보 조회 API 응답 그대로 작성
   userId: number
   email: string
   name: string
-  profileImage?: string
   cohortNum?: number // 프로의 경우에는 없음
-  // regionCd: string // 지역
   regionCd: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'DAEGU' | 'GWANGJU'
   classNum?: number // 반
-  // trackCd?: string // 트랙
   trackCd?: 'NON_MAJOR_PYTHON' | 'NON_MAJOR_JAVA' | 'MAJOR_JAVA' | 'EMBEDDED' | 'MOBILE' | 'DATA'
   curriculumCd?: string // 공통/특화/자율
   disabledYn?: boolean // 비활성화 유저인가
-  roles: SsafyUserRoles
+  roles: {
+    roleId?: 'ROLE_USER' | 'ROLE_ADMIN' | 'ROLE_SYSADMIN'
+    description: string
+  }
+  profileImage?: string
 }
 
 export type SsafyUserApiResponse = {
-  users: SsafyUser[]
+  content: SsafyUser[]
   pageable?: Pageable
   totalPages?: number
   totalElements?: number
@@ -93,7 +88,7 @@ export const codeToWord = (param: CodeToWordProps): string => {
 // MARK: DATAS
 export const dummySsafyUsers: SsafyUserApiResponse[] = [
   {
-    users: [
+    content: [
       {
         userId: 1,
         email: 'user1@ssafy.com',
@@ -103,6 +98,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
         classNum: 3,
         trackCd: 'MOBILE', // 대체
         roles: {
+          roleId: 'ROLE_USER',
           description: '학생',
         },
       },
@@ -115,6 +111,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
         classNum: 1,
         trackCd: 'DATA', // 대체
         roles: {
+          roleId: 'ROLE_USER',
           description: '학생',
         },
       },
@@ -231,7 +228,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
     totalElements: 35,
   },
   {
-    users: [
+    content: [
       {
         userId: 11,
         email: 'user11@ssafy.com',
@@ -369,7 +366,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
     totalElements: 35,
   },
   {
-    users: [
+    content: [
       {
         userId: 21,
         email: 'user21@ssafy.com',
@@ -507,7 +504,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
     totalElements: 35,
   },
   {
-    users: [
+    content: [
       {
         userId: 31,
         email: 'user31@ssafy.com',

@@ -109,7 +109,7 @@ export const AnnouncementTab = () => {
           ref={containerRef}
           className={`
           flex
-          ${isAllNoticeView ? 'mb-[130px]' : 'mb-[100px]'} px-spacing-16 pb-spacing-16 
+          ${isAllNoticeView ? 'mb-[172px]' : 'mb-[100px]'} px-spacing-16 pb-spacing-16 
           bg-color-bg-tertiary
           rounded-radius-8
           overflow-y-scroll

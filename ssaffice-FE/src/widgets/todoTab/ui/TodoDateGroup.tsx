@@ -11,9 +11,11 @@ type TodoDateGroupProps = {
 
 export const TodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupProps) => {
   const { isClicked, handleIsClicked } = useClickedToggle()
-  const statusCounts: number[] = useCalculateStatusCounts(dailySchedules)
+  const statusCounts: number[] = useCalculateStatusCounts({
+    param: { todos: dailySchedules, type: 'user' },
+  })
   return (
-    <>
+    <div className='flex flex-col relative'>
       <div
         className='
           flex gap-spacing-8
@@ -110,6 +112,6 @@ export const TodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupPro
           <TodoItem key={each.todo.scheduleId} todo={each} />
         ))}
       </div>
-    </>
+    </div>
   )
 }

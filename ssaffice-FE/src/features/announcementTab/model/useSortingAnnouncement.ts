@@ -1,4 +1,4 @@
-import { useDateFormatter } from '@/shared/model/useDateFormatter'
+import { useDateFormatter } from '@/shared/model'
 import type { AnnouncementItemDisplay, AnnouncementListDisplay } from './types'
 
 export const useSortingAnnouncement = (

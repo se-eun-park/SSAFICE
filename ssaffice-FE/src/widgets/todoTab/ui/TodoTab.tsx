@@ -7,6 +7,7 @@ import { useIsTabOpenStore } from '@/shared/model'
 import { TabLayout, HoverButton, SelectTodoState } from '@/shared/ui'
 import { CommonModal } from '@/shared/ui'
 import { HamburgerMenuIcon, FastLeftArrowIcon, CalendarIcon, EditIcon } from '@/assets/svg'
+import { SelectTodoSortCondition } from '@/features/todoTab/ui/SelectTodoSortCondition'
 
 export const TodoTab = () => {
   // store
@@ -52,14 +53,34 @@ export const TodoTab = () => {
         </TabLayout.Header>
         {isTabOpen ? (
           <TabLayout.Add>
-            <SelectTodoState
-              selectedState={selectedState}
-              setSelectedState={setSelectedState}
-              actionType='filter'
-            />
+            <div className='flex gap-spacing-16'>
+              <SelectTodoState
+                selectedState={selectedState}
+                setSelectedState={setSelectedState}
+                actionType='filter'
+              />
+              <SelectTodoSortCondition />
+            </div>
           </TabLayout.Add>
         ) : null}
-        <TabLayout.Content>{isTabOpen ? <TodoList /> : <TodoBoard />}</TabLayout.Content>
+
+        <TabLayout.Content>
+          {isTabOpen ? (
+            <div
+              className={`
+              flex
+              mb-[99px] px-spacing-16 pb-spacing-16 
+              bg-color-bg-tertiary
+              rounded-radius-8
+              overflow-y-scroll
+            `}
+            >
+              <TodoList />
+            </div>
+          ) : (
+            <TodoBoard />
+          )}
+        </TabLayout.Content>
       </TabLayout>
       <CommonModal
         name='TraineeTodo'

@@ -17,6 +17,12 @@ export type AnnouncementItemDisplay = {
   noticeId: number
   isEssential?: boolean // 나중에 essential parameter로 바꾸던지 (일단 지금은 선택)
   noticeTypeCd?: string
+  channelSummary?: {
+    channelId: string
+    channelName: string
+    mmTeamId: string
+    mmTeamName: string
+  }
 }
 
 export type AnnouncementListDisplay = Record<string, AnnouncementItemDisplay[]>
