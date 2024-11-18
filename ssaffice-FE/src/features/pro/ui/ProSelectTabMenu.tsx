@@ -42,7 +42,7 @@ export const ProSelectTabMenu = ({ selected, handleSelect }: ProSelectTabMenuPro
             `}
         onClick={() => handleSelect('manageEachTodos')}
       >
-        개별 할 일 관리
+        개인별 할 일 관리
       </button>
 
       <button

@@ -1,5 +1,6 @@
 import { TeamTodoItemDisplay } from '@/features/manageTeamTodoTab'
 import { ScheduleItemDisplay } from './types'
+import { EachTodoItemDisplay } from '@/features/manageEachTodoTab'
 
 export type UseCalculateStatusCountsProps = {
   param:
@@ -10,6 +11,10 @@ export type UseCalculateStatusCountsProps = {
     | {
         todos: TeamTodoItemDisplay[]
         type: 'managerTeamTodo'
+      }
+    | {
+        todos: EachTodoItemDisplay[]
+        type: 'managerEachTodo'
       }
 }
 export const useCalculateStatusCounts = ({ param }: UseCalculateStatusCountsProps): number[] => {
@@ -47,6 +52,24 @@ export const useCalculateStatusCounts = ({ param }: UseCalculateStatusCountsProp
       const completedTodo: TeamTodoItemDisplay[] = param.todos.filter((each) => {
         return (
           each.scheduleEnrolledCount.enrolledCount === each.scheduleEnrolledCount.completedCount
+        )
+      })
+      result[1] = completedTodo.length
+      break
+    }
+    case 'managerEachTodo': {
+      const enrolledTodo: EachTodoItemDisplay[] = param.todos.filter((each) => {
+        return (
+          each.scheduleSummaries.isEnrollYn === 'Y' &&
+          each.scheduleSummaries.scheduleStatusTypeCd !== 'DONE'
+        )
+      }) // 등록만 하고 완료하지는 못한 상태 (진행중)
+      result[0] = enrolledTodo.length
+
+      const completedTodo: EachTodoItemDisplay[] = param.todos.filter((each) => {
+        return (
+          each.scheduleSummaries.isEnrollYn === 'Y' &&
+          each.scheduleSummaries.scheduleStatusTypeCd === 'DONE'
         )
       })
       result[1] = completedTodo.length
