@@ -47,3 +47,14 @@ def insert_mm_team(mm_team):
             print(
                 f"Primary Key {mm_team.mm_team_id} already exists. Skipping insertion."
             )
+
+def insert_channel(channel):
+    with get_db() as db:
+        try:
+            db.merge(channel)
+            db.commit()
+            return channel.channel_id
+        except Exception as e:
+            db.rollback()
+            print(f"Error : {e}")
+            return None

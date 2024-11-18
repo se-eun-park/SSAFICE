@@ -20,7 +20,7 @@ def on_message(ws, message):
     # print("token : ",token)
     # print(get_user_info(token))
     data = json.loads(message)
-    
+
     # 1. 팀 생성 이벤트가 발생하면 해당 팀 정보를 DB에 저장
     if data["event"] == "team_created":
         team_id = data["data"]["team_id"]
@@ -30,7 +30,13 @@ def on_message(ws, message):
 
     # 2. event중에 글이 게시되고 해당 게시글이 올라온 채널의 이름이 공지를 포함하면 실행
     if is_notice(data):
-        print(data)
+
+        channel_id = json.loads(data["data"]["post"])["channel_id"]
+        channel_info = get_channel_info_by_channel_id(token, channel_id)
+        channel = make_channel_entity(channel_id, channel_info)
+        insert_channel(channel)
+
+        # print(data)
         # 일정인지 아닌지 분석하는 함수
         output_message = analyze_message(data)
         for notice in output_message["list"]:
@@ -63,7 +69,7 @@ def on_message(ws, message):
                     print("metadata가 none이었네요")
 
                 # 일정에 해당하는 유저를 먼저 정의해야함.
-                channel_id = json.loads(data["data"]["post"])["channel_id"]
+
                 user_count = get_channel_members_count(token, channel_id)[
                     "member_count"
                 ]
@@ -74,6 +80,8 @@ def on_message(ws, message):
                     for member_id in member_ids:
                         # user별로 DB에 넣을 schedule entity 생성
                         schedule = make_schedule_entity(notice_db_id)
+                        memo = notice['content']
+                        schedule.memo = memo
                         source_type = find_channel_type(data)
                         schedule.schedule_source_type = source_type
                         # 아직 회원가입하지 않은 유저라면 일정에 넣지 않고 pass

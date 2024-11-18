@@ -31,6 +31,7 @@ class Setting:
     S3_SECRET_KEY: str  ## s3
     S3_PREFIX: str  ## s3
     S3_BUCKET_NAME: str  ## s3
+    MM_GLOBAL_NOTICE_CHANNEL_ID : str
 
 
 config = Setting()
@@ -53,6 +54,7 @@ config.S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
 config.S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
 config.S3_PREFIX = os.getenv("S3_PREFIX")
 config.S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
+config.MM_GLOBAL_NOTICE_CHANNEL_ID = os.getenv("MM_GLOBAL_NOTICE_CHANNEL_ID")
 
 
 engine = create_engine(
