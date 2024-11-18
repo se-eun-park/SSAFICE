@@ -1,8 +1,10 @@
 import { useDateFormatter } from '@/shared/model'
 import type { ScheduleItemDisplay, ScheduleListDisplay } from './types'
+import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 
 export const useSortingSchedule = (
-  datas: ScheduleItemDisplay[],
+  //datas: ScheduleItemDisplay[],
+  datas: ScheduleSummaries[],
   type: 'by deadline' | 'by registration', //
 ): ScheduleListDisplay => {
   const result: ScheduleListDisplay = {}
@@ -12,13 +14,13 @@ export const useSortingSchedule = (
 
     switch (type) {
       case 'by deadline':
-        if (each.todo.endDateTime) {
-          keyDate = useDateFormatter('YYYY-MM-DD(string)', each.todo.endDateTime) as string
+        if (each.endDateTime) {
+          keyDate = useDateFormatter('YYYY-MM-DD(string)', each.endDateTime) as string
         }
         break
 
       case 'by registration':
-        keyDate = useDateFormatter('YYYY-MM-DD(string)', each.announcement.createdAt) as string
+        keyDate = useDateFormatter('YYYY-MM-DD(string)', each.createdAt) as string
         break
     }
 
@@ -39,8 +41,8 @@ export const useSortingSchedule = (
       switch (type) {
         case 'by deadline': {
           sortedResult[key] = result[key].sort((a, b) => {
-            if (a.todo.endDateTime && b.todo.endDateTime)
-              return a.todo.endDateTime.getTime() - b.todo.endDateTime.getTime()
+            if (a.endDateTime && b.endDateTime)
+              return new Date(a.endDateTime).getTime() - new Date(b.endDateTime).getTime()
             else return 0
           })
           break
@@ -48,7 +50,7 @@ export const useSortingSchedule = (
 
         case 'by registration': {
           sortedResult[key] = result[key].sort(
-            (a, b) => a.announcement.createdAt.getTime() - b.announcement.createdAt.getTime(),
+            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
           )
           break
         }

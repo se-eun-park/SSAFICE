@@ -1,5 +1,5 @@
 import { ManageEachTodoDateGroup } from './ManageEachTodoDateGroup'
-import { dummyEachTodos } from '@/features/manageEachTodoTab'
+// import { dummyEachTodos } from '@/features/manageEachTodoTab'
 import { useSortingEachTodo } from '@/features/manageEachTodoTab/model/useSortingEachTodo'
 import { instance } from '@/shared/model'
 import { useQuery } from '@tanstack/react-query'
@@ -26,7 +26,7 @@ export const ManageEachTodoList = () => {
   if (error) {
     return <div>Error loading data</div>
   }
-
+  console.log(data)
   const sortedTodos = useSortingEachTodo(data)
   return (
     <div

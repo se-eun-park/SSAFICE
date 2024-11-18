@@ -1,4 +1,5 @@
 import type { AnnouncementItemDisplay, createUser } from '@/features/announcementTab'
+import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 
 export type TodoItemDisplay = {
   scheduleId: number
@@ -62,7 +63,7 @@ export type UnScheduledDisplay = {
 }
 
 // 선택적 파라메터는 테스트 후 필수로 바꾸어 주세요
-export type ScheduleListDisplay = Record<string, ScheduleItemDisplay[]>
+export type ScheduleListDisplay = Record<string, ScheduleSummaries[]>
 
 export type TodoListDisplay = {
   // 일정 조회 API response
