@@ -55,7 +55,23 @@ export const TodoTab = () => {
         </TabLayout.Add>
       ) : null}
 
-      <TabLayout.Content>{isTabOpen ? <TodoList /> : <TodoBoard />}</TabLayout.Content>
+      <TabLayout.Content>
+        {isTabOpen ? (
+          <div
+            className={`
+              flex
+              mb-[99px] px-spacing-16 pb-spacing-16 
+              bg-color-bg-tertiary
+              rounded-radius-8
+              overflow-y-scroll
+            `}
+          >
+            <TodoList />
+          </div>
+        ) : (
+          <TodoBoard />
+        )}
+      </TabLayout.Content>
     </TabLayout>
   )
 }

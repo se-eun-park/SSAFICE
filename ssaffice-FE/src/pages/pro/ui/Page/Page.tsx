@@ -16,10 +16,11 @@ export const ProPage = () => {
       <ProSelectTabMenu selected={selected} handleSelect={handleSelect} />
 
       <section
-        className='
+        className={`
           flex flex-col
-          w-full h-full px-spacing-48
-        '
+          w-full h-full 
+          ${selected === 'manageMembers' ? 'px-spacing-48' : 'px-spacing-64'}
+          `}
       >
         {selected === 'manageMembers' ? (
           <ManageMembersTab />
