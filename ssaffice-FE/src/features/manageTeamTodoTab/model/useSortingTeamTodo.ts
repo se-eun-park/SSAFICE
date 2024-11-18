@@ -25,7 +25,9 @@ export const useSortingTeamTodo = (datas: TeamTodoItemDisplay[]): TeamTodoListDi
     })
     .forEach((key) => {
       sortedResult[key] = result[key].sort(
-        (a, b) => a.noticeSummary.createdAt.getTime() - b.noticeSummary.createdAt.getTime(),
+        (a, b) =>
+          new Date(a.noticeSummary.createdAt).getTime() -
+          new Date(b.noticeSummary.createdAt).getTime(),
       )
     })
 

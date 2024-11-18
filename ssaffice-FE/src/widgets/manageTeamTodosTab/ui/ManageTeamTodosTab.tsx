@@ -96,7 +96,9 @@ export const ManageTeamTodosTab = () => {
             <SelectTodoSortCondition />
           </div>
           <div className='h-[800px] px-spacing-16 bg-color-bg-tertiary overflow-y-scroll'>
-            <ManageTeamTodoList />
+            <ManageTeamTodoList
+            // todoState={selectedState} sortCondition={}
+            />
           </div>
         </div>
       </div>
