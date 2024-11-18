@@ -165,8 +165,43 @@ public class MattermostServiceImpl implements MattermostService {
         List<UserChannel> userChannelsToSave = mmChannelSummaryList.stream().map(channel -> new UserChannel(userId,
                                                                                                             channel.getId()))
                                                                    .toList();
+
+        for (MMChannelSummary userChannel : mmChannelSummaryList) {
+            System.out.println(userChannel.getId());
+
+        }
         userChannelRepository.saveAll(userChannelsToSave);
         return new ApiResponse(true, HttpStatus.OK, "Channel saved successfuly into UserChannel",
                                userChannelsToSave.stream().map(UserChannel::getChannelId).toList());
     }
+
+
+    @Override
+    public String getTeamByChannelIdFromMM(Long userId, Channel channel) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+        String token = user.getMattermostToken();
+        String channelId = channel.getChannelId();
+        try {
+            ResponseEntity<MMChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
+                    "/channels/" + channelId, HttpMethod.GET, null, MMChannelSummary[].class, token);
+
+            String type = Objects.requireNonNull(response.getBody())[0].getType();
+            if(type.equals("O") || type.equals("P")) {
+                return Objects.requireNonNull(response.getBody())[0].getTeamId();
+            }
+            return null;
+        } catch (InvalidTokenException e) {
+            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ApiResponse updateTeamByChannelId(String teamId, String mmChannelId) {
+        Channel channel = channelRepository.findById(mmChannelId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.CHANNEL_NOT_FOUND, "channelId", mmChannelId));
+        channel.setMmTeamId(teamId);
+        return new ApiResponse(true, HttpStatus.OK, "TeamId updated successfully", teamId);
+    }
+
 }

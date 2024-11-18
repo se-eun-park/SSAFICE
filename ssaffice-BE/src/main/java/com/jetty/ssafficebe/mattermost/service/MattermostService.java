@@ -34,5 +34,7 @@ public interface MattermostService {
 
     List<MMChannelSummary> getNonDuplicateChannelsByUserId(Long userId, List<MMChannelSummary> mmChannelSummaryList);
 
+    String getTeamByChannelIdFromMM(Long userId, Channel channel);
 
+    ApiResponse updateTeamByChannelId(String teamId, String mmChannelId);
 }
