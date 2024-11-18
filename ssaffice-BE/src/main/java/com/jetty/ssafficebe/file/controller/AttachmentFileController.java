@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +54,7 @@ public class AttachmentFileController {
      * @param fileType 파일의 유형 (예: 이미지, 문서 등)
      * @param refId   파일이 참조하는 엔티티의 ID (공지ID, 일정ID 등)
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UploadFileResponse> uploadAttachmentFile(
             @RequestParam MultipartFile file,
@@ -60,8 +62,4 @@ public class AttachmentFileController {
             @RequestParam Long refId) throws IOException {
         return ResponseEntity.ok(this.attachmentFileService.uploadFile(file, fileType, refId));
     }
-
-
-
-
 }

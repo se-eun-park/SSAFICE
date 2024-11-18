@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AdminScheduleRequest {
-
-    private Long noticeId;
+    private ScheduleRequest scheduleRequest;
     private List<Long> userIds;
 }

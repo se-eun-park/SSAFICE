@@ -61,4 +61,13 @@ public class ESNotice {
     @Field(type = FieldType.Keyword)
     private String channelId;
 
+    @Field(type = FieldType.Keyword)
+    private String channelName;
+
+    @Field(type = FieldType.Keyword)
+    private String mmTeamId;
+
+    @Field(type = FieldType.Keyword)
+    private String mmTeamName;
+
 }

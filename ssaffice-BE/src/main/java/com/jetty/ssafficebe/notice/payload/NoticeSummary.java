@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class NoticeSummaryForList {
+public class NoticeSummary {
 
     private Long noticeId;
     private String title;

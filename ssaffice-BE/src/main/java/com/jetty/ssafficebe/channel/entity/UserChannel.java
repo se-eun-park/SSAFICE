@@ -9,12 +9,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "user_channel")
 @Getter
 @Setter
+@NoArgsConstructor
 public class UserChannel {
 
     @Id
@@ -30,5 +32,10 @@ public class UserChannel {
     @JoinColumn(name = "channelId", insertable = false, updatable = false)
     private Channel channel;
     private String channelId;
+
+    public UserChannel(Long userId, String channelId) {
+        this.userId = userId;
+        this.channelId = channelId;
+    }
 
 }

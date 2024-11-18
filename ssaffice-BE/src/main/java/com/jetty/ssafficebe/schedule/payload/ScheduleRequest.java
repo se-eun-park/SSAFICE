@@ -15,10 +15,5 @@ public class ScheduleRequest {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String scheduleSourceTypeCd;
-    private String scheduleStatusTypeCd;
-    private String isEssentialYn;
-    private String isEnrollYn;
-    private Long userId;
-    private Long noticeId;
     private List<RemindRequest> remindRequests;
 }

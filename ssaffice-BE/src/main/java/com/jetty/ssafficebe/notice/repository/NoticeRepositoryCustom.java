@@ -1,13 +1,14 @@
 package com.jetty.ssafficebe.notice.repository;
 
 import com.jetty.ssafficebe.notice.entity.Notice;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.jetty.ssafficebe.notice.payload.NoticeFilterRequest;
+import java.util.List;
+import org.springframework.data.domain.Sort;
 
 public interface NoticeRepositoryCustom {
 
-    Page<Notice> getNoticeList(Long userId, Pageable pageable);
-
-    Page<Notice> getNoticeListForAdmin(Long userId, Pageable pageable);
+    List<Notice> getNoticeListByCreateUserAndFilter(Long userId,
+                                                    NoticeFilterRequest noticeFilterRequest,
+                                                    Sort sort);
 
 }
