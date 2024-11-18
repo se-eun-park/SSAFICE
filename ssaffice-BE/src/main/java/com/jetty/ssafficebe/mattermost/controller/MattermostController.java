@@ -2,6 +2,8 @@ package com.jetty.ssafficebe.mattermost.controller;
 
 import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
+import com.jetty.ssafficebe.mattermost.payload.DirectMessageRequest;
 import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
@@ -13,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,8 +62,11 @@ public class MattermostController {
 
     // user가 새로고침할 때 동작하는 endPoint
     // 해당 userID를 통해 MM에서 채널리스트를 가져와 공지사항만 필터링 한 후 Channel table과 UserChannel table에 저장
-    @GetMapping("/{userId}/channels")
-    public ResponseEntity<ApiResponse> saveChannelsByUserId(@PathVariable Long userId) {
+
+    @GetMapping("/channels")
+    public ResponseEntity<ApiResponse> saveChannelsByUserId(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Long userId = customUserDetails.getUserId();
 
         // 1. Channel table에 저장하는 부분
         // 1-1. MM에서 채널리스트를 가져와 공지사항만 필터링 한 후 Channel table에 저장
@@ -82,5 +88,19 @@ public class MattermostController {
         return ResponseEntity.ok(
                 this.mattermostService.saveChannelListToUserChannelByUserId(userId, nonDuplicateChannelsByUserId));
     }
+
+
+    @PostMapping("/remindmessage")
+    public ResponseEntity<ApiResponse> sendDirectMessage(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                         @RequestBody DirectMessageRequest request) {
+
+        Long userId = userDetails.getUserId();
+        Long targetUserId = request.getTargetUserId();
+        Long scheduleId = request.getScheduleId();
+        String channelId = this.mattermostService.createDMChannel(userId, targetUserId);
+        return ResponseEntity.ok(
+                this.mattermostService.sendDirectMessage(userId, channelId, scheduleId));
+    }
+
 
 }
