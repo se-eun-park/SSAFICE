@@ -31,21 +31,21 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(
-                                "/",
-                                "/home",
-                                "/error",
-                                "/api/auth/**",
-                                "/api/sso/**",
-                                "/api/mm/**"
-                        ).permitAll()
-                        .requestMatchers(
-                                "/api/notice/admin/**",
-                                "/api/schedules/admin/**",
-                                "/api/users/admin/**",
-                                "/api/roles/**"
-                        ).hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                                               .anyRequest().permitAll()
+//                        .requestMatchers(
+//                                "/",
+//                                "/home",
+//                                "/error",
+//                                "/api/auth/**",
+//                                "/api/sso/**"
+//                        ).permitAll()
+//                        .requestMatchers(
+//                                "/api/notice/admin/**",
+//                                "/api/schedules/admin/**",
+//                                "/api/users/admin/**",
+//                                "/api/roles/**"
+//                        ).hasRole("ADMIN")
+//                        .anyRequest().authenticated()
 
                 );
         http.addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
