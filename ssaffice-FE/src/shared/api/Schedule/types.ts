@@ -11,3 +11,18 @@ export type postScheduleResponse = {
   endDateTime: string
   remindRequests: RemindRequest[] | []
 }
+
+type postManagerScheduleProps = {
+  createData: {
+    title: string
+    memo: string
+    scheduleStatusTypeCd: string
+    startDateTime: string
+    endDateTime: string
+    remindRequests: RemindRequest[] | []
+  }
+}
+export type postManagerScheduleResponse = {
+  createData: postManagerScheduleProps
+  userIds: number[]
+}

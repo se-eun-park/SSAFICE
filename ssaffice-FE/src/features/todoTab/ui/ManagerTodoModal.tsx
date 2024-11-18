@@ -1,28 +1,32 @@
 import { useMemo, useState } from 'react'
 import { ManagerTodoFirstElements } from '../model/ManagerTodoFirstElements'
 import { TodoModal } from '@/shared/ui'
+import { postManagerSchedule, postManagerTeamSchedule } from '@/shared/api/Schedule'
+
+type RemindRequest = {
+  remindTypeCd: string
+  remindDateTime: string
+}
 
 type ManagerTodoModalProps = {
   closeRequest: () => void
   modaltype: 'CREATE' | 'VIEW' | 'EDIT'
   manageType: 'TEAM' | 'PERSONAL' | undefined
-  scheduleId?: string
 }
 
 export const ManagerTodoModal = ({
   closeRequest,
   modaltype,
   manageType,
-  scheduleId,
 }: ManagerTodoModalProps) => {
   const elements = ManagerTodoFirstElements(modaltype)
 
   const [title, setTitle] = useState(elements.title)
   const [description, setDescription] = useState(elements.description)
-  const [selectedState, setSelectedState] = useState(elements.selectedState)
+  // const [selectedState, setSelectedState] = useState(elements.selectedState)
   const [endDate, setEndDate] = useState(elements.endDate)
   const [reminder, setReminder] = useState(elements.remindRequests)
-  const [userIds, setUserIds] = useState<string[]>([])
+  const [userIds, setUserIds] = useState<number[]>([])
   const [isRequired, setIsRequired] = useState(elements.isEssentialYn)
 
   const headTitle = useMemo(() => {
@@ -35,21 +39,37 @@ export const ManagerTodoModal = ({
   }, [modaltype])
 
   const handleOnClickSave = () => {
-    // 등록 api 보내기
-    // 필수 입력값 검사
-    // scheduleSourceTypeCd = "GLOBAL" or "TEAM" or "PERSONAL"
-    // isEssentialYn = "Y" or "N"
-    // isEnrollYn = "Y" or "N" -> 미등록 공지에서 등록한놈인지 (이 모달에선 N 고정)
-    console.log(
-      title,
-      scheduleId,
-      description,
-      selectedState,
-      endDate,
-      reminder,
-      userIds,
-      isRequired,
-    )
+    if (!title || !description || !endDate) {
+      return
+    }
+
+    const startDateTime = `${new Date().toISOString().split('T')[0]}T00:00:00`
+    const endDateTime = `${endDate}T23:59:59`
+
+    if (manageType === 'PERSONAL') {
+      const createData = {
+        title: title,
+        memo: description,
+        startDateTime: startDateTime,
+        endDateTime: endDateTime,
+        scheduleStatusTypeCd: 'TODO',
+        remindRequests: reminder as RemindRequest[],
+      }
+      const userIds = [9]
+      postManagerSchedule({ createData, userIds })
+    } else {
+      const createData = {
+        title: title,
+        content: description,
+        startDateTime: startDateTime,
+        endDateTime: endDateTime,
+        noticeTypeCd: 'TEAM',
+        isEssentialYn: isRequired,
+        channelId: '4c96tn5s63bbmnjxuqress7j4r',
+      }
+      postManagerTeamSchedule(createData)
+    }
+
     closeRequest()
   }
 
@@ -70,7 +90,7 @@ export const ManagerTodoModal = ({
 
       <TodoModal.RightSection>
         <TodoModal.Flex>
-          <TodoModal.Status selectedState={selectedState} setSelectedState={setSelectedState} />
+          {/* <TodoModal.Status selectedState={selectedState} setSelectedState={setSelectedState} /> */}
           <TodoModal.Button saveRequest={handleOnClickSave} />
         </TodoModal.Flex>
 
@@ -93,7 +113,9 @@ export const ManagerTodoModal = ({
             <TodoModal.Required isRequired={isRequired} setIsRequired={setIsRequired} />
           )}
 
-          <TodoModal.Reminder reminder={reminder} setReminder={setReminder} />
+          {manageType === 'PERSONAL' ? (
+            <TodoModal.Reminder reminder={reminder} setReminder={setReminder} />
+          ) : null}
         </TodoModal.DetailsSection>
       </TodoModal.RightSection>
     </TodoModal>

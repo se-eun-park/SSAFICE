@@ -15,7 +15,14 @@ import type {
   SaveEditButtonResponse,
   RequiredResponse,
 } from './types'
-import { SelectTodoState, RemindTimeModal, AddTraineeModal, Radio, RadioGroup } from '@/shared/ui'
+import {
+  SelectTodoState,
+  RemindTimeModal,
+  AddTraineeModal,
+  AddTeamModal,
+  Radio,
+  RadioGroup,
+} from '@/shared/ui'
 import { BackArrowIcon, XIcon, RadioFocusOnIcon, RadioFocusOutIcon } from '@/assets/svg'
 
 // 서브 컴포넌트
@@ -257,18 +264,16 @@ function Assignee({
                       setUserIds={setUserIds}
                       userNameList={userNameList}
                       setUserNameList={setUserNameList}
-                      manageType={manageType}
                     />
                   )
                 : // 나중에 팀 정보 state를 넣으면 됨
                   isOpen && (
-                    <AddTraineeModal
+                    <AddTeamModal
                       setIsOpen={setIsOpen}
                       userIds={userIds}
                       setUserIds={setUserIds}
                       userNameList={userNameList}
                       setUserNameList={setUserNameList}
-                      manageType={manageType}
                     />
                   )}
             </div>
