@@ -104,7 +104,7 @@ public class ScheduleController {
      * @param pageable              : 기본값 (20개씩 / 생성순)
      * @return 조건에 맞는 일정 리스트
      */
-    @PostMapping("/unregistered")
+    @GetMapping("/unregistered")
     public ResponseEntity<Page<ScheduleSummary>> getUnregisteredSchedulePage(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PageableDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
