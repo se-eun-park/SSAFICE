@@ -102,17 +102,14 @@ public class ScheduleController {
      * (ROLE_USER) 미등록 공지 조회
      *
      * @param pageable              : 기본값 (20개씩 / 생성순)
-     * @param scheduleFilterRequest : 미등록 공지 여부(N), 상태, 일정 출처, 시작/종료 시간
      * @return 조건에 맞는 일정 리스트
      */
     @PostMapping("/unregistered")
     public ResponseEntity<Page<ScheduleSummary>> getUnregisteredSchedulePage(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody ScheduleFilterRequest scheduleFilterRequest,
             @PageableDefault(sort = "endDateTime", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
-                scheduleService.getUnregisteredSchedulePage(userDetails.getUserId(), scheduleFilterRequest,
-                                                            pageable));
+                scheduleService.getUnregisteredSchedulePage(userDetails.getUserId(), pageable));
     }
 
     /**
