@@ -1,5 +1,6 @@
 package com.jetty.ssafficebe.mattermost.payload;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class DirectMessageRequest {
   private Long scheduleId;
-  private Long targetUserId;
+  private List<MMUserIdRequest> userIds;
 }

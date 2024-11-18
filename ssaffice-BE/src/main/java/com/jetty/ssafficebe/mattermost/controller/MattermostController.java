@@ -5,6 +5,7 @@ import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.mattermost.payload.DirectMessageRequest;
 import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
+import com.jetty.ssafficebe.mattermost.payload.MMUserIdRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
@@ -94,12 +95,17 @@ public class MattermostController {
     public ResponseEntity<ApiResponse> sendDirectMessage(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                          @RequestBody DirectMessageRequest request) {
 
-        Long userId = userDetails.getUserId();
-        Long targetUserId = request.getTargetUserId();
+        Long userId = (long) 1;
+//        Long userId = userDetails.getUserId();
         Long scheduleId = request.getScheduleId();
-        String channelId = this.mattermostService.createDMChannel(userId, targetUserId);
-        return ResponseEntity.ok(
-                this.mattermostService.sendDirectMessage(userId, channelId, scheduleId));
+        List<MMUserIdRequest> userIds = request.getUserIds();
+
+        for (MMUserIdRequest mmUserIdRequest : userIds) {
+            Long targetUserId = mmUserIdRequest.getTargetUserId();
+            String channelId = this.mattermostService.createDMChannel(userId, targetUserId);
+            this.mattermostService.sendDirectMessage(userId, channelId, scheduleId);
+        }
+        return ResponseEntity.ok(new ApiResponse(true, "메시지 전송 완료", userIds));
     }
 
 
