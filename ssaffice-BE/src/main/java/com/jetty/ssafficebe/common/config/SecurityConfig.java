@@ -36,7 +36,8 @@ public class SecurityConfig {
                                 "/home",
                                 "/error",
                                 "/api/auth/**",
-                                "/api/sso/**"
+                                "/api/sso/**",
+                                "/api/mm/**"
                         ).permitAll()
                         .requestMatchers(
                                 "/api/notice/admin/**",
