@@ -1,16 +1,30 @@
+import { useLoginStateStore } from '@/entities/session'
+import { instance } from '@/shared/api'
+import { useQuery } from '@tanstack/react-query'
+
+// 관리자 개별 할일 등록
 export const ManagerTodoFirstElements = (modaltype: 'CREATE' | 'VIEW' | 'EDIT') => {
-  // 각 api로 불러온 초기값 명시 (지금은 그냥 더미데이터)
+  const isAuthenticated = useLoginStateStore()
+
+  const { data: user } = useQuery({
+    queryKey: ['userData'],
+    queryFn: async () => {
+      const { data } = await instance.get('/api/users/me')
+      return data
+    },
+    enabled: isAuthenticated,
+  })
+
   switch (modaltype) {
     case 'CREATE':
       return {
         title: '',
         description: '',
-        selectedState: 'todo',
         user: { name: '', profileImgUrl: '' },
 
         createUser: {
-          name: '용상윤[서울_5, 6반]실습코치',
-          profileImgUrl: 'https://i.pinimg.com/236x/a5/73/59/a5735920142505068fd1e5ebd0ce86f1.jpg',
+          name: user?.name,
+          profileImgUrl: user?.profileImgUrl,
         },
         endDate: '',
         remindRequests: [],

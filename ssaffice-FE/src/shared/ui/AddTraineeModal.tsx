@@ -2,13 +2,18 @@ import { useMemo, useState } from 'react'
 import { SearchBar } from './SearchBar'
 import { XIcon } from '@/assets/svg'
 
+type userListProps = {
+  userId: number
+  name: string
+  profileUrl: string
+}
+
 type AddTraineeModalProps = {
   setIsOpen: (isOpen: boolean) => void
-  userIds: string[]
-  setUserIds: (userIds: string[]) => void
+  userIds: number[]
+  setUserIds: (userIds: number[]) => void
   userNameList: string[]
   setUserNameList: (userNameList: string[]) => void
-  manageType: 'TEAM' | 'PERSONAL' | undefined
 }
 
 export const AddTraineeModal = ({
@@ -17,14 +22,13 @@ export const AddTraineeModal = ({
   setUserIds,
   userNameList,
   setUserNameList,
-  manageType,
 }: AddTraineeModalProps) => {
   // 나중엔 이 상태값이 검색결과 리스트
   const [searchValue, setSearchValue] = useState('')
-  const [idList, setIdList] = useState<string[]>(userIds)
+  const [idList, setIdList] = useState<number[]>(userIds)
   const [nameList, setNameList] = useState<string[]>(userNameList)
 
-  const handleOnclickUser = (userId: string, userName: string) => {
+  const handleOnclickUser = (userId: number, userName: string) => {
     setIdList((prev) => Array.from(new Set([userId, ...prev])))
     setNameList((prev) => Array.from(new Set([userName, ...prev])))
   }
@@ -54,29 +58,16 @@ export const AddTraineeModal = ({
       default:
         const userList = [
           {
-            userId: '1',
-            name: '곽성재',
-            profileUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
-          },
-          {
-            userId: '2',
-            name: '박세은',
-            profileUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
-          },
-          {
-            userId: '3',
+            userId: 9,
+            profileUrl:
+              'https://i.namu.wiki/i/TeKQ33pPbV0NQ1kpT6eb0MmGwwtQY-2OzAnWiSycpLndOBYZ6OvHrlECOQeYiO-p7nj73pYlATTT8GDTSwx6cg.webp',
             name: '천세경',
-            profileUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
-          },
-          {
-            userId: '4',
-            name: '이주영',
-            profileUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
           },
         ]
+
         return (
           <div className='w-full h-[416px] border flex divide-y divide-color-border-secondary flex-col border-color-border-primary rounded-radius-4'>
-            {userList.map((user) => (
+            {userList.map((user: userListProps) => (
               <button
                 key={user.userId}
                 onClick={() => handleOnclickUser(user.userId, user.name)}
@@ -99,13 +90,9 @@ export const AddTraineeModal = ({
 
   return (
     <div className='z-50 absolute right-2.5 top-12 flex flex-col gap-y-spacing-24 border w-[480px] h-fit bg-color-bg-primary rounded-radius-8 px-spacing-32 py-spacing-16 border-color-border-tertiary'>
-      <h1 className='w-full text-center heading-desktop-sm text-color-text-primary'>
-        {manageType === 'PERSONAL' ? '교육생 검색' : '팀 검색'}
-      </h1>
+      <h1 className='w-full text-center heading-desktop-sm text-color-text-primary'>교육생 검색</h1>
       <SearchBar setSearchValue={setSearchValue} />
-
       {dummyData}
-
       <div className='flex flex-col gap-y-spacing-8'>
         {nameList.map((userName, index) => (
           <div key={index} className='flex items-center gap-x-spacing-4'>
@@ -116,7 +103,6 @@ export const AddTraineeModal = ({
           </div>
         ))}
       </div>
-
       <button
         onClick={handleOnClickSubmit}
         className='w-full h-fit bg-color-bg-interactive-primary py-spacing-12 rounded-radius-8 body-lg-medium text-color-text-interactive-inverse'
