@@ -6,6 +6,7 @@ import { MainPage } from '@/pages/main'
 import { baseLayout } from './layouts/baseLayout'
 import { ProPage } from '@/pages/pro'
 import ProtectedRoute from '@/app/layouts/ProtectedRoute'
+import { SSORedirect } from '@/pages/redirect'
 
 export const appRouter = () => {
   return createBrowserRouter([
@@ -23,9 +24,13 @@ export const appRouter = () => {
           element: <LoginPage />,
         },
         {
+          path: '/sso/providers/ssafy/callback',
+          element: <SSORedirect />,
+        },
+        {
           path: 'main',
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute role='ROLE_USER'>
               <MainPage />
             </ProtectedRoute>
           ),
@@ -33,7 +38,7 @@ export const appRouter = () => {
         {
           path: 'pro',
           element: (
-            <ProtectedRoute>
+            <ProtectedRoute role='ROLE_ADMIN'>
               <ProPage />
             </ProtectedRoute>
           ),

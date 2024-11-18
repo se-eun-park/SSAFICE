@@ -2,7 +2,11 @@ import { SearchIcon } from '@/assets/svg'
 import { useSearchInput } from '../model'
 import { useEffect } from 'react'
 
-export const SearchBar = ({ setSearchValue }: any) => {
+type Props = {
+  setSearchValue: (searchValue: string) => void
+}
+
+export const SearchBar = ({ setSearchValue }: Props) => {
   const { value, handleValue, keyPressHandler, searchResult } = useSearchInput()
 
   useEffect(() => {

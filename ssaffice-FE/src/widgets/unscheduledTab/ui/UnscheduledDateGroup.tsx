@@ -1,10 +1,10 @@
-import type { ScheduleItemDisplay } from '@/features/todoTab'
+import type { UnScheduledDisplay } from '@/features/todoTab'
 import { UnscheduledItem } from './UnscheduledItem'
 import { useDateFormatter } from '@/shared/model'
 
 type UnscheduledDateGroupProps = {
   date: string
-  dailyUnschedules: ScheduleItemDisplay[]
+  dailyUnschedules: UnScheduledDisplay[]
   isLast?: boolean
 }
 export const UnscheduledDateGroup = ({
@@ -19,19 +19,12 @@ export const UnscheduledDateGroup = ({
           ${isLast ? 'pb-spacing-16' : ''}
         `}
     >
-      <div
-        className='
-          pt-spacing-24 pb-spacing-16
-          text-color-text-primary body-lg-medium
-          sticky top-0
-          bg-color-bg-tertiary z-10
-        '
-      >
+      <div className='sticky top-0 z-10 pt-spacing-24 pb-spacing-16 text-color-text-primary body-lg-medium bg-color-bg-tertiary'>
         {`${useDateFormatter('MM월 DD일 ?요일', new Date(date))}`}
       </div>
       <div className='flex flex-col gap-spacing-16'>
-        {dailyUnschedules.map((each) => (
-          <UnscheduledItem key={each.todo.scheduleId} unscheduledItem={each} />
+        {dailyUnschedules?.map((each) => (
+          <UnscheduledItem key={each?.scheduleId} unscheduledItem={each} />
         ))}
       </div>
     </div>

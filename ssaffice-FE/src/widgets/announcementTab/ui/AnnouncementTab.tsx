@@ -11,8 +11,12 @@ import { FastLeftArrowIcon } from '@/assets/svg'
 import { AnnouncementList } from './AnnouncementList'
 import { useAnnouncementTabSelectView } from '@/features/announcementTab'
 import { UnscheduledList } from '@/widgets/unscheduledTab'
+import { useEffect, useRef, useState } from 'react'
 
 export const AnnouncementTab = () => {
+  const [page, setPage] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [searchValue, setSearchValue] = useState('')
   // store
   const isTabOpen = useIsTabOpenStore()
   const setIsTabOpen = useSetIsTabOpenStore()
@@ -43,19 +47,44 @@ export const AnnouncementTab = () => {
   const { isAllNoticeView, handleNoticeViewSelect, selectedStyle, unselectedStyle } =
     useAnnouncementTabSelectView()
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+        console.log(scrollTop, scrollHeight, clientHeight)
+        if (scrollTop + clientHeight >= scrollHeight) {
+          setPage && setPage((prevPage: number) => prevPage + 1)
+        }
+      }
+    }
+
+    const container = containerRef.current
+    container?.addEventListener('scroll', handleScroll)
+
+    return () => {
+      container?.removeEventListener('scroll', handleScroll)
+    }
+  }, [setPage])
+
   return (
     <TabLayout animation={tabAnimationClass}>
       <TabLayout.Header animation={contentsAnimationClass}>
         <div className='flex heading-desktop-xl'>
           <div
-            onClick={() => handleNoticeViewSelect('미등록 공지')}
+            onClick={() => {
+              handleNoticeViewSelect('미등록 공지')
+              setPage(0)
+            }}
             className={isAllNoticeView ? unselectedStyle : selectedStyle}
           >
             미등록 공지
           </div>
           <div className='text-color-text-primary'>&nbsp;|&nbsp;</div>
           <div
-            onClick={() => handleNoticeViewSelect('전체 공지')}
+            onClick={() => {
+              handleNoticeViewSelect('전체 공지')
+              setPage(0)
+            }}
             className={isAllNoticeView ? selectedStyle : unselectedStyle}
           >
             전체 공지
@@ -69,17 +98,15 @@ export const AnnouncementTab = () => {
       </TabLayout.Header>
 
       <TabLayout.Add animation={contentsAnimationClass}>
-        {isAllNoticeView ? (
-          <SearchBar />
-        ) : (
-          <div className='pb-spacing-8'>
-            <RefreshMattermostConnection />
-          </div>
-        )}
+        <div className='pb-spacing-8'>
+          <RefreshMattermostConnection />
+        </div>
+        {isAllNoticeView && <SearchBar setSearchValue={setSearchValue} />}
       </TabLayout.Add>
 
       <TabLayout.Content animation={contentsAnimationClass}>
         <div
+          ref={containerRef}
           className={`
           flex
           ${isAllNoticeView ? 'mb-[130px]' : 'mb-[100px]'} px-spacing-16 pb-spacing-16 
@@ -88,7 +115,11 @@ export const AnnouncementTab = () => {
           overflow-y-scroll
           `}
         >
-          {isAllNoticeView ? <AnnouncementList /> : <UnscheduledList />}
+          {isAllNoticeView ? (
+            <AnnouncementList page={page} searchValue={searchValue} />
+          ) : (
+            <UnscheduledList page={page} />
+          )}
         </div>
       </TabLayout.Content>
     </TabLayout>

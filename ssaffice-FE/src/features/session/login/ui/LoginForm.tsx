@@ -17,12 +17,14 @@ export const LoginForm = () => {
   const navigate = useNavigate()
 
   useQuery({
-    queryKey: ['user'],
+    queryKey: ['user', isAuthenticated],
     queryFn: async () => {
       const { data } = await instance.get('/api/users/me')
       if (data) {
         data?.roles[0].roleId === 'ROLE_ADMIN' ? navigate('/pro') : navigate('/main')
       }
+
+      return data
     },
     enabled: isAuthenticated,
   })
@@ -37,6 +39,19 @@ export const LoginForm = () => {
       const response = loginResponse.data
       if (response) {
         setIsAuthenticated(true)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  async function handleSSOLogin() {
+    try {
+      const response = await instance.get('/api/sso/providers/SSAFY/authorization-uri')
+
+      const url = response.data
+      if (url) {
+        window.location.href = url
       }
     } catch (err) {
       console.error(err)
@@ -97,7 +112,7 @@ export const LoginForm = () => {
         <LoginButton
           label='SSAFY 로그인'
           icon={ssafyIcon}
-          onClick={() => {}}
+          onClick={handleSSOLogin}
           className='border text-color-text-info-bold bg-color-bg-info-subtle border-color-border-info-subtle'
         />
       </form>
