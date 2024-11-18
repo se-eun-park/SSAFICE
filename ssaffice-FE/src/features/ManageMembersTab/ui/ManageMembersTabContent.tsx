@@ -7,7 +7,7 @@ import {
   RemoveBinIcon,
   SendMessageIcon,
 } from '@/assets/svg'
-import { codeToWord, type MattermostChannel } from '@/features/ManageMembersTab'
+import { codeToWord, type MattermostChannel } from '@/features/manageMembersTab'
 import { useManageMembersTabContent } from '../model/useManageMembersTabContent'
 
 type ManageMembersTabContentProps = {

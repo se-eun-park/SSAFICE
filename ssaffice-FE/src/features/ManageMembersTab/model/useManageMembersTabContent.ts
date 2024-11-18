@@ -2,25 +2,19 @@ import { useEffect, useState } from 'react'
 import { dummySsafyUsers, MattermostChannel, SsafyUser, SsafyUserApiResponse } from './types'
 import { Pagenation } from '@/shared/model'
 
-export const useManageMembersTabContent = (channel: MattermostChannel, pageNumber?: number) => {
+export const useManageMembersTabContent = (channel: MattermostChannel) => {
   const [userInChannelList, setUserInChannelList] = useState<SsafyUser[]>([])
   const [selectedUserInChannelList, setSelectedUserInChannelList] = useState<SsafyUser[]>([])
   const [selectedAll, setSelectedAll] = useState(false)
-  // const [pageInfo, setPageInfo] = useState<{
-  //   pageable: Object
-  //   totalPages: number
-  //   totalElements: number
-  // } | null>(null)
   const [pageInfo, setPageInfo] = useState<Pagenation | null>(null)
 
-  // 1초 후에 데이터를 반환하는 예시 API 함수
   const fetchAPI = async (
     channelId: number,
     pageNumber?: number,
   ): Promise<SsafyUserApiResponse> => {
+    String(channelId) // API 연동 후 삭제(오류 방지용 로직)
     return new Promise((resolve) => {
       setTimeout(() => {
-        // 여기서는 더미 데이터를 반환
         if (pageNumber === undefined) pageNumber = 0
         resolve(dummySsafyUsers[pageNumber])
       }, 1000)

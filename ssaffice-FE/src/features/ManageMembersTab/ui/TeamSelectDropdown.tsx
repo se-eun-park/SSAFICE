@@ -3,7 +3,6 @@ import { useClickedToggle, useClickOutsideToggle } from '@/shared/model'
 import { DropDown } from '@/shared/ui'
 import { useRef } from 'react'
 import { dummyMattermostTeams, MattermostChannel } from '../model/types'
-import { useTeamSelectDropdown } from '../model/useTeamSelectDropdown'
 
 type TeamSelectDropdownProps = {
   handleSelectedIndex: (index: number) => void
