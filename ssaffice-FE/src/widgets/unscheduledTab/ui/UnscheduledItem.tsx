@@ -1,10 +1,10 @@
 import { FoldUp, SpreadDown } from '@/assets/svg'
-import type { UnscheduledItemDisplay } from '@/features/unscheduledTab'
+import type { ScheduleItemDisplay } from '@/features/todoTab'
 import { useClickedToggle, useCustomEmojiRemover, useDateFormatter, useHover } from '@/shared/model'
 import Markdown from 'react-markdown'
 
 type UnscheduledItemProps = {
-  unscheduledItem: UnscheduledItemDisplay
+  unscheduledItem: ScheduleItemDisplay
 }
 
 export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemProps) => {

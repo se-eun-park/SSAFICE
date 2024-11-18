@@ -6,7 +6,7 @@ import { useClickOutsideToggle, useHover } from '@/shared/model'
 import { useEffect, useRef, useState } from 'react'
 import { DropDown } from '@/shared/ui'
 import { SelectedSortConditionElements } from '../model/SelectedSortConditionElements'
-import { DownArrowIcon, SpreadDown } from '@/assets/svg'
+import { DownArrowIcon } from '@/assets/svg'
 
 export const SelectTodoSortCondition = ({
   state = 'by deadline',

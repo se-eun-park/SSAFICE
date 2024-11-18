@@ -1,4 +1,4 @@
-import { SpreadDown, TodoFlag } from '@/assets/svg'
+import { TodoFlag } from '@/assets/svg'
 import { SelectTodoState, type ScheduleItemDisplay } from '@/features/todoTab'
 
 type TodoItemProps = {
