@@ -12,11 +12,12 @@ export const ClickProfileButton = () => {
   const navigate = useNavigate()
   const isAuthenticated = useLoginStateStore()
   const setIsAuthenticated = useSetLoginStateStore()
-  const { data: user } = useQuery({
-    queryKey: ['user'],
+  const { data } = useQuery({
+    queryKey: ['userData'],
     queryFn: async () => {
-      const { data } = await instance.get('/api/users/me')
-      return data
+      const response = await instance.get('/api/users/me')
+      if (response) console.log(response.data)
+      return response.data
     },
     enabled: isAuthenticated,
   })
@@ -43,8 +44,8 @@ export const ClickProfileButton = () => {
         onClick={handleOnClickUserIcon}
         className={`p-1 rounded-full ${isOpen ? 'bg-color-bg-interactive-secondary-press' : 'hover:bg-color-bg-interactive-secondary-hover'}`}
       >
-        {user?.profileImgUrl ? (
-          <img src={user?.profileImgUrl} className='object-cover object-center w-7 h-7' />
+        {data?.profileImgUrl ? (
+          <img src={data?.profileImgUrl} className='object-cover object-center w-7 h-7' />
         ) : (
           <UserIcon className='w-7' />
         )}
@@ -61,13 +62,13 @@ export const ClickProfileButton = () => {
         <DropDown.Content isPaddingY={true}>
           <DropDown.Image>
             <img
-              src={user?.profileImgUrl}
+              src={data?.profileImgUrl}
               alt='내 프로필 사진'
               className='w-10 rounded-full aspect-square'
             />
           </DropDown.Image>
-          <DropDown.Title>{user?.name}</DropDown.Title>
-          <DropDown.SubTitle>{user?.email}</DropDown.SubTitle>
+          <DropDown.Title>{data}</DropDown.Title>
+          <DropDown.SubTitle>{data?.email}</DropDown.SubTitle>
         </DropDown.Content>
 
         <DropDown.Content

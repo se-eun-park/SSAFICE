@@ -18,6 +18,48 @@ export type ScheduleItemDisplay = {
   announcement: AnnouncementItemDisplay
 }
 
+export type User = {
+  userId: number
+  email: string
+  name: string
+  profileImgUrl: string
+}
+
+export type ChannelSummary = {
+  channelId: string
+  channelName: string
+  mmTeamId: string
+  mmTeamName: string
+}
+
+export type NoticeSummary = {
+  noticeId: number
+  title: string
+  content: string
+  createdAt: string
+  startDateTime: string
+  endDateTime: string
+  isEssentialYn: string
+  noticeTypeCd: string
+  createUser: User
+  channelSummary: ChannelSummary
+}
+
+export type UnScheduledDisplay = {
+  scheduleId: string
+  title: string
+  createdAt: string
+  startDateTime: string
+  endDateTime: string
+  scheduleSourceTypeCd: string | null
+  scheduleStatusTypeCd: string
+  isEssentialYn: string
+  isEnrollYn: string
+  chargeUser: User
+  createUser: User
+  noticeSummary: NoticeSummary
+}
+
 // 선택적 파라메터는 테스트 후 필수로 바꾸어 주세요
 export type ScheduleListDisplay = Record<string, ScheduleItemDisplay[]>
 

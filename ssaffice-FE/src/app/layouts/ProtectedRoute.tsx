@@ -14,10 +14,10 @@ export default function ProtectedRoute({
   const isAuthenticated = useLoginStateStore()
   const navigate = useNavigate()
   const { data } = useQuery({
-    queryKey: ['user', isAuthenticated],
+    queryKey: ['roleId'],
     queryFn: async () => {
       const { data } = await instance.get('/api/users/me')
-      return data?.roles[0]?.roleId
+      return data.roles[0].roleId
     },
     enabled: isAuthenticated,
   })
@@ -28,10 +28,16 @@ export default function ProtectedRoute({
     }
   }, [isAuthenticated, navigate])
 
+  useEffect(() => {
+    if (data && data !== role && data !== 'ROLE_SYSADMIN') {
+      navigate('/login')
+    }
+  }, [data, role, navigate])
+
   if (!isAuthenticated) {
     return null
   }
 
   if (data === role || data === 'ROLE_SYSADMIN') return <>{children}</>
-  else navigate('/login')
+  return null
 }

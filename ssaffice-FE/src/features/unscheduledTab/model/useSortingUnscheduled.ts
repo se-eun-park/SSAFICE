@@ -1,25 +1,25 @@
 import { useDateFormatter } from '@/shared/model'
 import type { UnscheduledListDisplay } from './types'
-import type { ScheduleItemDisplay } from '@/features/todoTab'
+import { UnScheduledDisplay } from '@/features/todoTab/index.ts'
 
 export const useSortingUnscheduled = (
-  datas: ScheduleItemDisplay[],
+  datas: UnScheduledDisplay[],
   type: 'by deadline' | 'by registration', //
 ): UnscheduledListDisplay => {
-  const result: UnscheduledListDisplay = {}
+  const result: any = {}
 
   datas.forEach((each) => {
     let keyDate: string = '1970-01-01' // 임의 기본값
 
     switch (type) {
       case 'by deadline':
-        if (each.todo.endDateTime) {
-          keyDate = useDateFormatter('YYYY-MM-DD(string)', each.todo.endDateTime) as string
+        if (each?.endDateTime) {
+          keyDate = useDateFormatter('YYYY-MM-DD(string)', new Date(each?.endDateTime)) as string
         }
         break
 
       case 'by registration':
-        keyDate = useDateFormatter('YYYY-MM-DD(string)', each.announcement.createdAt) as string
+        keyDate = useDateFormatter('YYYY-MM-DD(string)', new Date(each?.createdAt)) as string
         break
     }
 
@@ -39,9 +39,9 @@ export const useSortingUnscheduled = (
     .forEach((key) => {
       switch (type) {
         case 'by deadline': {
-          sortedResult[key] = result[key].sort((a, b) => {
-            if (a.todo.endDateTime && b.todo.endDateTime)
-              return b.todo.endDateTime.getTime() - a.todo.endDateTime.getTime()
+          sortedResult[key] = result[key].sort((a: any, b: any) => {
+            if (a?.endDateTime && b?.endDateTime)
+              return new Date(b?.endDateTime).getTime() - new Date(a?.endDateTime).getTime()
             else return 0
           })
           break
@@ -49,7 +49,8 @@ export const useSortingUnscheduled = (
 
         case 'by registration': {
           sortedResult[key] = result[key].sort(
-            (a, b) => b.announcement.createdAt.getTime() - a.announcement.createdAt.getTime(),
+            (a: any, b: any) =>
+              new Date(b?.createdAt)?.getTime() - new Date(a?.createdAt)?.getTime(),
           )
           break
         }

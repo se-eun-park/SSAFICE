@@ -23,6 +23,8 @@ export const LoginForm = () => {
       if (data) {
         data?.roles[0].roleId === 'ROLE_ADMIN' ? navigate('/pro') : navigate('/main')
       }
+
+      return data
     },
     enabled: isAuthenticated,
   })
