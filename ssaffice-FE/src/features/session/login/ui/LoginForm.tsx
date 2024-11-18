@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { LoginButton } from './LoginButton'
 import ssafyIcon from '/img/ssafy-icon.png'
-import { instance } from '@/shared/model/index.ts'
+import { instance } from '@/shared/api'
 import { useNavigate } from 'react-router-dom'
 import { useLoginStateStore, useSetLoginStateStore } from '@/entities/session/index.ts'
 import { useQuery } from '@tanstack/react-query'
@@ -82,7 +82,7 @@ export const LoginForm = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className='flex flex-col gap-spacing-12'>
+            <div className='flex-col flx gap-spacing-12'>
               <div className='flex justify-start text-color-text-tertiary body-md-semibold'>
                 비밀번호
               </div>

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { DropDown } from '@/shared/ui'
-import { instance, useClickOutsideToggle } from '@/shared/model'
+import { instance } from '@/shared/api'
+import { useClickOutsideToggle } from '@/shared/model'
 import { UserIcon, PasswordResetIcon, LogoutIcon } from '@/assets/svg'
 import { useNavigate } from 'react-router-dom'
 import { useLoginStateStore, useSetLoginStateStore } from '@/entities/session/index.ts'

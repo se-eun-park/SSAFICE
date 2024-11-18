@@ -4,7 +4,7 @@ import { RadioGroup, Radio } from '@/shared/ui'
 import { InfoIcon } from '@/assets/svg'
 
 type RemindProps = {
-  remindtype: string
+  remindTypeCd: string
   remindDateTime: string
 }
 
@@ -44,7 +44,7 @@ export const RemindTimeModal = ({ setIsOpen, reminder, setReminder }: RemindTime
     }
 
     const remindElements: RemindProps = {
-      remindtype: remindtype,
+      remindTypeCd: remindtype,
       remindDateTime: `${dateFormatted}T${hour}`,
     }
 
@@ -158,14 +158,14 @@ export const RemindTimeModal = ({ setIsOpen, reminder, setReminder }: RemindTime
               <div className='grid grid-cols-4 gap-spacing-20'>
                 <Radio
                   name='Hour'
-                  value='8:00:00'
+                  value='08:00:00'
                   className={`w-12 text-center h-fit body-xs-medium py-spacing-10 rounded-radius-8 ${hour === '8:00:00' ? 'bg-color-bg-interactive-disabled-press text-color-text-interactive-inverse' : 'bg-color-bg-interactive-secondary text-color-text-primary'}`}
                 >
                   8
                 </Radio>
                 <Radio
                   name='Hour'
-                  value='9:00:00'
+                  value='09:00:00'
                   className={`w-12 text-center h-fit body-xs-medium py-spacing-10 rounded-radius-8 ${hour === '9:00:00' ? 'bg-color-bg-interactive-disabled-press text-color-text-interactive-inverse' : 'bg-color-bg-interactive-secondary text-color-text-primary'}`}
                 >
                   9

@@ -1,7 +1,7 @@
 import type { SVGProps } from 'react'
 
 interface SvgTodoFlagProps extends SVGProps<SVGSVGElement> {
-  type: 'DONE' | 'IN_PROGRESS' | 'TODO'
+  type: string
 }
 
 const SvgTodoFlag = ({ type, ...props }: SvgTodoFlagProps) => {
