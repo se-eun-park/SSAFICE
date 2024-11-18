@@ -2,8 +2,8 @@ import {
   dummyMattermostTeams,
   ManageMembersTabContent,
   TeamSelectDropdown,
-} from '@/features/manageMembersTab'
-import { useTeamSelectDropdown } from '@/features/manageMembersTab/model/useTeamSelectDropdown'
+} from '@/features/ManageMemberTab'
+import { useTeamSelectDropdown } from '@/features/ManageMemberTab/model/useTeamSelectDropdown'
 import { RefreshMattermostConnection } from '@/shared/ui'
 
 export const ManageMembersTab = () => {
