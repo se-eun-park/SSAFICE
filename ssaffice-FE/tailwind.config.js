@@ -195,6 +195,7 @@ export default {
     },
   },
   plugins: [
+    require('tailwind-scrollbar-hide'),
     function ({ addUtilities }) {
       const newUtilities = {
         '.heading-desktop-5xl': {
