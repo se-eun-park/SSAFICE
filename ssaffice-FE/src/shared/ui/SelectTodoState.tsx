@@ -5,14 +5,18 @@ import { DownArrowIcon, TodoFlag } from '@/assets/svg'
 import { SelectedStateElements } from '../model/SelectedStateElements'
 
 type SelectTodoStateProps = {
-  state?: string
-  actionType: string // filter(필터), modify(개별 할일 상태), create(할일 간편 등록)
+  selectedState: string
+  setSelectedState: (selectedState: string) => void
+  actionType: string
 }
 
-export const SelectTodoState = ({ state = 'default', actionType }: SelectTodoStateProps) => {
+export const SelectTodoState = ({
+  selectedState,
+  setSelectedState,
+  actionType,
+}: SelectTodoStateProps) => {
   // state
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedState, setSelectedState] = useState(state)
   const [isDefaultHover, setIsDefaultHover] = useState(true)
   const dropDownRef = useRef<HTMLDivElement | null>(null)
 
@@ -59,6 +63,8 @@ export const SelectTodoState = ({ state = 'default', actionType }: SelectTodoSta
     } else {
       console.log('추후에 수정 api 연결')
     }
+
+    setIsOpen(false)
   }
 
   return (
@@ -66,18 +72,10 @@ export const SelectTodoState = ({ state = 'default', actionType }: SelectTodoSta
       {actionType === 'create' ? (
         <button
           onClick={handleOnClickOpen}
-          className='
-          flex gap-spacing-4 items-center
-          rounded-radius-8
-          hover:bg-color-bg-interactive-secondary-hover
-          active:bg-color-bg-interactive-secondary-press
-          '
+          className='flex items-center gap-spacing-4 rounded-radius-8 hover:bg-color-bg-interactive-secondary-hover active:bg-color-bg-interactive-secondary-press'
         >
           <div
-            className='
-            flex justify-center items-center
-            w-spacing-24 h-spacing-24 
-            '
+            className='flex items-center justify-center w-spacing-24 h-spacing-24'
           >
             <div className='flex w-[14px] h-[18px]'>
               <TodoFlag
@@ -93,10 +91,7 @@ export const SelectTodoState = ({ state = 'default', actionType }: SelectTodoSta
           </div>
 
           <div
-            className='
-            flex justify-center items-center
-            w-spacing-16 h-spacing-16
-          '
+            className='flex items-center justify-center w-spacing-16 h-spacing-16'
           >
             <div className='flex items-center'>
               <DownArrowIcon className='w-4' />

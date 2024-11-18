@@ -4,7 +4,6 @@ import { TodoDateGroup } from './TodoDateGroup'
 export const TodoList = () => {
   const datas = dummyTodos
   const sortedTodos = useSortingSchedule(datas.todos, 'by deadline')
-
   return (
     <div
       className='

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { restrictToFirstScrollableAncestor } from '@dnd-kit/modifiers'
 
 import { useLockScrollX } from '@/features/todoTab/model/hooks'
@@ -10,6 +10,13 @@ import type { GetTodoResponse } from '@/entities/todoTab'
 export const TodoBoard = () => {
   // hook
   useLockScrollX('.grid')
+
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 5,
+    },
+  })
+  const sensors = useSensors(pointerSensor)
 
   // state
   const [tasks, setTasks] = useState<GetTodoResponse[]>(GetTodoData)
@@ -60,7 +67,11 @@ export const TodoBoard = () => {
 
   return (
     <div className='grid w-full h-full grid-cols-3 overflow-x-hidden overflow-y-scroll overscroll-contain mt-spacing-24 gap-x-spacing-10'>
-      <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToFirstScrollableAncestor]}>
+      <DndContext
+        onDragEnd={handleDragEnd}
+        sensors={sensors}
+        modifiers={[restrictToFirstScrollableAncestor]}
+      >
         {CardColumnData.map((column) => (
           <CardColumn
             key={column.id}

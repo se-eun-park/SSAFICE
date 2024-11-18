@@ -1,7 +1,6 @@
 export { useLockScrollX } from './model/hooks'
 
 export { HoverTitle } from './ui/HoverTitle'
-export { SelectTodoState } from './ui/SelectTodoState'
 export { dummyTodos } from './model/types'
 export type {
   TodoItemDisplay,
@@ -11,5 +10,7 @@ export type {
 } from './model/types'
 export { Card } from './ui/Card'
 export { CardColumn } from './ui/CardColumn'
+export { TraineeTodoModal } from './ui/TraineeTodoModal'
+export { ManagerTodoModal } from './ui/ManagerTodoModal'
 export { useSortingSchedule } from './model/useSortingSchedule'
 export { useCalculateStatusCounts } from './model/useCalculateStatusCounts'

@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { TodoFlag } from '@/assets/svg'
-import { SelectTodoState, type ScheduleItemDisplay } from '@/features/todoTab'
+import { type ScheduleItemDisplay } from '@/features/todoTab'
+import { SelectTodoState } from '@/shared/ui'
 
 type TodoItemProps = {
   todo?: ScheduleItemDisplay
@@ -8,6 +10,8 @@ type TodoItemProps = {
 }
 
 export const TodoItem = ({ todo }: TodoItemProps) => {
+  const [selectedState, setSelectedState] = useState('todo')
+
   return (
     <div
       className={`
@@ -29,12 +33,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
         {/* 상태 라벨 */}
         {todo ? (
           todo.todo.scheduleStatusTypeCd && (
-            <div
-              className='
-                  flex justify-center items-center
-                  w-spacing-24 h-spacing-24 
-                  '
-            >
+            <div className='flex items-center justify-center w-spacing-24 h-spacing-24'>
               <div className='flex w-[14px] h-[18px]'>
                 <TodoFlag type={todo.todo.scheduleStatusTypeCd} />
               </div>
@@ -42,7 +41,11 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
           )
         ) : (
           // 새 할 일 만들기, 라벨 + 드롭다운
-          <SelectTodoState state='todo' actionType='create' />
+          <SelectTodoState
+            selectedState={selectedState}
+            setSelectedState={setSelectedState}
+            actionType='create'
+          />
         )}
 
         {todo ? (
@@ -59,12 +62,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
         ) : (
           <input
             type='text'
-            className='
-              flex-1
-              text-color-text-primary body-sm-medium
-              placeholder:text-color-text-disabled placeholder:body-sm-medium
-              focus:outline-none
-            '
+            className='flex-1 text-color-text-primary body-sm-medium placeholder:text-color-text-disabled placeholder:body-sm-medium focus:outline-none'
             placeholder='할일을 입력해주세요'
           />
         )}
@@ -76,11 +74,12 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
           <>
             {/* 할 일 상태 드롭다운 파트 */}
             <SelectTodoState
-              state={
+              selectedState={
                 todo.todo.scheduleStatusTypeCd === 'IN_PROGRESS'
                   ? 'progress'
                   : todo.todo.scheduleStatusTypeCd.toLowerCase()
               }
+              setSelectedState={setSelectedState}
               actionType='modify'
             />
           </>
