@@ -115,7 +115,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 1. 입력값 검증
         if (userIds.isEmpty()) {
-            throw new InvalidValueException(ErrorCode.INVALID_USER_IDS, "등록할 사용자 목록이 비어있습니다.", 0);
+            log.info("[Schedule] 공지사항 일괄 생성 해당 유저 존재 X 종료");
+            return ;
         }
 
         // ! 2. 모든 Schedule 생성 및 저장
