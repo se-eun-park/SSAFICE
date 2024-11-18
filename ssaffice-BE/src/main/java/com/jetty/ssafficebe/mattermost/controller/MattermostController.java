@@ -95,8 +95,7 @@ public class MattermostController {
     public ResponseEntity<ApiResponse> sendDirectMessage(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                          @RequestBody DirectMessageRequest request) {
 
-        Long userId = (long) 1;
-//        Long userId = userDetails.getUserId();
+        Long userId = userDetails.getUserId();
         Long scheduleId = request.getScheduleId();
         List<MMUserIdRequest> userIds = request.getUserIds();
 
