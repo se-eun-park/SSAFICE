@@ -6,28 +6,6 @@ export const TodoList = () => {
   const sortedTodos = useSortingSchedule(datas.todos, 'by deadline')
 
   return (
-    // <div
-    //   className='
-    // 이것도나와요?
-    //   w-full mb-[99px]
-    //   bg-color-bg-tertiary
-    //   rounded-radius-8
-    //   overflow-y-scroll
-    // '
-    // >
-    //   <div
-    //     className='
-    //     relative
-    //     px-spacing-16
-    //   '
-    //   >
-    //     <div
-    //       className='
-    //       flex flex-col
-    //       relative
-    //     '
-    //     >
-
     <div
       className='
         relative
