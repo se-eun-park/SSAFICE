@@ -1,5 +1,6 @@
 import { useDateFormatter } from '@/shared/model'
-import type { ScheduleItemDisplay, ScheduleListDisplay } from './types'
+// import type { ScheduleItemDisplay, ScheduleListDisplay } from './types'
+import type { ScheduleListDisplay } from './types'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 
 export const useSortingSchedule = (

@@ -1,4 +1,5 @@
-import { dummyTodos, useSortingSchedule } from '@/features/todoTab'
+// import { dummyTodos, useSortingSchedule } from '@/features/todoTab'
+import { useSortingSchedule } from '@/features/todoTab'
 import { TodoDateGroup } from './TodoDateGroup'
 import { useQuery } from '@tanstack/react-query'
 import { instance } from '@/shared/model'

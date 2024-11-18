@@ -1,6 +1,6 @@
 import { TeamTodoItemDisplay } from '@/features/manageTeamTodoTab'
-import { ScheduleItemDisplay } from './types'
-import { EachTodoItemDisplay } from '@/features/manageEachTodoTab'
+// import { ScheduleItemDisplay } from './types'
+// import { EachTodoItemDisplay } from '@/features/manageEachTodoTab'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 
 export type UseCalculateStatusCountsProps = {

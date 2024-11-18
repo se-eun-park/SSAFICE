@@ -1,6 +1,7 @@
 import { AddIcon } from '@/assets/svg'
 import { useClickedToggle, useDateFormatter } from '@/shared/model'
-import { useCalculateStatusCounts, type ScheduleItemDisplay } from '@/features/todoTab'
+// import { useCalculateStatusCounts, type ScheduleItemDisplay } from '@/features/todoTab'
+import { useCalculateStatusCounts } from '@/features/todoTab'
 import { TodoItem } from './TodoItem'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 

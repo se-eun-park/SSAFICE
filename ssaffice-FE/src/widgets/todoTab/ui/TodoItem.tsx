@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { TodoFlag } from '@/assets/svg'
-import { type ScheduleItemDisplay } from '@/features/todoTab'
+// import { type ScheduleItemDisplay } from '@/features/todoTab'
 import { SelectTodoState } from '@/shared/ui'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 

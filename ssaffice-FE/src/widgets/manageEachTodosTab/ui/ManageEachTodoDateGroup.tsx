@@ -1,7 +1,7 @@
 import { useDateFormatter } from '@/shared/model'
 import { useCalculateStatusCounts } from '@/features/todoTab'
 import { ManageEachTodoItem } from './ManageEachTodoItem'
-import { EachTodoItemDisplay } from '@/features/manageEachTodoTab'
+// import { EachTodoItemDisplay } from '@/features/manageEachTodoTab'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 
 type TodoDateGroupProps = {

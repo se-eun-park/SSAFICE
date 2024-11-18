@@ -1,5 +1,6 @@
 import { useDateFormatter } from '@/shared/model'
-import { EachTodoItemDisplay, EachTodoListDisplay, ScheduleSummaries } from './types'
+// import { EachTodoItemDisplay, EachTodoListDisplay, ScheduleSummaries } from './types'
+import { EachTodoListDisplay, ScheduleSummaries } from './types'
 
 export const useSortingEachTodo = (datas: ScheduleSummaries[]): EachTodoListDisplay => {
   const result: EachTodoListDisplay = {}

@@ -1,5 +1,5 @@
 import { TodoFlag } from '@/assets/svg'
-import { EachTodoItemDisplay } from '@/features/manageEachTodoTab'
+// import { EachTodoItemDisplay } from '@/features/manageEachTodoTab'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 
 type TodoItemProps = {
