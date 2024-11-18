@@ -159,3 +159,17 @@ def make_file_entity(notice_id, response, metadata, order_idx):
         order_idx=order_idx,
     )
     return response_file
+
+def make_mm_team_entity(team):    
+    response_team = MM_Team(
+        mm_team_id=team["id"],
+        mm_team_name=team["display_name"]            
+    )
+    return response_team
+    
+def make_mm_team_entity_by_team_id(team_id, team_name):
+    response_team = MM_Team(
+        team_id=team_id,
+        team_name=team_name
+    )
+    return response_team

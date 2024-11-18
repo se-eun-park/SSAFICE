@@ -1,5 +1,6 @@
 from setup import get_db
 from models import *
+from sqlalchemy.exc import IntegrityError
 
 
 def insert_notice(notice):
@@ -33,3 +34,16 @@ def insert_file(file):
         db.add(file)
         db.commit()
         return file.file_id
+
+
+def insert_mm_team(mm_team):
+    with get_db() as db:
+        try:
+            db.add(mm_team)
+            db.commit()
+            return mm_team.mm_team_id
+        except IntegrityError:
+            db.rollback()
+            print(
+                f"Primary Key {mm_team.mm_team_id} already exists. Skipping insertion."
+            )

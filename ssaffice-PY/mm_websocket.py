@@ -1,8 +1,9 @@
 import websocket
 import json
+import ssl
 from mmapi import *
 from setup import config
-from websocket_service import *
+from mm_service import *
 from get_datas import *
 from set_datas import *
 
@@ -14,13 +15,20 @@ websocket_url = mm_websocket_url
 token = TokenManager.get_token()
 
 
-
 # 웹소켓 이벤트 핸들러 함수
 def on_message(ws, message):
     # print("token : ",token)
     # print(get_user_info(token))
     data = json.loads(message)
-    # event중에 글이 게시되고 해당 게시글이 올라온 채널의 이름이 공지를 포함할 때만 출력
+    
+    # 1. 팀 생성 이벤트가 발생하면 해당 팀 정보를 DB에 저장
+    if data["event"] == "team_created":
+        team_id = data["data"]["team_id"]
+        team_display_name = data["data"]["team"]["team_display_name"]
+        team = make_mm_team_entity_by_team_id(team_id, team_display_name)
+        insert_mm_team(team)
+
+    # 2. event중에 글이 게시되고 해당 게시글이 올라온 채널의 이름이 공지를 포함하면 실행
     if is_notice(data):
         print(data)
         # 일정인지 아닌지 분석하는 함수
@@ -119,7 +127,7 @@ def connect_websocket():
         on_error=on_error,
         on_close=on_close,
     )
-    ws.run_forever()
+    ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
 
 
 connect_websocket()

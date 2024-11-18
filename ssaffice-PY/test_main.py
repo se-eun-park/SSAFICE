@@ -1,5 +1,5 @@
 from mmapi import *
-from websocket_service import *
+from mm_service import *
 # from websocket_test import *
 
 token = make_mattermost_admin_token() ## 해당 토큰은 관리자 계정의 토큰이라 가정한다.
