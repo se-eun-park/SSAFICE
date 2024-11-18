@@ -1,6 +1,6 @@
 from mmapi import *
 from setup import config, get_db
-from models import Notice, Schedule, File, file as f
+from models import Notice, Schedule, Attachment_File, attchment_file as f
 from get_datas import *
 from set_datas import *
 from datetime import datetime, timedelta
@@ -11,11 +11,12 @@ s3_access_key = config.S3_ACCESS_KEY
 s3_secret_key = config.S3_SECRET_KEY
 s3_prefix = config.S3_PREFIX
 s3_bucket_name = config.S3_BUCKET_NAME
+mm_global_notice_channel_id = config.MM_GLOBAL_NOTICE_CHANNEL_ID
 
 
 # 해당 채널이 분석 대상 메시지 확인하는 함수
 def is_notice(data):
-    if data["event"] == "posted" and "test" in data["data"]["channel_display_name"]:
+    if data["event"] == "posted" and "공지사항" in data["data"]["channel_display_name"]:
         return True
     return False
 
@@ -43,7 +44,7 @@ def essential_test(data):
 
 
 def make_notice_entity(data, notice):
-    json_data = json.loads(data["data"]["post"])        
+    json_data = json.loads(data["data"]["post"])
     is_essential = essential_test(json_data)
     mm_user_id = json_data["user_id"]
     user_id = get_user_id_by_user_mm_id(mm_user_id)
@@ -52,17 +53,18 @@ def make_notice_entity(data, notice):
 
     response_notice = Notice(
         created_by=user_id,
+        updated_by=user_id,
         channel_id=channel_id,
-        content=notice["content"],
+        content=original_message,
         end_date_time=notice["schedule_end_time"],
         is_essential_yn=is_essential,
         mm_message_id=notice["id"],
         start_date_time=notice["schedule_start_time"],
         title=notice["title"],
-        # original_message=original_message,
     )
 
     return response_notice
+
 
 def get_file_metadata_from_data(data):
     json_data = json.loads(data["data"]["post"])
@@ -77,17 +79,20 @@ def get_file_metadata_from_data(data):
 
 
 # s3로 파일 업로드
-def upload_file_to_s3(response):    
+def upload_file_to_s3(response):
     hash = f.generate_hash(response.content)
+    dir = hash[:2]
+    file_path = hash[2:]
     s3 = boto3.client(
         "s3", aws_access_key_id=s3_access_key, aws_secret_access_key=s3_secret_key
     )
 
     try:
         s3.put_object(
-            Bucket=s3_bucket_name, Key=f"{s3_prefix}/{hash}", Body=response.content
+            Bucket=s3_bucket_name,
+            Key=f"{s3_prefix}\{dir}\{file_path}",
+            Body=response.content,
         )
-        print(f"{hash} 업로드 완료")
     except Exception as e:
         print(f"Error : {e}")
 
@@ -96,7 +101,7 @@ def find_channel_type(data):
     json_data = json.loads(data["data"]["post"])
     channel_id = json_data["channel_id"]
     channel_type = data["data"]["channel_type"]
-    if channel_id == "i3ht4brt7jgu9g5rg8e4tfc98r":  # 11기 공지사항 채널id임
+    if channel_id == mm_global_notice_channel_id:  # 11기 공지사항 채널id임
         return "GLOBAL"
     elif (
         channel_type == "O" or channel_type == "P"
@@ -109,11 +114,11 @@ def find_channel_type(data):
 def make_schedule_entity(notice_id):
     notice = get_notice_by_notice_id(notice_id)
     response_schedule = Schedule(
-        created_by = notice.created_by,
+        created_by=notice.created_by,
+        updated_by=notice.updated_by,
         end_date_time=notice.end_date_time,
         is_enroll_yn=notice.is_essential_yn,
         is_essential_yn=notice.is_essential_yn,
-        memo=notice.content,
         notice_id=notice_id,
         start_date_time=notice.start_date_time,
         title=notice.title,
@@ -131,13 +136,14 @@ def find_user_id_by_channel_id(token, channel_id, page_num):
 def make_remind_entity(schedule_id):
     schedule = get_schedule_by_schedule_id(schedule_id)
     schedule_date_time = schedule.end_date_time
-    if(schedule.end_date_time == None):
+    if schedule.end_date_time == None:
         schedule_date_time = schedule.start_date_time
-
 
     response_remind = Remind(
         created_at=schedule.created_at,
         created_by=schedule.created_by,
+        updated_at=schedule.updated_at,
+        updated_by=schedule.updated_by,
         is_essential_yn=schedule.is_essential_yn,
         remind_date_time=schedule_date_time - timedelta(hours=1),
         remind_type_cd="ONCE",
@@ -146,30 +152,37 @@ def make_remind_entity(schedule_id):
     return response_remind
 
 
-def make_file_entity(notice_id, response, metadata, order_idx):  
+def make_file_entity(notice_id, response, metadata, order_idx):
     file = response.content
     hash = f.generate_hash(file)
-    response_file = File(
-        file_type="NOTICE",
+    response_file = Attachment_File(
+        file_type="notice",
         file_name=metadata["name"],
         file_size=metadata["size"],
         ref_id=notice_id,
         hash=hash,
-        mime_type=metadata["extension"],        
+        mime_type=metadata["extension"],
         order_idx=order_idx,
     )
     return response_file
 
-def make_mm_team_entity(team):    
-    response_team = MM_Team(
-        mm_team_id=team["id"],
-        mm_team_name=team["display_name"]            
-    )
+
+def make_mm_team_entity(team):
+    response_team = MM_Team(mm_team_id=team["id"], mm_team_name=team["display_name"])
     return response_team
-    
+
+
 def make_mm_team_entity_by_team_id(team_id, team_name):
-    response_team = MM_Team(
-        team_id=team_id,
-        team_name=team_name
-    )
+    response_team = MM_Team(team_id=team_id, team_name=team_name)
     return response_team
+
+
+def make_channel_entity(channel_id, channel_info):
+    team_id = channel_info["team_id"]
+    channel_name = channel_info["display_name"]
+    response_channel = Channel(
+        channel_id = channel_id,
+        channel_name = channel_name,
+        mm_team_id = team_id
+    )
+    return response_channel
