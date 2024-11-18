@@ -56,6 +56,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 1. Schedule 엔티티 생성 및 연관관계 설정
         Schedule schedule = scheduleConverter.toSchedule(scheduleRequest);
+        if (scheduleRequest.getScheduleStatusType() == null) {
+            schedule.setScheduleStatusTypeCd("TODO");
+        }
         if (scheduleRequest.getScheduleSourceTypeCd() == null) {
             schedule.setScheduleSourceTypeCd("PERSONAL");
         }
@@ -120,6 +123,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                                               Schedule schedule = scheduleConverter.toSchedule(userId, notice.getNoticeId());
                                               schedule.setTitle(notice.getTitle());
                                               schedule.setMemo(notice.getContent());
+                                              schedule.setScheduleSourceTypeCd("TODO");
                                               schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
                                               schedule.setIsEssentialYn(notice.getIsEssentialYn());
                                               if (notice.getIsEssential()) {
