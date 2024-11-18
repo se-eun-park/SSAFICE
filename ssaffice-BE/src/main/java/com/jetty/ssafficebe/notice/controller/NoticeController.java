@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,7 +43,7 @@ public class NoticeController {
      * <p>
      */
     @PostMapping("/admin")
-    public ResponseEntity<ApiResponse> saveNotice(@RequestPart NoticeRequest noticeRequest,
+    public ResponseEntity<ApiResponse> saveNotice(@ModelAttribute NoticeRequest noticeRequest,
                                                   @RequestPart(value = "files", required = false) List<MultipartFile> files)
             throws IOException {
         if (files == null) {
@@ -85,6 +86,8 @@ public class NoticeController {
 
     /**
      * 내가 작성한 공지사항 리스트 조회
+     *
+     * TODO : PARAMETER로 받기
      */
     @PostMapping("/admin/my")
     public ResponseEntity<List<NoticeSummaryForAdmin>> getMyNoticeList(
