@@ -137,17 +137,6 @@ export default {
         'radius-32': 'var(--unit-32)',
         'radius-circle': '999999px',
       },
-      // keyframes: {
-      //   slideToLeft: {
-      //     '0%': { transform: 'translateX(100%)' }, // 시작: 오른쪽 밖
-      //     '100%': { transform: 'translateX(0)' }, // 끝: 제자리
-      //   },
-      // },
-      // animation: {
-      //   slideToLeft: 'slideToLeft 0.3s ease-in-out forwards', // 0.5초 동안 진행, 끝에 멈춤
-      //   // !TODO 애니메이션 좀 더 빠르게 진행 less than 300ms
-      //   // !Latency 있으므로 아예 빠질 수도 있음
-      // },
       keyframes: {
         slideShrink: {
           '0%': { width: '100%' },
@@ -182,6 +171,10 @@ export default {
           '99.9%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
+        slideInFromRight: {
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
       },
       animation: {
         slideShrink: 'slideShrink 0.5s ease-in-out',
@@ -191,6 +184,7 @@ export default {
         fadeOut: 'fadeOut 0.5s ease-in-out',
         gapShrink: 'gapShrink 0.5s ease-in-out',
         taDa: 'taDa 0.7s',
+        slideInFromRight: 'slideInFromRight 0.8s ease-out',
       },
     },
   },
