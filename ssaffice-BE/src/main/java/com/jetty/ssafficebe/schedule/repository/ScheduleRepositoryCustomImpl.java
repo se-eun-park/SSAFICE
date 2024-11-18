@@ -135,6 +135,9 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
                 case "endDateTime":
                     builder.and(schedule.endDateTime.between(start, end));
                     break;
+                case "updatedAt":
+                    builder.and(schedule.updatedAt.between(start, end));
+                    break;
                 default:
                     throw new IllegalArgumentException("유효하지 않은 필터 타입: " + filterType);
             }
