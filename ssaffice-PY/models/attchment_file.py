@@ -14,6 +14,8 @@ class Attachment_File(Base):
     file_id = Column(String(255), primary_key=True, default=lambda: str(uuid.uuid4()), nullable=False)
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(BigInteger, ForeignKey("user.user_id"))
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+    updated_by = Column(BigInteger, ForeignKey("user.user_id"))
     file_name = Column(String(255))
     file_size = Column(BigInteger)
     file_type = Column(String(255))

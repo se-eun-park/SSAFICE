@@ -55,6 +55,7 @@ def on_message(ws, message):
                         upload_file_to_s3(response)      
                         file = make_file_entity(notice_db_id, response, metadata, order_idx)
                         file.created_by = notice_entity.created_by
+                        file.updated_by = notice_entity.created_by
                         file_db_id = insert_file(file)
                         print("file db 삽입 완료 : ", file_db_id)
                         order_idx+=1
