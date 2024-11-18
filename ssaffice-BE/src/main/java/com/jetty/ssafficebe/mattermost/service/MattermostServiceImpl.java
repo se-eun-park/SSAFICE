@@ -139,6 +139,7 @@ public class MattermostServiceImpl implements MattermostService {
                                .map(MMChannelSummary -> {
                                    Channel channel = new Channel();
                                    channel.setChannelId(MMChannelSummary.getId());
+                                   channel.setMmTeamId(MMChannelSummary.getTeamId());
                                    channel.setChannelName(MMChannelSummary.getDisplayName());
                                    return channel;
                                }).toList();
@@ -170,43 +171,10 @@ public class MattermostServiceImpl implements MattermostService {
                                                                                                             channel.getId()))
                                                                    .toList();
 
-        for (MMChannelSummary userChannel : mmChannelSummaryList) {
-
-        }
         userChannelRepository.saveAll(userChannelsToSave);
         return new ApiResponse(true, HttpStatus.OK, "Channel saved successfuly into UserChannel",
                                userChannelsToSave.stream().map(UserChannel::getChannelId).toList());
     }
-
-
-    @Override
-    public String getTeamByChannelIdFromMM(Long userId, Channel channel) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
-        String token = user.getMattermostToken();
-        String channelId = channel.getChannelId();
-        try {
-            ResponseEntity<MMChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
-                    "/channels/" + channelId, HttpMethod.GET, null, MMChannelSummary[].class, token);
-
-            String type = Objects.requireNonNull(response.getBody())[0].getType();
-            if(type.equals("O") || type.equals("P")) {
-                return Objects.requireNonNull(response.getBody())[0].getTeamId();
-            }
-            return null;
-        } catch (InvalidTokenException e) {
-            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND);
-        }
-    }
-
-    @Override
-    public ApiResponse updateTeamByChannelId(String teamId, String mmChannelId) {
-        Channel channel = channelRepository.findById(mmChannelId).orElseThrow(
-                () -> new ResourceNotFoundException(ErrorCode.CHANNEL_NOT_FOUND, "channelId", mmChannelId));
-        channel.setMmTeamId(teamId);
-        return new ApiResponse(true, HttpStatus.OK, "TeamId updated successfully", teamId);
-    }
-
 
     // DM을 보내기 위해선 먼저 DM Channel을 만들어야함.
     @Override
