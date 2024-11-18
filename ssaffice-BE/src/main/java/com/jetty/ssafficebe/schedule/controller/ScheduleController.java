@@ -60,7 +60,6 @@ public class ScheduleController {
     }
 
     /**
-     * TODO : 일정 sourceType 에 따라 수정 처리 설정
      * 일정 수정
      *
      * @param scheduleId            : 수정할 일정 id
@@ -88,7 +87,6 @@ public class ScheduleController {
     }
 
     /**
-     * TODO : 일정 sourceType 에 따라 삭제 처리 설정
      * 일정 삭제
      *
      * @param scheduleId : 삭제할 일정 id
@@ -107,7 +105,7 @@ public class ScheduleController {
      * @param scheduleFilterRequest : 미등록 공지 여부(N), 상태, 일정 출처, 시작/종료 시간
      * @return 조건에 맞는 일정 리스트
      */
-    @GetMapping("/unregistered")
+    @PostMapping("/unregistered")
     public ResponseEntity<Page<ScheduleSummary>> getUnregisteredSchedulePage(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
@@ -124,7 +122,7 @@ public class ScheduleController {
      * @param scheduleFilterRequest : 필터 타입, 미등록 여부, 상태, 일정 출처, 시작/종료 시간
      * @return 조건에 맞는 일정 리스트 + 상태(해야할일,진행중,완료) 카운트 리스트
      */
-    @GetMapping
+    @PostMapping
     public ResponseEntity<ScheduleListResponse> getScheduleList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
@@ -140,7 +138,7 @@ public class ScheduleController {
      * @param scheduleFilterRequest : 필터 타입, 미등록 여부, 상태, 일정 출처, 시작/종료 시간
      * @return 조건에 맞는 일정 리스트 + 상태(등록O, 등록O+완료) 카운트 리스트
      */
-    @GetMapping("/admin/notices/{noticeId}")
+    @PostMapping("/admin/notices/{noticeId}")
     public ResponseEntity<ScheduleListResponse> getScheduleListByNoticeForAdmin(
             @PathVariable Long noticeId,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
@@ -156,7 +154,7 @@ public class ScheduleController {
      * @param scheduleFilterRequest : 필터 타입, 미등록 여부, 상태, 일정 출처, 시작/종료 시간
      * @return 조건에 맞는 일정 리스트 + 상태(등록O, 등록O+완료) 카운트 리스트
      */
-    @GetMapping("/admin/assigned")
+    @PostMapping("/admin/assigned")
     public ResponseEntity<ScheduleListResponse> getAssignedScheduleList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
