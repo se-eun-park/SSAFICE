@@ -20,6 +20,7 @@ import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.repository.UserRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -169,10 +170,10 @@ public class MattermostServiceImpl implements MattermostService {
         List<UserChannel> userChannelsToSave = mmChannelSummaryList.stream().map(channel -> new UserChannel(userId,
                                                                                                             channel.getId()))
                                                                    .toList();
-
-        for (MMChannelSummary userChannel : mmChannelSummaryList) {
-
-        }
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+        user.setRecentMmChannelSyncTime(LocalDateTime.now());
+        userRepository.save(user);
         userChannelRepository.saveAll(userChannelsToSave);
         return new ApiResponse(true, HttpStatus.OK, "Channel saved successfuly into UserChannel",
                                userChannelsToSave.stream().map(UserChannel::getChannelId).toList());
