@@ -3,12 +3,14 @@ services:
   ssaffice-be:
     image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-be}:${DOCKER_TAG:-latest}
     container_name: ssaffice-be
-    network_mode: "host"
+    ports:
+      - "9090:9090"
     env_file:
       - ./ssaffice-BE/.env
     environment:
       - TZ=Asia/Seoul
       - SERVER_ADDRESS=0.0.0.0
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
     volumes:
       - ./ssaffice-BE/logs:/app/logs
 
@@ -16,10 +18,12 @@ services:
   ssaffice-fe:
     image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-fe}:${DOCKER_TAG:-latest}
     container_name: ssaffice-fe
-    network_mode: "host"
+    ports:
+      - "80:80"
+      - "443:443"
     environment:
       - SERVER_NAME=k11a605.p.ssafy.io
-      - BACKEND_HOST=127.0.0.1
+      - BACKEND_HOST=ssaffice-be
       - BACKEND_PORT=9090
       - TZ=Asia/Seoul
     volumes:
@@ -29,5 +33,34 @@ services:
     depends_on:
       - ssaffice-be
 
+  # Python Service 추가
+  ssaffice-py:
+    image: ${DOCKER_IMAGE:-kimhaeyeop/ssaffice-py}:${DOCKER_TAG:-latest}
+    container_name: ssaffice-py
+    ports:
+      - "8000:8000"  # Python 서비스의 포트
+    env_file:
+      - ./ssaffice-PY/.env
+    environment:
+      - TZ=Asia/Seoul
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
+    volumes:
+      - ./ssaffice-PY/logs:/app/logs
+
+  # Redis Service (Only for dev profile)
+  redis:
+    profiles:
+      - dev
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6380:6380"
+    command: redis-server --port 6380
+    volumes:
+      - redis_data:/data
+    environment:
+      - TZ=Asia/Seoul
+
 volumes:
   logs:
+  redis_data:
