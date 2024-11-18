@@ -9,8 +9,9 @@ export type TodoItemDisplay = {
   scheduleStatusTypeCd: 'TODO' | 'IN_PROGRESS' | 'DONE'
   isEssential?: boolean
   isEnroll?: boolean
-
-  user: createUser
+  createdAt?: Date
+  chargeUser?: createUser // 일정을 수행하는 교육생 // 더미데이터 깨져서 선택 파라메터 처리했습니다.
+  createUser: createUser // 일정을 등록한 사람(*교육생/프로)
 }
 
 export type ScheduleItemDisplay = {
@@ -43,7 +44,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: false,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 1,
           name: '김철수',
         },
@@ -66,7 +67,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'IN_PROGRESS',
         isEssential: true,
         isEnroll: false,
-        user: {
+        createUser: {
           userId: 3,
           name: '이민호',
         },
@@ -89,7 +90,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'DONE',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 5,
           name: '최영수',
         },
@@ -112,7 +113,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: false,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 7,
           name: '홍길동',
         },
@@ -135,7 +136,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'IN_PROGRESS',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 9,
           name: '박준형',
         },
@@ -158,7 +159,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'DONE',
         isEssential: false,
         isEnroll: false,
-        user: {
+        createUser: {
           userId: 11,
           name: '한지민',
         },
@@ -181,7 +182,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 13,
           name: '윤상호',
         },
@@ -205,7 +206,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: false,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 1,
           name: '김철수',
         },
@@ -228,7 +229,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'IN_PROGRESS',
         isEssential: true,
         isEnroll: false,
-        user: {
+        createUser: {
           userId: 3,
           name: '이민호',
         },
@@ -251,7 +252,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'DONE',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 5,
           name: '최영수',
         },
@@ -274,7 +275,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: false,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 7,
           name: '홍길동',
         },
@@ -297,7 +298,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'IN_PROGRESS',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 9,
           name: '박준형',
         },
@@ -320,7 +321,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'DONE',
         isEssential: false,
         isEnroll: false,
-        user: {
+        createUser: {
           userId: 11,
           name: '한지민',
         },
@@ -343,7 +344,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 13,
           name: '윤상호',
         },
@@ -366,7 +367,7 @@ export const dummyTodos: TodoListDisplay = {
         scheduleStatusTypeCd: 'TODO',
         isEssential: true,
         isEnroll: true,
-        user: {
+        createUser: {
           userId: 13,
           name: '윤상호',
         },
