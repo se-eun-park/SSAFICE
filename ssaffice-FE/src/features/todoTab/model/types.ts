@@ -5,7 +5,7 @@ export type TodoItemDisplay = {
   title: string
   startDateTime?: Date
   endDateTime?: Date
-  scheduleSourceTypeCd?: 'GLOBAL' | 'TEAM' | 'PERSONAL'
+  scheduleSourceTypeCd?: 'GLOBAL' | 'TEAM' | 'PERSONAL' | 'ASSIGNED'
   scheduleStatusTypeCd: 'TODO' | 'IN_PROGRESS' | 'DONE'
   isEssential?: boolean
   isEnroll?: boolean
@@ -25,7 +25,11 @@ export type ScheduleListDisplay = Record<string, ScheduleItemDisplay[]>
 export type TodoListDisplay = {
   // 일정 조회 API response
   todos: ScheduleItemDisplay[]
-  statusCounts: number[] // 차례로 TODO, IN_PROGRESS, DONE의 개수가 옵니다
+  scheduleStatusCount: {
+    todoCount: number
+    inProgressCount: number
+    doneCount: number
+  }
 }
 
 // sorting은 BE에서 해주니까 빼고 작업 (날짜로 묶을 필요 없음)
@@ -381,5 +385,9 @@ export const dummyTodos: TodoListDisplay = {
       },
     },
   ],
-  statusCounts: [2, 1, 12], // TODO: 18개, IN_PROGRESS: 15개, DONE: 16개
+  scheduleStatusCount: {
+    todoCount: 2,
+    inProgressCount: 1,
+    doneCount: 12,
+  }, // TODO: 18개, IN_PROGRESS: 15개, DONE: 16개
 }

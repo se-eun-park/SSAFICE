@@ -14,3 +14,5 @@ export { TraineeTodoModal } from './ui/TraineeTodoModal'
 export { ManagerTodoModal } from './ui/ManagerTodoModal'
 export { useSortingSchedule } from './model/useSortingSchedule'
 export { useCalculateStatusCounts } from './model/useCalculateStatusCounts'
+
+export type { UseCalculateStatusCountsProps } from './model/useCalculateStatusCounts'

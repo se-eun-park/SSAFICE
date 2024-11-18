@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 export const useProSelectTabMenu = () => {
   const [selected, setSelected] = useState<'manageMembers' | 'manageEachTodos' | 'manageTeamTodos'>(
-    'manageMembers',
+    'manageTeamTodos',
   )
 
   const handleSelect = (label: 'manageMembers' | 'manageEachTodos' | 'manageTeamTodos') => {

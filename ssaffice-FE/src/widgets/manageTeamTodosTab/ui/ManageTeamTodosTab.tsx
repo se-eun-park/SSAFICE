@@ -3,8 +3,8 @@ import { SelectTodoState } from '@/shared/ui'
 import { SelectTodoSortCondition } from '@/features/todoTab/ui/SelectTodoSortCondition'
 import { HoverButton, RefreshMattermostConnection } from '@/shared/ui'
 import { AnnouncementList } from '@/widgets/announcementTab'
-import { TodoList } from '@/widgets/todoTab'
 import { useState } from 'react'
+import { ManageTeamTodoList } from './ManageTeamTodoList'
 
 export const ManageTeamTodosTab = () => {
   // event
@@ -74,7 +74,7 @@ export const ManageTeamTodosTab = () => {
             <SelectTodoSortCondition />
           </div>
           <div className='h-[800px] px-spacing-16 bg-color-bg-tertiary overflow-y-scroll'>
-            <TodoList />
+            <ManageTeamTodoList />
           </div>
         </div>
       </div>
