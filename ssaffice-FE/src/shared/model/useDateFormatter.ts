@@ -3,6 +3,7 @@ type useDateFormatterProps =
   | 'YYYY-MM-DD(date)'
   | 'PM/AM HH:MM'
   | 'MM월 DD일 ?요일'
+  | 'MM월 DD일 HH:MM'
   | 'YYYY-MM-DD(?)'
   | 'D-?'
 
@@ -60,6 +61,8 @@ export const useDateFormatter = (type: useDateFormatterProps, date?: Date): stri
       return `${ampm} ${String(hours12).padStart(2, '0')}:${minutes}`
     case 'MM월 DD일 ?요일':
       return `${mm}월 ${dd}일 ${dayOfWeek}요일`
+    case 'MM월 DD일 HH:MM':
+      return `${mm}월 ${dd}일 ${hours24}:${minutes}`
     case 'YYYY-MM-DD(?)':
       return `${yyyy}-${mm}-${dd}(${dayOfWeek})`
     case 'D-?':

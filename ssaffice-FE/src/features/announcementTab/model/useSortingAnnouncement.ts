@@ -23,7 +23,7 @@ export const useSortingAnnouncement = (
 
   Object.keys(result)
     .sort((a, b) => {
-      return new Date(a).getTime() - new Date(b).getTime() // 날짜순 정렬
+      return new Date(b).getTime() - new Date(a).getTime() // 날짜순 정렬
     })
     .forEach((key) => {
       sortedResult[key] = result[key].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())

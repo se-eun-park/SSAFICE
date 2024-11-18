@@ -122,7 +122,7 @@ function TaskStatus({ selectedState, setSelectedState, modaltype }: TaskStatusRe
         <SelectTodoState
           selectedState={selectedState}
           setSelectedState={setSelectedState}
-          actionType='create'
+          actionType='filter'
         />
       )
     case 'VIEW':
@@ -130,7 +130,7 @@ function TaskStatus({ selectedState, setSelectedState, modaltype }: TaskStatusRe
         <SelectTodoState
           selectedState={selectedState}
           setSelectedState={setSelectedState}
-          actionType='create'
+          actionType='filter'
         />
       )
     case 'EDIT':
@@ -138,7 +138,7 @@ function TaskStatus({ selectedState, setSelectedState, modaltype }: TaskStatusRe
         <SelectTodoState
           selectedState={selectedState}
           setSelectedState={setSelectedState}
-          actionType='create'
+          actionType='filter'
         />
       )
   }

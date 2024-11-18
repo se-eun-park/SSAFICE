@@ -5,13 +5,19 @@ import { useDateFormatter } from '@/shared/model'
 type AnnouncementDateGroupProps = {
   date: string
   dailyAnnouncements: AnnouncementItemDisplay[]
+  isLast?: boolean
 }
-export const AnnouncementDateGroup = ({ date, dailyAnnouncements }: AnnouncementDateGroupProps) => {
+export const AnnouncementDateGroup = ({
+  date,
+  dailyAnnouncements,
+  isLast,
+}: AnnouncementDateGroupProps) => {
   return (
     <div
-      className='
-        flex flex-col
-        relative'
+      className={`
+          flex flex-col relative 
+          ${isLast ? 'pb-spacing-16' : ''}
+        `}
     >
       <div
         className='

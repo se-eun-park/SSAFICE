@@ -1,8 +1,11 @@
 import type { SVGProps } from 'react'
 
-const SvgTodoFlag = (type: 'DONE' | 'IN_PROGRESS' | 'TODO', props: SVGProps<SVGSVGElement>) => {
-  const colorCode = type === 'DONE' ? '#16A34A' : type === 'IN_PROGRESS' ? '#2563EB' : '#6B7280'
-  // 순서대로 color-icon-success, color-icon-info, color-icon-disabled
+interface SvgTodoFlagProps extends SVGProps<SVGSVGElement> {
+  type: 'DONE' | 'IN_PROGRESS' | 'TODO'
+}
+
+const SvgTodoFlag = ({ type, ...props }: SvgTodoFlagProps) => {
+  const colorCode = type === 'DONE' ? '#16A34A' : type === 'IN_PROGRESS' ? '#2563EB' : '#6B7280' // 순서대로 color-icon-success, color-icon-info, color-icon-disabled
 
   return (
     <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 14 18' {...props}>
@@ -13,4 +16,5 @@ const SvgTodoFlag = (type: 'DONE' | 'IN_PROGRESS' | 'TODO', props: SVGProps<SVGS
     </svg>
   )
 }
+
 export default SvgTodoFlag

@@ -11,5 +11,5 @@ export const useClickedToggle = () => {
     setIsClicked(!isClicked)
   }
 
-  return { isClicked, handleIsClicked }
+  return { isClicked, setIsClicked, handleIsClicked }
 }

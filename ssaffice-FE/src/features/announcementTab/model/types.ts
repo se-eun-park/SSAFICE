@@ -116,9 +116,9 @@ export const dummyAnnouncements: AnnouncementItemDisplay[] = [
     noticeId: 13,
   },
   {
-    user: { userId: 4, name: 'Bob Brown' },
+    user: { userId: 4, name: '안인석(교육프로)' },
     createdAt: new Date('2024-08-15T14:00:00'),
-    title: '공지 제목 14',
+    title: '[자율PJT 자치회 선발 안내]',
     content: `
   \\[자율PJT 자치회 선발 안내\\]\n-------------------\n\n**베스트 일레븐!** 11기 여러분
  안녕하세요!! 이번 **자율PJT 자치회**를 모집합니다! **나와 우리 팀원들을 위해 더 나은 SSAFY 
@@ -153,9 +153,9 @@ export const dummyAnnouncements: AnnouncementItemDisplay[] = [
     noticeId: 17,
   },
   {
-    user: { userId: 3, name: 'Alice Johnson' },
+    user: { userId: 3, name: '김싸피(교육프로)' },
     createdAt: new Date('2024-08-25T16:30:00'),
-    title: '공지 제목 18',
+    title: '[행운이벤트] 우리 반에 숨겨진 행운을 찾아주세요!',
     content: `@here 
 
 # EVENT 행운을 나눠주세요 :gg-clover: 
@@ -199,9 +199,9 @@ export const dummyAnnouncements: AnnouncementItemDisplay[] = [
     noticeId: 21,
   },
   {
-    user: { userId: 2, name: 'Jane Smith' },
+    user: { userId: 2, name: '정싸피(교육프로)' },
     createdAt: new Date('2024-08-20T08:30:00'),
-    title: '공지 제목 22',
+    title: '자율 프로젝트 계획서 및 2차 교보재 신청서 작성 및 제출안내',
     content: `
   [자율 프로젝트 계획서 
 및 2차 교보재 신청서 작성 및 제출안내]\n1차 교보재가 금일부터 순차적으로 지급중에 있습니다.\n2차 교보재는 사전 안내된 바와 같이 자유주제를 선택하신 팀과 1차 교보재를 신청하지 않은 팀에
