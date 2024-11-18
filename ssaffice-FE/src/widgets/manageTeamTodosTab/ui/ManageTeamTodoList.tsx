@@ -1,9 +1,19 @@
 import { ManageTeamTodoDateGroup } from './ManageTeamTodoDateGroup'
 import { dummyTeamTodos } from '@/features/manageTeamTodoTab/model/types'
 import { useSortingTeamTodo } from '@/features/manageTeamTodoTab/model/useSortingTeamTodo'
+import { useQuery } from '@tanstack/react-query'
 
+type ManageTeamTodoListProps = {
+  sortCondition: string
+  todoState: string
+}
 export const ManageTeamTodoList = () => {
+  // api
   const sortedTodos = useSortingTeamTodo(dummyTeamTodos)
+  const {} = useQuery({
+    queryKey: [],
+  })
+
   return (
     <div
       className='
@@ -28,6 +38,5 @@ export const ManageTeamTodoList = () => {
         ))}
       </div>
     </div>
-    // </div>
   )
 }

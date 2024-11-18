@@ -28,6 +28,5 @@ export const ManageEachTodoList = () => {
         ))}
       </div>
     </div>
-    // </div>
   )
 }
