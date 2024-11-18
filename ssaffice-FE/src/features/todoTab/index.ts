@@ -7,6 +7,7 @@ export type {
   TodoListDisplay,
   ScheduleItemDisplay,
   ScheduleListDisplay,
+  UnScheduledDisplay,
 } from './model/types'
 export { Card } from './ui/Card'
 export { CardColumn } from './ui/CardColumn'

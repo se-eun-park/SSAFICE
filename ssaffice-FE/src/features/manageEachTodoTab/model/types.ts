@@ -4,7 +4,7 @@ export type EachTodoItemDisplay = {
   scheduleSummaries: {
     scheduleId: number
     title: string
-    createdAt: Date // 이거 왜 명세에서 long이지?
+    createdAt: Date
     startDateTime?: Date
     endDateTime?: Date
     scheduleSourceTypeCd?: 'GLOBAL' | 'TEAM' | 'PERSONAL' | 'ASSIGNED'
@@ -40,7 +40,7 @@ export const dummyEachTodos: EachTodoItemDisplay[] = [
         userId: 1,
         name: '김철수',
         email: 'kim@example.com',
-        profileImageUrl: 'https://example.com/images/kim-profile.jpg',
+        profileImgUrl: 'https://example.com/images/kim-profile.jpg',
       },
       createUser: {
         userId: 2,
@@ -81,7 +81,7 @@ export const dummyEachTodos: EachTodoItemDisplay[] = [
         userId: 4,
         name: '정하늘',
         email: 'jung@example.com',
-        profileImageUrl: 'https://example.com/images/jung-profile.jpg',
+        profileImgUrl: 'https://example.com/images/jung-profile.jpg',
       },
       createUser: {
         userId: 5,
@@ -122,7 +122,7 @@ export const dummyEachTodos: EachTodoItemDisplay[] = [
         userId: 7,
         name: '홍길동',
         email: 'hong@example.com',
-        profileImageUrl: 'https://example.com/images/hong-profile.jpg',
+        profileImgUrl: 'https://example.com/images/hong-profile.jpg',
       },
       createUser: {
         userId: 8,
@@ -163,7 +163,7 @@ export const dummyEachTodos: EachTodoItemDisplay[] = [
         userId: 10,
         name: '김유리',
         email: 'kimyuri@example.com',
-        profileImageUrl: 'https://example.com/images/kimyuri-profile.jpg',
+        profileImgUrl: 'https://example.com/images/kimyuri-profile.jpg',
       },
       createUser: {
         userId: 11,
@@ -204,7 +204,7 @@ export const dummyEachTodos: EachTodoItemDisplay[] = [
         userId: 13,
         name: '윤상호',
         email: 'yoon@example.com',
-        profileImageUrl: 'https://example.com/images/yoon-profile.jpg',
+        profileImgUrl: 'https://example.com/images/yoon-profile.jpg',
       },
       createUser: {
         userId: 14,
@@ -245,7 +245,7 @@ export const dummyEachTodos: EachTodoItemDisplay[] = [
         userId: 16,
         name: '이수민',
         email: 'lee@example.com',
-        profileImageUrl: 'https://example.com/images/lee-profile.jpg',
+        profileImgUrl: 'https://example.com/images/lee-profile.jpg',
       },
       createUser: {
         userId: 17,
@@ -286,7 +286,7 @@ export const dummyEachTodos: EachTodoItemDisplay[] = [
         userId: 19,
         name: '오정훈',
         email: 'oh@example.com',
-        profileImageUrl: 'https://example.com/images/oh-profile.jpg',
+        profileImgUrl: 'https://example.com/images/oh-profile.jpg',
       },
       createUser: {
         userId: 20,
@@ -327,7 +327,7 @@ export const dummyEachTodos: EachTodoItemDisplay[] = [
         userId: 22,
         name: '서지훈',
         email: 'seo@example.com',
-        profileImageUrl: 'https://example.com/images/seo-profile.jpg',
+        profileImgUrl: 'https://example.com/images/seo-profile.jpg',
       },
       createUser: {
         userId: 23,
@@ -368,7 +368,7 @@ export const dummyEachTodos: EachTodoItemDisplay[] = [
         userId: 25,
         name: '윤서현',
         email: 'yoonseo@example.com',
-        profileImageUrl: 'https://example.com/images/yoonseo-profile.jpg',
+        profileImgUrl: 'https://example.com/images/yoonseo-profile.jpg',
       },
       createUser: {
         userId: 26,

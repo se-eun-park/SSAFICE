@@ -3,10 +3,32 @@ import { SelectTodoSortCondition } from '@/features/todoTab/ui/SelectTodoSortCon
 import { HoverButton, RefreshMattermostConnection } from '@/shared/ui'
 import { AnnouncementList } from '@/widgets/announcementTab'
 import { SelectTodoState } from '@/shared/ui'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ManageEachTodoList } from './ManageEachTodoList'
 
 export const ManageEachTodosTab = () => {
+  const [page, setPage] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+        console.log(scrollTop, scrollHeight, clientHeight)
+        if (scrollTop + clientHeight >= scrollHeight) {
+          setPage && setPage((prevPage: number) => prevPage + 1)
+        }
+      }
+    }
+
+    const container = containerRef.current
+    container?.addEventListener('scroll', handleScroll)
+
+    return () => {
+      container?.removeEventListener('scroll', handleScroll)
+    }
+  }, [setPage])
+
   // event
   const handleOnClickCalendar = () => {
     console.log('나중엔 캘린더가 열림')
@@ -31,7 +53,7 @@ export const ManageEachTodosTab = () => {
         <div className='text-color-text-primary heading-desktop-xl'>전체 공지</div>
         <RefreshMattermostConnection />
         <div className='h-[800px] px-spacing-16 bg-color-bg-tertiary overflow-y-scroll'>
-          <AnnouncementList />
+          <AnnouncementList page={page} searchValue='' />
         </div>
       </div>
 

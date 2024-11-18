@@ -1,6 +1,6 @@
-import type { ScheduleItemDisplay } from '@/features/todoTab'
+import type { ScheduleItemDisplay, UnScheduledDisplay } from '@/features/todoTab'
 
-export type UnscheduledListDisplay = Record<string, ScheduleItemDisplay[]>
+export type UnscheduledListDisplay = Record<string, UnScheduledDisplay[]>
 // 날짜로 묶은 미등록 공지 items. 직관적으로 알아볼 수 있도록 이름만 바꾸었습니다
 
 // 더미 데이터 배열입니다.
@@ -25,7 +25,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
         userId: 101,
         email: 'alice@example.com',
         name: '안인석(교육프로)',
-        profileImageUrl: 'https://picsum.photos/id/38/400/400',
+        profileImgUrl: 'https://picsum.photos/id/38/400/400',
       },
       createdAt: new Date('2024-11-10T09:00:00'),
       title: '자율PJT 영상 포트폴리오 담당자 설문제출 안내',
@@ -70,7 +70,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
         userId: 102,
         email: 'bob@example.com',
         name: '김싸피(교육프로)',
-        profileImageUrl: 'https://picsum.photos/id/39/400/400',
+        profileImgUrl: 'https://picsum.photos/id/39/400/400',
       },
       createdAt: new Date('2024-11-10T12:00:00'),
       title: 'SSAFY 청년멘토링 시청',
@@ -107,7 +107,7 @@ export const dummyUnschedules: ScheduleItemDisplay[] = [
         userId: 103,
         email: 'carol@example.com',
         name: '정싸피(컨설턴트)',
-        profileImageUrl: 'https://picsum.photos/id/40/400/400',
+        profileImgUrl: 'https://picsum.photos/id/40/400/400',
       },
       createdAt: new Date('2024-11-12T10:00:00'),
       title: '최종 팀미팅을 신청해 주세요!',

@@ -23,7 +23,7 @@ export const useManageMembersTabContent = (channel: MattermostChannel) => {
 
   const fetchUserInChannelList = async (pageNumber?: number) => {
     await fetchAPI(channel.channelId, pageNumber).then((res) => {
-      setUserInChannelList(res.users)
+      setUserInChannelList(res.content)
       if (res.pageable && res.totalPages !== undefined && res.totalElements !== undefined)
         setPageInfo({
           pageNumber: res?.pageable?.pageNumber,

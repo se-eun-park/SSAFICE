@@ -27,7 +27,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 101,
         email: 'admin@example.com',
         name: '관리자',
-        profileImageUrl: 'https://example.com/images/admin-profile.jpg',
+        profileImgUrl: 'https://example.com/images/admin-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12345',
@@ -54,7 +54,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 102,
         email: 'developer@example.com',
         name: '제인 도',
-        profileImageUrl: 'https://example.com/images/jane-profile.jpg',
+        profileImgUrl: 'https://example.com/images/jane-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12346',
@@ -81,7 +81,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 103,
         email: 'designer@example.com',
         name: '존 스미스',
-        profileImageUrl: 'https://example.com/images/john-profile.jpg',
+        profileImgUrl: 'https://example.com/images/john-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12347',
@@ -108,7 +108,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 104,
         email: 'manager@example.com',
         name: '박정훈',
-        profileImageUrl: 'https://example.com/images/park-profile.jpg',
+        profileImgUrl: 'https://example.com/images/park-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12348',
@@ -135,7 +135,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 105,
         email: 'assistant@example.com',
         name: '김미영',
-        profileImageUrl: 'https://example.com/images/kim-profile.jpg',
+        profileImgUrl: 'https://example.com/images/kim-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12349',
@@ -162,7 +162,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 106,
         email: 'security@example.com',
         name: '이정호',
-        profileImageUrl: 'https://example.com/images/lee-profile.jpg',
+        profileImgUrl: 'https://example.com/images/lee-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12350',
@@ -189,7 +189,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 107,
         email: 'admin@example.com',
         name: '관리자',
-        profileImageUrl: 'https://example.com/images/admin-profile.jpg',
+        profileImgUrl: 'https://example.com/images/admin-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12351',
@@ -216,7 +216,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 108,
         email: 'support@example.com',
         name: '최은정',
-        profileImageUrl: 'https://example.com/images/choi-profile.jpg',
+        profileImgUrl: 'https://example.com/images/choi-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12352',
@@ -243,7 +243,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 109,
         email: 'infra@example.com',
         name: '박진수',
-        profileImageUrl: 'https://example.com/images/parkjin-profile.jpg',
+        profileImgUrl: 'https://example.com/images/parkjin-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12353',
@@ -270,7 +270,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 110,
         email: 'event@example.com',
         name: '홍성민',
-        profileImageUrl: 'https://example.com/images/hong-profile.jpg',
+        profileImgUrl: 'https://example.com/images/hong-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12354',
@@ -297,7 +297,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 111,
         email: 'techworkshop@example.com',
         name: '이진수',
-        profileImageUrl: 'https://example.com/images/leejin-profile.jpg',
+        profileImgUrl: 'https://example.com/images/leejin-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12355',
@@ -324,7 +324,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 112,
         email: 'designer@example.com',
         name: '한지영',
-        profileImageUrl: 'https://example.com/images/han-profile.jpg',
+        profileImgUrl: 'https://example.com/images/han-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12356',
@@ -351,7 +351,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 113,
         email: 'customerservice@example.com',
         name: '조민정',
-        profileImageUrl: 'https://example.com/images/jo-profile.jpg',
+        profileImgUrl: 'https://example.com/images/jo-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12357',
@@ -378,7 +378,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 114,
         email: 'platform@example.com',
         name: '이수진',
-        profileImageUrl: 'https://example.com/images/leesujin-profile.jpg',
+        profileImgUrl: 'https://example.com/images/leesujin-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12358',
@@ -405,7 +405,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 115,
         email: 'devteam@example.com',
         name: '김태훈',
-        profileImageUrl: 'https://example.com/images/kimtae-profile.jpg',
+        profileImgUrl: 'https://example.com/images/kimtae-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12359',
@@ -432,7 +432,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 116,
         email: 'product@example.com',
         name: '장지민',
-        profileImageUrl: 'https://example.com/images/jang-profile.jpg',
+        profileImgUrl: 'https://example.com/images/jang-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12360',
@@ -459,7 +459,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 117,
         email: 'api@example.com',
         name: '오세영',
-        profileImageUrl: 'https://example.com/images/oh-profile.jpg',
+        profileImgUrl: 'https://example.com/images/oh-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12361',
@@ -486,7 +486,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 118,
         email: 'designer@example.com',
         name: '윤혜진',
-        profileImageUrl: 'https://example.com/images/yun-profile.jpg',
+        profileImgUrl: 'https://example.com/images/yun-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12362',
@@ -513,7 +513,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 119,
         email: 'dbteam@example.com',
         name: '정상혁',
-        profileImageUrl: 'https://example.com/images/jung-profile.jpg',
+        profileImgUrl: 'https://example.com/images/jung-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12363',
@@ -540,7 +540,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 120,
         email: 'pm@example.com',
         name: '이영진',
-        profileImageUrl: 'https://example.com/images/lee_profile.jpg',
+        profileImgUrl: 'https://example.com/images/lee_profile.jpg',
       },
       channelSummary: {
         channelId: 'C12364',
@@ -567,7 +567,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 121,
         email: 'uxteam@example.com',
         name: '박세진',
-        profileImageUrl: 'https://example.com/images/parksejin-profile.jpg',
+        profileImgUrl: 'https://example.com/images/parksejin-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12365',
@@ -594,7 +594,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 122,
         email: 'accounting@example.com',
         name: '조은영',
-        profileImageUrl: 'https://example.com/images/cho_profile.jpg',
+        profileImgUrl: 'https://example.com/images/cho_profile.jpg',
       },
       channelSummary: {
         channelId: 'C12366',
@@ -621,7 +621,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 123,
         email: 'system@example.com',
         name: '김하늘',
-        profileImageUrl: 'https://example.com/images/kimhaneul-profile.jpg',
+        profileImgUrl: 'https://example.com/images/kimhaneul-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12367',
@@ -648,7 +648,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 124,
         email: 'dev@example.com',
         name: '황민영',
-        profileImageUrl: 'https://example.com/images/huangminyoung-profile.jpg',
+        profileImgUrl: 'https://example.com/images/huangminyoung-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12368',
@@ -675,7 +675,7 @@ export const dummyTeamTodos: TeamTodoItemDisplay[] = [
         userId: 125,
         email: 'support@example.com',
         name: '최수지',
-        profileImageUrl: 'https://example.com/images/choisooji-profile.jpg',
+        profileImgUrl: 'https://example.com/images/choisooji-profile.jpg',
       },
       channelSummary: {
         channelId: 'C12369',
