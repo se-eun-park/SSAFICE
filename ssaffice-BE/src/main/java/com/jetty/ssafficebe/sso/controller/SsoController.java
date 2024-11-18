@@ -52,7 +52,7 @@ public class SsoController {
             log.info("[SSO] 존재하지 않는 SSO ID. 임시 유저 생성 후 SSO ID 저장");
             // isDisabled가 false인 유저 객체 생성 후 SSO Id만 set하여 저장
             User user = this.userService.saveUserForSSO(userRequest.getUserId());
-            AuthenticationResponse.builder().userId(user.getUserId()).isSuccess(false).build();
+            return AuthenticationResponse.builder().userId(user.getUserId()).isSuccess(false).build();
         }
 
         return AuthenticationResponse.builder().jwt(jwtProvider.generateToken(loginId)).isSuccess(true).build();
