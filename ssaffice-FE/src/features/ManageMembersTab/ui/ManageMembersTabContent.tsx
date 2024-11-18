@@ -3,6 +3,7 @@ import {
   CheckedRoundedSquare,
   PageMoveArrow,
   PageMoveEndArrow,
+  PencilIcon,
   RemoveBinIcon,
   SendMessageIcon,
 } from '@/assets/svg'
@@ -311,9 +312,9 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
                         </div>
                       </button>
                       <button className='flex justify-center items-center w-spacing-40 h-spacing-40'>
-                        <div className='w-[15px] h-[17px]'>
+                        <div className='w-[17px] h-[17px]'>
                           {/* 추후 pencil icon으로 바꾸어 주세요! */}
-                          <RemoveBinIcon color='#6B7280' />
+                          <PencilIcon />
                         </div>
                       </button>
                     </>
@@ -336,18 +337,26 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
               flex justify-center items-center 
               h-spacing-40 w-spacing-40'
             >
-              <div className='w-[13px] h-[12px]'>
+              <button
+                className='w-[13px] h-[12px]'
+                onClick={() => fetchUserInChannelList(0)}
+                disabled={pageInfo?.pageNumber === 0}
+              >
                 <PageMoveEndArrow />
-              </div>
+              </button>
             </div>
             <div
               className='
               flex justify-center items-center 
               h-spacing-40 w-spacing-40'
             >
-              <div className='w-[7px] h-[13px]'>
+              <button
+                className='w-[7px] h-[13px]'
+                onClick={() => pageInfo && fetchUserInChannelList(pageInfo?.pageNumber - 1)}
+                disabled={pageInfo?.pageNumber === 0}
+              >
                 <PageMoveArrow />
-              </div>
+              </button>
             </div>
           </div>
 
@@ -368,24 +377,39 @@ export const ManageMembersTabContent = ({ channel }: ManageMembersTabContentProp
               ))}
           </div>
 
+          {/* '이전 페이지' 관련 버튼 좌우반전하여 배치 */}
           <div className='flex gap-spacing-8 transform scale-x-[-1]'>
             <div
               className='
               flex justify-center items-center 
               h-spacing-40 w-spacing-40'
             >
-              <div className='w-[13px] h-[12px]'>
+              <button
+                className='w-[13px] h-[12px]'
+                onClick={() => pageInfo && fetchUserInChannelList(pageInfo.totalPages - 1)}
+                disabled={
+                  pageInfo?.pageNumber ===
+                  (pageInfo?.totalPages ? pageInfo.totalPages - 1 : undefined)
+                }
+              >
                 <PageMoveEndArrow />
-              </div>
+              </button>
             </div>
             <div
               className='
               flex justify-center items-center 
               h-spacing-40 w-spacing-40'
             >
-              <div className='w-[7px] h-[13px]'>
+              <button
+                className='w-[7px] h-[13px]'
+                onClick={() => pageInfo && fetchUserInChannelList(pageInfo.pageNumber + 1)}
+                disabled={
+                  pageInfo?.pageNumber ===
+                  (pageInfo?.totalPages ? pageInfo.totalPages - 1 : undefined)
+                }
+              >
                 <PageMoveArrow />
-              </div>
+              </button>
             </div>
           </div>
         </div>
