@@ -24,24 +24,24 @@ export const GetParticipationChannels = () => {
         </button>
       </div>
 
-      <DropDown isOpen={isOpen} position='top-spacing-32 right-0'>
-        <DropDown.Content>
+      <DropDown isOpen={isOpen} isDivide={true} width='w-60' position='top-spacing-32 right-0'>
+        <DropDown.Content isPaddingY={true}>
           <DropDown.SubTitle color='text-color-text-primary'>11기 공지전용</DropDown.SubTitle>
         </DropDown.Content>
 
-        <DropDown.Content>
+        <DropDown.Content isPaddingY={true}>
           <DropDown.SubTitle color='text-color-text-primary'>11기 서울4반</DropDown.SubTitle>
         </DropDown.Content>
 
-        <DropDown.Content>
+        <DropDown.Content isPaddingY={true}>
           <DropDown.SubTitle color='text-color-text-primary'>11기 공통 서울 8반</DropDown.SubTitle>
         </DropDown.Content>
 
-        <DropDown.Content>
+        <DropDown.Content isPaddingY={true}>
           <DropDown.SubTitle color='text-color-text-primary'>11기 특화 서울 6반</DropDown.SubTitle>
         </DropDown.Content>
 
-        <DropDown.Content>
+        <DropDown.Content isPaddingY={true}>
           <DropDown.SubTitle color='text-color-text-primary'>11기 자율 서울 6반</DropDown.SubTitle>
         </DropDown.Content>
       </DropDown>

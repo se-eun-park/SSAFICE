@@ -58,6 +58,9 @@ export default {
         'color-bg-interactive-success': 'var(--color-green-600)',
         'color-bg-interactive-success-hover': 'var(--color-green-700)',
         'color-bg-interactive-success-press': 'var(--color-green-800)',
+        'color-bg-interactive-disabled': 'var(--color-neutral-500)',
+        'color-bg-interactive-disabled-hover': 'var(--color-neutral-600)',
+        'color-bg-interactive-disabled-press': 'var(--color-neutral-700)',
 
         /* Border */
         'color-border-primary': 'var(--color-neutral-400)',
@@ -134,20 +137,59 @@ export default {
         'radius-32': 'var(--unit-32)',
         'radius-circle': '999999px',
       },
-      // keyframes: {
-      //   slideToLeft: {
-      //     '0%': { transform: 'translateX(100%)' }, // 시작: 오른쪽 밖
-      //     '100%': { transform: 'translateX(0)' }, // 끝: 제자리
-      //   },
-      // },
-      // animation: {
-      //   slideToLeft: 'slideToLeft 0.3s ease-in-out forwards', // 0.5초 동안 진행, 끝에 멈춤
-      //   // !TODO 애니메이션 좀 더 빠르게 진행 less than 300ms
-      //   // !Latency 있으므로 아예 빠질 수도 있음
-      // },
+      keyframes: {
+        slideShrink: {
+          '0%': { width: '100%' },
+          '99.99%': { padding: '32px' },
+          '100%': { width: '0%', padding: '0' },
+        },
+        slideExpand: {
+          '0%': { width: '0%', padding: '0' },
+          '1%': { padding: '32px' },
+          '100%': { width: '100%' },
+        },
+        slideExpandFast: {
+          '0%': { width: '0%', opacity: 0 },
+          '100%': { width: '100%', opacity: 1 },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '40%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeOut: {
+          '0%': { opacity: '1' },
+          '60%': { opacity: '0' },
+          '100%': { opacity: '0' },
+        },
+        gapShrink: {
+          '0%': { gap: '40px' },
+          '100%': { gap: '0px' },
+        },
+        taDa: {
+          '0%': { opacity: '0' },
+          '99.9%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideInFromRight: {
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+      },
+      animation: {
+        slideShrink: 'slideShrink 0.5s ease-in-out',
+        slideExpand: 'slideExpand 0.5s ease-in-out',
+        slideExpandFast: 'slideExpandFast 1s ease-in-out',
+        fadeIn: 'fadeIn 0.5s ease-in-out',
+        fadeOut: 'fadeOut 0.5s ease-in-out',
+        gapShrink: 'gapShrink 0.5s ease-in-out',
+        taDa: 'taDa 0.7s',
+        slideInFromRight: 'slideInFromRight 0.8s ease-out',
+      },
     },
   },
   plugins: [
+    require('tailwind-scrollbar-hide'),
     function ({ addUtilities }) {
       const newUtilities = {
         '.heading-desktop-5xl': {

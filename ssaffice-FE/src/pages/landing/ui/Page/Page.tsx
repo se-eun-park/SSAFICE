@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useLandingPageModel } from '@/features/landing/index'
+import { useLandingImageAnimation, useLandingPageModel } from '@/features/landing/index'
 
 //MARK: 공통 CSS
 /*
@@ -33,6 +33,7 @@ export const LandingPage = () => {
     selectedImage,
     handleSelectedIndex,
   } = useLandingPageModel()
+  const animationClass = useLandingImageAnimation(selectedImage)
 
   return (
     <div className='flex flex-col'>
@@ -45,8 +46,8 @@ export const LandingPage = () => {
         '
       >
         {/* 헤더 텍스트 영역 */}
-        <div className='flex flex-col gap-spacing-16 items-center'>
-          <div className='flex flex-col gap-spacing-8 items-center'>
+        <div className='flex flex-col items-center gap-spacing-16'>
+          <div className='flex flex-col items-center gap-spacing-8'>
             <div className='text-color-text-primary heading-desktop-4xl'>SSAFY 일정관리</div>
             <div className='text-color-text-primary heading-desktop-3xl'>
               SSAFICE와 함께 시작하기
@@ -58,13 +59,7 @@ export const LandingPage = () => {
         </div>
         <Link
           to='/login'
-          className='
-            flex
-            px-spacing-24 py-spacing-10
-            text-white body-lg-medium
-            bg-color-bg-interactive-primary hover:bg-color-bg-interactive-primary-hover
-            rounded-radius-32 
-          '
+          className='flex text-white px-spacing-24 py-spacing-10 body-lg-medium bg-color-bg-interactive-primary hover:bg-color-bg-interactive-primary-hover rounded-radius-32'
         >
           SSAFICE 바로가기
         </Link>
@@ -72,15 +67,9 @@ export const LandingPage = () => {
 
       {/* MARK: 화면 하단
        */}
-      <div
-        className='
-        flex flex-col gap-spacing-40 justify-start
-        px-spacing-80 py-spacing-64 
-        border border-t-color-border-tertiary
-      '
-      >
+      <div className='flex flex-col justify-start border-t gap-spacing-40 px-spacing-128 py-spacing-64 border-t-color-border-tertiary'>
         {/* 텍스트, 탭 5개 영역 */}
-        <div className='flex flex-col gap-spacing-20 items-center'>
+        <div className='flex flex-col items-center gap-spacing-20'>
           <div className='text-color-text-primary body-xl-semibold'>
             교육생과 프로 모두에게 최적의 경험을 제공합니다.
           </div>
@@ -101,23 +90,19 @@ export const LandingPage = () => {
         {/* 탭 이미지, 상세설명 영역 */}
         <div
           className='
-        flex justify-between
+        flex justify-between gap-spacing-32
         h-[400px]
         '
         >
           {/* 탭 설명 영역 */}
-          <div
-            className='
-            flex flex-col gap-spacing-32 items-start justify-center
-          '
-          >
+          <div className='flex flex-col items-start justify-center gap-spacing-32'>
             <div className='flex flex-col gap-spacing-16'>
-              <div className='text-color-text-primary heading-desktop-3xl'>{selectedTitle}</div>
-              <div className='text-color-text-primary body-lg-medium whitespace-pre-wrap'>
+              <div className='text-color-text-primary heading-desktop-2xl'>{selectedTitle}</div>
+              <div className='whitespace-pre-wrap text-color-text-primary body-lg-medium'>
                 {selectedContent}
               </div>
             </div>
-            <div className='flex gap-spacing-12 justify-start'>
+            <div className='flex justify-start gap-spacing-12'>
               <Link to='/login' className='text-color-text-info body-lg-semibold'>
                 SSAFICE 바로가기
               </Link>
@@ -128,11 +113,11 @@ export const LandingPage = () => {
           </div>
 
           {/* 이미지 영역 */}
-          <div className='w-[600px] h-[400px] overflow-hidden'>
+          <div className={`w-[600px] h-[400px] overflow-hidden transform ${animationClass}`}>
             <img
               id='slide-target'
               src={selectedImage}
-              className='w-full h-full object-cover'
+              className='object-cover w-full h-full'
               alt='탭 이미지'
             />
           </div>
