@@ -2,10 +2,12 @@ import { useDateFormatter } from '@/shared/model'
 import { useCalculateStatusCounts } from '@/features/todoTab'
 import { ManageEachTodoItem } from './ManageEachTodoItem'
 import { EachTodoItemDisplay } from '@/features/manageEachTodoTab'
+import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 
 type TodoDateGroupProps = {
   date: string
-  dailySchedules: EachTodoItemDisplay[]
+  // dailySchedules: EachTodoItemDisplay[]
+  dailySchedules: ScheduleSummaries[]
   isLast?: boolean
 }
 
@@ -60,7 +62,7 @@ export const ManageEachTodoDateGroup = ({ date, dailySchedules, isLast }: TodoDa
       <div className={`flex flex-col gap-spacing-16 ${isLast ? 'pb-spacing-16' : ''}`}>
         {/* todoItems */}
         {dailySchedules.map((each) => (
-          <ManageEachTodoItem key={each.scheduleSummaries.scheduleId} todo={each} />
+          <ManageEachTodoItem key={each.scheduleId} todo={each} />
         ))}
       </div>
     </div>

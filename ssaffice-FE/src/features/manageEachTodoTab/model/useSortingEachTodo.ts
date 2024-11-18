@@ -1,14 +1,11 @@
 import { useDateFormatter } from '@/shared/model'
-import { EachTodoItemDisplay, EachTodoListDisplay } from './types'
+import { EachTodoItemDisplay, EachTodoListDisplay, ScheduleSummaries } from './types'
 
-export const useSortingEachTodo = (datas: EachTodoItemDisplay[]): EachTodoListDisplay => {
+export const useSortingEachTodo = (datas: ScheduleSummaries[]): EachTodoListDisplay => {
   const result: EachTodoListDisplay = {}
 
   datas.forEach((each) => {
-    const keyDate: string = useDateFormatter(
-      'YYYY-MM-DD(string)',
-      each.scheduleSummaries.createdAt,
-    ) as string
+    const keyDate: string = useDateFormatter('YYYY-MM-DD(string)', each.createdAt) as string
 
     if (!result[keyDate]) {
       result[keyDate] = []
@@ -25,7 +22,7 @@ export const useSortingEachTodo = (datas: EachTodoItemDisplay[]): EachTodoListDi
     })
     .forEach((key) => {
       sortedResult[key] = result[key].sort(
-        (a, b) => a.scheduleSummaries.createdAt.getTime() - b.scheduleSummaries.createdAt.getTime(),
+        (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       )
     })
 

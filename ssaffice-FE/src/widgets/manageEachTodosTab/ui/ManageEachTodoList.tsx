@@ -5,7 +5,7 @@ import { instance } from '@/shared/model'
 import { useQuery } from '@tanstack/react-query'
 
 export const ManageEachTodoList = () => {
-  const { data } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['eachTodos'],
     queryFn: async () => {
       const { data } = await instance.post('/api/schedules/admin/assigned', {
@@ -13,13 +13,21 @@ export const ManageEachTodoList = () => {
         filterEndDateTime: new Date(),
         filterType: 'createdAt',
       })
-      return data
+      return data.scheduleSummaries
     },
   })
 
-  console.log(data)
+  // 데이터가 아직 로딩 중이라면 로딩 상태 표시
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
-  const sortedTodos = useSortingEachTodo(dummyEachTodos)
+  // API 호출에 실패했을 경우 에러 메시지 표시
+  if (error) {
+    return <div>Error loading data</div>
+  }
+
+  const sortedTodos = useSortingEachTodo(data)
   return (
     <div
       className='

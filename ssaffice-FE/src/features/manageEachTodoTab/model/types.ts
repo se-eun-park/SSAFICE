@@ -1,27 +1,29 @@
 import { AnnouncementItemDisplay, createUser } from '@/features/announcementTab'
 
+export type ScheduleSummaries = {
+  scheduleId: number
+  title: string
+  createdAt: Date
+  startDateTime?: Date
+  endDateTime?: Date
+  scheduleSourceTypeCd?: 'GLOBAL' | 'TEAM' | 'PERSONAL' | 'ASSIGNED'
+  scheduleStatusTypeCd: 'TODO' | 'IN_PROGRESS' | 'DONE'
+  isEssentialYn: 'Y' | 'N'
+  isEnrollYn: 'Y' | 'N'
+  chargeUser: createUser
+  createUser: createUser
+  noticeSummary: AnnouncementItemDisplay
+}
 export type EachTodoItemDisplay = {
-  scheduleSummaries: {
-    scheduleId: number
-    title: string
-    createdAt: Date
-    startDateTime?: Date
-    endDateTime?: Date
-    scheduleSourceTypeCd?: 'GLOBAL' | 'TEAM' | 'PERSONAL' | 'ASSIGNED'
-    scheduleStatusTypeCd: 'TODO' | 'IN_PROGRESS' | 'DONE'
-    isEssentialYn: 'Y' | 'N'
-    isEnrollYn: 'Y' | 'N'
-    chargeUser: createUser
-    createUser: createUser
-    noticeSummary: AnnouncementItemDisplay
-  }
+  scheduleSummaries: ScheduleSummaries[]
   scheduleEnrolledCount: {
     completedCount: number
     enrolledCount: number
   }
+  scheduleStatusCount?: number
 }
 
-export type EachTodoListDisplay = Record<string, EachTodoItemDisplay[]>
+export type EachTodoListDisplay = Record<string, ScheduleSummaries[]>
 
 // MARK: DATAS
 export const dummyEachTodos: EachTodoItemDisplay[] = [

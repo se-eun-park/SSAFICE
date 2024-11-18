@@ -1,15 +1,16 @@
 import { TodoFlag } from '@/assets/svg'
 import { EachTodoItemDisplay } from '@/features/manageEachTodoTab'
+import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 
 type TodoItemProps = {
-  todo: EachTodoItemDisplay
+  // todo: EachTodoItemDisplay
+  todo: ScheduleSummaries
   // todo 객체가 전달되면 -> 할일 리스트의 각 할일 컴포넌트
   // todo 객체가 전달되지 않으면 -> 새로운 할일 등록 컴포넌트
 }
 
 export const ManageEachTodoItem = ({ todo }: TodoItemProps) => {
-  const isCompleted: boolean =
-    todo.scheduleEnrolledCount.completedCount === todo.scheduleEnrolledCount.enrolledCount
+  const isCompleted: boolean = todo.isEnrollYn === 'Y' && todo.scheduleStatusTypeCd === 'DONE'
   return (
     <div
       className={`
@@ -39,12 +40,8 @@ export const ManageEachTodoItem = ({ todo }: TodoItemProps) => {
                   flex flex-col gap-spacing-8
                   `}
         >
-          <div className='text-color-text-primary body-sm-medium'>
-            {todo.scheduleSummaries.title}
-          </div>
-          <div className='text-color-text-tertiary body-sm-medium'>
-            {todo.scheduleSummaries.chargeUser.name}
-          </div>
+          <div className='text-color-text-primary body-sm-medium'>{todo.title}</div>
+          <div className='text-color-text-tertiary body-sm-medium'>{todo.chargeUser.name}</div>
         </div>
       </div>
 
