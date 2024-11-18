@@ -2,6 +2,8 @@ import { SummaryTab } from '@/widgets/summaryTab'
 import { AnnouncementTab } from '@/widgets/announcementTab'
 import { TodoTab } from '@/widgets/todoTab'
 import { useIsTabOpenStore, useIsAnimationStore } from '@/shared/model'
+import { useLoginStateStore } from '@/entities/session/index.ts'
+import { useNavigate } from 'react-router-dom'
 
 export const MainPage = () => {
   const isTabOpen = useIsTabOpenStore()

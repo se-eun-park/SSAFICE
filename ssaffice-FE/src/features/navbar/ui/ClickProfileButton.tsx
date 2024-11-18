@@ -2,10 +2,14 @@ import { useRef, useState } from 'react'
 import { DropDown } from '@/shared/ui'
 import { useClickOutsideToggle } from '@/shared/model'
 import { UserIcon, PasswordResetIcon, LogoutIcon } from '@/assets/svg'
+import { useNavigate } from 'react-router-dom'
+import { useSetLoginStateStore } from '@/entities/session/index.ts'
 
 export const ClickProfileButton = () => {
   const [isOpen, setIsOpen] = useState(false)
   const dropDownRef = useRef<HTMLDivElement | null>(null)
+  const navigate = useNavigate()
+  const setIsAuthenticated = useSetLoginStateStore()
 
   useClickOutsideToggle(dropDownRef, setIsOpen)
 
@@ -18,7 +22,9 @@ export const ClickProfileButton = () => {
   }
 
   const handleOnClickLogout = () => {
-    console.log('로그아웃')
+    localStorage.removeItem('access_token')
+    setIsAuthenticated(false)
+    navigate('/login')
   }
 
   return (
