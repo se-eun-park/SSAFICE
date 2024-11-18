@@ -1,7 +1,7 @@
 import type { SVGProps } from 'react'
 
 const SvgTodoFlag = (type: 'DONE' | 'IN_PROGRESS' | 'TODO', props: SVGProps<SVGSVGElement>) => {
-  const colorCode = type === 'DONE' ? '#16A34A' : 'IN_PROGRESS' ? '#2563EB' : '#6B7280'
+  const colorCode = type === 'DONE' ? '#16A34A' : type === 'IN_PROGRESS' ? '#2563EB' : '#6B7280'
   // 순서대로 color-icon-success, color-icon-info, color-icon-disabled
 
   return (
