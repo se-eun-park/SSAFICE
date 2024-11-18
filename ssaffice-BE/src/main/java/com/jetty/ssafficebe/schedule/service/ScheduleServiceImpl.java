@@ -118,6 +118,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 2. 모든 Schedule 생성 및 저장
         List<Schedule> schedules = userIds.stream().map(userId -> {
                                               Schedule schedule = scheduleConverter.toSchedule(userId, notice.getNoticeId());
+                                              schedule.setTitle(notice.getTitle());
+                                              schedule.setMemo(notice.getContent());
                                               schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
                                               schedule.setIsEssentialYn(notice.getIsEssentialYn());
                                               if (notice.getIsEssential()) {
@@ -134,11 +136,9 @@ public class ScheduleServiceImpl implements ScheduleService {
                                            ? notice.getEndDateTime().minusHours(1)
                                            : notice.getStartDateTime().minusHours(1);
 
-            savedSchedules.forEach(schedule -> {
-                saveScheduleReminds(schedule.getUserId(),
-                                    List.of(remindConverter.toRemindRequest("Y", "ONCE", remindDateTime)),
-                                    schedule.getScheduleId());
-            });
+            savedSchedules.forEach(schedule -> saveScheduleReminds(schedule.getUserId(),
+                                                               List.of(remindConverter.toRemindRequest("Y", "ONCE", remindDateTime)),
+                                                               schedule.getScheduleId()));
         }
 
         log.info("[Schedule] 공지사항 일정 일괄 생성 완료 - 전체={}, 성공={}", userIds.size(), savedSchedules.size());
@@ -216,7 +216,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         validateAuthorization(userId, schedule.getUserId());
 
         // ! 3-1. 필수 일정이고 관리자가 아닐 경우 삭제 시도 예외처리
-        if (schedule.getIsEssential() && !isAdmin(userId)) {
+        if (schedule.getIsEssential() && isNotAdmin(userId)) {
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "scheduleId", scheduleId);
         }
 
@@ -342,7 +342,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * 요청한 사용자가 일정 소유자이거나 관리자인 경우만 허용하는 메서드
      */
     private void validateAuthorization(Long userId, Long requestUserId) {
-        if (!requestUserId.equals(userId) && !isAdmin(userId)) {
+        if (!requestUserId.equals(userId) && isNotAdmin(userId)) {
             log.warn("[Authorization] 권한 없음 - userId={}, requestUserId={}, isAdmin={}", userId, requestUserId, false);
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "userId", userId);
         }
@@ -377,7 +377,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     /**
      * 관리자 권한 체크 메서드
      */
-    private boolean isAdmin(Long userId) {
-        return userRoleRepository.existsByUserIdAndRoleIdIn(userId, Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
+    private boolean isNotAdmin(Long userId) {
+        return !userRoleRepository.existsByUserIdAndRoleIdIn(userId, Arrays.asList("ROLE_ADMIN", "ROLE_SYSADMIN"));
     }
 }
