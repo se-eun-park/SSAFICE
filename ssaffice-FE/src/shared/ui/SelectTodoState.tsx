@@ -5,14 +5,18 @@ import { DownArrowIcon } from '@/assets/svg'
 import { SelectedStateElements } from '../model/SelectedStateElements'
 
 type SelectTodoStateProps = {
-  state?: string
+  selectedState: string
+  setSelectedState: (selectedState: string) => void
   actionType: string
 }
 
-export const SelectTodoState = ({ state = 'default', actionType }: SelectTodoStateProps) => {
+export const SelectTodoState = ({
+  selectedState,
+  setSelectedState,
+  actionType,
+}: SelectTodoStateProps) => {
   // state
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedState, setSelectedState] = useState(state)
   const [isDefaultHover, setIsDefaultHover] = useState(true)
   const dropDownRef = useRef<HTMLDivElement | null>(null)
 
@@ -54,6 +58,8 @@ export const SelectTodoState = ({ state = 'default', actionType }: SelectTodoSta
     } else {
       console.log('추후에 수정 api 연결')
     }
+
+    setIsOpen(false)
   }
 
   return (
