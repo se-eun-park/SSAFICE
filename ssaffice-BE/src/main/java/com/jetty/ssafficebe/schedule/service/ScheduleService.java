@@ -32,7 +32,7 @@ public interface ScheduleService {
 
     ScheduleListResponse getScheduleListByNoticeForAdmin(Long noticeId, ScheduleFilterRequest filterRequest, Sort sort);
 
-    Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable);
+    Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId, Pageable pageable);
 
     ScheduleListResponse getAssignedScheduleList(Long userId, ScheduleFilterRequest filterRequest, Sort sort);
 
