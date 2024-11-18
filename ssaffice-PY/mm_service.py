@@ -15,7 +15,7 @@ s3_bucket_name = config.S3_BUCKET_NAME
 
 # 해당 채널이 분석 대상 메시지 확인하는 함수
 def is_notice(data):
-    if data["event"] == "posted" and "test" in data["data"]["channel_display_name"]:
+    if data["event"] == "posted" and "공지사항" in data["data"]["channel_display_name"]:
         return True
     return False
 
