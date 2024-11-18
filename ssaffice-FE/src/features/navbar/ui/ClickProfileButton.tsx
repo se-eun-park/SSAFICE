@@ -68,7 +68,7 @@ export const ClickProfileButton = () => {
               className='w-10 rounded-full aspect-square'
             />
           </DropDown.Image>
-          <DropDown.Title>{data}</DropDown.Title>
+          <DropDown.Title>{data?.name}</DropDown.Title>
           <DropDown.SubTitle>{data?.email}</DropDown.SubTitle>
         </DropDown.Content>
 

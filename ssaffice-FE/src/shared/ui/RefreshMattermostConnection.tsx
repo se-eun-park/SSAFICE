@@ -1,5 +1,5 @@
 import { RefreshIcon } from '@/assets/svg'
-import { instance } from '@/shared/model'
+import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -43,15 +43,11 @@ export const RefreshMattermostConnection = () => {
 
   return (
     <div
-      className='
-        flex gap-spacing-8 items-center
-    '
+      className='flex items-center  gap-spacing-8'
     >
-      <button className='flex gap-spacing-8 items-center' onClick={handleButtonClick}>
+      <button className='flex items-center gap-spacing-8' onClick={handleButtonClick}>
         <div
-          className='
-        w-spacing-12 h-spacing-12
-      '
+          className=' w-spacing-12 h-spacing-12'
         >
           <RefreshIcon />
         </div>
@@ -67,10 +63,7 @@ export const RefreshMattermostConnection = () => {
         </div>
       </button>
       <div
-        className='
-        flex justify-end
-        text-color-text-tertiary body-sm-medium
-      '
+        className='flex justify-end  text-color-text-tertiary body-sm-medium'
       >
         {formatDateTime(user?.recentMmChannelSyncTime)}
       </div>

@@ -1,4 +1,4 @@
-import { instance } from '@/shared/model'
+import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
 
 export const SSORedirect = () => {

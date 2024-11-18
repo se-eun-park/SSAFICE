@@ -1,7 +1,7 @@
 import { AnnouncementDateGroup } from './AnnouncementDateGroup'
 import { useSortingAnnouncement } from '@/features/announcementTab'
 import type { AnnouncementListDisplay } from '@/features/announcementTab'
-import { instance } from '@/shared/model'
+import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 

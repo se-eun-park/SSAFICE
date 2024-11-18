@@ -1,8 +1,8 @@
 import { useLoginStateStore } from '@/entities/session'
-import { instance } from '@/shared/model'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { instance } from '@/shared/api'
 
 export default function ProtectedRoute({
   children,

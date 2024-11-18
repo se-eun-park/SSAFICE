@@ -1,7 +1,7 @@
 import { useSortingUnscheduled } from '@/features/unscheduledTab'
 import { UnscheduledDateGroup } from './UnscheduledDateGroup'
 import type { UnscheduledListDisplay } from '@/features/unscheduledTab'
-import { instance } from '@/shared/model/index.ts'
+import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
