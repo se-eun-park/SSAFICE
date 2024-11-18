@@ -52,6 +52,7 @@ def make_notice_entity(data, notice):
 
     response_notice = Notice(
         created_by=user_id,
+        updated_by=user_id,
         channel_id=channel_id,
         content=notice["content"],
         end_date_time=notice["schedule_end_time"],
@@ -113,6 +114,7 @@ def make_schedule_entity(notice_id):
     notice = get_notice_by_notice_id(notice_id)
     response_schedule = Schedule(
         created_by=notice.created_by,
+        updated_by=notice.updated_by,
         end_date_time=notice.end_date_time,
         is_enroll_yn=notice.is_essential_yn,
         is_essential_yn=notice.is_essential_yn,
@@ -152,7 +154,7 @@ def make_file_entity(notice_id, response, metadata, order_idx):
     file = response.content
     hash = f.generate_hash(file)
     response_file = Attachment_File(
-        file_type="NOTICE",
+        file_type="notice",
         file_name=metadata["name"],
         file_size=metadata["size"],
         ref_id=notice_id,

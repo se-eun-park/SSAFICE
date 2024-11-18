@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, BigInteger
 from sqlalchemy.orm import relationship
 from .base import Base
+from .notice import Notice
 
 
 class User(Base):
@@ -14,4 +15,4 @@ class User(Base):
     name = Column(String(255), index=True)
     is_disabled_yn = Column(Boolean)
 
-    notices = relationship("Notice", back_populates="created_user")
+    notices = relationship("Notice", back_populates="created_user", foreign_keys=[Notice.created_by])

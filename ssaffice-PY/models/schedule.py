@@ -11,6 +11,8 @@ class Schedule(Base):
     schedule_id = Column(BigInteger, primary_key=True, autoincrement=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(BigInteger, ForeignKey("user.user_id"))
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+    updated_by = Column(BigInteger, ForeignKey("user.user_id"))
     end_date_time = Column(DateTime(timezone=True))    
     is_enroll_yn = Column(BooleanToYN, default="N")
     is_essential_yn = Column(BooleanToYN, default="N")
@@ -29,6 +31,9 @@ class Remind(Base):
 
     remind_id = Column(BigInteger, primary_key=True, autoincrement=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
+    created_by = Column(BigInteger, ForeignKey("user.user_id"))
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+    updated_by = Column(BigInteger, ForeignKey("user.user_id"))
     created_by = Column(BigInteger, ForeignKey("user.user_id"))
     is_essential_yn = Column(BooleanToYN, default="N")
     remind_date_time = Column(DateTime(timezone=True))
