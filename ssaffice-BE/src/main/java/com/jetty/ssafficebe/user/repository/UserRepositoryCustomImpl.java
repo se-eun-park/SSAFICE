@@ -1,10 +1,10 @@
 package com.jetty.ssafficebe.user.repository;
 
+import com.jetty.ssafficebe.channel.entity.QUserChannel;
 import com.jetty.ssafficebe.common.jpa.AbstractQueryDslRepository;
 import com.jetty.ssafficebe.role.entity.QUserRole;
 import com.jetty.ssafficebe.user.entity.QUser;
 import com.jetty.ssafficebe.user.entity.User;
-import com.jetty.ssafficebe.user.payload.UserFilterRequest;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -30,26 +30,13 @@ public class UserRepositoryCustomImpl extends AbstractQueryDslRepository impleme
     }
 
     @Override
-    public Page<User> getUsersByFilter(UserFilterRequest userFilterRequest, Pageable pageable) {
-        // 요청 받은 항목들로 필터링하여 사용자 목록을 반환하는 메소드
+    public Page<User> getUsersByChannelId(String channelId, Pageable pageable) {
+        // 입력받은 channelId 가 현재 유저가 참여한 채널 중 존재하는 channelId일 경우
         QUser user = QUser.user;
-        JPQLQuery<User> query = from(user);
-
-        if (userFilterRequest.getCohortNum() != null) {
-            query.where(user.cohortNum.eq(userFilterRequest.getCohortNum()));
-        }
-        if (userFilterRequest.getRegionCd() != null) {
-            query.where(user.regionCd.eq(userFilterRequest.getRegionCd()));
-        }
-        if (userFilterRequest.getClassNum() != null) {
-            query.where(user.classNum.eq(userFilterRequest.getClassNum()));
-        }
-        if (userFilterRequest.getTrackCd() != null) {
-            query.where(user.trackCd.eq(userFilterRequest.getTrackCd()));
-        }
-        if (userFilterRequest.getDisabledYn() != null) {
-            query.where(user.isDisabledYn.eq(userFilterRequest.getDisabledYn()));
-        }
+        QUserChannel userChannel = QUserChannel.userChannel;
+        JPQLQuery<User> query = from(user)
+                .join(user.userChannels, userChannel)
+                .where(userChannel.channelId.eq(channelId));
 
         return getPageImpl(query, pageable);
     }

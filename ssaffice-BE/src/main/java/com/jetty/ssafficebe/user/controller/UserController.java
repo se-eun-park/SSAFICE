@@ -109,13 +109,13 @@ public class UserController {
     /**
      * 유저 리스트 조회
      */
-    @PostMapping("/admin")
-    public ResponseEntity<Page<UserSummary>> getUserPage(@RequestBody UserFilterRequest userFilterRequest,
+    @GetMapping("/admin")
+    public ResponseEntity<Page<UserSummary>> getUserPage(@RequestParam String channelId,
                                                          @PageableDefault(
                                                                  size = 20,
                                                                  sort = "userId",
                                                                  direction = Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(userService.getUserPage(userFilterRequest, pageable));
+        return ResponseEntity.ok(userService.getUserPage(channelId, pageable));
     }
 
     /**

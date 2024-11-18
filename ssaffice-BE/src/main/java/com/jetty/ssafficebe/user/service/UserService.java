@@ -5,7 +5,6 @@ import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
-import com.jetty.ssafficebe.user.payload.UserFilterRequest;
 import com.jetty.ssafficebe.user.payload.UserRequestForSso;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import java.io.IOException;
@@ -24,7 +23,7 @@ public interface UserService {
 
     ApiResponse deleteUsers(List<Long> userIds);
 
-    Page<UserSummary> getUserPage(UserFilterRequest userFilterRequest, Pageable pageable);
+    Page<UserSummary> getUserPage(String channelId, Pageable pageable);
 
     ApiResponse updatePassword(Long userId, UpdatePasswordRequest updatePasswordRequest);
 

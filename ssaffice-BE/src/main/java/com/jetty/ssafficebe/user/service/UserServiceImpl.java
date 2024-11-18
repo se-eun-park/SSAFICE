@@ -21,7 +21,6 @@ import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
-import com.jetty.ssafficebe.user.payload.UserFilterRequest;
 import com.jetty.ssafficebe.user.payload.UserRequestForSso;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
@@ -156,8 +155,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserSummary> getUserPage(UserFilterRequest userFilterRequest, Pageable pageable) {
-        Page<User> usersPageByFilter = this.userRepository.getUsersByFilter(userFilterRequest, pageable);
+    public Page<UserSummary> getUserPage(String channelId, Pageable pageable) {
+        Page<User> usersPageByFilter = this.userRepository.getUsersByChannelId(channelId, pageable);
         return usersPageByFilter.map(user -> {
             UserSummary userSummary = this.userConverter.toUserSummary(user);
 

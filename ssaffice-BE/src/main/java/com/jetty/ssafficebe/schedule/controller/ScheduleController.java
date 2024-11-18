@@ -122,7 +122,7 @@ public class ScheduleController {
      * @param scheduleFilterRequest : 필터 타입, 미등록 여부, 상태, 일정 출처, 시작/종료 시간
      * @return 조건에 맞는 일정 리스트 + 상태(해야할일,진행중,완료) 카운트 리스트
      */
-    @PostMapping
+    @PostMapping("/my")
     public ResponseEntity<ScheduleListResponse> getScheduleList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleFilterRequest scheduleFilterRequest,
