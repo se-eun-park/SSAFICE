@@ -1,14 +1,21 @@
+import { useState } from 'react'
 import { TodoList } from './TodoList'
 import { TodoBoard } from './TodoBoard'
 
-import { HoverTitle, SelectTodoState } from '@/features/todoTab'
+import { HoverTitle } from '@/features/todoTab'
 import { useIsTabOpenStore } from '@/shared/model'
-import { TabLayout, HoverButton } from '@/shared/ui'
+import { TabLayout, HoverButton, SelectTodoState } from '@/shared/ui'
+import { CommonModal } from '@/shared/ui'
 import { HamburgerMenuIcon, FastLeftArrowIcon, CalendarIcon, EditIcon } from '@/assets/svg'
 
 export const TodoTab = () => {
   // store
   const isTabOpen = useIsTabOpenStore()
+
+  // state
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const close = () => setIsModalOpen(false)
+  const [selectedState, setSelectedState] = useState('default')
 
   // event
   const handleOnClickCalendar = () => {
@@ -16,41 +23,51 @@ export const TodoTab = () => {
   }
 
   const handleOnClickCreateTodo = () => {
-    console.log('나중엔 할 일 등록 모달이 열림')
+    setIsModalOpen(true)
   }
 
   return (
-    <TabLayout>
-      <TabLayout.Header>
-        <div className='flex justify-between w-full'>
-          <HoverTitle
-            mouseOverIcon={<FastLeftArrowIcon className='w-6 rotate-180' />}
-            mouseOutIcon={<HamburgerMenuIcon className='w-6' />}
-            title='할 일'
-          />
-
-          <div className='flex items-center gap-x-spacing-16'>
-            <HoverButton
-              icon={<CalendarIcon className='w-6' />}
-              tooltip='캘린더'
-              onClickEvent={handleOnClickCalendar}
+    <>
+      <TabLayout>
+        <TabLayout.Header>
+          <div className='flex justify-between w-full'>
+            <HoverTitle
+              mouseOverIcon={<FastLeftArrowIcon className='w-6 rotate-180' />}
+              mouseOutIcon={<HamburgerMenuIcon className='w-6' />}
+              title='할 일'
             />
-            <HoverButton
-              icon={<EditIcon className='w-6' />}
-              tooltip='할 일 등록'
-              onClickEvent={handleOnClickCreateTodo}
-            />
+            <div className='flex items-center gap-x-spacing-16'>
+              <HoverButton
+                icon={<CalendarIcon className='w-6' />}
+                tooltip='캘린더'
+                onClickEvent={handleOnClickCalendar}
+              />
+              <HoverButton
+                icon={<EditIcon className='w-6' />}
+                tooltip='할 일 등록'
+                onClickEvent={handleOnClickCreateTodo}
+              />
+            </div>
           </div>
-        </div>
-      </TabLayout.Header>
-
-      {isTabOpen ? (
-        <TabLayout.Add>
-          <SelectTodoState actionType='filter' />
-        </TabLayout.Add>
-      ) : null}
-
-      <TabLayout.Content>{isTabOpen ? <TodoList /> : <TodoBoard />}</TabLayout.Content>
-    </TabLayout>
+        </TabLayout.Header>
+        {isTabOpen ? (
+          <TabLayout.Add>
+            <SelectTodoState
+              selectedState={selectedState}
+              setSelectedState={setSelectedState}
+              actionType='filter'
+            />
+          </TabLayout.Add>
+        ) : null}
+        <TabLayout.Content>{isTabOpen ? <TodoList /> : <TodoBoard />}</TabLayout.Content>
+      </TabLayout>
+      <CommonModal
+        name='TraineeTodo'
+        modaltype='CREATE'
+        opened={isModalOpen}
+        closeRequest={close}
+        isBackdropCloseRequest={false}
+      />
+    </>
   )
 }
