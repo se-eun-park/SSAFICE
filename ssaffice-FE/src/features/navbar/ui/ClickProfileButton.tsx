@@ -1,11 +1,25 @@
 import { useRef, useState } from 'react'
 import { DropDown } from '@/shared/ui'
-import { useClickOutsideToggle } from '@/shared/model'
+import { instance, useClickOutsideToggle } from '@/shared/model'
 import { UserIcon, PasswordResetIcon, LogoutIcon } from '@/assets/svg'
+import { useNavigate } from 'react-router-dom'
+import { useLoginStateStore, useSetLoginStateStore } from '@/entities/session/index.ts'
+import { useQuery } from '@tanstack/react-query'
 
 export const ClickProfileButton = () => {
   const [isOpen, setIsOpen] = useState(false)
   const dropDownRef = useRef<HTMLDivElement | null>(null)
+  const navigate = useNavigate()
+  const isAuthenticated = useLoginStateStore()
+  const setIsAuthenticated = useSetLoginStateStore()
+  const { data: user } = useQuery({
+    queryKey: ['user'],
+    queryFn: async () => {
+      const { data } = await instance.get('/api/users/me')
+      return data
+    },
+    enabled: isAuthenticated,
+  })
 
   useClickOutsideToggle(dropDownRef, setIsOpen)
 
@@ -18,7 +32,9 @@ export const ClickProfileButton = () => {
   }
 
   const handleOnClickLogout = () => {
-    console.log('로그아웃')
+    localStorage.removeItem('access_token')
+    setIsAuthenticated(false)
+    navigate('/login')
   }
 
   return (
@@ -27,7 +43,11 @@ export const ClickProfileButton = () => {
         onClick={handleOnClickUserIcon}
         className={`p-1 rounded-full ${isOpen ? 'bg-color-bg-interactive-secondary-press' : 'hover:bg-color-bg-interactive-secondary-hover'}`}
       >
-        <UserIcon className='w-7' />
+        {user?.profileImgUrl ? (
+          <img src={user?.profileImgUrl} className='object-cover object-center w-7 h-7' />
+        ) : (
+          <UserIcon className='w-7' />
+        )}
       </button>
 
       {/* DropDown 컴포넌트 */}
@@ -41,13 +61,13 @@ export const ClickProfileButton = () => {
         <DropDown.Content isPaddingY={true}>
           <DropDown.Image>
             <img
-              src='https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg'
+              src={user?.profileImgUrl}
               alt='내 프로필 사진'
               className='w-10 rounded-full aspect-square'
             />
           </DropDown.Image>
-          <DropDown.Title>곽성재(교육생)</DropDown.Title>
-          <DropDown.SubTitle>seongJ@gamil.com</DropDown.SubTitle>
+          <DropDown.Title>{user?.name}</DropDown.Title>
+          <DropDown.SubTitle>{user?.email}</DropDown.SubTitle>
         </DropDown.Content>
 
         <DropDown.Content

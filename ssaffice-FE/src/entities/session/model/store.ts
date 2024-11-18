@@ -6,7 +6,7 @@ type SessionStoreProps = {
 }
 
 const useSessionStore = create<SessionStoreProps>((set) => ({
-  isAuthenticated: false,
+  isAuthenticated: !!localStorage.getItem('access_token'),
   setIsAuthenticated: (value) => set({ isAuthenticated: value }),
 }))
 

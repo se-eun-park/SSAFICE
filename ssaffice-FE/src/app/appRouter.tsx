@@ -5,6 +5,7 @@ import { LandingPage } from '@/pages/landing'
 import { MainPage } from '@/pages/main'
 import { baseLayout } from './layouts/baseLayout'
 import { ProPage } from '@/pages/pro'
+import ProtectedRoute from '@/app/layouts/ProtectedRoute'
 
 export const appRouter = () => {
   return createBrowserRouter([
@@ -23,11 +24,19 @@ export const appRouter = () => {
         },
         {
           path: 'main',
-          element: <MainPage />,
+          element: (
+            <ProtectedRoute>
+              <MainPage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: 'pro',
-          element: <ProPage />,
+          element: (
+            <ProtectedRoute>
+              <ProPage />
+            </ProtectedRoute>
+          ),
         },
       ],
     },
