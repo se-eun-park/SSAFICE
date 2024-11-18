@@ -74,11 +74,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
           <>
             {/* 할 일 상태 드롭다운 파트 */}
             <SelectTodoState
-              selectedState={
-                todo.todo.scheduleStatusTypeCd === 'IN_PROGRESS'
-                  ? 'progress'
-                  : todo.todo.scheduleStatusTypeCd.toLowerCase()
-              }
+              selectedState={todo.todo.scheduleStatusTypeCd}
               setSelectedState={setSelectedState}
               actionType='modify'
             />

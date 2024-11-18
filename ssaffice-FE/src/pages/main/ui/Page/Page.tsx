@@ -8,10 +8,12 @@ export const MainPage = () => {
   const isAnimation = useIsAnimationStore()
 
   return (
-    <main className='flex flex-col w-full min-h-[calc(100vh+190px)] gap-y-spacing-32 px-spacing-32 pt-spacing-40'>
+    <main className='flex flex-col w-full min-h-[calc(100vh+190px)] gap-y-spacing-32 pt-spacing-40'>
       <SummaryTab />
 
-      <div className={`flex gap-x-spacing-40 ${isAnimation ? ' animate-gapShrink' : ''}`}>
+      <div
+        className={`flex gap-x-spacing-40 px-spacing-32 ${isAnimation ? ' animate-gapShrink' : ''}`}
+      >
         {isTabOpen && <AnnouncementTab />}
         <TodoTab />
       </div>
