@@ -1,7 +1,5 @@
 from setup import get_db
 from models import *
-from sqlalchemy.exc import IntegrityError
-
 
 def insert_notice(notice):
     with get_db() as db:
@@ -39,14 +37,13 @@ def insert_file(file):
 def insert_mm_team(mm_team):
     with get_db() as db:
         try:
-            db.add(mm_team)
+            db.merge(mm_team)
             db.commit()
             return mm_team.mm_team_id
-        except IntegrityError:
+        except Exception as e:
             db.rollback()
-            print(
-                f"Primary Key {mm_team.mm_team_id} already exists. Skipping insertion."
-            )
+            print(f"Error : {e}")
+            return None
 
 def insert_channel(channel):
     with get_db() as db:

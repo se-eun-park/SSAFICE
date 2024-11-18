@@ -93,7 +93,6 @@ def upload_file_to_s3(response):
             Key=f"{s3_prefix}\{dir}\{file_path}",
             Body=response.content,
         )
-        print(f"{hash} 업로드 완료")
     except Exception as e:
         print(f"Error : {e}")
 
