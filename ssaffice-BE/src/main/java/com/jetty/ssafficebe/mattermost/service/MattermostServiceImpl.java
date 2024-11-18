@@ -16,11 +16,14 @@ import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
 import com.jetty.ssafficebe.mattermost.payload.UserAutocompleteResponse;
 import com.jetty.ssafficebe.mattermost.payload.UserAutocompleteSummary;
 import com.jetty.ssafficebe.mattermost.util.MattermostUtil;
+import com.jetty.ssafficebe.schedule.entity.Schedule;
+import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
@@ -39,6 +42,7 @@ public class MattermostServiceImpl implements MattermostService {
     private final UserRepository userRepository;
     private final ChannelRepository channelRepository;
     private final UserChannelRepository userChannelRepository;
+    private final ScheduleRepository scheduleRepository;
 
     @Override
     public PostSummary getPost(String postId) {
@@ -165,8 +169,88 @@ public class MattermostServiceImpl implements MattermostService {
         List<UserChannel> userChannelsToSave = mmChannelSummaryList.stream().map(channel -> new UserChannel(userId,
                                                                                                             channel.getId()))
                                                                    .toList();
+
+        for (MMChannelSummary userChannel : mmChannelSummaryList) {
+
+        }
         userChannelRepository.saveAll(userChannelsToSave);
         return new ApiResponse(true, HttpStatus.OK, "Channel saved successfuly into UserChannel",
                                userChannelsToSave.stream().map(UserChannel::getChannelId).toList());
+    }
+
+
+    @Override
+    public String getTeamByChannelIdFromMM(Long userId, Channel channel) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+        String token = user.getMattermostToken();
+        String channelId = channel.getChannelId();
+        try {
+            ResponseEntity<MMChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
+                    "/channels/" + channelId, HttpMethod.GET, null, MMChannelSummary[].class, token);
+
+            String type = Objects.requireNonNull(response.getBody())[0].getType();
+            if(type.equals("O") || type.equals("P")) {
+                return Objects.requireNonNull(response.getBody())[0].getTeamId();
+            }
+            return null;
+        } catch (InvalidTokenException e) {
+            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ApiResponse updateTeamByChannelId(String teamId, String mmChannelId) {
+        Channel channel = channelRepository.findById(mmChannelId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.CHANNEL_NOT_FOUND, "channelId", mmChannelId));
+        channel.setMmTeamId(teamId);
+        return new ApiResponse(true, HttpStatus.OK, "TeamId updated successfully", teamId);
+    }
+
+
+    // DM을 보내기 위해선 먼저 DM Channel을 만들어야함.
+    @Override
+    public String createDMChannel(Long userId, Long targetUserId){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+        String token = user.getMattermostToken();
+
+        String mmUserId = user.getMattermostUserId();
+        String mmTargetUserId = userRepository.findById(targetUserId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", targetUserId)).getMattermostUserId();
+
+        String[] payload = new String[]{mmUserId, mmTargetUserId};
+
+        ResponseEntity<MMChannelSummary> response = this.mattermostUtil.callMattermostApi(
+                "/channels/direct" , HttpMethod.POST, payload, MMChannelSummary.class, token);
+
+        return Objects.requireNonNull(response.getBody()).getId();
+    }
+
+    @Override
+    public ApiResponse sendDirectMessage(Long userId, String channelId, Long scheduleId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+        String token = user.getMattermostToken();
+
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.SCHEDULE_NOT_FOUND, "scheduleId", scheduleId));
+
+        String message = "[REMIND]\n제목 : " + schedule.getTitle() +" \n" + "내용 : " + schedule.getMemo() + " \n" + "시작시간 : " + schedule.getStartDateTime() + " \n" + "종료시간 : " + schedule.getEndDateTime();
+
+        Map<String, String> payload = Map.of(
+                "channel_id", channelId,
+                "message", message
+        );
+        try {
+            ResponseEntity<PostSummary> response = this.mattermostUtil.callMattermostApi(
+                    "/posts", HttpMethod.POST, payload, PostSummary.class, token);
+
+            boolean isSuccess = response.getStatusCode() == HttpStatus.CREATED;
+            return new ApiResponse(isSuccess, HttpStatus.resolve(response.getStatusCode().value()), "", response.getBody());
+
+        } catch (InvalidTokenException e) {
+            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND);
+        }
     }
 }
