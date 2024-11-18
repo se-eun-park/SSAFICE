@@ -76,11 +76,7 @@ public class MattermostController {
                 mmchannelSummaryList);
         List<Channel> nonDuplicateChannels = this.mattermostService.getNonDuplicateChannels(filteredNoticeChannels);
         this.mattermostService.saveAllChannelsByMMChannelList(nonDuplicateChannels);
-        // 1-2. teamId도 업데이트 한다.
-        for (Channel channel : nonDuplicateChannels) {
-            String teamId = this.mattermostService.getTeamByChannelIdFromMM(userId, channel);
-            this.mattermostService.updateTeamByChannelId(teamId, channel.getChannelId());
-        }
+
 
         // 2. UserChannel table에 저장하는 부분
         List<MMChannelSummary> nonDuplicateChannelsByUserId = this.mattermostService.getNonDuplicateChannelsByUserId(
