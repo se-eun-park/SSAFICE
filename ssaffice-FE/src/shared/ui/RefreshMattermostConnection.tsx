@@ -1,5 +1,5 @@
 import { RefreshIcon } from '@/assets/svg'
-import { instance } from '@/shared/model'
+import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -36,23 +36,16 @@ export const RefreshMattermostConnection = () => {
 
   const handleButtonClick = async () => {
     await refetch()
+    // window.location.reload()
     queryClient.invalidateQueries({ queryKey: ['unscheduled'] })
     queryClient.invalidateQueries({ queryKey: ['announcements'] })
     queryClient.invalidateQueries({ queryKey: ['userData'] })
   }
 
   return (
-    <div
-      className='
-        flex gap-spacing-8 items-center
-    '
-    >
-      <button className='flex gap-spacing-8 items-center' onClick={handleButtonClick}>
-        <div
-          className='
-        w-spacing-12 h-spacing-12
-      '
-        >
+    <div className='flex items-center gap-spacing-8'>
+      <button className='flex items-center gap-spacing-8' onClick={handleButtonClick}>
+        <div className=' w-spacing-12 h-spacing-12'>
           <RefreshIcon />
         </div>
 
@@ -66,12 +59,7 @@ export const RefreshMattermostConnection = () => {
           MM 팀/채널 새로고침
         </div>
       </button>
-      <div
-        className='
-        flex justify-end
-        text-color-text-tertiary body-sm-medium
-      '
-      >
+      <div className='flex justify-end text-color-text-tertiary body-sm-medium'>
         {formatDateTime(user?.recentMmChannelSyncTime)}
       </div>
     </div>

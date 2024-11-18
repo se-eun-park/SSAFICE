@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { DropDown } from '@/shared/ui'
-import { instance, useClickOutsideToggle } from '@/shared/model'
+import { instance } from '@/shared/api'
+import { useClickOutsideToggle } from '@/shared/model'
 import { UserIcon, PasswordResetIcon, LogoutIcon } from '@/assets/svg'
 import { useNavigate } from 'react-router-dom'
 import { useLoginStateStore, useSetLoginStateStore } from '@/entities/session/index.ts'
@@ -45,7 +46,10 @@ export const ClickProfileButton = () => {
         className={`p-1 rounded-full ${isOpen ? 'bg-color-bg-interactive-secondary-press' : 'hover:bg-color-bg-interactive-secondary-hover'}`}
       >
         {data?.profileImgUrl ? (
-          <img src={data?.profileImgUrl} className='object-cover object-center w-7 h-7' />
+          <img
+            src={data?.profileImgUrl}
+            className='object-cover object-center rounded-full w-7 h-7'
+          />
         ) : (
           <UserIcon className='w-7' />
         )}
@@ -56,7 +60,7 @@ export const ClickProfileButton = () => {
         isOpen={isOpen}
         isShadow={true}
         isDivide={true}
-        width='w-[23.25rem]'
+        width='w-[15rem]'
         position='right-0 mt-spacing-8'
       >
         <DropDown.Content isPaddingY={true}>

@@ -1,11 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { TraineeTodoFirstElements } from '../model/TraineeTodoFirstElements'
+import { postTraineeSchedule } from '@/shared/api/Schedule'
 import { TodoModal } from '@/shared/ui'
 
 type TraineeTodoModalProps = {
   closeRequest: () => void
   modaltype: 'CREATE' | 'VIEW' | 'EDIT'
-  scheduleId?: string
+  scheduleId: number
 }
 
 export const TraineeTodoModal = ({
@@ -13,7 +14,7 @@ export const TraineeTodoModal = ({
   modaltype,
   scheduleId,
 }: TraineeTodoModalProps) => {
-  const elements = TraineeTodoFirstElements(modaltype)
+  const elements = TraineeTodoFirstElements({ modaltype, scheduleId })
 
   const [modalType, setModalType] = useState(modaltype)
   const [title, setTitle] = useState(elements.title)
@@ -21,6 +22,17 @@ export const TraineeTodoModal = ({
   const [selectedState, setSelectedState] = useState(elements.selectedState)
   const [endDate, setEndDate] = useState(elements.endDate)
   const [reminder, setReminder] = useState(elements.remindRequests)
+
+  useEffect(() => {
+    if (modalType === 'CREATE') return
+    if (title) return
+
+    setTitle(elements.title)
+    setDescription(elements.description)
+    setSelectedState(elements.selectedState)
+    setEndDate(elements.endDate)
+    setReminder(elements.remindRequests)
+  }, [elements])
 
   const headTitle = useMemo(() => {
     switch (modalType) {
@@ -34,13 +46,24 @@ export const TraineeTodoModal = ({
   }, [modalType])
 
   const handleOnClickSave = () => {
-    // 등록 api 보내기
-    // 필수 입력값 검사
-    // scheduleSourceTypeCd = "GLOBAL" or "TEAM" or "PERSONAL"
-    // isEssentialYn = "Y" or "N"
-    // isEnrollYn = "Y" or "N" -> 미등록 공지에서 등록한놈인지 (이 모달에선 N 고정)
-    console.log(title, description, selectedState, endDate, reminder)
+    if (!title || !description || !selectedState || !endDate) {
+      return
+    }
+
+    const startDateTime = `${new Date().toISOString().split('T')[0]}T00:00:00`
+    const endDateTime = `${endDate}T23:59:59`
+
+    const createData = {
+      title: title,
+      memo: description,
+      startDateTime: startDateTime,
+      endDateTime: endDateTime,
+      remindRequests: reminder,
+      scheduleStatusTypeCd: selectedState,
+    }
+    postTraineeSchedule(createData)
     closeRequest()
+    window.location.reload()
   }
 
   const handleOnClickEdit = () => {
@@ -68,7 +91,6 @@ export const TraineeTodoModal = ({
           {description}
         </TodoModal.Description>
       </TodoModal.LeftSection>
-
       <TodoModal.RightSection>
         <TodoModal.Flex>
           <TodoModal.Status selectedState={selectedState} setSelectedState={setSelectedState} />
@@ -86,7 +108,11 @@ export const TraineeTodoModal = ({
             userIds={[]} // type error 방지를 위해 빈 배열 전달
             setUserIds={() => []}
           />
-          <TodoModal.Manager createUser={elements.createUser} userType='trainee' />
+          <TodoModal.Manager
+            user={elements.user}
+            createUser={elements.createUser}
+            userType='trainee'
+          />
           <TodoModal.EndDate endDate={endDate} setEndDate={setEndDate} />
           <TodoModal.Reminder reminder={reminder} setReminder={setReminder} />
         </TodoModal.DetailsSection>

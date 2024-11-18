@@ -39,6 +39,11 @@ export type AssigneeResponse = BaseResponse & {
 }
 
 export type ManagerResponse = BaseResponse & {
+  user: {
+    name: string
+    profileImgUrl: string
+  }
+
   createUser: {
     name: string
     profileImgUrl: string
@@ -51,14 +56,9 @@ export type EndDateResponse = BaseResponse & {
   setEndDate: (endDate: string) => void
 }
 
-type ReminderProps = {
-  remindtype: string
-  remindDateTime: string
-}
-
 export type ReminderResponse = BaseResponse & {
-  reminder: ReminderProps[]
-  setReminder: (reminder: ReminderProps[]) => void
+  reminder: any[]
+  setReminder: (reminder: any[]) => void
 }
 
 export type SaveEditButtonResponse = BaseResponse & {

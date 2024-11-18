@@ -74,25 +74,13 @@ export const SelectTodoState = ({
           onClick={handleOnClickOpen}
           className='flex items-center gap-spacing-4 rounded-radius-8 hover:bg-color-bg-interactive-secondary-hover active:bg-color-bg-interactive-secondary-press'
         >
-          <div
-            className='flex items-center justify-center w-spacing-24 h-spacing-24'
-          >
+          <div className='flex items-center justify-center w-spacing-24 h-spacing-24'>
             <div className='flex w-[14px] h-[18px]'>
-              <TodoFlag
-                type={
-                  selectedState === 'progress'
-                    ? 'IN_PROGRESS'
-                    : selectedState === 'done'
-                      ? 'DONE'
-                      : 'TODO'
-                }
-              />
+              <TodoFlag type={selectedState} />
             </div>
           </div>
 
-          <div
-            className='flex items-center justify-center w-spacing-16 h-spacing-16'
-          >
+          <div className='flex items-center justify-center w-spacing-16 h-spacing-16'>
             <div className='flex items-center'>
               <DownArrowIcon className='w-4' />
             </div>

@@ -6,7 +6,7 @@ import { HoverTitle } from '@/features/todoTab'
 import { useIsTabOpenStore } from '@/shared/model'
 import { TabLayout, HoverButton, SelectTodoState } from '@/shared/ui'
 import { CommonModal } from '@/shared/ui'
-import { HamburgerMenuIcon, FastLeftArrowIcon, CalendarIcon, EditIcon } from '@/assets/svg'
+import { HamburgerMenuIcon, FastLeftArrowIcon, EditIcon } from '@/assets/svg'
 import { SelectTodoSortCondition } from '@/features/todoTab/ui/SelectTodoSortCondition'
 
 export const TodoTab = () => {
@@ -19,9 +19,9 @@ export const TodoTab = () => {
   const [selectedState, setSelectedState] = useState('default')
 
   // event
-  const handleOnClickCalendar = () => {
-    console.log('나중엔 캘린더가 열림')
-  }
+  // const handleOnClickCalendar = () => {
+  //   console.log('나중엔 캘린더가 열림')
+  // }
 
   const handleOnClickCreateTodo = () => {
     setIsModalOpen(true)
@@ -38,11 +38,11 @@ export const TodoTab = () => {
               title='할 일'
             />
             <div className='flex items-center gap-x-spacing-16'>
-              <HoverButton
+              {/* <HoverButton
                 icon={<CalendarIcon className='w-6' />}
                 tooltip='캘린더'
                 onClickEvent={handleOnClickCalendar}
-              />
+              /> */}
               <HoverButton
                 icon={<EditIcon className='w-6' />}
                 tooltip='할 일 등록'
@@ -85,6 +85,7 @@ export const TodoTab = () => {
       <CommonModal
         name='TraineeTodo'
         modaltype='CREATE'
+        scheduleId={null}
         opened={isModalOpen}
         closeRequest={close}
         isBackdropCloseRequest={false}

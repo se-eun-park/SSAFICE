@@ -304,7 +304,9 @@ function Assignee({
   }
 }
 
-function Manager({ createUser, userType, modaltype }: ManagerResponse) {
+function Manager({ user, createUser, userType, modaltype }: ManagerResponse) {
+  const isTrainee = createUser.name === user.name
+
   switch (modaltype) {
     case 'CREATE':
       switch (userType) {
@@ -331,19 +333,21 @@ function Manager({ createUser, userType, modaltype }: ManagerResponse) {
 
     case 'VIEW':
       return (
-        <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
-          <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
-          <div className='flex items-center gap-x-spacing-6'>
-            <img
-              src={createUser.profileImgUrl}
-              alt='profile'
-              className='w-5 h-5 rounded-radius-circle'
-            />
-            <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
-              {createUser.name}
-            </p>
+        !isTrainee && (
+          <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
+            <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
+            <div className='flex items-center gap-x-spacing-6'>
+              <img
+                src={createUser.profileImgUrl}
+                alt='profile'
+                className='w-5 h-5 rounded-radius-circle'
+              />
+              <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
+                {createUser.name}
+              </p>
+            </div>
           </div>
-        </div>
+        )
       )
 
     case 'EDIT':
@@ -443,11 +447,11 @@ function ReminderTime({ reminder, setReminder, modaltype }: ReminderResponse) {
                   </button>
                   <p className='body-xs-semibold text-color-text-tertiary'>
                     <span
-                      className={`mr-spacing-2 ${item.remindtype === 'DAILY' ? 'text-color-text-info' : 'text-color-text-danger'}`}
+                      className={`mr-spacing-2 ${item.remindTypeCd === 'DAILY' ? 'text-color-text-info' : 'text-color-text-danger'}`}
                     >
-                      {item.remindtype === 'DAILY' ? '매일' : '한번만'}
+                      {item.remindTypeCd === 'DAILY' ? '매일' : '한번만'}
                     </span>
-                    {item.remindtype === 'ONCE' && item.remindDateTime.split('T')[0]}{' '}
+                    {item.remindTypeCd === 'ONCE' && item.remindDateTime.split('T')[0]}{' '}
                     {parseInt(item.remindDateTime.split('T')[1].split(':')[0]) === 12
                       ? '오후 12시'
                       : parseInt(item.remindDateTime.split('T')[1].split(':')[0]) > 12
@@ -475,11 +479,11 @@ function ReminderTime({ reminder, setReminder, modaltype }: ReminderResponse) {
                 <div key={idx} className='flex items-center gap-x-spacing-4'>
                   <p className='body-xs-semibold text-color-text-tertiary'>
                     <span
-                      className={`mr-spacing-2 ${item.remindtype === 'DAILY' ? 'text-color-text-info' : 'text-color-text-danger'}`}
+                      className={`mr-spacing-2 ${item.remindTypeCd === 'DAILY' ? 'text-color-text-info' : 'text-color-text-danger'}`}
                     >
-                      {item.remindtype === 'DAILY' ? '매일' : '한번만'}
+                      {item.remindTypeCd === 'DAILY' ? '매일' : '한번만'}
                     </span>
-                    {item.remindtype === 'ONCE' && item.remindDateTime.split('T')[0]}{' '}
+                    {item.remindTypeCd === 'ONCE' && item.remindDateTime.split('T')[0]}{' '}
                     {parseInt(item.remindDateTime.split('T')[1].split(':')[0]) === 12
                       ? '오후 12시'
                       : parseInt(item.remindDateTime.split('T')[1].split(':')[0]) > 12
@@ -511,9 +515,9 @@ function ReminderTime({ reminder, setReminder, modaltype }: ReminderResponse) {
                   </button>
                   <p className='body-xs-semibold text-color-text-tertiary'>
                     <span
-                      className={`mr-spacing-2 ${item.remindtype === 'DAILY' ? 'text-color-text-info' : 'text-color-text-danger'}`}
+                      className={`mr-spacing-2 ${item.remindTypeCd === 'DAILY' ? 'text-color-text-info' : 'text-color-text-danger'}`}
                     >
-                      {item.remindtype === 'DAILY' ? '매일' : '한번만'}
+                      {item.remindTypeCd === 'DAILY' ? '매일' : '한번만'}
                     </span>
                     {parseInt(item.remindDateTime.split('T')[1].split(':')[0]) === 12
                       ? '오후 12시'

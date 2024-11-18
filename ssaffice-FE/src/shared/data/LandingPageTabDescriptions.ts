@@ -8,8 +8,8 @@ export const tabValues: string[] = [
 ]
 
 export const tabImages: string[] = [
-  '/img/landing-1.jpg',
-  '/img/landing-2.jpg',
-  '/img/landing-3.jpg',
-  '/img/landing-4.jpg',
+  '/img/landing-1.png',
+  '/img/landing-2.png',
+  '/img/landing-3.png',
+  '/img/landing-4.png',
 ]

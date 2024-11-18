@@ -11,9 +11,11 @@ const LoginErrorModal = React.lazy(() =>
 
 const TraineeTodoModal = React.lazy(() =>
   import('@/features/todoTab').then((module) => ({
-    default: (props: { modaltype: 'CREATE' | 'VIEW' | 'EDIT'; closeRequest: () => void }) => (
-      <module.TraineeTodoModal {...props} />
-    ),
+    default: (props: {
+      modaltype: 'CREATE' | 'VIEW' | 'EDIT'
+      scheduleId: number
+      closeRequest: () => void
+    }) => <module.TraineeTodoModal {...props} />,
   })),
 )
 
@@ -61,7 +63,11 @@ export const findModalByName = (
     TraineeTodo: {
       modal: (
         <Suspense fallback={<div>Loading...</div>}>
-          <TraineeTodoModal modaltype={props.modaltype} closeRequest={closeRequest} />
+          <TraineeTodoModal
+            modaltype={props.modaltype}
+            scheduleId={props.scheduleId}
+            closeRequest={closeRequest}
+          />
         </Suspense>
       ),
       width: '972px',

@@ -82,7 +82,11 @@ export const ManagerTodoModal = ({
             userIds={userIds}
             setUserIds={setUserIds}
           />
-          <TodoModal.Manager createUser={elements.createUser} userType='manager' />
+          <TodoModal.Manager
+            user={elements.user}
+            createUser={elements.createUser}
+            userType='manager'
+          />
           <TodoModal.EndDate endDate={endDate} setEndDate={setEndDate} />
 
           {manageType === 'PERSONAL' ? null : (
