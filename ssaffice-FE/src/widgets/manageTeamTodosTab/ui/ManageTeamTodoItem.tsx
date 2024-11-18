@@ -9,6 +9,7 @@ type TodoItemProps = {
 
 export const ManageTeamTodoItem = ({ todo }: TodoItemProps) => {
   const isCompleted: boolean =
+    todo.scheduleEnrolledCount.enrolledCount !== 0 &&
     todo.scheduleEnrolledCount.completedCount === todo.scheduleEnrolledCount.enrolledCount
   return (
     <div

@@ -44,6 +44,7 @@ export const useCalculateStatusCounts = ({ param }: UseCalculateStatusCountsProp
     case 'managerTeamTodo': {
       const enrolledTodo: TeamTodoItemDisplay[] = param.todos.filter((each) => {
         return (
+          each.scheduleEnrolledCount.enrolledCount === 0 ||
           each.scheduleEnrolledCount.enrolledCount !== each.scheduleEnrolledCount.completedCount
         )
       })
@@ -51,6 +52,7 @@ export const useCalculateStatusCounts = ({ param }: UseCalculateStatusCountsProp
 
       const completedTodo: TeamTodoItemDisplay[] = param.todos.filter((each) => {
         return (
+          each.scheduleEnrolledCount.enrolledCount !== 0 &&
           each.scheduleEnrolledCount.enrolledCount === each.scheduleEnrolledCount.completedCount
         )
       })

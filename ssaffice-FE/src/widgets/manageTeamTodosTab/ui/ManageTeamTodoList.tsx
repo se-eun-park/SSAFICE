@@ -1,33 +1,39 @@
 import { ManageTeamTodoDateGroup } from './ManageTeamTodoDateGroup'
-import { dummyTeamTodos } from '@/features/manageTeamTodoTab/model/types'
 import { useSortingTeamTodo } from '@/features/manageTeamTodoTab/model/useSortingTeamTodo'
+import { instance } from '@/shared/model'
 import { useQuery } from '@tanstack/react-query'
 
-type ManageTeamTodoListProps = {
-  sortCondition: string
-  todoState: string
-}
+// api
+
 export const ManageTeamTodoList = () => {
-  // api
-  const sortedTodos = useSortingTeamTodo(dummyTeamTodos)
-  const {} = useQuery({
-    queryKey: [],
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['teamTodos'],
+    queryFn: async () => {
+      const { data } = await instance.post('/api/notice/admin/my', {
+        filterStartDateTime: new Date('2024-01-01'),
+        filterEndDateTime: new Date(),
+        filterType: 'createdAt',
+      })
+      return data
+    },
   })
 
+  // 데이터가 아직 로딩 중이라면 로딩 상태 표시
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  // API 호출에 실패했을 경우 에러 메시지 표시
+  if (error) {
+    return <div>Error loading data</div>
+  }
+
+  // 데이터를 정렬
+  const sortedTodos = useSortingTeamTodo(data)
+
   return (
-    <div
-      className='
-        relative
-        w-full h-full
-      '
-    >
-      <div
-        className='
-            relative
-            flex flex-col
-            w-full h-full
-        '
-      >
+    <div className='relative w-full h-full'>
+      <div className='relative flex flex-col w-full h-full'>
         {Object.entries(sortedTodos).map(([date, dailySchedules], index) => (
           <ManageTeamTodoDateGroup
             key={date}
