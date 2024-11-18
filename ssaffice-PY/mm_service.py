@@ -1,6 +1,6 @@
 from mmapi import *
 from setup import config, get_db
-from models import Notice, Schedule, File, file as f
+from models import Notice, Schedule, Attachment_File, attchment_file as f
 from get_datas import *
 from set_datas import *
 from datetime import datetime, timedelta
@@ -43,7 +43,7 @@ def essential_test(data):
 
 
 def make_notice_entity(data, notice):
-    json_data = json.loads(data["data"]["post"])        
+    json_data = json.loads(data["data"]["post"])
     is_essential = essential_test(json_data)
     mm_user_id = json_data["user_id"]
     user_id = get_user_id_by_user_mm_id(mm_user_id)
@@ -64,6 +64,7 @@ def make_notice_entity(data, notice):
 
     return response_notice
 
+
 def get_file_metadata_from_data(data):
     json_data = json.loads(data["data"]["post"])
     file_ids = (
@@ -77,15 +78,17 @@ def get_file_metadata_from_data(data):
 
 
 # s3로 파일 업로드
-def upload_file_to_s3(response):    
+def upload_file_to_s3(response):
     hash = f.generate_hash(response.content)
+    dir = hash[:2]
+    file_path = hash[2:]
     s3 = boto3.client(
         "s3", aws_access_key_id=s3_access_key, aws_secret_access_key=s3_secret_key
     )
 
     try:
         s3.put_object(
-            Bucket=s3_bucket_name, Key=f"{s3_prefix}/{hash}", Body=response.content
+            Bucket=s3_bucket_name, Key=f"{s3_prefix}\{dir}\{file_path}", Body=response.content
         )
         print(f"{hash} 업로드 완료")
     except Exception as e:
@@ -109,7 +112,7 @@ def find_channel_type(data):
 def make_schedule_entity(notice_id):
     notice = get_notice_by_notice_id(notice_id)
     response_schedule = Schedule(
-        created_by = notice.created_by,
+        created_by=notice.created_by,
         end_date_time=notice.end_date_time,
         is_enroll_yn=notice.is_essential_yn,
         is_essential_yn=notice.is_essential_yn,
@@ -131,9 +134,8 @@ def find_user_id_by_channel_id(token, channel_id, page_num):
 def make_remind_entity(schedule_id):
     schedule = get_schedule_by_schedule_id(schedule_id)
     schedule_date_time = schedule.end_date_time
-    if(schedule.end_date_time == None):
+    if schedule.end_date_time == None:
         schedule_date_time = schedule.start_date_time
-
 
     response_remind = Remind(
         created_at=schedule.created_at,
@@ -146,30 +148,26 @@ def make_remind_entity(schedule_id):
     return response_remind
 
 
-def make_file_entity(notice_id, response, metadata, order_idx):  
+def make_file_entity(notice_id, response, metadata, order_idx):
     file = response.content
     hash = f.generate_hash(file)
-    response_file = File(
+    response_file = Attachment_File(
         file_type="NOTICE",
         file_name=metadata["name"],
         file_size=metadata["size"],
         ref_id=notice_id,
         hash=hash,
-        mime_type=metadata["extension"],        
+        mime_type=metadata["extension"],
         order_idx=order_idx,
     )
     return response_file
 
-def make_mm_team_entity(team):    
-    response_team = MM_Team(
-        mm_team_id=team["id"],
-        mm_team_name=team["display_name"]            
-    )
+
+def make_mm_team_entity(team):
+    response_team = MM_Team(mm_team_id=team["id"], mm_team_name=team["display_name"])
     return response_team
-    
+
+
 def make_mm_team_entity_by_team_id(team_id, team_name):
-    response_team = MM_Team(
-        team_id=team_id,
-        team_name=team_name
-    )
+    response_team = MM_Team(team_id=team_id, team_name=team_name)
     return response_team
