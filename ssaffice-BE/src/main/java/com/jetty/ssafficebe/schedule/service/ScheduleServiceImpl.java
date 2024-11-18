@@ -19,10 +19,10 @@ import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
 import com.jetty.ssafficebe.schedule.payload.ScheduleEnrolledCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleFilterRequest;
 import com.jetty.ssafficebe.schedule.payload.ScheduleListResponse;
-import com.jetty.ssafficebe.schedule.payload.ScheduleStatusCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleRequest;
-import com.jetty.ssafficebe.schedule.payload.UpdateScheduleRequest;
+import com.jetty.ssafficebe.schedule.payload.ScheduleStatusCount;
 import com.jetty.ssafficebe.schedule.payload.ScheduleSummary;
+import com.jetty.ssafficebe.schedule.payload.UpdateScheduleRequest;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -137,8 +137,9 @@ public class ScheduleServiceImpl implements ScheduleService {
                                            : notice.getStartDateTime().minusHours(1);
 
             savedSchedules.forEach(schedule -> saveScheduleReminds(schedule.getUserId(),
-                                                               List.of(remindConverter.toRemindRequest("Y", "ONCE", remindDateTime)),
-                                                               schedule.getScheduleId()));
+                                                                   List.of(remindConverter.toRemindRequest("Y", "ONCE",
+                                                                                                           remindDateTime)),
+                                                                   schedule.getScheduleId()));
         }
 
         log.info("[Schedule] 공지사항 일정 일괄 생성 완료 - 전체={}, 성공={}", userIds.size(), savedSchedules.size());
@@ -284,14 +285,15 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId, ScheduleFilterRequest filterRequest,
-                                                             Pageable pageable) {
+    public Page<ScheduleSummary> getUnregisteredSchedulePage(Long userId, Pageable pageable) {
         log.info("[Schedule] 미등록 공지 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 미등록 공지사항 일정 조회
+        ScheduleFilterRequest filterRequest = new ScheduleFilterRequest();
         filterRequest.setIsEnrollYn("N");
-        Page<Schedule> schedulePage = scheduleRepository.findSchedulePageByUserIdAndFilter(userId, filterRequest,
-                                                                                           pageable);
+        Page<Schedule> schedulePage = scheduleRepository.findUnregisteredSchedulePageByUserIdAndFilter(userId,
+                                                                                                       filterRequest,
+                                                                                                       pageable);
 
         // ! 2. 응답 생성
         Page<ScheduleSummary> scheduleSummaryPage = schedulePage.map(scheduleConverter::toScheduleSummary);
