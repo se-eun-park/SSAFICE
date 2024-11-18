@@ -54,13 +54,12 @@ def make_notice_entity(data, notice):
         created_by=user_id,
         updated_by=user_id,
         channel_id=channel_id,
-        content=notice["content"],
+        content=original_message,
         end_date_time=notice["schedule_end_time"],
         is_essential_yn=is_essential,
         mm_message_id=notice["id"],
         start_date_time=notice["schedule_start_time"],
-        title=notice["title"],
-        # original_message=original_message,
+        title=notice["title"],        
     )
 
     return response_notice
@@ -142,6 +141,8 @@ def make_remind_entity(schedule_id):
     response_remind = Remind(
         created_at=schedule.created_at,
         created_by=schedule.created_by,
+        updated_at=schedule.updated_at,
+        updated_by=schedule.updated_by,
         is_essential_yn=schedule.is_essential_yn,
         remind_date_time=schedule_date_time - timedelta(hours=1),
         remind_type_cd="ONCE",
