@@ -1,11 +1,19 @@
 import { useState } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 
-import type { GetTodoResponse } from '@/entities/todoTab'
+import type { TaskResponse } from '@/entities/todoTab'
 import { CommonModal } from '@/shared/ui'
 import { CardSourceTypeElements } from '../model/CardSourceTypeElements'
 import { CardEndDateElements } from '../model/CardEndDateElements'
 
+type CardProps = {
+  scheduleId: number
+  title: string
+  endDateTime: string
+  scheduleStatusTypeCd: string
+  scheduleSourceTypeCd: string
+  createUser: TaskResponse['createUser']
+}
 export const Card = ({
   scheduleId,
   title,
@@ -13,7 +21,7 @@ export const Card = ({
   scheduleStatusTypeCd,
   scheduleSourceTypeCd,
   createUser,
-}: GetTodoResponse) => {
+}: CardProps) => {
   const cardSourceTag = CardSourceTypeElements({ scheduleSourceTypeCd })
   const cardEndDate = CardEndDateElements({ endDateTime, scheduleStatusTypeCd })
 
@@ -74,6 +82,7 @@ export const Card = ({
       <CommonModal
         name='TraineeTodo'
         modaltype='VIEW'
+        scheduleId={scheduleId}
         opened={isModalOpen}
         closeRequest={close}
         isBackdropCloseRequest={false}

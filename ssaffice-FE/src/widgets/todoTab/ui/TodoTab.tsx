@@ -64,6 +64,7 @@ export const TodoTab = () => {
       <CommonModal
         name='TraineeTodo'
         modaltype='CREATE'
+        scheduleId={null}
         opened={isModalOpen}
         closeRequest={close}
         isBackdropCloseRequest={false}

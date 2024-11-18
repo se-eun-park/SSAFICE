@@ -25,7 +25,11 @@ export const TodoBoard = () => {
   const sensors = useSensors(pointerSensor)
 
   // state
-  const { data } = useTraineeScheduleList('updatedAt', '2024-11-01T00:00:00', '2024-12-01T00:00:00')
+  const { data, isLoading } = useTraineeScheduleList(
+    'updatedAt',
+    '2024-11-01T00:00:00',
+    '2024-12-01T00:00:00',
+  )
 
   const [tasks, setTasks] = useState<TaskResponse[]>(data?.scheduleSummaries)
   const [columnLength, setColumnLength] = useState<ColumnLengthProps>({
@@ -35,13 +39,15 @@ export const TodoBoard = () => {
   })
 
   useEffect(() => {
+    console.log(data, isLoading)
+
     setTasks(data?.scheduleSummaries)
     setColumnLength({
       TODO: data?.scheduleStatusCount.todoCount,
       IN_PROGRESS: data?.scheduleStatusCount.inProgressCount,
       DONE: data?.scheduleStatusCount.doneCount,
     })
-  }, [data])
+  }, [data, isLoading])
 
   // event
   const handleDragEnd = (event: DragEndEvent) => {
@@ -49,7 +55,7 @@ export const TodoBoard = () => {
 
     if (!over) return
 
-    const taskId = active.id as string
+    const taskId = active.id as number
     const oldStatus = active.data.current?.status
     const newStatus = over.id as TaskResponse['scheduleStatusTypeCd']
 

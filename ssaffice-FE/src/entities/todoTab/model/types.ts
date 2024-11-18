@@ -20,7 +20,7 @@ export type NoticeSummary = {
 }
 
 export type TaskResponse = {
-  scheduleId: string
+  scheduleId: number
   title: string
   createdAt: string
   startDateTime?: string

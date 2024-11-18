@@ -1,1 +1,3 @@
-export { getTraineeScheduleList } from './apis'
+export { getTraineeScheduleList, postTraineeSchedule, getTraineeScheduleDetail } from './apis'
+
+export type { postScheduleResponse } from './types'
