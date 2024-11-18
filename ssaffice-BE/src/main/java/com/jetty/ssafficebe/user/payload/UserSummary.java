@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.user.payload;
 
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -35,4 +36,6 @@ public class UserSummary {
     private List<RoleSummarySimple> roles = new ArrayList<>();
 
     private String profileImgUrl;
+
+    private LocalDateTime recentMmChannelSyncTime;
 }

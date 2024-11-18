@@ -1,57 +1,76 @@
 package com.jetty.ssafficebe.mattermost.controller;
 
-import com.jetty.ssafficebe.mattermost.payload.PostRequest;
+import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
+import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
-import com.jetty.ssafficebe.mattermost.payload.TeamSummary;
 import com.jetty.ssafficebe.mattermost.payload.UserAutocompleteSummary;
 import com.jetty.ssafficebe.mattermost.service.MattermostService;
-import com.jetty.ssafficebe.mattermost.util.MattermostUtil;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/mm")
 public class MattermostController {
-  private final MattermostService mattermostService;
 
-  @GetMapping("/posts/{postId}")
-  public ResponseEntity<PostSummary> getPost(@PathVariable String postId) {
-    return ResponseEntity.ok(this.mattermostService.getPost(postId));
-  }
+    private final MattermostService mattermostService;
 
-  @PostMapping("/posts")
-  public ResponseEntity<ApiResponse> createPost(@RequestBody PostRequest request) {
-    return ResponseEntity.ok(this.mattermostService.createPost(request));
-  }
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<PostSummary> getPost(@PathVariable String postId) {
+        return ResponseEntity.ok(this.mattermostService.getPost(postId));
+    }
 
-  @PutMapping("/posts/{postId}")
-  public ResponseEntity<ApiResponse> putPost(@RequestBody PostUpdateRequest request) {
-    return ResponseEntity.ok(this.mattermostService.putPost(request));
-  }
+    @PostMapping("/posts")
+    public ResponseEntity<ApiResponse> createPost(@RequestBody PostRequest request) {
+        return ResponseEntity.ok(this.mattermostService.createPost(request));
+    }
 
-  @DeleteMapping("/posts/{postId}")
-  public ResponseEntity<ApiResponse> deletePost(@PathVariable String postId) {
-    return ResponseEntity.ok(this.mattermostService.deletePost(postId));
-  }
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<ApiResponse> putPost(@RequestBody PostUpdateRequest request) {
+        return ResponseEntity.ok(this.mattermostService.putPost(request));
+    }
 
-  @GetMapping("/users/autocomplete")
-  public ResponseEntity<List<UserAutocompleteSummary>> getUserAutocomplete(@RequestParam String name) {
-    // 영어 외의 문자도 인코딩할 수 있도록 인코딩 코드 추가
-    String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
-    return ResponseEntity.ok(this.mattermostService.getUserAutocomplete(encodedName));
-  }
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<ApiResponse> deletePost(@PathVariable String postId) {
+        return ResponseEntity.ok(this.mattermostService.deletePost(postId));
+    }
 
-  @GetMapping("/teams")
-  public ResponseEntity<String> getTeamSummary() {
-    return ResponseEntity.ok(this.mattermostService.getTeams());
-//    return ResponseEntity.ok("getUserAutocomplete");
-  }
+    @GetMapping("/users/autocomplete")
+    public ResponseEntity<List<UserAutocompleteSummary>> getUserAutocomplete(@RequestParam String name) {
+        // 영어 외의 문자도 인코딩할 수 있도록 인코딩 코드 추가
+        String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
+        return ResponseEntity.ok(this.mattermostService.getUserAutocomplete(encodedName));
+    }
+
+    // user가 새로고침할 때 동작하는 endPoint
+    // 해당 userID를 통해 MM에서 채널리스트를 가져와 공지사항만 필터링 한 후 Channel table과 UserChannel table에 저장
+    @GetMapping("/{userId}/channels")
+    public ResponseEntity<ApiResponse> saveChannelsByUserId(@PathVariable Long userId) {
+
+        List<MMChannelSummary> mmchannelSummaryList = this.mattermostService.getChannelsByUserIdFromMM(userId);
+        List<MMChannelSummary> filteredNoticeChannels = this.mattermostService.filteredNoticeChannels(
+                mmchannelSummaryList);
+        List<Channel> nonDuplicateChannels = this.mattermostService.getNonDuplicateChannels(filteredNoticeChannels);
+        this.mattermostService.saveAllChannelsByMMChannelList(nonDuplicateChannels);
+        List<MMChannelSummary> nonDuplicateChannelsByUserId = this.mattermostService.getNonDuplicateChannelsByUserId(
+                userId, mmchannelSummaryList);
+        return ResponseEntity.ok(
+                this.mattermostService.saveChannelListToUserChannelByUserId(userId, nonDuplicateChannelsByUserId));
+    }
+
 }

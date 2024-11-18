@@ -61,7 +61,7 @@ public class SwaggerConfig {
     public GroupedOpenApi channelApi() {
         return GroupedOpenApi.builder()
                              .group("channel")
-                             .pathsToMatch("/api/channel/**")
+                             .pathsToMatch("/api/channels/**")
                              .build();
     }
 
@@ -108,8 +108,16 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi searchApi() {
         return GroupedOpenApi.builder()
-                             .group("search")
-                             .pathsToMatch("/api/search/**")
+                             .group("elasticsearch")
+                             .pathsToMatch("/api/es/**")
+                             .build();
+    }
+
+    @Bean
+    public GroupedOpenApi SSOApi() {
+        return GroupedOpenApi.builder()
+                             .group("SSAFY SSO")
+                             .pathsToMatch("/api/sso/**")
                              .build();
     }
 
@@ -117,7 +125,7 @@ public class SwaggerConfig {
     public GroupedOpenApi userApi() {
         return GroupedOpenApi.builder()
                              .group("user")
-                             .pathsToMatch("/api/user/**")
+                             .pathsToMatch("/api/users/**")
                              .build();
     }
 

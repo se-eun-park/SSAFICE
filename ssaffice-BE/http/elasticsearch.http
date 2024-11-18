@@ -19,3 +19,26 @@ Content-Type: application/json
 
 ### delete Notice
 DELETE http://localhost:9090/api/search/notice/2
+
+### Save User
+POST http://localhost:9090/api/es/users
+Content-Type: application/json
+
+{
+  "userId" : 1,
+  "name": "홍길동",
+  "email": "hong@example.com",
+  "profileImgUrl": "http://example.com/profile.jpg"
+}
+
+### Delete User
+DELETE http://localhost:9090/api/es/users/1
+Content-Type: application/json
+
+### Search User
+POST http://localhost:9090/api/es/users/search
+Content-Type: application/json
+
+{
+  "keyword": "ji"
+}

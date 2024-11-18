@@ -10,6 +10,4 @@ public interface UserRepositoryCustom {
     Page<User> findUsersByRoleId(String roleId, Pageable pageable);
 
     Page<User> getUsersByFilter(UserFilterRequest userFilterRequest, Pageable pageable);
-
-    Page<User> findUsersByChannelId(String channelId, Pageable pageable);
 }

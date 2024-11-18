@@ -7,5 +7,7 @@ import lombok.Getter;
 @Builder
 public class AuthenticationResponse {
 
+    private Long userId;
     private String jwt;
+    private boolean isSuccess;
 }

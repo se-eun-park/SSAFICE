@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 public class UserAutocompleteResponse {
 
-	@JsonProperty("users")
-	private List<UserAutocompleteSummary> users;
+    @JsonProperty("users")
+    private List<UserAutocompleteSummary> users;
 }
