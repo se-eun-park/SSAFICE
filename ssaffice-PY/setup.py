@@ -1,8 +1,9 @@
-import os
+import os, time
 from pathlib import Path
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import OperationalError
 from contextlib import contextmanager
 
 env_path = Path(__file__).resolve().parent / ".env"
@@ -64,16 +65,32 @@ engine = create_engine(
     + ":"
     + config.DB_PORT
     + "/"
-    + config.DB_NAME
+    + config.DB_NAME,
+    pool_pre_ping=True,
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
+MAX_RETRIES = 3
+RETRY_DELAY = 2
 # db랑 연결하기 위한 메서드
 @contextmanager
 def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    retries = 0
+    while retries < MAX_RETRIES:
+        try:
+            db = SessionLocal()
+            yield db
+            db.close()
+            break
+        except OperationalError as e:
+            print(f"DB 연결 오류 발생: {e}")
+            retries += 1
+            if retries < MAX_RETRIES:
+                print(f"{retries}/{MAX_RETRIES}번째 재연결 시도 중...")
+                time.sleep(RETRY_DELAY)  # 지연 후 재시도
+            else:
+                print("DB 재연결 실패. 최대 시도 횟수 초과.")
+                raise e   
+        finally:
+            db.close()
