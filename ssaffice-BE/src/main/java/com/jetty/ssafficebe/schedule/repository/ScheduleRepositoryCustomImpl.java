@@ -56,15 +56,16 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
     }
 
     @Override
-    public Page<Schedule> findSchedulePageByUserIdAndFilter(Long userId, ScheduleFilterRequest filter,
+    public Page<Schedule> findUnregisteredSchedulePageByUserIdAndFilter(Long userId, ScheduleFilterRequest filter,
                                                             Pageable pageable) {
         QSchedule schedule = QSchedule.schedule;
 
         Predicate predicate = createPredicate(filter, schedule);
 
         JPQLQuery<Schedule> query = from(schedule)
-                .where(schedule.createUser.userId.eq(userId))
-                .where(predicate);
+                .where(schedule.userId.eq(userId))
+                .where(predicate)
+                .where(schedule.endDateTime.gt(LocalDateTime.now()));
 
         return getPageImpl(query, pageable);
     }

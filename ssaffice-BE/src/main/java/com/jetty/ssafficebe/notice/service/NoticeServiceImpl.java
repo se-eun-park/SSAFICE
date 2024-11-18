@@ -94,7 +94,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public Page<NoticeSummary> getNoticePage(Long userId, Pageable pageable) {
-        if (userRepository.existsById(userId)) {
+        if (!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.", userId);
         }
 
