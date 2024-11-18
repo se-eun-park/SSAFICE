@@ -1,6 +1,7 @@
 import { LoginForm } from '@/features/session/login'
 
 export const LoginPage = () => {
+  
   return (
     <div className='flex flex-col w-full pt-[8rem] items-center'>
       <div className='flex flex-col items-center w-[28.375rem]'>

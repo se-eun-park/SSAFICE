@@ -32,7 +32,11 @@ export const appRouter = () => {
         },
         {
           path: 'pro',
-          element: <ProPage />,
+          element: (
+            <ProtectedRoute>
+              <ProPage />
+            </ProtectedRoute>
+          ),
         },
       ],
     },
