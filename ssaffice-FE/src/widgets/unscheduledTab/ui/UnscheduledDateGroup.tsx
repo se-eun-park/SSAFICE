@@ -1,10 +1,10 @@
-import type { UnscheduledItemDisplay } from '@/features/unscheduledTab'
+import type { ScheduleItemDisplay } from '@/features/todoTab'
 import { UnscheduledItem } from './UnscheduledItem'
 import { useDateFormatter } from '@/shared/model'
 
 type UnscheduledDateGroupProps = {
   date: string
-  dailyUnschedules: UnscheduledItemDisplay[]
+  dailyUnschedules: ScheduleItemDisplay[]
   isLast?: boolean
 }
 export const UnscheduledDateGroup = ({

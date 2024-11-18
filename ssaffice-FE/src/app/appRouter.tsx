@@ -4,6 +4,7 @@ import { LoginPage } from '@/pages/login'
 import { LandingPage } from '@/pages/landing'
 import { MainPage } from '@/pages/main'
 import { baseLayout } from './layouts/baseLayout'
+import { ProPage } from '@/pages/pro'
 import ProtectedRoute from '@/app/layouts/ProtectedRoute'
 
 export const appRouter = () => {
@@ -28,6 +29,10 @@ export const appRouter = () => {
               <MainPage />
             </ProtectedRoute>
           ),
+        },
+        {
+          path: 'pro',
+          element: <ProPage />,
         },
       ],
     },

@@ -13,7 +13,7 @@ export const SelectedSortConditionElements = ({
     switch (selectedSortCondition) {
       case 'by deadline':
         return {
-          label: '마감 임박 순',
+          label: '마감 순',
           bgClass: `w-fit px-spacing-8 py-spacing-4 rounded-radius-8 ${isOpen ? 'bg-color-bg-interactive-secondary-press' : 'bg-color-bg-interactive-secondary hover:bg-color-bg-interactive-secondary-hover'}`,
           labelClass: 'text-color-text-primary body-sm-medium',
           contents: [
@@ -39,7 +39,7 @@ export const SelectedSortConditionElements = ({
           labelClass: 'text-color-text-primary body-sm-medium',
           contents: [
             {
-              label: '마감 임박 순',
+              label: '마감 순',
               type: 'by deadline',
               isDefaultHover: true,
               classname: 'bg-color-black body-xs-medium',
@@ -60,7 +60,7 @@ export const SelectedSortConditionElements = ({
           labelClass: 'text-color-text-primary body-sm-medium',
           contents: [
             {
-              label: '마감 임박 순',
+              label: '마감 순',
               type: 'by deadline',
               isDefaultHover: true,
               classname: 'bg-color-blue body-xs-medium',

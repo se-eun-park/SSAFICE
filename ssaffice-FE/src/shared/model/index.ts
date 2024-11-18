@@ -1,4 +1,5 @@
 export type { ModalName, ModalElement } from './CommonModal/types'
+export type { Pagenation, Pageable } from './types'
 
 export { useSearchInput } from './SearchBar/useSearchInput'
 
@@ -10,6 +11,8 @@ export { useDateFormatter } from './useDateFormatter'
 export { useCustomEmojiRemover } from './useCustomEmojiRemover'
 
 export { useClickedToggle } from './useClickedToggle'
+
+export { useRefreshMattermostConnection } from './useRefreshMattermostConnection'
 
 export { announcementDataEmojiSelectExpression } from './regularExpressions'
 
