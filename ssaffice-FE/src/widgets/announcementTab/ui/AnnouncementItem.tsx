@@ -11,7 +11,7 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemProps) =>
   const { isClicked, handleIsClicked } = useClickedToggle()
 
   return (
-    <div className='flex flex-col border gap-spacing-4 bg-color-bg-primary border-color-border-tertiary rounded-radius-8 hover:bg-color-bg-interactive-secondary-hover'>
+    <div className='flex flex-col border cursor-pointer gap-spacing-4 bg-color-bg-primary border-color-border-tertiary rounded-radius-8 hover:bg-color-bg-interactive-secondary-hover'>
       <div
         className={`
         flex gap-spacing-12

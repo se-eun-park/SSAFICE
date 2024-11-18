@@ -12,6 +12,7 @@ export const AnnouncementList = ({ page, searchValue }: { page: number; searchVa
     queryKey: ['noticeSearch', searchValue],
     queryFn: async () => {
       const response = await instance.post(`/api/es/notice/search`, { keyword: searchValue })
+
       setSearchResultList((prevList) => ({
         ...prevList,
         content: [...(prevList?.content || []), ...response.data.content],
@@ -25,10 +26,15 @@ export const AnnouncementList = ({ page, searchValue }: { page: number; searchVa
     queryKey: ['announcements', page],
     queryFn: async () => {
       const response = await instance.get(`/api/notice?page=${page}&size=20`)
-      setResultList((prevList) => ({
-        ...prevList,
-        content: [...(prevList?.content || []), ...response.data.content],
-      }))
+      if (page) {
+        setResultList((prevList) => ({
+          ...prevList,
+          content: [...(prevList?.content || []), ...response.data.content],
+        }))
+      } else {
+        setResultList(response.data)
+      }
+
       return response.data
     },
   })

@@ -11,10 +11,15 @@ export const UnscheduledList = ({ page }: { page: number }) => {
     queryKey: ['unscheduled', page],
     queryFn: async () => {
       const response = await instance.get(`/api/schedules/unregistered?page=${page}&size=20`)
-      setResultList((prevList) => ({
-        ...prevList,
-        content: [...(prevList?.content || []), ...response.data.content],
-      }))
+      if (page) {
+        setResultList((prevList) => ({
+          ...prevList,
+          content: [...(prevList?.content || []), ...response.data.content],
+        }))
+      } else {
+        setResultList(response.data)
+      }
+
       return response.data
     },
   })

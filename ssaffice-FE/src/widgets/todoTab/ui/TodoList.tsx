@@ -5,19 +5,8 @@ export const TodoList = () => {
   const datas = dummyTodos
   const sortedTodos = useSortingSchedule(datas.todos, 'by deadline')
   return (
-    <div
-      className='
-        relative
-        w-full h-full
-      '
-    >
-      <div
-        className='
-            relative
-            flex flex-col
-            w-full h-full
-        '
-      >
+    <div className='relative w-full h-full '>
+      <div className='relative flex flex-col w-full h-full '>
         {Object.entries(sortedTodos).map(([date, dailySchedules], index) => (
           <TodoDateGroup
             key={date}
@@ -28,6 +17,5 @@ export const TodoList = () => {
         ))}
       </div>
     </div>
-    // </div>
   )
 }
