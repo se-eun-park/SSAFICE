@@ -14,7 +14,7 @@ public class ScheduleRequest {
     private String memo;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private String scheduleStatusType;
+    private String scheduleStatusTypeCd;
     private String scheduleSourceTypeCd;
     private List<RemindRequest> remindRequests;
 }
