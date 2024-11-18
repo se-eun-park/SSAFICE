@@ -159,14 +159,14 @@ export const RemindTimeModal = ({ setIsOpen, reminder, setReminder }: RemindTime
                 <Radio
                   name='Hour'
                   value='08:00:00'
-                  className={`w-12 text-center h-fit body-xs-medium py-spacing-10 rounded-radius-8 ${hour === '8:00:00' ? 'bg-color-bg-interactive-disabled-press text-color-text-interactive-inverse' : 'bg-color-bg-interactive-secondary text-color-text-primary'}`}
+                  className={`w-12 text-center h-fit body-xs-medium py-spacing-10 rounded-radius-8 ${hour === '08:00:00' ? 'bg-color-bg-interactive-disabled-press text-color-text-interactive-inverse' : 'bg-color-bg-interactive-secondary text-color-text-primary'}`}
                 >
                   8
                 </Radio>
                 <Radio
                   name='Hour'
                   value='09:00:00'
-                  className={`w-12 text-center h-fit body-xs-medium py-spacing-10 rounded-radius-8 ${hour === '9:00:00' ? 'bg-color-bg-interactive-disabled-press text-color-text-interactive-inverse' : 'bg-color-bg-interactive-secondary text-color-text-primary'}`}
+                  className={`w-12 text-center h-fit body-xs-medium py-spacing-10 rounded-radius-8 ${hour === '09:00:00' ? 'bg-color-bg-interactive-disabled-press text-color-text-interactive-inverse' : 'bg-color-bg-interactive-secondary text-color-text-primary'}`}
                 >
                   9
                 </Radio>

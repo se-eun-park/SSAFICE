@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { TodoFlag } from '@/assets/svg'
-import { type ScheduleItemDisplay } from '@/features/todoTab'
+// import { type ScheduleItemDisplay } from '@/features/todoTab'
 import { SelectTodoState } from '@/shared/ui'
+import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 
 type TodoItemProps = {
-  todo?: ScheduleItemDisplay
+  // todo?: ScheduleItemDisplay
+  todo?: ScheduleSummaries
   // todo 객체가 전달되면 -> 할일 리스트의 각 할일 컴포넌트
   // todo 객체가 전달되지 않으면 -> 새로운 할일 등록 컴포넌트
 }
@@ -32,10 +34,10 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
 
         {/* 상태 라벨 */}
         {todo ? (
-          todo.todo.scheduleStatusTypeCd && (
+          todo.scheduleStatusTypeCd && (
             <div className='flex items-center justify-center w-spacing-24 h-spacing-24'>
               <div className='flex w-[14px] h-[18px]'>
-                <TodoFlag type={todo.todo.scheduleStatusTypeCd} />
+                <TodoFlag type={todo.scheduleStatusTypeCd} />
               </div>
             </div>
           )
@@ -54,10 +56,10 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
             className={`
                   flex-1
                   text-color-text-primary body-sm-medium
-                  ${todo.todo.scheduleStatusTypeCd === 'DONE' && 'line-through'}
+                  ${todo.scheduleStatusTypeCd === 'DONE' && 'line-through'}
                   `}
           >
-            {todo.todo.title}
+            {todo.title}
           </div>
         ) : (
           <input
@@ -74,7 +76,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
           <>
             {/* 할 일 상태 드롭다운 파트 */}
             <SelectTodoState
-              selectedState={todo.todo.scheduleStatusTypeCd}
+              selectedState={todo.scheduleStatusTypeCd}
               setSelectedState={setSelectedState}
               actionType='modify'
             />

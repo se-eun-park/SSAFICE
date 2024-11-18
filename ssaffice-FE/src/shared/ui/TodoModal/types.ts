@@ -31,8 +31,8 @@ export type AssigneeResponse = BaseResponse & {
     name: string
     profileImgUrl: string
   }
-  userIds: string[]
-  setUserIds: (userIds: string[]) => void
+  userIds: number[]
+  setUserIds: (userIds: number[]) => void
 
   userType: string
   manageType?: 'TEAM' | 'PERSONAL' | undefined
