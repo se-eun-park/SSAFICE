@@ -46,7 +46,10 @@ export const ClickProfileButton = () => {
         className={`p-1 rounded-full ${isOpen ? 'bg-color-bg-interactive-secondary-press' : 'hover:bg-color-bg-interactive-secondary-hover'}`}
       >
         {data?.profileImgUrl ? (
-          <img src={data?.profileImgUrl} className='object-cover object-center w-7 h-7' />
+          <img
+            src={data?.profileImgUrl}
+            className='object-cover object-center rounded-full w-7 h-7'
+          />
         ) : (
           <UserIcon className='w-7' />
         )}
@@ -57,7 +60,7 @@ export const ClickProfileButton = () => {
         isOpen={isOpen}
         isShadow={true}
         isDivide={true}
-        width='w-[23.25rem]'
+        width='w-[15rem]'
         position='right-0 mt-spacing-8'
       >
         <DropDown.Content isPaddingY={true}>

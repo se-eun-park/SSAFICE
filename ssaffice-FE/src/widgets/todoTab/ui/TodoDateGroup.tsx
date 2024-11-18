@@ -1,11 +1,14 @@
 import { AddIcon } from '@/assets/svg'
 import { useClickedToggle, useDateFormatter } from '@/shared/model'
-import { useCalculateStatusCounts, type ScheduleItemDisplay } from '@/features/todoTab'
+// import { useCalculateStatusCounts, type ScheduleItemDisplay } from '@/features/todoTab'
+import { useCalculateStatusCounts } from '@/features/todoTab'
 import { TodoItem } from './TodoItem'
+import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 
 type TodoDateGroupProps = {
   date: string
-  dailySchedules: ScheduleItemDisplay[]
+  // dailySchedules: ScheduleItemDisplay[]
+  dailySchedules: ScheduleSummaries[]
   isLast?: boolean
 }
 
@@ -15,60 +18,24 @@ export const TodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupPro
     param: { todos: dailySchedules, type: 'user' },
   })
   return (
-    <div className='flex flex-col relative'>
-      <div
-        className='
-          flex gap-spacing-8
-          pt-spacing-24 pb-spacing-16
-          bg-color-bg-tertiary 
-          sticky top-0 z-10
-        '
-      >
+    <div className='relative flex flex-col'>
+      <div className='sticky top-0 z-10 flex gap-spacing-8 pt-spacing-24 pb-spacing-16 bg-color-bg-tertiary'>
         {/* 날짜 영역 */}
-        <div
-          className='
-            text-color-text-primary body-lg-medium
-            
-            '
-        >
+        <div className=' text-color-text-primary body-lg-medium'>
           {useDateFormatter('MM월 DD일 ?요일', new Date(date)) as string}
         </div>
 
-        <div
-          className='
-            flex justify-center items-center
-            px-spacing-8 py-spacing-2
-            text-color-text-interactive-inverse body-sm-medium
-            bg-color-bg-interactive-disabled
-            rounded-radius-circle
-            '
-        >
+        <div className='flex items-center justify-center px-spacing-8 py-spacing-2 text-color-text-interactive-inverse body-sm-medium bg-color-bg-interactive-disabled rounded-radius-circle'>
           {/* count of TODOs */}
           {statusCounts[0]}
         </div>
 
-        <div
-          className='
-            flex justify-center items-center
-            px-spacing-8 py-spacing-2
-            text-color-text-interactive-inverse body-sm-medium
-            bg-color-bg-info
-            rounded-radius-circle
-        '
-        >
+        <div className='flex items-center justify-center px-spacing-8 py-spacing-2 text-color-text-interactive-inverse body-sm-medium bg-color-bg-info rounded-radius-circle'>
           {/* count of IN_PROGRESS */}
           {statusCounts[1]}
         </div>
 
-        <div
-          className='
-            flex justify-center items-center
-            px-spacing-8 py-spacing-2
-            text-color-text-interactive-inverse body-sm-medium
-            bg-color-bg-success
-            rounded-radius-circle
-            '
-        >
+        <div className='flex items-center justify-center px-spacing-8 py-spacing-2 text-color-text-interactive-inverse body-sm-medium bg-color-bg-success rounded-radius-circle'>
           {/* count of DONEs */}
           {statusCounts[2]}
         </div>
@@ -109,7 +76,7 @@ export const TodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupPro
 
         {/* todoItems */}
         {dailySchedules.map((each) => (
-          <TodoItem key={each.todo.scheduleId} todo={each} />
+          <TodoItem key={each.scheduleId} todo={each} />
         ))}
       </div>
     </div>
