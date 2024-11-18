@@ -1,6 +1,6 @@
 import { ManageTeamTodoDateGroup } from './ManageTeamTodoDateGroup'
 import { useSortingTeamTodo } from '@/features/manageTeamTodoTab/model/useSortingTeamTodo'
-import { instance } from '@/shared/model'
+import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
 
 // api

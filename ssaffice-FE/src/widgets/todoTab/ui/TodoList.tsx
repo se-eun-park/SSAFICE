@@ -2,7 +2,7 @@
 import { useSortingSchedule } from '@/features/todoTab'
 import { TodoDateGroup } from './TodoDateGroup'
 import { useQuery } from '@tanstack/react-query'
-import { instance } from '@/shared/model'
+import { instance } from '@/shared/api'
 
 export const TodoList = () => {
   const { data, isLoading, error } = useQuery({

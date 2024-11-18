@@ -1,7 +1,7 @@
 import { ManageEachTodoDateGroup } from './ManageEachTodoDateGroup'
 // import { dummyEachTodos } from '@/features/manageEachTodoTab'
 import { useSortingEachTodo } from '@/features/manageEachTodoTab/model/useSortingEachTodo'
-import { instance } from '@/shared/model'
+import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
 
 export const ManageEachTodoList = () => {
@@ -30,17 +30,10 @@ export const ManageEachTodoList = () => {
   const sortedTodos = useSortingEachTodo(data)
   return (
     <div
-      className='
-        relative
-        w-full h-full
-      '
+      className='relative w-full h-full '
     >
       <div
-        className='
-            relative
-            flex flex-col
-            w-full h-full
-        '
+        className='relative flex flex-col w-full h-full '
       >
         {Object.entries(sortedTodos).map(([date, dailySchedules], index) => (
           <ManageEachTodoDateGroup
