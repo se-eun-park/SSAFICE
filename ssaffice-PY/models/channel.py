@@ -8,6 +8,6 @@ class Channel(Base):
 
     channel_id = Column(String(255), primary_key=True, index=True)
     mm_team_id = Column(String(255), ForeignKey("mm_team.mm_team_id"))
-    name = Column(String(255))
+    channel_name = Column(String(255))
 
     team = relationship("MM_Team")

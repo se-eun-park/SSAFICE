@@ -31,6 +31,8 @@ template = PromptTemplate(
     한 주의 시작은 일요일이다. 
     오늘 요일을 파악해서 이번주, 다음주 등에 해당하는 날짜를 문맥상으로 잘 파악해라.
     
+    특히 마감시간은 거의 모든 경우에 있으므로 마감시간은 신중하게 파악하라.
+    
     JSON 형태는 list라는 배열안에 넣어서 출력한다.
     해당 메시지가 일정이라고 판단되는 경우:
     'id': id,
@@ -70,7 +72,6 @@ def get_user_info(token):
     response = session.get(f"{mm_baseurl}/users/me", headers=headers)
 
     if response.status_code == 200:
-        # print("User info:", response.json())
         return response.json()
     else:
         print("Failed to get user info with status code:", response.status_code)
@@ -83,7 +84,6 @@ def get_user_info_by_user_id(token, user_id):
     response = session.get(f"{mm_baseurl}/users/{user_id}", headers=headers)
 
     if response.status_code == 200:
-        # print("User info:", response.json())
         return response.json()
     else:
         print("Failed to get user info with status code:", response.status_code)
@@ -93,13 +93,11 @@ def get_user_info_by_user_id(token, user_id):
 def get_user_profile_image(token):
     headers = get_headers(token)
     response = session.get(f"{mm_baseurl}/users/me/image", headers=headers)
-    print("image:", response.url)
 
     # with open('image.jpg', 'wb') as f:
     #     f.write(response.content)
 
     if response.status_code == 200:
-        # print("User info:", response.json())
         return response.json()
     else:
         print("Failed to get user image with status code:", response.status_code)
@@ -202,11 +200,9 @@ def login(mm_id, mm_pw):
     credentials = {"login_id": mm_id, "password": mm_pw}
     response = session.post(login_url, json=credentials)
     if response.status_code == 200:
-        print("Login successful")
         return response.headers.get("Token")
     else:
-        print("Login failed")
-        print("Response:", response.json())
+        print("Failed to get channels with status code:", response.status_code)
         return None  # 로그인 실패 시 None 반환
 
 

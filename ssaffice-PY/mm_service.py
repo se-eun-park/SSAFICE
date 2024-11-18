@@ -11,6 +11,7 @@ s3_access_key = config.S3_ACCESS_KEY
 s3_secret_key = config.S3_SECRET_KEY
 s3_prefix = config.S3_PREFIX
 s3_bucket_name = config.S3_BUCKET_NAME
+mm_global_notice_channel_id = config.MM_GLOBAL_NOTICE_CHANNEL_ID
 
 
 # 해당 채널이 분석 대상 메시지 확인하는 함수
@@ -59,7 +60,7 @@ def make_notice_entity(data, notice):
         is_essential_yn=is_essential,
         mm_message_id=notice["id"],
         start_date_time=notice["schedule_start_time"],
-        title=notice["title"],        
+        title=notice["title"],
     )
 
     return response_notice
@@ -88,9 +89,10 @@ def upload_file_to_s3(response):
 
     try:
         s3.put_object(
-            Bucket=s3_bucket_name, Key=f"{s3_prefix}\{dir}\{file_path}", Body=response.content
+            Bucket=s3_bucket_name,
+            Key=f"{s3_prefix}\{dir}\{file_path}",
+            Body=response.content,
         )
-        print(f"{hash} 업로드 완료")
     except Exception as e:
         print(f"Error : {e}")
 
@@ -99,7 +101,7 @@ def find_channel_type(data):
     json_data = json.loads(data["data"]["post"])
     channel_id = json_data["channel_id"]
     channel_type = data["data"]["channel_type"]
-    if channel_id == "i3ht4brt7jgu9g5rg8e4tfc98r":  # 11기 공지사항 채널id임
+    if channel_id == mm_global_notice_channel_id:  # 11기 공지사항 채널id임
         return "GLOBAL"
     elif (
         channel_type == "O" or channel_type == "P"
@@ -117,7 +119,6 @@ def make_schedule_entity(notice_id):
         end_date_time=notice.end_date_time,
         is_enroll_yn=notice.is_essential_yn,
         is_essential_yn=notice.is_essential_yn,
-        memo=notice.content,
         notice_id=notice_id,
         start_date_time=notice.start_date_time,
         title=notice.title,
@@ -174,3 +175,14 @@ def make_mm_team_entity(team):
 def make_mm_team_entity_by_team_id(team_id, team_name):
     response_team = MM_Team(team_id=team_id, team_name=team_name)
     return response_team
+
+
+def make_channel_entity(channel_id, channel_info):
+    team_id = channel_info["team_id"]
+    channel_name = channel_info["display_name"]
+    response_channel = Channel(
+        channel_id = channel_id,
+        channel_name = channel_name,
+        mm_team_id = team_id
+    )
+    return response_channel
