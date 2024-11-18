@@ -1,10 +1,13 @@
+import { useSetLoginStateStore } from '@/entities/session'
 import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 
 export const SSORedirect = () => {
+  const navigate = useNavigate()
+  const setIsAuthenticated = useSetLoginStateStore()
   const params = new URLSearchParams(window.location.search)
   const codeParam = params.get('code')
-  if (codeParam) console.log(codeParam)
   const {} = useQuery({
     queryKey: ['SSO', codeParam],
     queryFn: async () => {
@@ -14,8 +17,10 @@ export const SSORedirect = () => {
         },
       })
       if (data) {
-        console.log(data)
+        setIsAuthenticated(true)
+        navigate('/login')
       }
+      return data
     },
   })
 
