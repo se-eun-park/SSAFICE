@@ -171,7 +171,6 @@ public class MattermostServiceImpl implements MattermostService {
                                                                    .toList();
 
         for (MMChannelSummary userChannel : mmChannelSummaryList) {
-            System.out.println(userChannel.getId());
 
         }
         userChannelRepository.saveAll(userChannelsToSave);
@@ -224,7 +223,6 @@ public class MattermostServiceImpl implements MattermostService {
 
         ResponseEntity<MMChannelSummary> response = this.mattermostUtil.callMattermostApi(
                 "/channels/direct" , HttpMethod.POST, payload, MMChannelSummary.class, token);
-        System.out.println(response.getBody());
 
         return Objects.requireNonNull(response.getBody()).getId();
     }
