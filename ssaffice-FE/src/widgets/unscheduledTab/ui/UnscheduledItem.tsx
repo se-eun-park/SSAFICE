@@ -26,9 +26,9 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemProps) => {
       >
         <div className='rounded-full w-spacing-40 h-spacing-40 bg-color-bg-disabled aspect-square'>
           {/* 프로필 이미지 넣어 주세요 */}
-          {unscheduledItem.chargeUser?.profileImgUrl && (
+          {unscheduledItem.createUser?.profileImgUrl && (
             <img
-              src={unscheduledItem.chargeUser?.profileImgUrl}
+              src={unscheduledItem.createUser?.profileImgUrl}
               alt='사진 없음'
               className='w-full h-full rounded-full aspect-square'
             />
@@ -38,7 +38,7 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemProps) => {
           <div className='flex gap-spacing-8'>
             {/* 프로 이름 */}
             <div className='flex text-color-text-primary body-md-medium'>
-              {unscheduledItem.chargeUser.name}
+              {unscheduledItem.createUser.name}
             </div>
             {/* 시각 */}
             <div className='flex self-end text-color-text-disabled body-xs-medium'>{`${useDateFormatter('PM/AM HH:MM', unscheduledItem.createdAt)}`}</div>

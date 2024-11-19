@@ -10,7 +10,7 @@ export const ManageEachTodoList = () => {
     queryFn: async () => {
       const { data } = await instance.post('/api/schedules/admin/assigned', {
         filterStartDateTime: new Date('2024-01-01'),
-        filterEndDateTime: new Date(),
+        filterEndDateTime: new Date('2024-12-31'),
         filterType: 'createdAt',
       })
       return data.scheduleSummaries
@@ -29,12 +29,8 @@ export const ManageEachTodoList = () => {
   console.log(data)
   const sortedTodos = useSortingEachTodo(data)
   return (
-    <div
-      className='relative w-full h-full '
-    >
-      <div
-        className='relative flex flex-col w-full h-full '
-      >
+    <div className='relative w-full h-full '>
+      <div className='relative flex flex-col w-full h-full '>
         {Object.entries(sortedTodos).map(([date, dailySchedules], index) => (
           <ManageEachTodoDateGroup
             key={date}
