@@ -48,7 +48,7 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
         Predicate predicate = createPredicate(filter, schedule);
 
         JPQLQuery<Schedule> query = from(schedule)
-                .where(schedule.createUser.userId.eq(userId))
+                .where(schedule.createdBy.eq(userId))
                 .where(predicate);
 
         return getSortedList(query, sort);
