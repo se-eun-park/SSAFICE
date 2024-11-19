@@ -67,12 +67,12 @@ export const Card = ({
         <div className={cardSourceTag?.classname}>{cardSourceTag?.description}</div>
 
         <div className='flex items-center justify-between w-full gap-x-spacing-8'>
-          <p className={`body-xs-medium min-w-max ${cardEndDate.color}`}>{cardEndDate.endDate}</p>
+          <p className={`body-xs-medium min-w-max ${cardEndDate?.color}`}>{cardEndDate?.endDate}</p>
 
           <div className='flex items-center justify-end w-4/5 gap-x-spacing-8'>
-            <p className='truncate body-sm-regular text-color-text-disabled'>{createUser.name}</p>
+            <p className='truncate body-sm-regular text-color-text-disabled'>{createUser?.name}</p>
             <img
-              src={createUser.profileImgUrl}
+              src={createUser?.profileImgUrl}
               alt='create user image'
               className='w-6 h-6 rounded-radius-circle'
             />
