@@ -13,9 +13,13 @@ public interface ScheduleRepositoryCustom {
 
     List<Schedule> findScheduleListByUserIdAndFilter(Long userId, ScheduleFilterRequest filterRequest, Sort sort);
 
+    List<Schedule> findScheduleListByUserIdAndFilterByAdmin(Long userId, ScheduleFilterRequest filterRequest,
+                                                            Sort sort);
+
     List<Schedule> findScheduleListByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest filterRequest, Sort sort);
 
-    Page<Schedule> findUnregisteredSchedulePageByUserIdAndFilter(Long userId, ScheduleFilterRequest filterRequest, Pageable pageable);
+    Page<Schedule> findUnregisteredSchedulePageByUserIdAndFilter(Long userId, ScheduleFilterRequest filterRequest,
+                                                                 Pageable pageable);
 
     ScheduleStatusCount getStatusCounts(List<Schedule> schedules);
 
