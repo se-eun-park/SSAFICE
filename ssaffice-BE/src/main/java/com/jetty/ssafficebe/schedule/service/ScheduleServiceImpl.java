@@ -314,7 +314,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 1. 관리자 할당 일정 조회
         filterRequest.setScheduleSourceTypeCd("ASSIGNED");
-        List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilter(userId,
+        List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilterByAdmin(userId,
                                                                                            filterRequest,
                                                                                            sort);
 

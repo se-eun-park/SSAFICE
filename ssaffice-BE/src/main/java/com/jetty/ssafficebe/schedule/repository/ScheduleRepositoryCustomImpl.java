@@ -40,6 +40,20 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
         return getSortedList(query, sort);
     }
 
+    @Override
+    public List<Schedule> findScheduleListByUserIdAndFilterByAdmin(Long userId, ScheduleFilterRequest filter,
+                                                                   Sort sort) {
+        QSchedule schedule = QSchedule.schedule;
+
+        Predicate predicate = createPredicate(filter, schedule);
+
+        JPQLQuery<Schedule> query = from(schedule)
+                .where(schedule.createUser.userId.eq(userId))
+                .where(predicate);
+
+        return getSortedList(query, sort);
+    }
+
     // 공지사항 일정 조회
     @Override
     public List<Schedule> findScheduleListByNoticeIdAndFilter(Long noticeId, ScheduleFilterRequest filter,
