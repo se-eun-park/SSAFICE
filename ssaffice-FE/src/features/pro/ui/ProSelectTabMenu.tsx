@@ -45,7 +45,7 @@ export const ProSelectTabMenu = ({ selected, handleSelect }: ProSelectTabMenuPro
         개인별 할 일 관리
       </button>
 
-      <button
+      {/* <button
         className={`
             p-spacing-10
             ${
@@ -60,7 +60,7 @@ export const ProSelectTabMenu = ({ selected, handleSelect }: ProSelectTabMenuPro
         onClick={() => handleSelect('manageMembers')}
       >
         멤버 관리
-      </button>
+      </button> */}
     </div>
   )
 }

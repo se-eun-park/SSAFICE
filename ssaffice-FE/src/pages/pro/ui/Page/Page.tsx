@@ -7,12 +7,7 @@ export const ProPage = () => {
   const { selected, handleSelect } = useProSelectTabMenu()
 
   return (
-    <main
-      className='
-        flex flex-col
-        w-full h-full
-      '
-    >
+    <main className='flex flex-col w-full h-full '>
       <ProSelectTabMenu selected={selected} handleSelect={handleSelect} />
 
       <section
