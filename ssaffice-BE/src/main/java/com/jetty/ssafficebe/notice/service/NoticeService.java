@@ -24,6 +24,6 @@ public interface NoticeService {
 
     NoticeDetail getNotice(Long userId, Long noticeId);
 
-    List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, BaseFilterRequest baseFilterRequest, Sort sort);
+    List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, BaseFilterRequest filterRequest, Sort sort);
 
 }

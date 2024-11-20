@@ -135,10 +135,10 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, BaseFilterRequest baseFilterRequest,
+    public List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, BaseFilterRequest filterRequest,
                                                                  Sort sort) {
 
-        List<Notice> result = noticeRepository.getNoticeListByCreateUserAndFilter(userId, baseFilterRequest, sort);
+        List<Notice> result = noticeRepository.getNoticeListByCreateUserAndFilter(userId, filterRequest, sort);
         List<NoticeSummary> noticeSummaryList = noticeConverter.toNoticeSummaryList(result);
 
         // 수행여부 count 추가
