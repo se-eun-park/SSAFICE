@@ -49,7 +49,6 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final ESNoticeService esNoticeService;
 
-    @Transactional
     @Override
     public ApiResponse saveNotice(NoticeRequest noticeRequest, List<MultipartFile> files) throws IOException {
         Notice notice = noticeConverter.toNotice(noticeRequest);

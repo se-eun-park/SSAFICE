@@ -9,4 +9,6 @@ public interface ChannelService {
     List<ChannelSummary> getChannelsByUserId(Long userId);
 
     List<String> getChannelIdsByUserId(Long userId);
+
+    List<Long> getUserIdListByChannelId(String channelId);
 }

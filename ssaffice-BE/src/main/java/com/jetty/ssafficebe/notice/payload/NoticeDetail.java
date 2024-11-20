@@ -18,7 +18,7 @@ public class NoticeDetail {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private LocalDateTime createdAt;
-    private String isEssentialYn;
+    private String essentialYn;
     private CreatedBySummary createUser;
     private boolean isOwner; // 글의 주인인지 아닌지
     private List<AttachmentFileSummary> attachmentFiles;
