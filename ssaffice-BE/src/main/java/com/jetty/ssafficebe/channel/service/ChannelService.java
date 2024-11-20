@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ChannelService {
 
-    List<ChannelSummary> getChannelsByUserId(Long userId);
+    List<ChannelSummary> getChannelListByUserId(Long userId);
 
     List<String> getChannelIdsByUserId(Long userId);
 

@@ -19,7 +19,7 @@ public class ChannelServiceImpl implements ChannelService {
 
 
     @Override
-    public List<ChannelSummary> getChannelsByUserId(Long userId) {
+    public List<ChannelSummary> getChannelListByUserId(Long userId) {
         List<UserChannel> userChannels = userChannelRepository.findDistinctByUserId(userId);
 
         List<Channel> channels = userChannels.stream()

@@ -98,7 +98,7 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         // 1. 유저가 속해있는 채널 아이디 조회
-        List<ChannelSummary> channelsByUserId = channelService.getChannelsByUserId(userId);
+        List<ChannelSummary> channelsByUserId = channelService.getChannelListByUserId(userId);
         List<String> channelIds = channelsByUserId.stream()
                                                   .map(ChannelSummary::getChannelId)
                                                   .toList();
