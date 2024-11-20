@@ -20,6 +20,6 @@ public class NoticeDetail {
     private LocalDateTime createdAt;
     private String essentialYn;
     private CreatedBySummary createUser;
-    private boolean isOwner; // 글의 주인인지 아닌지
+    private boolean owner; // 글의 주인인지 아닌지
     private List<AttachmentFileSummary> attachmentFiles;
 }
