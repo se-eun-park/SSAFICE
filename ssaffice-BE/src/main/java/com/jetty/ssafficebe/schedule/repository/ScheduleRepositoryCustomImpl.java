@@ -71,7 +71,7 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
 
     @Override
     public Page<Schedule> findUnregisteredSchedulePageByUserIdAndFilter(Long userId, ScheduleFilterRequest filter,
-                                                            Pageable pageable) {
+                                                                        Pageable pageable) {
         QSchedule schedule = QSchedule.schedule;
 
         Predicate predicate = createPredicate(filter, schedule);
@@ -112,12 +112,12 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
     public ScheduleEnrolledCount getEnrolledCounts(List<Schedule> schedules) {
         // 등록된 일정 수
         long enrolledCount = schedules.stream()
-                                      .filter(Schedule::getIsEnroll)
+                                      .filter(Schedule::isEnroll)
                                       .count();
 
         // 완료된 일정 수
         long completedCount = schedules.stream()
-                                       .filter(Schedule::getIsEnroll)
+                                       .filter(Schedule::isEnroll)
                                        .filter(s -> ScheduleStatusType.DONE.equals(s.getScheduleStatusType()))
                                        .count();
 
@@ -130,8 +130,8 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
     private Predicate createPredicate(ScheduleFilterRequest filter, QSchedule schedule) {
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (filter.getIsEnrollYn() != null) {
-            builder.and(schedule.isEnrollYn.eq(filter.getIsEnrollYn()));
+        if (filter.getEnrollYn() != null) {
+            builder.and(schedule.enrollYn.eq(filter.getEnrollYn()));
         }
 
         if (filter.getScheduleSourceTypeCd() != null) {

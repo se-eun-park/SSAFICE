@@ -82,7 +82,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 1. 입력값 검증
         if (userIds.isEmpty()) {
-            throw new InvalidValueException(ErrorCode.INVALID_USER_IDS, "등록할 사용자 목록이 비어있습니다.", 0);
+            log.info("[Schedule] 관리자의 개별 일정 등록 해당 유저 존재 X 종료");
+            return new ApiResponse(true, "사용자가 지정되지 않았습니다.");
         }
 
         // ! 2. 모든 일정 생성 및 저장
@@ -126,9 +127,9 @@ public class ScheduleServiceImpl implements ScheduleService {
                                               schedule.setMemo(notice.getContent());
                                               schedule.setScheduleSourceTypeCd("TODO");
                                               schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
-                                              schedule.setIsEssentialYn(notice.getEssentialYn());
-                                              if ("Y".equals(notice.getEssentialYn())) {
-                                                  schedule.setIsEnrollYn("Y");
+                                              schedule.setEssentialYn(notice.getEssentialYn());
+                                              if (notice.isEssential()) {
+                                                  schedule.setEnrollYn("Y");
                                               }
                                               return schedule;
                                           })
@@ -167,9 +168,9 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .ifPresent(schedule::setMemo);
         Optional.ofNullable(updateScheduleRequest.getScheduleStatusTypeCd())
                 .ifPresent(schedule::setScheduleStatusTypeCd);
-        if (!schedule.getIsEssential() && schedule.getNoticeId() != null) {
-            Optional.ofNullable(updateScheduleRequest.getIsEnrollYn())
-                    .ifPresent(schedule::setIsEnrollYn);
+        if (!schedule.isEssential() && schedule.getNoticeId() != null) {
+            Optional.ofNullable(updateScheduleRequest.getEnrollYn())
+                    .ifPresent(schedule::setEnrollYn);
         }
         if (schedule.getScheduleSourceType() == ScheduleSourceType.PERSONAL) {
             Optional.ofNullable(updateScheduleRequest.getTitle())
@@ -222,14 +223,14 @@ public class ScheduleServiceImpl implements ScheduleService {
         validateAuthorization(userId, schedule.getUserId());
 
         // ! 3-1. 필수 일정이고 관리자가 아닐 경우 삭제 시도 예외처리
-        if (schedule.getIsEssential() && isNotAdmin(userId)) {
+        if (schedule.isEssential() && isNotAdmin(userId)) {
             throw new InvalidAuthorizationException(ErrorCode.INVALID_AUTHORIZATION, "scheduleId", scheduleId);
         }
 
         // ! 3-2. 공지 파생 일정일 경우 처리 및 Response 반환
         if (schedule.getNotice() != null && !ScheduleSourceType.PERSONAL.name()
                                                                         .equals(schedule.getScheduleSourceTypeCd())) {
-            schedule.setIsEnrollYn("N");
+            schedule.setEnrollYn("N");
             scheduleRepository.save(schedule);
             return new ApiResponse(true, "팀 공지 일정이 미등록 처리되었습니다.", scheduleId);
         }
@@ -246,7 +247,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("[Schedule] 개인 일정 목록 조회 시작 - userId={}", userId);
 
         // ! 1. 조건에 맞는 일정 리스트 생성
-        filterRequest.setIsEnrollYn("Y");
+        filterRequest.setEnrollYn("Y");
         List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilter(userId, filterRequest, sort);
 
         // ! 2. 조회된 일정에서 상태별 카운트 계산
@@ -295,7 +296,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 1. 미등록 공지사항 일정 조회
         ScheduleFilterRequest filterRequest = new ScheduleFilterRequest();
-        filterRequest.setIsEnrollYn("N");
+        filterRequest.setEnrollYn("N");
         Page<Schedule> schedulePage = scheduleRepository.findUnregisteredSchedulePageByUserIdAndFilter(userId,
                                                                                                        filterRequest,
                                                                                                        pageable);

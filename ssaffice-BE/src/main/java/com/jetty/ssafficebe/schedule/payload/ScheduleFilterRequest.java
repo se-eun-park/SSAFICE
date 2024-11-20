@@ -9,7 +9,7 @@ import lombok.Setter;
 public class ScheduleFilterRequest {
 
     private String filterType;
-    private String isEnrollYn;
+    private String enrollYn;
     private String scheduleSourceTypeCd;
     private LocalDateTime filterStartDateTime;
     private LocalDateTime filterEndDateTime;

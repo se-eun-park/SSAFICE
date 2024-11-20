@@ -16,8 +16,8 @@ public class UpdateScheduleRequest {
     private LocalDateTime endDateTime;
     private String scheduleSourceTypeCd;
     private String scheduleStatusTypeCd;
-    private String isEssentialYn;
-    private String isEnrollYn;
+    private String essentialYn;
+    private String enrollYn;
     private Long userId;
     private Long noticeId;
     private List<RemindRequest> remindRequests;
