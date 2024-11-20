@@ -53,17 +53,17 @@ public class Schedule extends BaseEntity {
     @Column(name = "scheduleStatusTypeCd", updatable = false, insertable = false)
     private ScheduleStatusType scheduleStatusType;
 
-    private String isEssentialYn = "N";
+    private String essentialYn = "N";
 
     @Convert(converter = BooleanToYNConverter.class)
-    @Column(name = "isEssentialYn", updatable = false, insertable = false)
-    private Boolean isEssential;
+    @Column(name = "essentialYn", updatable = false, insertable = false)
+    private boolean essential;
 
-    private String isEnrollYn = "Y";
+    private String enrollYn = "Y";
 
     @Convert(converter = BooleanToYNConverter.class)
-    @Column(name = "isEnrollYn", updatable = false, insertable = false)
-    private Boolean isEnroll;
+    @Column(name = "enrollYn", updatable = false, insertable = false)
+    private boolean enroll;
 
     private Long userId;
 

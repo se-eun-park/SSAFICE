@@ -1,8 +1,8 @@
 package com.jetty.ssafficebe.notice.service;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.common.payload.BaseFilterRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeDetail;
-import com.jetty.ssafficebe.notice.payload.NoticeFilterRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummary;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForAdmin;
@@ -24,6 +24,6 @@ public interface NoticeService {
 
     NoticeDetail getNotice(Long userId, Long noticeId);
 
-    List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, NoticeFilterRequest noticeFilterRequest, Sort sort);
+    List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, BaseFilterRequest filterRequest, Sort sort);
 
 }

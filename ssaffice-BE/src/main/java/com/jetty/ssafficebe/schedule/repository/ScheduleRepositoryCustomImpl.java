@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.schedule.repository;
 
 import com.jetty.ssafficebe.common.jpa.AbstractQueryDslRepository;
+import com.jetty.ssafficebe.common.jpa.DateTimeConverter;
 import com.jetty.ssafficebe.schedule.code.ScheduleStatusType;
 import com.jetty.ssafficebe.schedule.entity.QSchedule;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
@@ -20,8 +21,7 @@ import org.springframework.data.domain.Sort;
 
 public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository implements ScheduleRepositoryCustom {
 
-    public ScheduleRepositoryCustomImpl(JPAQueryFactory queryFactory,
-                                        EntityManager entityManager) {
+    public ScheduleRepositoryCustomImpl(JPAQueryFactory queryFactory, EntityManager entityManager) {
         super(queryFactory, entityManager);
     }
 
@@ -71,7 +71,7 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
 
     @Override
     public Page<Schedule> findUnregisteredSchedulePageByUserIdAndFilter(Long userId, ScheduleFilterRequest filter,
-                                                            Pageable pageable) {
+                                                                        Pageable pageable) {
         QSchedule schedule = QSchedule.schedule;
 
         Predicate predicate = createPredicate(filter, schedule);
@@ -112,12 +112,12 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
     public ScheduleEnrolledCount getEnrolledCounts(List<Schedule> schedules) {
         // 등록된 일정 수
         long enrolledCount = schedules.stream()
-                                      .filter(Schedule::getIsEnroll)
+                                      .filter(Schedule::isEnroll)
                                       .count();
 
         // 완료된 일정 수
         long completedCount = schedules.stream()
-                                       .filter(Schedule::getIsEnroll)
+                                       .filter(Schedule::isEnroll)
                                        .filter(s -> ScheduleStatusType.DONE.equals(s.getScheduleStatusType()))
                                        .count();
 
@@ -130,16 +130,16 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
     private Predicate createPredicate(ScheduleFilterRequest filter, QSchedule schedule) {
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (filter.getIsEnrollYn() != null) {
-            builder.and(schedule.isEnrollYn.eq(filter.getIsEnrollYn()));
+        if (filter.getEnrollYn() != null) {
+            builder.and(schedule.enrollYn.eq(filter.getEnrollYn()));
         }
 
         if (filter.getScheduleSourceTypeCd() != null) {
             builder.and(schedule.scheduleSourceTypeCd.eq(filter.getScheduleSourceTypeCd()));
         }
 
-        LocalDateTime start = filter.getFilterStartDateTime();
-        LocalDateTime end = filter.getFilterEndDateTime();
+        LocalDateTime start = DateTimeConverter.toLocalDateTime(filter.getStart());
+        LocalDateTime end = DateTimeConverter.toLocalDateTime(filter.getEnd());
         String filterType = filter.getFilterType();
 
         if (filterType != null && start != null && end != null) {

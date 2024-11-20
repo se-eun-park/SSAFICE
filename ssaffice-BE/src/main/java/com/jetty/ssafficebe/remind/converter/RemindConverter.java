@@ -11,7 +11,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.WARN)
 public interface RemindConverter {
 
-    RemindRequest toRemindRequest(String isEssentialYn, String remindTypeCd, LocalDateTime remindDateTime);
+    RemindRequest toRemindRequest(String essentialYn, String remindTypeCd, LocalDateTime remindDateTime);
 
     Remind toRemind(RemindRequest remindRequest);
 

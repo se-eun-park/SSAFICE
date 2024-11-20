@@ -1,15 +1,14 @@
 package com.jetty.ssafficebe.notice.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.common.payload.BaseFilterRequest;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.notice.payload.NoticeDetail;
-import com.jetty.ssafficebe.notice.payload.NoticeFilterRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummary;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForAdmin;
 import com.jetty.ssafficebe.notice.service.NoticeService;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +23,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -87,22 +86,13 @@ public class NoticeController {
     }
 
     /**
-     * 내가 작성한 공지사항 리스트 조회. 팀 별 할 일 관리에서 사용 중
+     * 내가 작성한 공지사항 리스트 조회
      */
     @GetMapping("/admin/my")
     public ResponseEntity<List<NoticeSummaryForAdmin>> getMyNoticeList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestParam LocalDateTime start,
-            @RequestParam LocalDateTime end,
-            @RequestParam String type,
+            @ModelAttribute BaseFilterRequest filterRequest,
             @SortDefault(sort = "endDateTime", direction = Sort.Direction.ASC) Sort sort) {
-        return ResponseEntity.ok(
-                noticeService.getNoticePageByCreateUser(userDetails.getUserId(),
-                                                        NoticeFilterRequest.builder()
-                                                                           .filterStartDateTime(start)
-                                                                           .filterEndDateTime(end)
-                                                                           .filterType(type)
-                                                                           .build(),
-                                                        sort));
+        return ResponseEntity.ok(noticeService.getNoticePageByCreateUser(userDetails.getUserId(), filterRequest, sort));
     }
 }
