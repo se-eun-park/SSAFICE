@@ -30,11 +30,6 @@ public class ChannelController {
         return ResponseEntity.ok(channelService.getChannelsByUserId(userDetails.getUserId()));
     }
 
-    @GetMapping("/my")
-    public ResponseEntity<List<ChannelSummary>> getChannelList(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok(channelService.getChannelsByUserId(userDetails.getUserId()));
-    }
-
     @GetMapping("/ids/{userId}")
     public ResponseEntity<List<String>> getChannelIdsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(channelService.getChannelIdsByUserId(userId));
