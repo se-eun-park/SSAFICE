@@ -20,8 +20,6 @@ public interface MattermostService {
 
     ApiResponse deletePost(String postId);
 
-    List<UserAutocompleteSummary> getUserAutocomplete(String name);
-
     List<MMChannelSummary> getChannelsByUserIdFromMM(Long userId);
 
     ApiResponse saveAllChannelsByMMChannelList(List<Channel> channelList);
