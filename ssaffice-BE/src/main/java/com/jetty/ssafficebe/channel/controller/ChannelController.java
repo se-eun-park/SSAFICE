@@ -26,6 +26,11 @@ public class ChannelController {
     }
 
     @GetMapping("/my")
+    public ResponseEntity<List<ChannelSummary>> getMyChannelList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(channelService.getChannelsByUserId(userDetails.getUserId()));
+    }
+
+    @GetMapping("/my")
     public ResponseEntity<List<ChannelSummary>> getChannelList(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(channelService.getChannelsByUserId(userDetails.getUserId()));
     }
