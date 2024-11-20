@@ -6,11 +6,11 @@ import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidAuthorizationException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.common.payload.BaseFilterRequest;
 import com.jetty.ssafficebe.file.service.AttachmentFileService;
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
 import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.notice.payload.NoticeDetail;
-import com.jetty.ssafficebe.notice.payload.NoticeFilterRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummary;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForAdmin;
@@ -135,10 +135,10 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, NoticeFilterRequest noticeFilterRequest,
+    public List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, BaseFilterRequest baseFilterRequest,
                                                                  Sort sort) {
 
-        List<Notice> result = noticeRepository.getNoticeListByCreateUserAndFilter(userId, noticeFilterRequest, sort);
+        List<Notice> result = noticeRepository.getNoticeListByCreateUserAndFilter(userId, baseFilterRequest, sort);
         List<NoticeSummary> noticeSummaryList = noticeConverter.toNoticeSummaryList(result);
 
         // 수행여부 count 추가

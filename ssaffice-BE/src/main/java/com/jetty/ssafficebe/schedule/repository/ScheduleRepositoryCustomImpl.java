@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.schedule.repository;
 
 import com.jetty.ssafficebe.common.jpa.AbstractQueryDslRepository;
+import com.jetty.ssafficebe.common.jpa.DateTimeConverter;
 import com.jetty.ssafficebe.schedule.code.ScheduleStatusType;
 import com.jetty.ssafficebe.schedule.entity.QSchedule;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
@@ -20,8 +21,7 @@ import org.springframework.data.domain.Sort;
 
 public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository implements ScheduleRepositoryCustom {
 
-    public ScheduleRepositoryCustomImpl(JPAQueryFactory queryFactory,
-                                        EntityManager entityManager) {
+    public ScheduleRepositoryCustomImpl(JPAQueryFactory queryFactory, EntityManager entityManager) {
         super(queryFactory, entityManager);
     }
 
@@ -138,8 +138,8 @@ public class ScheduleRepositoryCustomImpl extends AbstractQueryDslRepository imp
             builder.and(schedule.scheduleSourceTypeCd.eq(filter.getScheduleSourceTypeCd()));
         }
 
-        LocalDateTime start = filter.getFilterStartDateTime();
-        LocalDateTime end = filter.getFilterEndDateTime();
+        LocalDateTime start = DateTimeConverter.toLocalDateTime(filter.getStartTime());
+        LocalDateTime end = DateTimeConverter.toLocalDateTime(filter.getEndTime());
         String filterType = filter.getFilterType();
 
         if (filterType != null && start != null && end != null) {
