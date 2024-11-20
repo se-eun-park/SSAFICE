@@ -49,7 +49,6 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final ESNoticeService esNoticeService;
 
-    @Transactional
     @Override
     public ApiResponse saveNotice(NoticeRequest noticeRequest, List<MultipartFile> files) throws IOException {
         Notice notice = noticeConverter.toNotice(noticeRequest);
@@ -118,6 +117,8 @@ public class NoticeServiceImpl implements NoticeService {
     public NoticeDetail getNotice(Long userId, Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new ResourceNotFoundException(
                 ErrorCode.NOTICE_NOT_FOUND, "해당 공지사항을 찾을 수 없습니다.", noticeId));
+
+        System.out.println("noticeBoolean : " + notice.isEssential());
 
         NoticeDetail noticeDetail = noticeConverter.toNoticeDetail(notice);
 

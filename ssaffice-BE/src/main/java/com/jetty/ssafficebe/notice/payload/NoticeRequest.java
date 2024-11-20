@@ -14,7 +14,7 @@ public class NoticeRequest {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String noticeTypeCd;
-    private String isEssentialYn;
+    private String essentialYn;
     private String channelId;
 
 }

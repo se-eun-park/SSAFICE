@@ -119,6 +119,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             return ;
         }
 
+        System.out.println("필수 공지 확인 : " + notice.isEssential());
+
         // ! 2. 모든 Schedule 생성 및 저장
         List<Schedule> schedules = userIds.stream().map(userId -> {
                                               Schedule schedule = scheduleConverter.toSchedule(userId, notice.getNoticeId());
@@ -126,8 +128,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                                               schedule.setMemo(notice.getContent());
                                               schedule.setScheduleSourceTypeCd("TODO");
                                               schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
-                                              schedule.setIsEssentialYn(notice.getIsEssentialYn());
-                                              if (notice.getIsEssential()) {
+                                              schedule.setIsEssentialYn(notice.getEssentialYn());
+                                              if (notice.isEssential()) {
                                                   schedule.setIsEnrollYn("Y");
                                               }
                                               return schedule;
@@ -136,7 +138,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<Schedule> savedSchedules = scheduleRepository.saveAll(schedules);
 
         // ! 3. 필수 공지사항인 경우 리마인드 request 생성 후 해당 일정에 리마인드 추가하는 메서드 호출
-        if (notice.getIsEssential() && (notice.getStartDateTime() != null || notice.getEndDateTime() != null)) {
+        if (notice.isEssential() && (notice.getStartDateTime() != null || notice.getEndDateTime() != null)) {
             LocalDateTime remindDateTime = notice.getEndDateTime() != null
                                            ? notice.getEndDateTime().minusHours(1)
                                            : notice.getStartDateTime().minusHours(1);

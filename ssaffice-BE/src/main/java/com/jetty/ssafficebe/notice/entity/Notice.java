@@ -48,11 +48,11 @@ public class Notice extends BaseEntity {
     @Column(name = "noticeTypeCd", updatable = false, insertable = false)
     private NoticeType noticeType;
 
-    private String isEssentialYn = "N";
+    private String essentialYn = "N";
 
     @Convert(converter = BooleanToYNConverter.class)
-    @Column(name = "isEssentialYn", updatable = false, insertable = false)
-    private Boolean isEssential;
+    @Column(name = "essentialYn", updatable = false, insertable = false)
+    private boolean essential;
 
     private String channelId;
 

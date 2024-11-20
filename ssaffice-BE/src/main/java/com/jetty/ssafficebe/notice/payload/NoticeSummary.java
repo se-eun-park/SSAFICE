@@ -18,7 +18,7 @@ public class NoticeSummary {
     private LocalDateTime createdAt;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private String isEssentialYn;
+    private String essentialYn;
     private String noticeTypeCd;
     private CreatedBySummary createUser;
     private ChannelSummary channelSummary;
