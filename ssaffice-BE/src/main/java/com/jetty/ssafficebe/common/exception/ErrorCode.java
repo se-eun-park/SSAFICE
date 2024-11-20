@@ -23,6 +23,7 @@ public enum ErrorCode {
     INVALID_DATETIME_FORMAT(HttpStatus.BAD_REQUEST, "날짜/시간 형식이 올바르지 않습니다."),
 
     INVALID_AUTHORIZATION(HttpStatus.FORBIDDEN, "해당 리소스에 대한 권한이 없습니다."),
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
     ;
 
     private final HttpStatus status;

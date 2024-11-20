@@ -54,31 +54,25 @@ public class MattermostController {
         return ResponseEntity.ok(this.mattermostService.deletePost(postId));
     }
 
-    @GetMapping("/users/autocomplete")
-    public ResponseEntity<List<UserAutocompleteSummary>> getUserAutocomplete(@RequestParam String name) {
-        // 영어 외의 문자도 인코딩할 수 있도록 인코딩 코드 추가
-        String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
-        return ResponseEntity.ok(this.mattermostService.getUserAutocomplete(encodedName));
-    }
-
-    // user가 새로고침할 때 동작하는 endPoint
-    // 해당 userID를 통해 MM에서 채널리스트를 가져와 공지사항만 필터링 한 후 Channel table과 UserChannel table에 저장
-
+    /**
+     * 사용자가 속한 MM 채널 목록을 가져와 해당 채널들을 Channel 테이블과 UserChannel 테이블에 저장하는 메서드입니다.
+     * 이 메서드는 두 단계로 구성됩니다:
+     * 1. 사용자가 속한 채널을 Mattermost에서 가져와 Channel 테이블에 저장합니다.
+     * 2. 사용자와 채널의 연관 관계를 UserChannel 테이블에 저장합니다.
+     *
+     * @param customUserDetails 인증된 사용자의 세부 정보를 포함하는 객체입니다. 이를 통해 사용자 ID를 가져올 수 있습니다. JWT Token 을 통해 인증된 사용자의 정보를 가져옵니다.
+     * @return 요청의 처리 결과를 담고 있는 ResponseEntity 객체로, 성공적으로 저장되었을 때의 응답 결과를 포함합니다.
+     */
     @GetMapping("/channels")
     public ResponseEntity<ApiResponse> saveChannelsByUserId(
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         Long userId = customUserDetails.getUserId();
-
-        // 1. Channel table에 저장하는 부분
-        // 1-1. MM에서 채널리스트를 가져와 공지사항만 필터링 한 후 Channel table에 저장
         List<MMChannelSummary> mmchannelSummaryList = this.mattermostService.getChannelsByUserIdFromMM(userId);
         List<MMChannelSummary> filteredNoticeChannels = this.mattermostService.filteredNoticeChannels(
                 mmchannelSummaryList);
         List<Channel> nonDuplicateChannels = this.mattermostService.getNonDuplicateChannels(filteredNoticeChannels);
         this.mattermostService.saveAllChannelsByMMChannelList(nonDuplicateChannels);
 
-
-        // 2. UserChannel table에 저장하는 부분
         List<MMChannelSummary> nonDuplicateChannelsByUserId = this.mattermostService.getNonDuplicateChannelsByUserId(
                 userId, filteredNoticeChannels);
 
@@ -87,7 +81,7 @@ public class MattermostController {
     }
 
 
-    @PostMapping("/remindmessage")
+    @PostMapping("/send")
     public ResponseEntity<ApiResponse> sendDirectMessage(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                          @RequestBody DirectMessageRequest request) {
 
