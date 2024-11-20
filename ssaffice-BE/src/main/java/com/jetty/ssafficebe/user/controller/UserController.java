@@ -5,7 +5,6 @@ import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
-import com.jetty.ssafficebe.user.payload.UserFilterRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.service.UserService;
 import java.io.IOException;
@@ -107,8 +106,8 @@ public class UserController {
     /**
      * 유저 리스트 조회
      */
-    @GetMapping("/admin")
-    public ResponseEntity<Page<UserSummary>> getUserPage(@RequestParam String channelId,
+    @GetMapping("/admin/{channelId}")
+    public ResponseEntity<Page<UserSummary>> getUserPage(@PathVariable String channelId,
                                                          @PageableDefault(
                                                                  size = 20,
                                                                  sort = "userId",
