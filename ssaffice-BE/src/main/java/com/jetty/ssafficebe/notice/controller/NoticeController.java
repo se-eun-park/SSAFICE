@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Log4j2
 @RestController
 @RequestMapping("/api/notice")
 @RequiredArgsConstructor
@@ -43,9 +45,11 @@ public class NoticeController {
      * <p>
      */
     @PostMapping("/admin")
-    public ResponseEntity<ApiResponse> saveNotice(@ModelAttribute NoticeRequest noticeRequest,
+    public ResponseEntity<ApiResponse> saveNotice(@RequestPart("notice") NoticeRequest noticeRequest,
                                                   @RequestPart(value = "files", required = false) List<MultipartFile> files)
             throws IOException {
+        log.info("[saveNotice] 공지 저장 시작, title : {}", noticeRequest.getTitle());
+
         if (files == null) {
             files = Collections.emptyList();
         }
