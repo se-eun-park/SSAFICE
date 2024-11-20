@@ -118,8 +118,6 @@ public class NoticeServiceImpl implements NoticeService {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new ResourceNotFoundException(
                 ErrorCode.NOTICE_NOT_FOUND, "해당 공지사항을 찾을 수 없습니다.", noticeId));
 
-        System.out.println("noticeBoolean : " + notice.isEssential());
-
         NoticeDetail noticeDetail = noticeConverter.toNoticeDetail(notice);
 
         // 주인인지 확인
