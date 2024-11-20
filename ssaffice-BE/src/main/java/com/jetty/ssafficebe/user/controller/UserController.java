@@ -40,7 +40,6 @@ public class UserController {
 
     /**
      * (관리자 권한) 유저 등록
-     * TODO : 관리자인 경우만 허용하도록 변경
      */
     @PostMapping("/admin")
     public ResponseEntity<ApiResponse> saveUser(@RequestBody SaveUserRequest saveUserRequest) {
@@ -68,7 +67,6 @@ public class UserController {
 
     /**
      * (관리자 권한) 유저 정보 조회
-     * TODO : 관리자인 경우만 허용하도록 변경
      */
     @GetMapping("/admin/{userId}")
     public ResponseEntity<UserSummary> getUser(@PathVariable Long userId) {
