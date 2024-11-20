@@ -54,8 +54,8 @@ public class RemindServiceImpl implements RemindService {
 
         // ! 4. Remind 생성 및 저장
         Remind remind = remindConverter.toRemind(remindRequest);
-        if (remindRequest.getIsEssentialYn() == null) {
-            remind.setIsEssentialYn("N");
+        if (remindRequest.getEssentialYn() == null) {
+            remind.setEssentialYn("N");
         }
         schedule.addRemind(remind);
         Remind savedRemind = remindRepository.save(remind);
