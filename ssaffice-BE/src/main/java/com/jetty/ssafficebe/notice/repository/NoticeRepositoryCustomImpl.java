@@ -42,8 +42,8 @@ public class NoticeRepositoryCustomImpl extends AbstractQueryDslRepository imple
     private Predicate createPredicate(BaseFilterRequest filter, QNotice notice) {
         BooleanBuilder builder = new BooleanBuilder();
 
-        LocalDateTime start = DateTimeConverter.toLocalDateTime(filter.getStartTime());
-        LocalDateTime end = DateTimeConverter.toLocalDateTime(filter.getEndTime());
+        LocalDateTime start = DateTimeConverter.toLocalDateTime(filter.getStart());
+        LocalDateTime end = DateTimeConverter.toLocalDateTime(filter.getEnd());
         String filterType = filter.getFilterType();
 
         if (filterType != null && start != null && end != null) {

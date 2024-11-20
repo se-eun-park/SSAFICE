@@ -85,8 +85,8 @@ Authorization: Bearer {{JWT}}
 ## [일정 리스트]
 ### 리스트 필터용
 @filterType = createdAt
-@startTime = 2024-11-01T09:00:00
-@endTime = 2024-11-30T18:00:00
+@start = 2024-11-01T09:00:00
+@end = 2024-11-30T18:00:00
 
 ### 미등록 공지 조회
 GET http://localhost:9090/api/schedules/unregistered
@@ -94,16 +94,16 @@ Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
 ### 개인 일정 리스트 조회
-GET http://localhost:9090/api/schedules/my?sort=createdAt,desc&filterType={{filterType}}&startTime={{startTime}}&endTime={{endTime}}
+GET http://localhost:9090/api/schedules/my?sort=createdAt,desc&filterType={{filterType}}&start={{start}}&end={{end}}
 Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
 ### 관리자의 개별 일정 리스트 조회
-GET http://localhost:9090/api/schedules/admin/assigned?sort=createdAt,desc&filterType={{filterType}}&startTime={{startTime}}&endTime={{endTime}}
+GET http://localhost:9090/api/schedules/admin/assigned?sort=createdAt,desc&filterType={{filterType}}&start={{start}}&end={{end}}
 Content-Type: application/json
 Authorization: Bearer {{JWT}}
 
 ### 관리자의 공지 파생 일정 리스트 조회
-GET http://localhost:9090/api/schedules/admin/notices/{{noticeId}}?sort=createdAt,desc&filterType={{filterType}}&startTime={{startTime}}&endTime={{endTime}}
+GET http://localhost:9090/api/schedules/admin/notices/{{noticeId}}?sort=createdAt,desc&filterType={{filterType}}&start={{start}}&end={{end}}
 Content-Type: application/json
 Authorization: Bearer {{JWT}}
