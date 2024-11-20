@@ -14,6 +14,6 @@ import lombok.experimental.SuperBuilder;
 public class BaseFilterRequest {
 
     private String filterType;
-    private String startTime;
-    private String endTime;
+    private String start;
+    private String end;
 }
