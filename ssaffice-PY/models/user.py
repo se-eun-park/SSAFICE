@@ -14,5 +14,6 @@ class User(Base):
     password = Column(String(255))
     name = Column(String(255), index=True)
     is_disabled_yn = Column(Boolean)
+    profile_img_url = Column(String(255))
 
     notices = relationship("Notice", back_populates="created_user", foreign_keys=[Notice.created_by])

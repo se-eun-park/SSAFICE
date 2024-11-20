@@ -32,6 +32,10 @@ class Setting:
     S3_PREFIX: str  ## s3
     S3_BUCKET_NAME: str  ## s3
     MM_GLOBAL_NOTICE_CHANNEL_ID : str
+    ES_HOST: str
+    ES_ID: str
+    ES_PW: str
+    ES_FINGERPRINT: str
 
 
 config = Setting()
@@ -55,6 +59,10 @@ config.S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
 config.S3_PREFIX = os.getenv("S3_PREFIX")
 config.S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
 config.MM_GLOBAL_NOTICE_CHANNEL_ID = os.getenv("MM_GLOBAL_NOTICE_CHANNEL_ID")
+config.ES_HOST = os.getenv("ES_HOST")
+config.ES_ID = os.getenv("ES_ID")
+config.ES_PW = os.getenv("ES_PW")
+config.ES_FINGERPRINT = os.getenv("ES_FINGERPRINT")
 
 
 engine = create_engine(
@@ -82,8 +90,7 @@ def get_db():
     while retries < MAX_RETRIES:
         try:
             db = SessionLocal()
-            yield db
-            db.close()
+            yield db            
             break
         except OperationalError as e:
             print(f"DB 연결 오류 발생: {e}")
