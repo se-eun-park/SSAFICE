@@ -9,7 +9,7 @@ public interface AttachmentFileRepository extends JpaRepository<AttachmentFile, 
 
     List<AttachmentFile> findAllByFileIdIn(Collection<String> fileIdSet);
 
-    List<AttachmentFile> findAllByRefIdAndFileTypeAndIsDeletedYn(Long refId, String fileType, String isDeletedYn);
+    List<AttachmentFile> findAllByRefIdAndFileTypeAndDeletedYn(Long refId, String fileType, String isDeletedYn);
 
-    List<AttachmentFile> findAllByRefIdAndIsDeletedYn(Long refId, String isDeletedYn);
+    List<AttachmentFile> findAllByRefIdAndDeletedYn(Long refId, String isDeletedYn);
 }

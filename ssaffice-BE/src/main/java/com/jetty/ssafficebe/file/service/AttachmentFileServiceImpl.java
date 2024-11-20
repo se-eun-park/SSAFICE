@@ -73,12 +73,12 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
 
         // DB에서 해당 참조 id로 파일 리스트 조회
         List<AttachmentFile> fileListByRefId =
-                this.attachmentFileRepository.findAllByRefIdAndFileTypeAndIsDeletedYn(refId, fileType, "N");
+                this.attachmentFileRepository.findAllByRefIdAndFileTypeAndDeletedYn(refId, fileType, "N");
         for (AttachmentFile attachmentFile : fileListByRefId) {
             if (fileIdSet.contains(attachmentFile.getFileId())) {
                 fileIdSet.remove(attachmentFile.getFileId());
             } else {
-                attachmentFile.setIsDeletedYn("Y");
+                attachmentFile.setDeletedYn("Y");
             }
         }
 
@@ -86,13 +86,13 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
         for (AttachmentFile attachmentFile : fileListToUpdateRefId) {
             attachmentFile.setRefId(refId);
             attachmentFile.setFileType(fileType);
-            attachmentFile.setIsDeletedYn("N");
+            attachmentFile.setDeletedYn("N");
         }
     }
 
     @Override
     public List<AttachmentFileSummary> getAttachmentFilesSummaryByRefId(Long refId) {
-        List<AttachmentFile> attachmentFiles = this.attachmentFileRepository.findAllByRefIdAndIsDeletedYn(refId, "N");
+        List<AttachmentFile> attachmentFiles = this.attachmentFileRepository.findAllByRefIdAndDeletedYn(refId, "N");
         return attachmentFileConverter.toAttachmentFileSummaryList(attachmentFiles);
     }
 }
