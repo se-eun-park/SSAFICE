@@ -1,16 +1,13 @@
 package com.jetty.ssafficebe.schedule.payload;
 
-import java.time.LocalDateTime;
+import com.jetty.ssafficebe.common.payload.BaseFilterRequest;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ScheduleFilterRequest {
+public class ScheduleFilterRequest extends BaseFilterRequest {
 
-    private String filterType;
     private String enrollYn;
     private String scheduleSourceTypeCd;
-    private LocalDateTime filterStartDateTime;
-    private LocalDateTime filterEndDateTime;
 }
