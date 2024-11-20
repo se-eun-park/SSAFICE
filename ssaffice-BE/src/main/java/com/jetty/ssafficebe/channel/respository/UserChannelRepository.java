@@ -10,7 +10,7 @@ public interface UserChannelRepository extends JpaRepository<UserChannel, Long> 
 
     List<UserChannel> findDistinctByUserId(Long userId);
 
-    List<UserChannel> findDistinctByChannelId(String channelId);
+    List<UserChannel> findByChannelId(String channelId);
 
     @Query("SELECT uc.channelId FROM UserChannel uc WHERE uc.userId = :userId")
     List<String> findChannelIdsByUserId(@Param("userId") Long userId);

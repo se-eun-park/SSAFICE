@@ -32,4 +32,15 @@ public class ChannelServiceImpl implements ChannelService {
     public List<String> getChannelIdsByUserId(Long userId) {
         return userChannelRepository.findChannelIdsByUserId(userId);
     }
+
+    @Override
+    public List<Long> getUserIdListByChannelId(String channelId) {
+        List<UserChannel> byChannelId = userChannelRepository.findByChannelId(channelId);
+        if (byChannelId != null) {
+            return byChannelId.stream()
+                              .map(UserChannel::getUserId)
+                              .toList();
+        }
+        return List.of();
+    }
 }

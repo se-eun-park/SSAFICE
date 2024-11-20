@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,6 +33,11 @@ public class ChannelController {
     @GetMapping("/ids/{userId}")
     public ResponseEntity<List<String>> getChannelIdsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(channelService.getChannelIdsByUserId(userId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Long>> getUserIdListByChannelId(@RequestParam String channelId) {
+        return ResponseEntity.ok(channelService.getUserIdListByChannelId(channelId));
     }
 
 }

@@ -208,10 +208,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Long> getUserIdsByChannelId(String channelId) {
-        List<UserChannel> distinctByChannelId = this.userChannelRepository.findDistinctByChannelId(channelId);
-        return distinctByChannelId.stream()
-                                  .map(UserChannel::getUserId)
-                                  .toList();
+        List<UserChannel> byChannelId = this.userChannelRepository.findByChannelId(channelId);
+        if (byChannelId != null) {
+            return byChannelId.stream()
+                              .map(UserChannel::getUserId)
+                              .toList();
+        }
+        return null;
     }
 
     /**
