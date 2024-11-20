@@ -4,6 +4,11 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { instance } from '@/shared/api'
 
+async function fetchUser() {
+  const { data } = await instance.get('/api/users/me')
+  return data
+}
+
 export default function ProtectedRoute({
   children,
   role,
@@ -13,31 +18,29 @@ export default function ProtectedRoute({
 }) {
   const isAuthenticated = useLoginStateStore()
   const navigate = useNavigate()
-  const { data } = useQuery({
+  const { data: user } = useQuery({
     queryKey: ['roleId'],
-    queryFn: async () => {
-      const { data } = await instance.get('/api/users/me')
-      return data.roles[0].roleId
-    },
+    queryFn: fetchUser,
     enabled: isAuthenticated,
   })
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (
+      !isAuthenticated ||
+      (user?.roles[0]?.roleId &&
+        user.roles[0].roleId !== role &&
+        user.roles[0].roleId !== 'ROLE_SYSADMIN')
+    ) {
       navigate('/login')
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, user, role, navigate])
 
-  useEffect(() => {
-    if (data && data !== role && data !== 'ROLE_SYSADMIN') {
-      navigate('/login')
-    }
-  }, [data, role, navigate])
-
-  if (!isAuthenticated) {
+  if (
+    !isAuthenticated ||
+    (user?.roles[0]?.roleId !== role && user?.roles[0]?.roleId !== 'ROLE_SYSADMIN')
+  ) {
     return null
   }
 
-  if (data === role || data === 'ROLE_SYSADMIN') return <>{children}</>
-  return null
+  return <>{children}</>
 }

@@ -28,10 +28,9 @@ export const RefreshMattermostConnection = () => {
     },
   })
 
-  const { refetch } = useQuery({
+  const { refetch, isFetching } = useQuery({
     queryKey: ['mattermostConnection'],
     queryFn: fetchMattermostConnection,
-    enabled: false, // 초기에는 자동으로 실행되지 않도록 설정
   })
 
   const handleButtonClick = async () => {
@@ -60,7 +59,7 @@ export const RefreshMattermostConnection = () => {
         </div>
       </button>
       <div className='flex justify-end text-color-text-tertiary body-sm-medium'>
-        {formatDateTime(user?.recentMmChannelSyncTime)}
+        {isFetching ? 'MM 연동중...' : formatDateTime(user?.recentMmChannelSyncTime)}
       </div>
     </div>
   )
