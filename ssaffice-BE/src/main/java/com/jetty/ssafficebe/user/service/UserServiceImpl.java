@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
             user = userRepository.findById(userId).orElseThrow(
                     () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
             userConverter.updateUserForSSO(user, saveUserRequest);
-            user.setIsDisabledYn("N");
+            user.setDisabledYn("N");
         }
 
         user.setPassword(passwordEncoder.encode(saveUserRequest.getPassword()));
@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findById(userId).orElse(null);
 
             if (user != null) {
-                user.setIsDisabledYn("Y");
+                user.setDisabledYn("Y");
                 userRepository.save(user);
             }
 
@@ -236,7 +236,7 @@ public class UserServiceImpl implements UserService {
     public User saveUserForSSO(String ssoId) {
         User user = userRepository.findBySsafyUUID(ssoId).orElse(new User());
         user.setSsafyUUID(ssoId);
-        user.setIsDisabledYn("N");
+        user.setDisabledYn("N");
         return this.userRepository.save(user);
     }
 }

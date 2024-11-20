@@ -41,15 +41,15 @@ public class User extends BaseEntity {
 
     private String name;
 
-    private String isDisabledYn = "N";
-
     private String profileImgUrl;
 
     private String ssafyUUID;
 
+    private String disabledYn = "N";
+
     @Convert(converter = BooleanToYNConverter.class)
-    @Column(name = "isDisabledYn", updatable = false, insertable = false)
-    private boolean isDisabled;
+    @Column(name = "disabledYn", updatable = false, insertable = false)
+    private boolean disabled;
 
     private Integer cohortNum;
 
