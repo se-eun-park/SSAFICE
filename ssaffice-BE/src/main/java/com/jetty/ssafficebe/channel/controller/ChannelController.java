@@ -22,12 +22,12 @@ public class ChannelController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<ChannelSummary>> getChannelListByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(channelService.getChannelsByUserId(userId));
+        return ResponseEntity.ok(channelService.getChannelListByUserId(userId));
     }
 
     @GetMapping("/my")
     public ResponseEntity<List<ChannelSummary>> getMyChannelList(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok(channelService.getChannelsByUserId(userDetails.getUserId()));
+        return ResponseEntity.ok(channelService.getChannelListByUserId(userDetails.getUserId()));
     }
 
     @GetMapping("/ids/{userId}")
