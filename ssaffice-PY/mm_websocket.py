@@ -1,3 +1,4 @@
+import elasticsearch_index
 import websocket
 import json
 import ssl
@@ -44,8 +45,12 @@ def on_message(ws, message):
                 notice_entity = make_notice_entity(data, notice)
                 notice_source_type = find_channel_type(data)
                 notice_entity.notice_type_cd = notice_source_type
+                
                 # notice를 DB에 저장
                 notice_db_id = insert_notice(notice_entity)
+                
+                # notice를 ES에 indexing
+                elasticsearch_index.index_data(notice_entity)
 
                 # 파일 업로드 하면서 동시에 db에 파일 정보 삽입
                 metadatas = get_file_metadata_from_data(data)               
