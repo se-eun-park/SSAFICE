@@ -1,0 +1,20 @@
+### 변수 설정
+@scheduleId = 7
+@remindId = 7
+@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjJAZ21haWwuY29tIiwiZXhwIjoxNzMxNjQwNDMzfQ.1GbNJMEZDjVmM0Wnuk65Hu10jRn8NuE8eoJi4TsyWYtTHbeqlEb4_HVZ4hjk9Ewi6D7HyQGeEi06kirnkYJ_Gg
+
+### 알림 등록
+POST http://localhost:9090/api/schedules/{{scheduleId}}/reminds
+Content-Type: application/json
+Authorization: Bearer {{JWT}}
+
+{
+  "isEssentialYn": "N",
+  "remindTypeCd": "DAILY",
+  "remindDateTime" : "2024-11-10T18:00:00"
+}
+
+### 알림 삭제
+DELETE http://localhost:9090/api/schedules/reminds/{{remindId}}
+Content-Type: application/json
+Authorization: Bearer {{JWT}}
