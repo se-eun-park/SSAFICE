@@ -82,7 +82,7 @@ export const LoginForm = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className='flex-col flx gap-spacing-12'>
+            <div className='flex-col flex gap-spacing-12'>
               <div className='flex justify-start text-color-text-tertiary body-md-semibold'>
                 비밀번호
               </div>
