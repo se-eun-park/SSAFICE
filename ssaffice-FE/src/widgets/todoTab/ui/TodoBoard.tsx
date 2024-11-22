@@ -6,6 +6,7 @@ import { useLockScrollX } from '@/features/todoTab/model/hooks'
 import { Card, CardColumn } from '@/features/todoTab'
 import { useTraineeScheduleList, CardColumnData } from '@/entities/todoTab'
 import type { TaskResponse } from '@/entities/todoTab'
+import { putTraineeSchedule } from '@/shared/api/Schedule'
 
 type ColumnLengthProps = {
   TODO: number
@@ -39,8 +40,6 @@ export const TodoBoard = () => {
   })
 
   useEffect(() => {
-    console.log(data, isLoading)
-
     setTasks(data?.scheduleSummaries)
     setColumnLength({
       TODO: data?.scheduleStatusCount.todoCount,
@@ -82,10 +81,12 @@ export const TodoBoard = () => {
         [newStatus]: newLength + 1,
       }
     })
+
+    putTraineeSchedule(taskId, { scheduleStatusTypeCd: newStatus })
   }
 
   return (
-    <div className='grid w-full h-full grid-cols-3 overflow-x-hidden overflow-y-scroll overscroll-contain mt-spacing-24 gap-x-spacing-10'>
+    <div className='grid w-full h-full grid-cols-3 overflow-x-hidden overflow-y-auto overscroll-contain mt-spacing-24 gap-x-spacing-10'>
       <DndContext
         onDragEnd={handleDragEnd}
         sensors={sensors}

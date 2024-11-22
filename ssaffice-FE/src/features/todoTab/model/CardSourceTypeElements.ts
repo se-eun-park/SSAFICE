@@ -15,7 +15,13 @@ export const CardSourceTypeElements = ({ scheduleSourceTypeCd }: CardSourceTypeE
         }
       case 'TEAM':
         return {
-          description: '팀 공지에서 등록',
+          description: '공지에서 등록',
+          classname:
+            'bg-color-bg-warning w-fit h-fit px-spacing-4 py-spacing-2 rounded-radius-4 text-color-text-interactive-inverse body-xs-semibold',
+        }
+      case 'ASSIGNED':
+        return {
+          description: '공지에서 등록',
           classname:
             'bg-color-bg-warning w-fit h-fit px-spacing-4 py-spacing-2 rounded-radius-4 text-color-text-interactive-inverse body-xs-semibold',
         }
