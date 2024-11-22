@@ -3,13 +3,15 @@ import { useSortingSchedule } from '@/features/todoTab'
 import { TodoDateGroup } from './TodoDateGroup'
 import { useQuery } from '@tanstack/react-query'
 import { instance } from '@/shared/api'
+import { useDateFormatter } from '@/shared/model'
 
 export const TodoList = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['eachTodos_user'],
     queryFn: async () => {
       const { data } = await instance.post(
-        `/api/schedules/my?start=${'2024-01-01'}&end=${'2024-12-31'}&type=createdAt&sort=endDateTime,asc`,
+        // TODO: post/src 맞는지 확인하기 !!
+        `/api/notice/admin/my?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', new Date('2024-01-01')) as string}&end=${useDateFormatter('API REQUEST: end', new Date('2024-01-01')) as string}`,
       )
       return data.scheduleSummaries
     },

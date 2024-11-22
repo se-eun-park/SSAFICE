@@ -6,6 +6,8 @@ type useDateFormatterProps =
   | 'MM월 DD일 HH:MM'
   | 'YYYY-MM-DD(?)'
   | 'D-?'
+  | 'API REQUEST: start' // BE LocalDateTime type에 맞추어 yyyy-mm-ddThh:mm:ss로 변환됩니다.
+  | 'API REQUEST: end' // start의 경우 시작일이므로 0시 0분 0초부터, end의 경우 종료일이므로 24시 0분 0초로 세팅됩니다.
 
 export const useDateFormatter = (
   type: useDateFormatterProps,
@@ -76,6 +78,11 @@ export const useDateFormatter = (
       return `${yyyy}-${mm}-${dd}(${dayOfWeek})`
     case 'D-?':
       return getDateDifference(date)
+    case 'API REQUEST: start':
+      return `${yyyy}-${mm}-${dd}T00:00:00`
+
+    case 'API REQUEST: end':
+      return `${yyyy}-${mm}-${dd}T24:00:00`
 
     default:
       console.log(
