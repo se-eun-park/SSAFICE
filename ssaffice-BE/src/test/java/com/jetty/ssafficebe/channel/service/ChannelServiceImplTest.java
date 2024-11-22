@@ -99,14 +99,14 @@ public class ChannelServiceImplTest {
     @DisplayName("[Success] 유저 아이디로 ChannelSummaryList 가져오기 - 성공")
     @Test
     void testGetChannelListByUserId_ReturnsChannelSummaries() {
-        // Arrange
+        // Given
         when(userChannelRepository.findDistinctByUserId(userId)).thenReturn(userChannels);
         when(channelConverter.toChannelSummaryList(channels)).thenReturn(channelSummaries);
 
-        // Act
+        // When
         List<ChannelSummary> result = channelService.getChannelListByUserId(userId);
 
-        // Assert
+        // then
         assertThat(result).isEqualTo(channelSummaries);
         verify(userChannelRepository, times(1)).findDistinctByUserId(userId);
         verify(channelConverter, times(1)).toChannelSummaryList(channels);
@@ -115,14 +115,14 @@ public class ChannelServiceImplTest {
     @DisplayName("[Success] 유저 아이디로 ChannelSummaryList 가져오기 - 채널 없음")
     @Test
     void testGetChannelListByUserId_NoChannelList_ReturnsEmptyList() {
-        // Arrange
+        // Given
         when(userChannelRepository.findDistinctByUserId(userId)).thenReturn(Collections.emptyList());
         when(channelConverter.toChannelSummaryList(Collections.emptyList())).thenReturn(Collections.emptyList());
 
-        // Act
+        // When
         List<ChannelSummary> result = channelService.getChannelListByUserId(userId);
 
-        // Assert
+        // then
         assertThat(result).isEmpty();
         verify(userChannelRepository, times(1)).findDistinctByUserId(userId);
         verify(channelConverter, times(1)).toChannelSummaryList(Collections.emptyList());
@@ -131,14 +131,14 @@ public class ChannelServiceImplTest {
     @DisplayName("[Success] 유저 아이디로 ChannelIdList 가져오기 - 성공")
     @Test
     void testGetChannelIdListByUserId_ReturnsChannelIds() {
-        // Arrange
+        // Given
         List<String> channelIds = Arrays.asList("channel-1", "channel-2");
         when(userChannelRepository.findChannelIdsByUserId(userId)).thenReturn(channelIds);
 
-        // Act
+        // When
         List<String> result = channelService.getChannelIdsByUserId(userId);
 
-        // Assert
+        // then
         assertThat(result).isEqualTo(channelIds);
         verify(userChannelRepository, times(1)).findChannelIdsByUserId(userId);
     }
@@ -146,14 +146,14 @@ public class ChannelServiceImplTest {
     @DisplayName("[Success] 채널 아이디로 UserIdList 가져오기 - 성공")
     @Test
     void testGetUserIdListByChannelId_ReturnsUserIds() {
-        // Arrange
+        // Given
         List<UserChannel> userChannelsByChannel = Arrays.asList(userChannel1, userChannel2);
         when(userChannelRepository.findByChannelId(channelId)).thenReturn(userChannelsByChannel);
 
-        // Act
+        // When
         List<Long> result = channelService.getUserIdListByChannelId(channelId);
 
-        // Assert
+        // then
         List<Long> expectedUserIds = Arrays.asList(userId, userId);
         assertThat(result).isEqualTo(expectedUserIds);
         verify(userChannelRepository, times(1)).findByChannelId(channelId);
@@ -162,13 +162,13 @@ public class ChannelServiceImplTest {
     @DisplayName("[Success] 채널 아이디로 UserIdList 가져오기 - 유저 없음")
     @Test
     void testGetUserIdListByChannelId_NoUsers_ReturnsEmptyList() {
-        // Arrange
+        // Given
         when(userChannelRepository.findByChannelId(channelId)).thenReturn(Collections.emptyList());
 
-        // Act
+        // When
         List<Long> result = channelService.getUserIdListByChannelId(channelId);
 
-        // Assert
+        // then
         assertThat(result).isEmpty();
         verify(userChannelRepository, times(1)).findByChannelId(channelId);
     }

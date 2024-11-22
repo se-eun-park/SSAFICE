@@ -53,7 +53,7 @@ class JwtAuthenticationFilterTest {
     @DisplayName("토큰이 유효한 경우")
     @Test
     void testValidJwtToken() throws ServletException, IOException {
-        // Arrange
+        // Given
         String token = "valid.jwt.token";
         String email = "test@example.com";
 
@@ -62,10 +62,10 @@ class JwtAuthenticationFilterTest {
         when(jwtProvider.getUserEmailFromToken(token)).thenReturn(email);
         when(userDetailsService.loadUserByUsername(email)).thenReturn(userDetails);
 
-        // Act
+        // When
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-        // Assert
+        // Then
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)
                 SecurityContextHolder.getContext().getAuthentication();
 
@@ -81,17 +81,17 @@ class JwtAuthenticationFilterTest {
     @DisplayName("토큰이 유효하지 않은 경우")
     @Test
     void testInvalidJwtToken() throws ServletException, IOException {
-        // Arrange
+        // Given
         String token = "invalid.jwt.token";
         String email = "test@example.com";
 
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
         when(jwtProvider.validateToken(token)).thenReturn(false);
 
-        // Act
+        // When
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-        // Assert
+        // Then
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
 
         verify(jwtProvider, times(1)).validateToken(token);
@@ -103,13 +103,13 @@ class JwtAuthenticationFilterTest {
     @DisplayName("헤더에 JWT 토큰이 없는 경우")
     @Test
     void testNoJwtTokenInHeader() throws ServletException, IOException {
-        // Arrange
+        // Given
         when(request.getHeader("Authorization")).thenReturn(null);
 
-        // Act
+        // When
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-        // Assert
+        // Then
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
 
         verify(jwtProvider, times(1)).validateToken(any());
@@ -121,16 +121,16 @@ class JwtAuthenticationFilterTest {
     @DisplayName("만료된 JWT 토큰인 경우")
     @Test
     void testExpiredJwtToken() throws ServletException, IOException {
-        // Arrange
+        // Given
         String token = "expired.jwt.token";
 
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
         when(jwtProvider.validateToken(token)).thenReturn(false);
 
-        // Act
+        // When
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-        // Assert
+        // Then
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
 
         verify(jwtProvider, times(1)).validateToken(token);
