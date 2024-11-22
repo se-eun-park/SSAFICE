@@ -6,7 +6,7 @@ import { instance } from '@/shared/api'
 
 export const TodoList = () => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['eachTodos'],
+    queryKey: ['eachTodos_user'],
     queryFn: async () => {
       const { data } = await instance.post('/api/schedules/my', {
         filterStartDateTime: new Date('2024-01-01'),

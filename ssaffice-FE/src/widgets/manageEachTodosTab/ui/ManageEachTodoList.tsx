@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 
 export const ManageEachTodoList = () => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['eachTodos'],
+    queryKey: ['eachTodos_manager'],
     queryFn: async () => {
       const { data } = await instance.post('/api/schedules/admin/assigned', {
         filterStartDateTime: new Date('2024-01-01'),
