@@ -9,11 +9,9 @@ export const ManageTeamTodoList = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['teamTodos'],
     queryFn: async () => {
-      const { data } = await instance.post('/api/notice/admin/my', {
-        filterStartDateTime: new Date('2024-01-01'),
-        filterEndDateTime: new Date(),
-        filterType: 'createdAt',
-      })
+      const { data } = await instance.get(
+        `/api/notice/admin/my?start=${'2024-01-01'}&end=${'2024-12-31'}&type=createdAt&sort=endDateTime,asc`,
+      )
       return data
     },
   })
