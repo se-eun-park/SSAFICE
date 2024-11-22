@@ -47,7 +47,8 @@ public class UserController {
     }
 
     @PostMapping("/{userId}")
-    public ResponseEntity<ApiResponse> saveUser(@PathVariable Long userId, SaveUserRequest saveUserRequest) {
+    public ResponseEntity<ApiResponse> saveUser(@PathVariable Long userId, @RequestBody SaveUserRequest saveUserRequest) {
+        System.out.println("email : " + saveUserRequest.getEmail());
         log.info("[User] SSO 연동 회원가입 시작");
         return ResponseEntity.ok().body(userService.saveUser(userId, saveUserRequest));
     }
@@ -106,8 +107,8 @@ public class UserController {
     /**
      * 유저 리스트 조회
      */
-    @GetMapping("/admin/{channelId}")
-    public ResponseEntity<Page<UserSummary>> getUserPage(@PathVariable String channelId,
+    @GetMapping("/admin")
+    public ResponseEntity<Page<UserSummary>> getUserPage(@RequestParam String channelId,
                                                          @PageableDefault(
                                                                  size = 20,
                                                                  sort = "userId",
