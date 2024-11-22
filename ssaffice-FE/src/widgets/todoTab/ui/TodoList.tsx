@@ -8,11 +8,9 @@ export const TodoList = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['eachTodos_user'],
     queryFn: async () => {
-      const { data } = await instance.post('/api/schedules/my', {
-        filterStartDateTime: new Date('2024-01-01'),
-        filterEndDateTime: new Date('2024-11-30'),
-        filterType: 'createdAt',
-      })
+      const { data } = await instance.post(
+        `/api/schedules/my?start=${'2024-01-01'}&end=${'2024-12-31'}&type=createdAt&sort=endDateTime,asc`,
+      )
       return data.scheduleSummaries
     },
   })
