@@ -16,7 +16,7 @@ export const useManageMembersTabContent = (channel: MattermostChannel) => {
     pageNumber?: number,
   ): Promise<SsafyUserApiResponse> => {
     const response = await instance.get(
-      `api/users/admin/${channelId}?page=${pageNumber === undefined ? 0 : pageNumber}&size=10&sort=name,asc`,
+      `api/users/admin?channelId=${channelId}&page=${pageNumber === undefined ? 0 : pageNumber}&size=10&sort=name,asc`,
     )
     return response.data
   }
