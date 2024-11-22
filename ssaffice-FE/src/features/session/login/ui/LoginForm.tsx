@@ -110,7 +110,7 @@ export const LoginForm = () => {
         </div>
 
         <LoginButton
-          label='SSAFY 로그인'
+          label='SSAFY로 시작하기'
           icon={ssafyIcon}
           onClick={handleSSOLogin}
           className='border text-color-text-info-bold bg-color-bg-info-subtle border-color-border-info-subtle'
