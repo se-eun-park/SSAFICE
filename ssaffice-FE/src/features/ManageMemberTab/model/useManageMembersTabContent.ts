@@ -9,7 +9,7 @@ export const useManageMembersTabContent = (channel: MattermostChannel) => {
   const [pageInfo, setPageInfo] = useState<Pagenation | null>(null)
 
   const fetchAPI = async (
-    channelId: number,
+    channelId: string,
     pageNumber?: number,
   ): Promise<SsafyUserApiResponse> => {
     String(channelId) // API 연동 후 삭제(오류 방지용 로직)

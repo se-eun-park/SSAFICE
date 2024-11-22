@@ -2,7 +2,7 @@ import { CheckedCircle, DownArrowIcon, ExitButton, SpreadRight } from '@/assets/
 import { useClickedToggle, useClickOutsideToggle } from '@/shared/model'
 import { DropDown } from '@/shared/ui'
 import { useRef } from 'react'
-import { dummyMattermostTeams, MattermostChannel } from '../model/types'
+import { MattermostChannel, MattermostTeam } from '../model/types'
 
 type TeamSelectDropdownProps = {
   handleSelectedIndex: (index: number) => void
@@ -12,6 +12,7 @@ type TeamSelectDropdownProps = {
   handleSelectChannel: (channel: MattermostChannel, checked: boolean) => void
   selectedChannel: MattermostChannel | null
   tabName: string | null
+  mattermostTeams: MattermostTeam[] | null
 }
 export const TeamSelectDropdown = ({
   handleSelectedIndex,
@@ -21,6 +22,7 @@ export const TeamSelectDropdown = ({
   handleSelectChannel,
   selectedChannel,
   tabName,
+  mattermostTeams,
 }: TeamSelectDropdownProps) => {
   const { isClicked, setIsClicked, handleIsClicked } = useClickedToggle()
   const dropDownRef = useRef<HTMLDivElement | null>(null)
@@ -58,9 +60,10 @@ export const TeamSelectDropdown = ({
 
           <div className='flex w-full h-full'>
             <div className='flex flex-col w-1/2 h-full overflow-y-scroll border-r gap-spacing-4 border-spacing-1 border-color-border-secondary'>
-              {dummyMattermostTeams.map((each, index) => (
-                <button
-                  className={`
+              {mattermostTeams &&
+                mattermostTeams.map((each, index) => (
+                  <button
+                    className={`
                     flex justify-between gap-spacing-10 
                     h-[51px] p-spacing-16
                     ${index === selectedIndex && 'bg-color-bg-interactive-secondary-press'}
@@ -68,17 +71,17 @@ export const TeamSelectDropdown = ({
                     active:bg-color-bg-interactive-secondary-press
                     
                     `}
-                  onClick={() => handleSelectedIndex(index)}
-                  key={each.teamId}
-                >
-                  <div className='text-color-text-primary body-md-medium'>{each.name}</div>
-                  <div className='flex items-center justify-center w-spacing-12 h-spacing-12'>
-                    <div className=' w-spacing-6 h-spacing-10'>
-                      <SpreadRight />
+                    onClick={() => handleSelectedIndex(index)}
+                    key={each.teamId}
+                  >
+                    <div className='text-color-text-primary body-md-medium'>{each.name}</div>
+                    <div className='flex items-center justify-center w-spacing-12 h-spacing-12'>
+                      <div className=' w-spacing-6 h-spacing-10'>
+                        <SpreadRight />
+                      </div>
                     </div>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                ))}
             </div>
             <div className='flex flex-col w-1/2 h-full'>
               {/* hover하는 팀명에 따라 렌더링되는 채널 리스트 달라야 합니다 */}

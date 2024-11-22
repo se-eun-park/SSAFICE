@@ -1,8 +1,4 @@
-import {
-  dummyMattermostTeams,
-  ManageMembersTabContent,
-  TeamSelectDropdown,
-} from '@/features/ManageMemberTab'
+import { ManageMembersTabContent, TeamSelectDropdown } from '@/features/ManageMemberTab'
 import { useTeamSelectDropdown } from '@/features/ManageMemberTab/model/useTeamSelectDropdown'
 import { RefreshMattermostConnection } from '@/shared/ui'
 
@@ -15,7 +11,8 @@ export const ManageMembersTab = () => {
     handleSelectChannel, // 채널 선택 시
     selectedChannel, // 선택된 채널
     tabName, // 탭 이름('적용' 버튼 누르면 업데이트)
-  } = useTeamSelectDropdown(dummyMattermostTeams)
+    mattermostTeams, // API 요청하여 받아온 사용자가 포함된 MM 팀 / 채널 정보
+  } = useTeamSelectDropdown()
 
   return (
     <>
@@ -34,6 +31,7 @@ export const ManageMembersTab = () => {
           handleSelectChannel={handleSelectChannel}
           selectedChannel={selectedChannel}
           tabName={tabName}
+          mattermostTeams={mattermostTeams}
         />
         <RefreshMattermostConnection />
       </div>

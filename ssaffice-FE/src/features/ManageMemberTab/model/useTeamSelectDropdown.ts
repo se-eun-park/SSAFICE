@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react'
 import { MattermostChannel, MattermostTeam } from './types'
+import { useQuery } from '@tanstack/react-query'
+import { instance } from '@/shared/api'
+import { useSortingMattermostChannel } from './useSortingMattermostChannel'
 
-export const useTeamSelectDropdown = (datas: MattermostTeam[]) => {
+export const useTeamSelectDropdown = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>()
   const [selectedTeam, setSelectedTeam] = useState<MattermostTeam | null>(null)
   const [channelList, setChannelList] = useState<MattermostChannel[]>()
   const [selectedChannel, setSelectedChannel] = useState<MattermostChannel | null>(null)
 
   const [tabName, setTabName] = useState<string | null>(null)
+
+  const [mattermostTeams, setMattermostTeams] = useState<MattermostTeam[] | null>(null)
 
   const handleSelectedIndex = (index: number) => {
     setSelectedIndex(index)
@@ -26,11 +31,21 @@ export const useTeamSelectDropdown = (datas: MattermostTeam[]) => {
   }
 
   useEffect(() => {
-    if (selectedIndex !== undefined) {
-      setChannelList(datas[selectedIndex].channels)
-      setSelectedTeam(datas[selectedIndex])
+    if (mattermostTeams && selectedIndex !== undefined) {
+      setChannelList(mattermostTeams[selectedIndex].channels)
+      setSelectedTeam(mattermostTeams[selectedIndex])
     }
   }, [selectedIndex])
+
+  const { data } = useQuery({
+    queryKey: ['mattermostInfo'],
+    queryFn: async () => {
+      const response = await instance.get('/api/channels/my')
+      return response.data
+    },
+  })
+
+  setMattermostTeams(useSortingMattermostChannel(data))
 
   return {
     handleSelectedIndex,
@@ -41,5 +56,6 @@ export const useTeamSelectDropdown = (datas: MattermostTeam[]) => {
     selectedChannel,
     selectedTeam,
     tabName,
+    mattermostTeams,
   }
 }
