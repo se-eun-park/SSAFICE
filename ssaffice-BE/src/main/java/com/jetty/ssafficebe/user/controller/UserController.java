@@ -47,7 +47,8 @@ public class UserController {
     }
 
     @PostMapping("/{userId}")
-    public ResponseEntity<ApiResponse> saveUser(@PathVariable Long userId, SaveUserRequest saveUserRequest) {
+    public ResponseEntity<ApiResponse> saveUser(@PathVariable Long userId, @RequestBody SaveUserRequest saveUserRequest) {
+        System.out.println("email : " + saveUserRequest.getEmail());
         log.info("[User] SSO 연동 회원가입 시작");
         return ResponseEntity.ok().body(userService.saveUser(userId, saveUserRequest));
     }
