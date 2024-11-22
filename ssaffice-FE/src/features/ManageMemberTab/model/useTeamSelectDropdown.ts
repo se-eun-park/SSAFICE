@@ -45,7 +45,9 @@ export const useTeamSelectDropdown = () => {
     },
   })
 
-  setMattermostTeams(useSortingMattermostChannel(data))
+  useEffect(() => {
+    if (data) setMattermostTeams(useSortingMattermostChannel(data))
+  }, [data])
 
   return {
     handleSelectedIndex,

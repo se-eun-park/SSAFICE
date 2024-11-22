@@ -5,6 +5,8 @@ export const useSortingMattermostChannel = (channel: ChannelSummary[]): Mattermo
   const sorted: Record<string, MattermostTeam> = {}
   console.log(channel)
 
+  if (channel === undefined) return [] // 받아온 리스트가 없는 경우.
+
   channel.forEach((each) => {
     if (!sorted[each.mmTeamId])
       sorted[each.mmTeamId] = {

@@ -24,7 +24,6 @@ export const TodoList = () => {
   if (error) {
     return <div>Error loading data</div>
   }
-  console.log(data)
 
   const sortedTodos = useSortingSchedule(data, 'by deadline')
   return (
