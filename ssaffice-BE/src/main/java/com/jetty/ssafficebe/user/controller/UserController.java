@@ -107,8 +107,8 @@ public class UserController {
     /**
      * 유저 리스트 조회
      */
-    @GetMapping("/admin/{channelId}")
-    public ResponseEntity<Page<UserSummary>> getUserPage(@PathVariable String channelId,
+    @GetMapping("/admin")
+    public ResponseEntity<Page<UserSummary>> getUserPage(@RequestParam String channelId,
                                                          @PageableDefault(
                                                                  size = 20,
                                                                  sort = "userId",
