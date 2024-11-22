@@ -39,7 +39,7 @@ export const ManagerTodoModal = ({
   }, [modaltype])
 
   const handleOnClickSave = () => {
-    if (!title || !description || !endDate) {
+    if (!title || userIds.length === 0) {
       return
     }
 
@@ -55,7 +55,6 @@ export const ManagerTodoModal = ({
         scheduleStatusTypeCd: 'TODO',
         remindRequests: reminder as RemindRequest[],
       }
-      const userIds = [9]
       postManagerSchedule({ createData, userIds })
     } else {
       const createData = {
