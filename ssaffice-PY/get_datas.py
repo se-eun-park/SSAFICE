@@ -16,3 +16,23 @@ def get_schedule_by_schedule_id(schedule_id):
     with get_db() as db:
         schedule = db.query(Schedule).filter(Schedule.schedule_id == schedule_id).first()
         return schedule
+    
+def get_all_notice():
+    with get_db() as db:
+        notices = db.query(Notice).all()
+        return notices
+    
+def get_user_by_user_id(user_id):
+    with get_db() as db:
+        user = db.query(User).filter(User.user_id == user_id).first()
+        return user
+    
+def get_channel_by_channel_id(channel_id):
+    with get_db() as db:
+        channel = db.query(Channel).filter(Channel.channel_id == channel_id).first()
+        return channel
+    
+def get_mm_team_by_mm_team_id(mm_team_id):
+    with get_db() as db:
+        team = db.query(MM_Team).filter(MM_Team.mm_team_id == mm_team_id).first()
+        return team

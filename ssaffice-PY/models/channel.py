@@ -10,4 +10,4 @@ class Channel(Base):
     mm_team_id = Column(String(255), ForeignKey("mm_team.mm_team_id"))
     channel_name = Column(String(255))
 
-    team = relationship("MM_Team")
+    mm_team = relationship("MM_Team")
