@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { NotFoundPage } from '@/pages/notFound'
 import { LoginPage } from '@/pages/login'
+import { SignupPage } from '@/pages/signup'
 import { LandingPage } from '@/pages/landing'
 import { MainPage } from '@/pages/main'
 import { baseLayout } from './layouts/baseLayout'
@@ -22,6 +23,10 @@ export const appRouter = () => {
         {
           path: 'login',
           element: <LoginPage />,
+        },
+        {
+          path: 'signup',
+          element: <SignupPage />,
         },
         {
           path: '/sso/providers/ssafy/callback',
