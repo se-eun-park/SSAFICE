@@ -17,7 +17,7 @@ export type SsafyUser = {
   email: string
   name: string
   cohortNum?: number // 프로의 경우에는 없음
-  regionCd: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'DAEGU' | 'GWANGJU'
+  regionCd: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'GUMI' | 'GWANGJU'
   classNum?: number // 반
   trackCd?: 'NON_MAJOR_PYTHON' | 'NON_MAJOR_JAVA' | 'MAJOR_JAVA' | 'EMBEDDED' | 'MOBILE' | 'DATA'
   curriculumCd?: string // 공통/특화/자율
@@ -43,7 +43,7 @@ export type CodeToWordTrackCdProps = {
 
 export type CodeToWordRegionCdProps = {
   fieldName: 'regionCd'
-  fieldValue: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'DAEGU' | 'GWANGJU'
+  fieldValue: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'GUMI' | 'GWANGJU'
 }
 
 export type CodeToWordProps = {
@@ -56,8 +56,8 @@ export const codeToWord = (param: CodeToWordProps): string => {
       switch (param.field.fieldValue) {
         case 'BU_UL_GYEONG':
           return '부울경'
-        case 'DAEGU':
-          return '대구'
+        case 'GUMI':
+          return '구미'
         case 'DAEJEON':
           return '대전'
         case 'GWANGJU':
@@ -167,7 +167,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
         userId: 7,
         email: 'user7@ssafy.com',
         name: 'James Brown',
-        regionCd: 'DAEGU', // 수정
+        regionCd: 'GUMI', // 수정
         cohortNum: 11,
         classNum: 7,
         trackCd: 'MOBILE', // 대체
@@ -245,7 +245,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
         userId: 12,
         email: 'user12@ssafy.com',
         name: 'Ava Thomas',
-        regionCd: 'DAEGU', // 수정
+        regionCd: 'GUMI', // 수정
         cohortNum: 12,
         classNum: 1,
         trackCd: 'EMBEDDED', // 대체
@@ -317,7 +317,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
         userId: 18,
         email: 'user18@ssafy.com',
         name: 'Jack Walker',
-        regionCd: 'DAEGU', // 수정
+        regionCd: 'GUMI', // 수정
         cohortNum: 12,
         classNum: 3,
         trackCd: 'NON_MAJOR_JAVA', // 대체
