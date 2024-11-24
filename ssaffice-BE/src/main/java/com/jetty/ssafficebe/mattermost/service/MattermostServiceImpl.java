@@ -242,7 +242,7 @@ public class MattermostServiceImpl implements MattermostService {
         ResponseEntity<String> response = this.mattermostUtil.callMattermostApi(
                 "/users/login", HttpMethod.POST, payload, String.class, null);
         try{
-            return response.getHeaders().get("Token").get(0);
+            return Objects.requireNonNull(response.getHeaders().get("Token")).get(0);
         } catch(Exception e){
             throw new InvalidValueException(ErrorCode.INVALID_MM_LOGIN, "mmID", mmId);
         }
