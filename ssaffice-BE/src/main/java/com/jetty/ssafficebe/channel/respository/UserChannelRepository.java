@@ -15,5 +15,5 @@ public interface UserChannelRepository extends JpaRepository<UserChannel, Long> 
     @Query("SELECT uc.channelId FROM UserChannel uc WHERE uc.userId = :userId")
     List<String> findChannelIdsByUserId(@Param("userId") Long userId);
 
-    List<UserChannel> findAllByUserId(Long userId);
+    List<UserChannel> findAllByUserIdAndChannelIdNotIn(Long userId, List<String> list);
 }

@@ -1,16 +1,12 @@
 package com.jetty.ssafficebe.mattermost.controller;
 
-import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.mattermost.payload.DirectMessageRequest;
-import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
-import com.jetty.ssafficebe.mattermost.payload.MMUserIdRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
 import com.jetty.ssafficebe.mattermost.service.MattermostService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -53,59 +49,38 @@ public class MattermostController {
     }
 
     /**
-     * 사용자가 속한 MM 채널 목록을 가져와 해당 채널들을 Channel 테이블과 UserChannel 테이블에 저장하는 메서드입니다. 이 메서드는 두 단계로 구성됩니다: 1. 사용자가 속한 채널을
-     * Mattermost에서 가져와 Channel 테이블에 저장합니다. 2. 사용자와 채널의 연관 관계를 UserChannel 테이블에 저장합니다.
+     * 새로고침을 누를 때 사용자가 속한 MM 채널 목록을 가져와 해당 채널들을 Channel 테이블과 UserChannel 테이블에 저장하는 메서드입니다. 이 메서드는 두 단계로 구성됩니다: 1. 사용자가
+     * 속한 채널을 Mattermost 에서 가져와 Channel 테이블에 저장합니다. 2. 사용자와 채널의 연관 관계를 UserChannel 테이블에 저장합니다.
      *
-     * @param userDetails 인증된 사용자의 세부 정보를 포함하는 객체입니다. 이를 통해 사용자 ID를 가져올 수 있습니다. JWT Token 을 통해 인증된 사용자의 정보를
-     *                          가져옵니다.
+     * @param userDetails 인증된 사용자의 세부 정보를 포함하는 객체입니다. 이를 통해 사용자 ID를 가져올 수 있습니다. JWT Token 을 통해 인증된 사용자의 정보를 가져옵니다.
      * @return 요청의 처리 결과를 담고 있는 ResponseEntity 객체로, 성공적으로 저장되었을 때의 응답 결과를 포함합니다.
      */
-    @GetMapping("/channels")
-    public ResponseEntity<ApiResponse> saveChannelsByUserId(
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse> saveChannelsByUserIdOnRefresh(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         log.info("[saveChannelsByUserId] userID 새로고침 시 채널 저장하는 메서드 시작 , userId : {}", userDetails.getUserId());
 
-        Long userId = userDetails.getUserId();
-        List<MMChannelSummary> mmchannelSummaryList = this.mattermostService.getChannelsByUserIdFromMM(userId);
-        List<MMChannelSummary> filteredNoticeChannels = this.mattermostService.filteredNoticeChannels(
-                mmchannelSummaryList);
-        List<Channel> nonDuplicateChannels = this.mattermostService.getNonDuplicateChannels(filteredNoticeChannels);
-        this.mattermostService.saveAllChannelsByMMChannelList(nonDuplicateChannels);
-
-        List<MMChannelSummary> nonDuplicateChannelsByUserId = this.mattermostService.getNonDuplicateChannelsByUserId(
-                userId, filteredNoticeChannels);
-
-        return ResponseEntity.ok(
-                this.mattermostService.saveChannelListToUserChannelByUserId(userId, nonDuplicateChannelsByUserId));
+        return ResponseEntity.ok(mattermostService.saveChannelsByUserIdOnRefresh(userDetails.getUserId()));
     }
 
 
     /**
-     * 사용자가 대상 사용자들에게 직접 메시지를 전송하는 메서드입니다.
-     * 이 메서드는 각 대상 사용자에 대해 DM 채널을 생성하고, 해당 채널을 통해 메시지를 전송합니다.
+     * 사용자가 대상 사용자들에게 직접 메시지를 전송하는 메서드입니다. 이 메서드는 각 대상 사용자에 대해 DM 채널을 생성하고, 해당 채널을 통해 메시지를 전송합니다.
      *
-     * @param userDetails 인증된 사용자의 세부 정보를 포함하는 객체입니다. 이를 통해 사용자 ID를 가져올 수 있습니다. JWT Token 을 통해 인증된 사용자의 정보를
-     *      *                          가져옵니다.
-     * @param request 직접 메시지를 전송하기 위한 요청 정보입니다. 스케줄 ID와 수신받을 사용자 ID 리스트를 포함합니다.
+     * @param userDetails 인증된 사용자의 세부 정보를 포함하는 객체입니다. 이를 통해 사용자 ID를 가져올 수 있습니다. JWT Token 을 통해 인증된 사용자의 정보를 * 가져옵니다.
+     * @param request     직접 메시지를 전송하기 위한 요청 정보입니다. 스케줄 ID와 수신받을 사용자 ID 리스트를 포함합니다.
      * @return 메시지 전송 결과를 담고 있는 ResponseEntity 객체로, 성공적으로 전송되었을 때의 응답 결과를 포함합니다.
      */
     @PostMapping("/send")
-    public ResponseEntity<ApiResponse> sendDirectMessage(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                         @RequestBody DirectMessageRequest request) {
-
+    public ResponseEntity<ApiResponse> sendDirectMessageToUserList(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody DirectMessageRequest request) {
         log.info("[sendDirectMessage] DM을 보내는 메서드 시작");
 
-        Long userId = userDetails.getUserId();
-        Long scheduleId = request.getScheduleId();
-        List<MMUserIdRequest> userIds = request.getUserIds();
-
-        for (MMUserIdRequest mmUserIdRequest : userIds) {
-            Long targetUserId = mmUserIdRequest.getTargetUserId();
-            String channelId = this.mattermostService.createDMChannel(userId, targetUserId);
-            this.mattermostService.sendDirectMessage(userId, channelId, scheduleId);
-        }
-        return ResponseEntity.ok(new ApiResponse(true, "메시지 전송 완료", userIds));
+        return ResponseEntity.ok(this.mattermostService.sendRemindMessageToUserList(userDetails.getUserId(),
+                                                                                    request.getUserIds(),
+                                                                                    request.getScheduleId()));
     }
 
 
