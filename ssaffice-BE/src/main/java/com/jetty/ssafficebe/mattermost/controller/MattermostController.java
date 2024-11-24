@@ -5,6 +5,7 @@ import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.mattermost.payload.DirectMessageRequest;
 import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
+import com.jetty.ssafficebe.mattermost.payload.MMLoginRequest;
 import com.jetty.ssafficebe.mattermost.payload.MMUserIdRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
@@ -101,6 +102,13 @@ public class MattermostController {
             this.mattermostService.sendDirectMessage(userId, channelId, scheduleId);
         }
         return ResponseEntity.ok(new ApiResponse(true, "메시지 전송 완료", userIds));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> login(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody
+                                             MMLoginRequest request) {
+
+        return ResponseEntity.ok(this.mattermostService.MMLogin(userDetails.getUserId(), request));
     }
 
 

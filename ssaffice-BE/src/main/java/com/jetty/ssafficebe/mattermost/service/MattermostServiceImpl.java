@@ -6,10 +6,12 @@ import com.jetty.ssafficebe.channel.respository.ChannelRepository;
 import com.jetty.ssafficebe.channel.respository.UserChannelRepository;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidTokenException;
+import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.mattermost.payload.DeleteSummary;
 import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
+import com.jetty.ssafficebe.mattermost.payload.MMLoginRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
@@ -223,6 +225,26 @@ public class MattermostServiceImpl implements MattermostService {
 
         } catch (InvalidTokenException e) {
             throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ApiResponse MMLogin(Long userId, MMLoginRequest mmLoginRequest){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+        user.setMattermostToken(this.getMMToken(mmLoginRequest.getLoginId(), mmLoginRequest.getPassword()));
+        userRepository.save(user);
+        return new ApiResponse(true, HttpStatus.OK, "Login Success", user.getEmail());
+    }
+
+    public String getMMToken(String mmId, String mmPassword) {
+        MMLoginRequest payload = new MMLoginRequest(mmId, mmPassword);
+        ResponseEntity<String> response = this.mattermostUtil.callMattermostApi(
+                "/users/login", HttpMethod.POST, payload, String.class, null);
+        try{
+            return response.getHeaders().get("Token").get(0);
+        } catch(Exception e){
+            throw new InvalidValueException(ErrorCode.INVALID_MM_LOGIN, "mmID", mmId);
         }
     }
 }

@@ -4,6 +4,7 @@ package com.jetty.ssafficebe.mattermost.service;
 import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
+import com.jetty.ssafficebe.mattermost.payload.MMLoginRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
@@ -37,4 +38,6 @@ public interface MattermostService {
     String createDMChannel(Long userId, Long targetUserId);
 
     ApiResponse sendDirectMessage(Long userId, String channelId, Long scheduleId);
+
+    ApiResponse MMLogin(Long userId, MMLoginRequest mmLoginRequest);
 }
