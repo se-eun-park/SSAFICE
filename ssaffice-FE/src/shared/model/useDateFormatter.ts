@@ -82,7 +82,7 @@ export const useDateFormatter = (
       return `${yyyy}-${mm}-${dd}T00:00:00`
 
     case 'API REQUEST: end':
-      return `${yyyy}-${mm}-${dd}T24:00:00`
+      return `${yyyy}-${mm}-${dd}T23:59:59`
 
     default:
       console.log(
