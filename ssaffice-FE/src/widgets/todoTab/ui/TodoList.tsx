@@ -10,8 +10,7 @@ export const TodoList = () => {
     queryKey: ['eachTodos_user'],
     queryFn: async () => {
       const { data } = await instance.get(
-        // TODO: post/src 맞는지 확인하기 !!
-        `/api/schedules/my?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', new Date('2024-01-01')) as string}&end=${useDateFormatter('API REQUEST: end', new Date('2024-01-01')) as string}`,
+        `/api/schedules/my?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', new Date('2024-01-01')) as string}&end=${useDateFormatter('API REQUEST: end', new Date('2024-12-31')) as string}`,
       )
       return data.scheduleSummaries
     },
