@@ -36,6 +36,12 @@ public class Remind extends BaseEntity {
     @Column(name = "essentialYn", updatable = false, insertable = false)
     private Boolean essential;
 
+    private String activeYn = "Y";
+
+    @Convert(converter = BooleanToYNConverter.class)
+    @Column(name = "activeYn", updatable = false, insertable = false)
+    private Boolean active;
+
     private String remindTypeCd;
 
     @Enumerated(EnumType.STRING)
