@@ -48,6 +48,7 @@ export const ClickProfileButton = () => {
         {data?.profileImgUrl ? (
           <img
             src={data?.profileImgUrl}
+            alt='내 프로필 사진'
             className='object-cover object-center rounded-full w-7 h-7'
           />
         ) : (
@@ -65,11 +66,19 @@ export const ClickProfileButton = () => {
       >
         <DropDown.Content isPaddingY={true}>
           <DropDown.Image>
-            <img
-              src={data?.profileImgUrl}
-              alt='내 프로필 사진'
-              className='w-10 rounded-full aspect-square'
-            />
+            {data?.profileImgUrl ? (
+              <img
+                src={data?.profileImgUrl}
+                alt='내 프로필 사진'
+                className='w-10 rounded-full aspect-square'
+              />
+            ) : (
+              <div className='flex items-center justify-center w-10 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                <p className='body-lg-medium text-color-text-interactive-inverse'>
+                  {data?.name[0]}
+                </p>
+              </div>
+            )}
           </DropDown.Image>
           <DropDown.Title>{data?.name}</DropDown.Title>
           <DropDown.SubTitle>{data?.email}</DropDown.SubTitle>

@@ -46,7 +46,7 @@ export const TraineeTodoModal = ({
   }, [modalType])
 
   const handleOnClickSave = () => {
-    if (!title || !description || !selectedState || !endDate) {
+    if (!title) {
       return
     }
 

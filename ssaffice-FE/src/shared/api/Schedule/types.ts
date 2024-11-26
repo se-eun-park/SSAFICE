@@ -26,3 +26,12 @@ export type postManagerScheduleResponse = {
   createData: postManagerScheduleProps
   userIds: number[]
 }
+
+export type putTraineeScheduleResponse = {
+  title?: string
+  memo?: string
+  scheduleStatusTypeCd?: string
+  startDateTime?: string
+  endDateTime?: string
+  enrollYn?: string
+}

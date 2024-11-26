@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum Region implements CommonCode {
     SEOUL("서울"),
-    DAEGU("대구"),
+    GUMI("구미"),
     BU_UL_GYEONG("부울경"),
     GWANGJU("광주"),
     DAEJEON("대전");
