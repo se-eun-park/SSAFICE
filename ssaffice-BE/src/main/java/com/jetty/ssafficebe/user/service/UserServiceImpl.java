@@ -25,6 +25,7 @@ import com.jetty.ssafficebe.user.payload.UserRequestForSso;
 import com.jetty.ssafficebe.user.payload.UserSummary;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -218,9 +219,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * SSO 로그인 처리 메서드.
-     * 현재는 User테이블의 SsafyUUID로 로그인 처리하도록 구현되어 있지만,
-     * 실제로는 DB에 여러개의 SSO 서버(네이버, 구글, 카카오 등)의 유저Id를 저장하고
+     * SSO 로그인 처리 메서드. 현재는 User테이블의 SsafyUUID로 로그인 처리하도록 구현되어 있지만, 실제로는 DB에 여러개의 SSO 서버(네이버, 구글, 카카오 등)의 유저Id를 저장하고
      * SSOId 리스트를 가져와 확인하는 로그인 처리를 위한 로직을 구현해야 함.
      */
     @Override
@@ -238,5 +237,13 @@ public class UserServiceImpl implements UserService {
         user.setSsafyUUID(ssoId);
         user.setDisabledYn("N");
         return this.userRepository.save(user);
+    }
+
+    @Override
+    public void saveLastRefreshTime(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+        user.setRecentMmChannelSyncTime(LocalDateTime.now());
+        userRepository.save(user);
     }
 }

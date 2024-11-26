@@ -34,4 +34,6 @@ public interface UserService {
     String handleSsoLogin(UserRequestForSso userRequest);
 
     User saveUserForSSO(String userId);
+
+    void saveLastRefreshTime(Long userId);
 }
