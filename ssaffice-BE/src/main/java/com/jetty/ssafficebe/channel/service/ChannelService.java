@@ -1,7 +1,6 @@
 package com.jetty.ssafficebe.channel.service;
 
 
-import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.channel.payload.ChannelSummary;
 import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
 import java.util.List;
@@ -16,5 +15,5 @@ public interface ChannelService {
 
     int saveNotExistingChannelList(List<MMChannelSummary> channelSummaries);
 
-    void saveChannelListToUserChannelByUserId(Long userId, List<MMChannelSummary> mmChannelSummaryList);
+    void saveNewUserChannels(Long userId, List<MMChannelSummary> mmChannelSummaryList);
 }
