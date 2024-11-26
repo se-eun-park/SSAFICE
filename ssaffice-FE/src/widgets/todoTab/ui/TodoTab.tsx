@@ -18,11 +18,6 @@ export const TodoTab = () => {
   const close = () => setIsModalOpen(false)
   const [selectedState, setSelectedState] = useState('default')
 
-  // event
-  // const handleOnClickCalendar = () => {
-  //   console.log('나중엔 캘린더가 열림')
-  // }
-
   const handleOnClickCreateTodo = () => {
     setIsModalOpen(true)
   }
@@ -75,7 +70,7 @@ export const TodoTab = () => {
               overflow-y-scroll
             `}
             >
-              <TodoList />
+              <TodoList startDate={new Date('2024-01-01')} endDate={new Date('2024-12-31')} />
             </div>
           ) : (
             <TodoBoard />

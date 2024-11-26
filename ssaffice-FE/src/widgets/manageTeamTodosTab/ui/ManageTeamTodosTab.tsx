@@ -95,7 +95,10 @@ export const ManageTeamTodosTab = () => {
               <SelectTodoSortCondition />
             </div>
             <div className='h-[800px] px-spacing-16 bg-color-bg-tertiary overflow-y-scroll'>
-              <ManageTeamTodoList />
+              <ManageTeamTodoList
+                startDate={new Date('2024-01-01')}
+                endDate={new Date('2024-12-31')}
+              />
             </div>
           </div>
         </div>

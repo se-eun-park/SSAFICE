@@ -1,3 +1,4 @@
+import { DayPicker } from 'react-day-picker'
 import { CalendarIcon, EditIcon } from '@/assets/svg'
 import { SelectTodoSortCondition } from '@/features/todoTab/ui/SelectTodoSortCondition'
 import { CommonModal, HoverButton, RefreshMattermostConnection } from '@/shared/ui'
@@ -94,7 +95,10 @@ export const ManageEachTodosTab = () => {
               <SelectTodoSortCondition />
             </div>
             <div className='h-[800px] px-spacing-16 bg-color-bg-tertiary overflow-y-scroll'>
-              <ManageEachTodoList />
+              <ManageEachTodoList
+                startDate={new Date('2024-01-01')}
+                endDate={new Date('2024-12-31')}
+              />
             </div>
           </div>
         </div>
