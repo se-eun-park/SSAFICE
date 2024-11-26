@@ -58,7 +58,6 @@ public class MattermostController {
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse> saveChannelsByUserIdOnRefresh(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-
         log.info("[saveChannelsByUserId] userID 새로고침 시 채널 저장하는 메서드 시작 , userId : {}", userDetails.getUserId());
 
         return ResponseEntity.ok(mattermostService.saveChannelsByUserIdOnRefresh(userDetails.getUserId()));

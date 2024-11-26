@@ -93,6 +93,7 @@ public class MattermostServiceImpl implements MattermostService {
      */
     @Override
     public ApiResponse saveChannelsByUserIdOnRefresh(Long userId) {
+
         // 1. Mattermost 에서 사용자 채널 조회
         List<MMChannelSummary> mmchannelSummaryList = getChannelsByUserIdFromMM(userId);
 
@@ -103,7 +104,7 @@ public class MattermostServiceImpl implements MattermostService {
         int savedCount = this.channelService.saveNotExistingChannelList(filteredNoticeChannels);
 
         // 4. UserChannel Table 에 userID와 매핑되어있지 않은 채널 리스트 저장
-        this.channelService.saveChannelListToUserChannelByUserId(userId, filteredNoticeChannels);
+        this.channelService.saveNewUserChannels(userId, filteredNoticeChannels);
 
         // 5. 유저 정보에 마지막 새로고침 시간 저장
         userService.saveLastRefreshTime(userId);
