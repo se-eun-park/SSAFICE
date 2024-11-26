@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { dummySsafyUsers, MattermostChannel, SsafyUser, SsafyUserApiResponse } from './types'
+import { MattermostChannel, SsafyUser, SsafyUserApiResponse } from './types'
 import { Pagenation } from '@/shared/model'
-import { useQuery } from '@tanstack/react-query'
 import { instance } from '@/shared/api'
 
 export const useManageMembersTabContent = (channel: MattermostChannel) => {
