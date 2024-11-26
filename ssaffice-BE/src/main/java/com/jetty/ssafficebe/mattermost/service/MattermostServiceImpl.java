@@ -1,9 +1,6 @@
 package com.jetty.ssafficebe.mattermost.service;
 
-import com.jetty.ssafficebe.channel.entity.Channel;
-import com.jetty.ssafficebe.channel.entity.UserChannel;
-import com.jetty.ssafficebe.channel.respository.ChannelRepository;
-import com.jetty.ssafficebe.channel.respository.UserChannelRepository;
+import com.jetty.ssafficebe.channel.service.ChannelService;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidTokenException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
@@ -13,16 +10,14 @@ import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
-import com.jetty.ssafficebe.mattermost.payload.UserAutocompleteResponse;
-import com.jetty.ssafficebe.mattermost.payload.UserAutocompleteSummary;
 import com.jetty.ssafficebe.mattermost.util.MattermostUtil;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.repository.UserRepository;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,19 +26,21 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 @Service
 @RequiredArgsConstructor
 public class MattermostServiceImpl implements MattermostService {
 
     private static final String END_POINT_FOR_POST = "posts";
+
     private final MattermostUtil mattermostUtil;
+
     private final UserRepository userRepository;
-    private final ChannelRepository channelRepository;
-    private final UserChannelRepository userChannelRepository;
+
     private final ScheduleRepository scheduleRepository;
+
+    private final ChannelService channelService;
+
 
     @Override
     public PostSummary getPost(String postId) {
@@ -85,144 +82,172 @@ public class MattermostServiceImpl implements MattermostService {
         return new ApiResponse(isSuccess, HttpStatus.resolve(response.getStatusCode().value()), "", response.getBody());
     }
 
+
+    /**
+     * userID로 주어진 사용자가 속한 mattermost 의 "공지사항" 채널을 DB에 저장하는 메서드입니다.
+     *
+     * @param userId 조회 할 사용자 Id 입니다.
+     * @return 저장된 채널의 수를 반환합니다.
+     */
     @Override
-    public List<UserAutocompleteSummary> getUserAutocomplete(String name) {
-        MultiValueMap<String, String> queryParameters = new LinkedMultiValueMap<>();
-        queryParameters.add("name", name);
-        ResponseEntity<UserAutocompleteResponse> response = this.mattermostUtil.callApi("users/autocomplete",
-                                                                                        queryParameters, HttpMethod.GET,
-                                                                                        null,
-                                                                                        UserAutocompleteResponse.class);
-        return (response.getBody() != null) ? response.getBody().getUsers() : null;
+    public ApiResponse saveChannelsByUserIdOnRefresh(Long userId) {
+        // 1. Mattermost 에서 사용자 채널 조회
+        List<MMChannelSummary> mmchannelSummaryList = getChannelsByUserIdFromMM(userId);
+
+        // 2. 공지사항 채널 필터링
+        List<MMChannelSummary> filteredNoticeChannels = getFilteredMMChannelSummaryList(mmchannelSummaryList, "공지사항");
+
+        // 3. Channel Table 에 저장되어있지 않은 채널 리스트 저장
+        int savedCount = this.channelService.saveNotExistingChannelList(filteredNoticeChannels);
+
+        // 4. UserChannel Table 에 userID와 매핑되어있지 않은 채널 리스트 저장
+        this.channelService.saveChannelListToUserChannelByUserId(userId, filteredNoticeChannels);
+
+        return new ApiResponse(true, HttpStatus.OK, "Channel saved successful", savedCount);
     }
 
-    // // userId를 이용해 MM 에서 해당 user 가 속한 채널리스트를 가져옴
+    /**
+     * 주어진 사용자 ID와 채널 ID를 사용하여 해당 채널에 직접 메시지를 전송하는 메서드입니다.
+     *
+     * @param userId       메시지를 전송할 사용자의 ID 입니다.
+     * @param targetUserId 메시지를 받을 사용자의 ID 입니다.
+     * @param message      전송할 메시지 내용입니다.
+     * @throws ResourceNotFoundException 사용자 ID에 해당하는 데이터를 찾을 수 없을 때 발생합니다.
+     * @throws InvalidTokenException     MM 토큰이 유효하지 않을 때 발생합니다.
+     */
     @Override
-    public List<MMChannelSummary> getChannelsByUserIdFromMM(Long userId) {
-        // 1. userId로 user 조회하여 mattermostId와 Token 가져오기
+    public void sendDirectMessage(Long userId, Long targetUserId, String message) {
+        // 1. 사용자 정보를 조회(MM 토큰을 가져오기 위함)
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
-        String mmUserId = user.getMattermostUserId();
-        String token = user.getMattermostToken();
 
-        // 2. token 과 mmId로 ChannelSummary 를 배열로 가져오기
+        // 2. 메시지 전송을 위한 채널을 만들고 메시지를 보냄.
+        Map<String, String> payload = Map.of("channel_id", createDMChannel(userId, targetUserId), "message", message);
+
         try {
-            ResponseEntity<MMChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
-                    "/users/" + mmUserId + "/channels", HttpMethod.GET, null, MMChannelSummary[].class, token);
-
-            return Arrays.asList(Objects.requireNonNull(response.getBody()));
+            this.mattermostUtil.callMattermostApi("/posts", HttpMethod.POST, payload, PostSummary.class,
+                                                  user.getMattermostToken());
         } catch (InvalidTokenException e) {
-            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND);
+            throw new InvalidTokenException(ErrorCode.INVALID_MM_TOKEN);
         }
     }
 
-    // 가져온 채널 리스트 중 Notice(공지사항) 채널만 필터링
+    /**
+     * 대상 사용자들에게 일정과 관련된 remindMessage 를 보내는 메서드
+     *
+     * @param userId           메시지를 전송할 사용자의 ID 입니다.
+     * @param targetUserIdList 메시지를 받을 사용자들의 ID 리스트입니다.
+     * @param ScheduleId       메시지의 내용을 가져올 스케줄 ID 입니다.
+     * @return 메시지를 보낸 사용자의 수를 반환합니다.
+     */
     @Override
-    public List<MMChannelSummary> filteredNoticeChannels(List<MMChannelSummary> mmChannelSummaryList) {
+    public ApiResponse sendRemindMessageToUserList(Long userId, List<Long> targetUserIdList, Long ScheduleId) {
+        String message = makeDirectMessageFromSchedule(ScheduleId);
+        for (Long targetUserId : targetUserIdList) {
+            sendDirectMessage(userId, targetUserId, message);
+        }
+        return new ApiResponse(true, HttpStatus.OK, "메시지 전송 성공", targetUserIdList.size());
+    }
+
+    // TODO. 아래 메서드들은 private 처리 해도 됨. 현재는 테스트코드를 위해 public 으로 둔 상태.
+
+    /**
+     * userId에 속한 채널 리스트를 받아오는 메서드
+     *
+     * @param userId           메시지를 전송할 사용자의 ID 입니다.
+     * @throws ResourceNotFoundException 사용자 ID에 해당하는 데이터를 찾을 수 없을 때 발생합니다.
+     * @throws InvalidTokenException     MM 토큰이 유효하지 않을 때 발생합니다.
+     * @return 메시지를 보낸 사용자의 수를 반환합니다.
+     */
+    public List<MMChannelSummary> getChannelsByUserIdFromMM(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("사용자 ID가 null 입니다.");
+        }
+
+        // 1. userId로 DB의 user 를 조회하여 Mattermost ID와 토큰을 가져옵니다.
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+
+        // 2. mmToken 과 mmId로 채널 요약 정보를 배열로 가져옵니다.
+        try {
+            ResponseEntity<MMChannelSummary[]> response = this.mattermostUtil.callMattermostApi(
+                    "/users/" + user.getMattermostUserId() + "/channels",
+                    HttpMethod.GET,
+                    null,
+                    MMChannelSummary[].class,
+                    user.getMattermostToken());
+
+            return Arrays.asList(Objects.requireNonNull(response.getBody()));
+            // TODO. Exception 터트려보고 처리하기
+        } catch (InvalidTokenException e) {
+            throw new InvalidTokenException(ErrorCode.INVALID_MM_TOKEN);
+        }
+    }
+
+
+    /**
+     * 사용자가 속한 채널 목록에서 특정 채널 이름을 포함하는 채널 목록을 반환하는 메서드
+     *
+     * @param mmChannelSummaryList 사용자가 속한 채널 목록입니다.
+     * @param channelName          필터링할 채널 이름입니다.
+     * @return 필터링 된 MMChannelSummary 리스트를 반환합니다.
+     */
+    public List<MMChannelSummary> getFilteredMMChannelSummaryList(List<MMChannelSummary> mmChannelSummaryList,
+                                                                   String channelName) {
+        if (mmChannelSummaryList == null) {
+            return Collections.emptyList();
+        }
+
         List<MMChannelSummary> mmChannelSummaries = new ArrayList<>();
         for (MMChannelSummary channelSummary : mmChannelSummaryList) {
-            if (channelSummary.getDisplayName().contains("공지사항")) {
+            if (channelSummary.getDisplayName().contains(channelName)) {
                 mmChannelSummaries.add(channelSummary);
             }
         }
         return mmChannelSummaries;
     }
 
+    /**
+     * DM 메시지를 보내기 위해 DM 채널을 생성하는 메서드
+     *
+     * @param userId       메시지를 전송할 사용자의 ID 입니다.
+     * @param targetUserId 메시지를 받을 사용자의 ID 입니다.
+     * @return 생성된 DM 채널의 ID를 반환합니다.
+     * @throws ResourceNotFoundException 사용자 ID에 해당하는 데이터를 찾을 수 없을 때 발생합니다.
+     *
+     */
+    public String createDMChannel(Long userId, Long targetUserId) {
 
-    // 기존 채널 db에 저장되어있지 않은 채널만 가져옴
-    @Override
-    public List<Channel> getNonDuplicateChannels(List<MMChannelSummary> channelSummaries) {
-        List<String> channelIds = channelSummaries.stream().map(MMChannelSummary::getId).toList();
-        List<String> existingChannelIds = channelRepository.findByChannelIdIn(channelIds).stream()
-                                                           .map(Channel::getChannelId).toList();
-        return channelSummaries.stream()
-                               .filter(MMChannelSummary -> !existingChannelIds.contains(MMChannelSummary.getId()))
-                               .map(MMChannelSummary -> {
-                                   Channel channel = new Channel();
-                                   channel.setChannelId(MMChannelSummary.getId());
-                                   channel.setMmTeamId(MMChannelSummary.getTeamId());
-                                   channel.setChannelName(MMChannelSummary.getDisplayName());
-                                   return channel;
-                               }).toList();
-    }
-
-    // 가져온 채널리스트를 Channel 테이블에 저장
-    @Override
-    public ApiResponse saveAllChannelsByMMChannelList(List<Channel> channelList) {
-        channelRepository.saveAll(channelList);
-        return new ApiResponse(true, HttpStatus.OK, "Channel saved successfully",
-                               channelList.stream().map(Channel::getChannelId).toList());
-    }
-
-    // MM 에서 가져온 채널리스트 중 UserChannel 테이블에 해당 userId로 찾았을 때 저장되어있지 않은 채널만 가져옴
-    @Override
-    public List<MMChannelSummary> getNonDuplicateChannelsByUserId(Long userId,
-                                                                  List<MMChannelSummary> mmChannelSummaryList) {
-        List<UserChannel> existingUserChannelList = userChannelRepository.findAllByUserId(userId);
-        List<String> existingUserChannelIds = existingUserChannelList.stream().map(UserChannel::getChannelId).toList();
-
-        return mmChannelSummaryList.stream().filter(channel -> !existingUserChannelIds.contains(channel.getId()))
-                                   .toList();
-    }
-
-    // 가져온 채널리스트를 UserChannel 테이블에 저장
-    @Override
-    public ApiResponse saveChannelListToUserChannelByUserId(Long userId, List<MMChannelSummary> mmChannelSummaryList) {
-        List<UserChannel> userChannelsToSave = mmChannelSummaryList.stream().map(channel -> new UserChannel(userId,
-                                                                                                            channel.getId()))
-                                                                   .toList();
+        // 1. 사용자 정보를 조회(MM ID를 가져오기 위함)
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
-        user.setRecentMmChannelSyncTime(LocalDateTime.now());
-        userRepository.save(user);
-        userChannelRepository.saveAll(userChannelsToSave);
-        return new ApiResponse(true, HttpStatus.OK, "Channel saved successfuly into UserChannel",
-                               userChannelsToSave.stream().map(UserChannel::getChannelId).toList());
+
+        User targetUser = userRepository.findById(targetUserId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", targetUserId));
+
+        // 3. DM 채널 생성을 위한 페이로드 구성
+        String[] payload = new String[]{user.getMattermostUserId(), targetUser.getMattermostUserId()};
+
+        // 4. Mattermost API 를 호출하여 DM 채널을 생성합니다.
+        ResponseEntity<MMChannelSummary> response = this.mattermostUtil.callMattermostApi("/channels/direct",
+                                                                                          HttpMethod.POST, payload,
+                                                                                          MMChannelSummary.class,
+                                                                                          user.getMattermostToken());
+        // 5. 생성된 채널의 ID를 반환합니다.
+        return Objects.requireNonNull(response.getBody(), "응답 본문이 null 입니다.").getId();
     }
 
-    // DM을 보내기 위해선 먼저 DM Channel을 만들어야함.
-    @Override
-    public String createDMChannel(Long userId, Long targetUserId){
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
-        String token = user.getMattermostToken();
-
-        String mmUserId = user.getMattermostUserId();
-        String mmTargetUserId = userRepository.findById(targetUserId).orElseThrow(
-                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", targetUserId)).getMattermostUserId();
-
-        String[] payload = new String[]{mmUserId, mmTargetUserId};
-
-        ResponseEntity<MMChannelSummary> response = this.mattermostUtil.callMattermostApi(
-                "/channels/direct" , HttpMethod.POST, payload, MMChannelSummary.class, token);
-
-        return Objects.requireNonNull(response.getBody()).getId();
-    }
-
-    @Override
-    public ApiResponse sendDirectMessage(Long userId, String channelId, Long scheduleId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
-        String token = user.getMattermostToken();
-
+    /**
+     * ScheduleId를 통해 스케줄 정보를 가져와 메시지를 만드는 메서드
+     *
+     * @param scheduleId 사용자가 속한 채널 목록입니다.
+     * @return DirectMessage 의 payload 입니다.
+     */
+    public String makeDirectMessageFromSchedule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new ResourceNotFoundException(ErrorCode.SCHEDULE_NOT_FOUND, "scheduleId", scheduleId));
 
-        String message = "[REMIND]\n제목 : " + schedule.getTitle() +" \n" + "내용 : " + schedule.getMemo() + " \n" + "시작시간 : " + schedule.getStartDateTime() + " \n" + "종료시간 : " + schedule.getEndDateTime();
-
-        Map<String, String> payload = Map.of(
-                "channel_id", channelId,
-                "message", message
-        );
-        try {
-            ResponseEntity<PostSummary> response = this.mattermostUtil.callMattermostApi(
-                    "/posts", HttpMethod.POST, payload, PostSummary.class, token);
-
-            boolean isSuccess = response.getStatusCode() == HttpStatus.CREATED;
-            return new ApiResponse(isSuccess, HttpStatus.resolve(response.getStatusCode().value()), "", response.getBody());
-
-        } catch (InvalidTokenException e) {
-            throw new InvalidTokenException(ErrorCode.TOKEN_NOT_FOUND);
-        }
+        return "[REMIND]\n제목 : " + schedule.getTitle() + " \n" + "내용 : " + schedule.getMemo() + " \n" + "시작시간 : "
+                + schedule.getStartDateTime() + " \n" + "종료시간 : " + schedule.getEndDateTime();
     }
 }

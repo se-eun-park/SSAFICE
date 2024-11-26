@@ -11,7 +11,7 @@ public enum ErrorCode {
     NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공지사항을 찾을 수 없습니다."),
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 일정을 찾을 수 없습니다."),
     REMIND_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 알림을 찾을 수 없습니다."),
-    TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 토큰을 찾을 수 없습니다."),
+    MM_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 토큰을 찾을 수 없습니다."),
     CHANNEL_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 채널을 찾을 수 없습니다."),
 
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 사용중인 이메일입니다."),
@@ -23,6 +23,7 @@ public enum ErrorCode {
     INVALID_DATETIME_FORMAT(HttpStatus.BAD_REQUEST, "날짜/시간 형식이 올바르지 않습니다."),
 
     INVALID_AUTHORIZATION(HttpStatus.FORBIDDEN, "해당 리소스에 대한 권한이 없습니다."),
+    INVALID_MM_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
     ;
 
     private final HttpStatus status;
