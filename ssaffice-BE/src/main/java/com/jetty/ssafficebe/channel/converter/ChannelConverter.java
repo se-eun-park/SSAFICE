@@ -19,6 +19,8 @@ public interface ChannelConverter {
     @Mapping(source = "id", target = "channelId")
     @Mapping(source = "displayName", target = "channelName")
     @Mapping(source = "teamId", target = "mmTeamId")
+    Channel toChannel(MMChannelSummary mmChannelSummary);
+
     List<Channel> toChannelList(List<MMChannelSummary> mmChannelSummaryList);
 
 }
