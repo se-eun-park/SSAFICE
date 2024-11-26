@@ -1,6 +1,7 @@
 import { ManageTeamTodoDateGroup } from './ManageTeamTodoDateGroup'
 import { useSortingTeamTodo } from '@/features/manageTeamTodoTab/model/useSortingTeamTodo'
 import { instance } from '@/shared/api'
+import { useDateFormatter } from '@/shared/model'
 import { useQuery } from '@tanstack/react-query'
 
 // api
@@ -9,11 +10,9 @@ export const ManageTeamTodoList = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['teamTodos'],
     queryFn: async () => {
-      const { data } = await instance.post('/api/notice/admin/my', {
-        filterStartDateTime: new Date('2024-01-01'),
-        filterEndDateTime: new Date(),
-        filterType: 'createdAt',
-      })
+      const { data } = await instance.get(
+        `/api/notice/admin/my?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', new Date('2024-01-01')) as string}&end=${useDateFormatter('API REQUEST: end', new Date('2024-12-31')) as string}`,
+      )
       return data
     },
   })

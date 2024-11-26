@@ -8,6 +8,7 @@ export type {
   ScheduleItemDisplay,
   ScheduleListDisplay,
   UnScheduledDisplay,
+  ChannelSummary,
 } from './model/types'
 export { Card } from './ui/Card'
 export { CardColumn } from './ui/CardColumn'

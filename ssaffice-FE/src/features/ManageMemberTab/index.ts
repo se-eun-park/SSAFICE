@@ -9,4 +9,4 @@ export type {
   CodeToWordRegionCdProps,
   CodeToWordProps,
 } from './model/types'
-export { dummyMattermostTeams, dummySsafyUsers, codeToWord } from './model/types'
+export { codeToWord, dummySsafyUsers, dummyMattermostTeams } from './model/types'
