@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class DirectMessageRequest {
   private Long scheduleId;
-  private List<MMUserIdRequest> userIds;
+  private List<Long> userIds;
 }

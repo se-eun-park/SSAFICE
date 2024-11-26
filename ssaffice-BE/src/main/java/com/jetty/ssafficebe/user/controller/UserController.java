@@ -96,8 +96,7 @@ public class UserController {
     }
 
     /**
-     * 유저 삭제. 관리자 페이지에서 사용하는 api로 유저 리스트를 받아 해당 유저 전체 soft delete. disabledYn을 'Y'로 변경.
-     * TODO : 관리자인 경우만 허용하도록 변경
+     * 유저 삭제
      */
     @DeleteMapping("/admin")
     public ResponseEntity<ApiResponse> deleteUsers(@RequestBody List<Long> userIds) {

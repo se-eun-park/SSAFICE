@@ -2,17 +2,16 @@ import { ManageEachTodoDateGroup } from './ManageEachTodoDateGroup'
 // import { dummyEachTodos } from '@/features/manageEachTodoTab'
 import { useSortingEachTodo } from '@/features/manageEachTodoTab/model/useSortingEachTodo'
 import { instance } from '@/shared/api'
+import { useDateFormatter } from '@/shared/model'
 import { useQuery } from '@tanstack/react-query'
 
 export const ManageEachTodoList = () => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['eachTodos'],
+    queryKey: ['eachTodos_manager'],
     queryFn: async () => {
-      const { data } = await instance.post('/api/schedules/admin/assigned', {
-        filterStartDateTime: new Date('2024-01-01'),
-        filterEndDateTime: new Date('2024-12-31'),
-        filterType: 'createdAt',
-      })
+      const { data } = await instance.get(
+        `/api/schedules/admin/assigned?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', new Date('2024-01-01')) as string}&end=${useDateFormatter('API REQUEST: end', new Date('2024-12-31')) as string}`,
+      )
       return data.scheduleSummaries
     },
   })
