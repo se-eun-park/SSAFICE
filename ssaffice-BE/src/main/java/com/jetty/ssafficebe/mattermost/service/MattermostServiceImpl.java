@@ -15,6 +15,7 @@ import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.repository.UserRepository;
+import com.jetty.ssafficebe.user.service.UserService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,6 +37,7 @@ public class MattermostServiceImpl implements MattermostService {
     private final MattermostUtil mattermostUtil;
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
     private final ScheduleRepository scheduleRepository;
 
@@ -102,6 +104,9 @@ public class MattermostServiceImpl implements MattermostService {
 
         // 4. UserChannel Table 에 userID와 매핑되어있지 않은 채널 리스트 저장
         this.channelService.saveChannelListToUserChannelByUserId(userId, filteredNoticeChannels);
+
+        // 5. 유저 정보에 마지막 새로고침 시간 저장
+        userService.saveLastRefreshTime(userId);
 
         return new ApiResponse(true, HttpStatus.OK, "Channel saved successful", savedCount);
     }
