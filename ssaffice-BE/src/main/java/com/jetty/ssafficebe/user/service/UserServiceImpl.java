@@ -143,14 +143,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse deleteUsers(List<Long> userIds) {
         for (Long userId : userIds) {
-            User user = userRepository.findById(userId).orElse(null);
-
-            if (user != null) {
-                user.setDisabledYn("Y");
-                userRepository.save(user);
-            }
-
-            esUserService.deleteUser(userId);
+            userRepository.deleteById(userId);
         }
         return new ApiResponse(true, HttpStatus.OK, "유저 삭제 성공");
     }
