@@ -39,6 +39,7 @@ export const LoginForm = () => {
       const response = loginResponse.data
       if (response) {
         setIsAuthenticated(true)
+        navigate('/main')
       }
     } catch (err) {
       console.error(err)
