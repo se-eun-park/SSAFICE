@@ -4,10 +4,11 @@ import { TodoBoard } from './TodoBoard'
 
 import { HoverTitle } from '@/features/todoTab'
 import { useIsTabOpenStore } from '@/shared/model'
-import { TabLayout, HoverButton, SelectTodoState } from '@/shared/ui'
+import { TabLayout, HoverButton, SelectTodoState, SelectDateRange } from '@/shared/ui'
 import { CommonModal } from '@/shared/ui'
 import { HamburgerMenuIcon, FastLeftArrowIcon, EditIcon } from '@/assets/svg'
 import { SelectTodoSortCondition } from '@/features/todoTab/ui/SelectTodoSortCondition'
+import { useSelectDateRange } from '@/shared/model/useSelectDateRange'
 
 export const TodoTab = () => {
   // store
@@ -21,6 +22,8 @@ export const TodoTab = () => {
   const handleOnClickCreateTodo = () => {
     setIsModalOpen(true)
   }
+
+  const { selectedDate, handleSelectedDate, fixedDate, handleFixedDate } = useSelectDateRange()
 
   return (
     <>
@@ -55,6 +58,12 @@ export const TodoTab = () => {
                 actionType='filter'
               />
               <SelectTodoSortCondition />
+
+              <SelectDateRange
+                selectedDate={selectedDate}
+                handleSelectedDate={handleSelectedDate}
+                handleFixedDate={handleFixedDate}
+              />
             </div>
           </TabLayout.Add>
         ) : null}
@@ -70,7 +79,9 @@ export const TodoTab = () => {
               overflow-y-scroll
             `}
             >
-              <TodoList startDate={new Date('2024-01-01')} endDate={new Date('2024-12-31')} />
+              {fixedDate.from && fixedDate.to && (
+                <TodoList startDate={fixedDate.from} endDate={fixedDate.to} />
+              )}
             </div>
           ) : (
             <TodoBoard />

@@ -1,11 +1,12 @@
 import { CalendarIcon, EditIcon } from '@/assets/svg'
-import { SelectTodoState } from '@/shared/ui'
+import { SelectDateRange, SelectTodoState } from '@/shared/ui'
 import { SelectTodoSortCondition } from '@/features/todoTab/ui/SelectTodoSortCondition'
 import { HoverButton, RefreshMattermostConnection } from '@/shared/ui'
 import { AnnouncementList } from '@/widgets/announcementTab'
 import { useEffect, useRef, useState } from 'react'
 import { ManageTeamTodoList } from './ManageTeamTodoList'
 import { CommonModal } from '@/shared/ui'
+import { useSelectDateRange } from '@/shared/model/useSelectDateRange'
 
 export const ManageTeamTodosTab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -42,6 +43,7 @@ export const ManageTeamTodosTab = () => {
   }
 
   const [selectedState, setSelectedState] = useState('default')
+  const { selectedDate, handleSelectedDate, fixedDate, handleFixedDate } = useSelectDateRange()
 
   return (
     <>
@@ -93,12 +95,16 @@ export const ManageTeamTodosTab = () => {
                 setSelectedState={setSelectedState}
               />
               <SelectTodoSortCondition />
+              <SelectDateRange
+                selectedDate={selectedDate}
+                handleSelectedDate={handleSelectedDate}
+                handleFixedDate={handleFixedDate}
+              />
             </div>
             <div className='h-[800px] px-spacing-16 bg-color-bg-tertiary overflow-y-scroll'>
-              <ManageTeamTodoList
-                startDate={new Date('2024-01-01')}
-                endDate={new Date('2024-12-31')}
-              />
+              {fixedDate.from && fixedDate.to && (
+                <ManageTeamTodoList startDate={fixedDate.from} endDate={fixedDate.to} />
+              )}
             </div>
           </div>
         </div>
