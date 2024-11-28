@@ -1,11 +1,11 @@
-import { DayPicker } from 'react-day-picker'
 import { CalendarIcon, EditIcon } from '@/assets/svg'
 import { SelectTodoSortCondition } from '@/features/todoTab/ui/SelectTodoSortCondition'
-import { CommonModal, HoverButton, RefreshMattermostConnection } from '@/shared/ui'
+import { CommonModal, HoverButton, RefreshMattermostConnection, SelectDateRange } from '@/shared/ui'
 import { AnnouncementList } from '@/widgets/announcementTab'
 import { SelectTodoState } from '@/shared/ui'
 import { useEffect, useRef, useState } from 'react'
 import { ManageEachTodoList } from './ManageEachTodoList'
+import { useSelectDateRange } from '@/shared/model/useSelectDateRange'
 
 export const ManageEachTodosTab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -41,7 +41,9 @@ export const ManageEachTodosTab = () => {
     setIsModalOpen(true)
   }
 
+  // states
   const [selectedState, setSelectedState] = useState('default')
+  const { selectedDate, handleSelectedDate, fixedDate, handleFixedDate } = useSelectDateRange()
 
   return (
     <>
@@ -93,12 +95,17 @@ export const ManageEachTodosTab = () => {
                 setSelectedState={setSelectedState}
               />
               <SelectTodoSortCondition />
+
+              <SelectDateRange
+                selectedDate={selectedDate}
+                handleSelectedDate={handleSelectedDate}
+                handleFixedDate={handleFixedDate}
+              />
             </div>
             <div className='h-[800px] px-spacing-16 bg-color-bg-tertiary overflow-y-scroll'>
-              <ManageEachTodoList
-                startDate={new Date('2024-01-01')}
-                endDate={new Date('2024-12-31')}
-              />
+              {fixedDate.from && fixedDate.to && (
+                <ManageEachTodoList startDate={fixedDate.from} endDate={fixedDate.to} />
+              )}
             </div>
           </div>
         </div>
