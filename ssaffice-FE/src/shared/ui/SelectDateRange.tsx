@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { useClickOutsideToggle, useClickedToggle } from '../model'
+import { useRef, useState } from 'react'
+import { useClickOutsideToggle, useClickedToggle, useDateFormatter } from '../model'
 import { DownArrowIcon } from '@/assets/svg'
 import { DropDown } from './DropDown/DropDown'
 import { DateRange, DayPicker } from 'react-day-picker'
@@ -7,7 +7,7 @@ import { DateRange, DayPicker } from 'react-day-picker'
 type SelectDateRangeProps = {
   selectedDate: DateRange
   handleSelectedDate: (dateRange: DateRange) => void
-  handleFixedDate: (dateRange: DateRange) => void
+  handleFixedDate: () => void
 }
 
 export const SelectDateRange = ({
@@ -19,8 +19,11 @@ export const SelectDateRange = ({
   const { isClicked, setIsClicked, handleIsClicked } = useClickedToggle()
   const dropDownRef = useRef<HTMLDivElement | null>(null)
   useClickOutsideToggle(dropDownRef, setIsClicked)
+  const [isChanged, setIsChanged] = useState<boolean>(false)
+  const handleIsChanged = () => {
+    setIsChanged(true)
+  }
 
-  //   const { selectedDate, handleSelectedDate, fixedDate, handleFixedDate } = useSelectDateRange()
   return (
     <>
       {/* dropdown date select area */}
@@ -31,7 +34,11 @@ export const SelectDateRange = ({
           `}
           onClick={handleIsClicked}
         >
-          <p>날짜 선택</p>
+          <p>
+            {isChanged
+              ? `${useDateFormatter('YYYY-MM-DD(string)', selectedDate.from)} ~ ${useDateFormatter('YYYY-MM-DD(string)', selectedDate.to)}`
+              : '날짜 선택'}
+          </p>
           <DownArrowIcon className={`w-4`} />
         </button>
 
@@ -65,8 +72,9 @@ export const SelectDateRange = ({
                   rounded-radius-8
               '
                 onClick={() => {
-                  handleFixedDate(selectedDate)
+                  handleFixedDate()
                   handleIsClicked()
+                  handleIsChanged()
                 }}
               >
                 적용

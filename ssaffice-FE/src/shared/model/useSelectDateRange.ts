@@ -24,9 +24,8 @@ export const useSelectDateRange = () => {
     setSelectedDate(dateRange)
   }
 
-  const handleFixedDate = (dateRange: DateRange) => {
-    handleSelectedDate(dateRange)
-    setFixedDate(dateRange)
+  const handleFixedDate = () => {
+    setFixedDate(selectedDate)
   }
 
   return { selectedDate, handleSelectedDate, fixedDate, handleFixedDate }
