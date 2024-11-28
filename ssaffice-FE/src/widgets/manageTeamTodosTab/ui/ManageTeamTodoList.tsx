@@ -11,7 +11,7 @@ type ManageTeamTodoListProps = {
 
 export const ManageTeamTodoList = ({ startDate, endDate }: ManageTeamTodoListProps) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['teamTodos'],
+    queryKey: ['teamTodos', startDate, endDate],
     queryFn: async () => {
       const { data } = await instance.get(
         `/api/notice/admin/my?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,

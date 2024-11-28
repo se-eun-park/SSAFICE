@@ -10,7 +10,7 @@ type todoListProps = {
 }
 export const TodoList = ({ startDate, endDate }: todoListProps) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['eachTodos_user'],
+    queryKey: ['eachTodos_user', startDate, endDate],
     queryFn: async () => {
       const { data } = await instance.get(
         `/api/schedules/my?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
