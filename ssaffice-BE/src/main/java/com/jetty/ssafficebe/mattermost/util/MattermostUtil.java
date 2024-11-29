@@ -117,7 +117,6 @@ public class MattermostUtil {
         ResponseEntity<T> response;
         try {
             RequestEntity<U> requestEntity = RequestEntity.method(method, apiUrl).headers(headers).body(body);
-            System.out.println(requestEntity.getBody());
             response = this.restTemplate.exchange(requestEntity, responseType);
         } catch (HttpStatusCodeException exception) {
             response = new ResponseEntity<>(exception.getStatusCode());

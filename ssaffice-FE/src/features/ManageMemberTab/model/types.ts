@@ -1,12 +1,12 @@
 import { Pageable } from '@/shared/model'
 
 export type MattermostChannel = {
-  channelId: number
+  channelId: string
   name: string
 }
 
 export type MattermostTeam = {
-  teamId: number
+  teamId: string
   name: string
   channels: MattermostChannel[]
 }
@@ -17,7 +17,7 @@ export type SsafyUser = {
   email: string
   name: string
   cohortNum?: number // 프로의 경우에는 없음
-  regionCd: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'DAEGU' | 'GWANGJU'
+  regionCd: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'GUMI' | 'GWANGJU'
   classNum?: number // 반
   trackCd?: 'NON_MAJOR_PYTHON' | 'NON_MAJOR_JAVA' | 'MAJOR_JAVA' | 'EMBEDDED' | 'MOBILE' | 'DATA'
   curriculumCd?: string // 공통/특화/자율
@@ -43,7 +43,7 @@ export type CodeToWordTrackCdProps = {
 
 export type CodeToWordRegionCdProps = {
   fieldName: 'regionCd'
-  fieldValue: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'DAEGU' | 'GWANGJU'
+  fieldValue: 'SEOUL' | 'BU_UL_GYEONG' | 'DAEJEON' | 'GUMI' | 'GWANGJU'
 }
 
 export type CodeToWordProps = {
@@ -56,8 +56,8 @@ export const codeToWord = (param: CodeToWordProps): string => {
       switch (param.field.fieldValue) {
         case 'BU_UL_GYEONG':
           return '부울경'
-        case 'DAEGU':
-          return '대구'
+        case 'GUMI':
+          return '구미'
         case 'DAEJEON':
           return '대전'
         case 'GWANGJU':
@@ -167,7 +167,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
         userId: 7,
         email: 'user7@ssafy.com',
         name: 'James Brown',
-        regionCd: 'DAEGU', // 수정
+        regionCd: 'GUMI', // 수정
         cohortNum: 11,
         classNum: 7,
         trackCd: 'MOBILE', // 대체
@@ -245,7 +245,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
         userId: 12,
         email: 'user12@ssafy.com',
         name: 'Ava Thomas',
-        regionCd: 'DAEGU', // 수정
+        regionCd: 'GUMI', // 수정
         cohortNum: 12,
         classNum: 1,
         trackCd: 'EMBEDDED', // 대체
@@ -317,7 +317,7 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
         userId: 18,
         email: 'user18@ssafy.com',
         name: 'Jack Walker',
-        regionCd: 'DAEGU', // 수정
+        regionCd: 'GUMI', // 수정
         cohortNum: 12,
         classNum: 3,
         trackCd: 'NON_MAJOR_JAVA', // 대체
@@ -584,93 +584,93 @@ export const dummySsafyUsers: SsafyUserApiResponse[] = [
 ]
 export const dummyMattermostTeams: MattermostTeam[] = [
   {
-    teamId: 123456789,
+    teamId: 123456789 + '',
     name: '11기 서울 8반',
     channels: [
       {
-        channelId: 22022021,
+        channelId: 22022021 + '',
         name: '공지사항',
       },
       {
-        channelId: 33233212,
+        channelId: 33233212 + '',
         name: '소통',
       },
       {
-        channelId: 44545454,
+        channelId: 44545454 + '',
         name: '강의 공유',
       },
     ],
   },
   {
-    teamId: 456789456789,
+    teamId: 456789456789 + '',
     name: '11기 공통 서울 1반',
     channels: [
       {
-        channelId: 456789123456,
+        channelId: 456789123456 + '',
         name: '공지사항',
       },
       {
-        channelId: 789456123,
+        channelId: 789456123 + '',
         name: '잡담',
       },
       {
-        channelId: 784545,
+        channelId: 784545 + '',
         name: 'A108',
       },
       {
-        channelId: 456789456123,
+        channelId: 456789456123 + '',
         name: 'A108(비공식)',
       },
     ],
   },
   {
-    teamId: 789456789456,
+    teamId: 789456789456 + '',
     name: '11기 특화 서울 4반',
     channels: [
       {
-        channelId: 78945,
+        channelId: 78945 + '',
         name: '공지사항',
       },
       {
-        channelId: 456789,
+        channelId: 456789 + '',
         name: '서울 4반 이벤트',
       },
       {
-        channelId: 7878,
+        channelId: 7878 + '',
         name: 'A401',
       },
       {
-        channelId: 45645789,
+        channelId: 45645789 + '',
         name: 'A401(비공식)',
       },
     ],
   },
   {
-    teamId: 456789456,
+    teamId: 456789456 + '',
     name: '11기 자율 서울 6반',
     channels: [
       {
-        channelId: 1,
+        channelId: 1 + '',
         name: '공지사항',
       },
       {
-        channelId: 2,
+        channelId: 2 + '',
         name: '잡담',
       },
       {
-        channelId: 3,
+        channelId: 3 + '',
         name: 'A605',
       },
       {
-        channelId: 4,
+        channelId: 4 + '',
         name: 'A605(은밀한 대화)',
       },
       {
-        channelId: 5,
+        channelId: 5 + '',
         name: 'A605_FE',
       },
       {
-        channelId: 6,
+        channelId: 6 + '',
         name: '강의 교보재 신청',
       },
     ],
