@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.mattermost.service;
 
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
+import com.jetty.ssafficebe.mattermost.payload.MMLoginRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
@@ -22,4 +23,6 @@ public interface MattermostService {
     void sendDirectMessage(Long userId, Long targetUserId, String message);
 
     ApiResponse sendRemindMessageToUserList(Long userId, List<Long> targetUserIdList, Long ScheduleId);
+
+    ApiResponse MMLogin(Long userId, MMLoginRequest mmLoginRequest);
 }
