@@ -1,5 +1,7 @@
 package com.jetty.ssafficebe.mattermost.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.channel.entity.UserChannel;
 import com.jetty.ssafficebe.channel.respository.ChannelRepository;
@@ -25,6 +27,7 @@ import com.jetty.ssafficebe.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -232,17 +235,28 @@ public class MattermostServiceImpl implements MattermostService {
     public ApiResponse MMLogin(Long userId, MMLoginRequest mmLoginRequest){
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
-        user.setMattermostToken(this.getMMToken(mmLoginRequest.getLoginId(), mmLoginRequest.getPassword()));
+        Map<String, String> data = this.getMMTokenAndMMId(mmLoginRequest.getLoginId(), mmLoginRequest.getPassword());
+        user.setMattermostToken(data.get("token"));
+        user.setMattermostUserId(data.get("id"));
         userRepository.save(user);
         return new ApiResponse(true, HttpStatus.OK, "Login Success", user.getEmail());
     }
 
-    public String getMMToken(String mmId, String mmPassword) {
+    public Map<String, String> getMMTokenAndMMId(String mmId, String mmPassword) {
         MMLoginRequest payload = new MMLoginRequest(mmId, mmPassword);
         ResponseEntity<String> response = this.mattermostUtil.callMattermostApi(
                 "/users/login", HttpMethod.POST, payload, String.class, null);
+        String jsonResponse = Objects.requireNonNull(response.getBody());
+        Map<String, String> data = new HashMap<>();
         try{
-            return Objects.requireNonNull(response.getHeaders().get("Token")).get(0);
+            String token = Objects.requireNonNull(response.getHeaders().get("Token")).get(0);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+            String id = jsonNode.get("id").asText();
+            data.put("token", token);
+            data.put("id", id);
+            return data;
+            
         } catch(Exception e){
             throw new InvalidValueException(ErrorCode.INVALID_MM_LOGIN, "mmID", mmId);
         }
