@@ -7,6 +7,8 @@ RUN apk update && apk add --no-cache \
     python3-dev \
     musl-dev \
     linux-headers \
+    libffi-dev \
+    openssl-dev \
     build-base \
     && rm -rf /var/cache/apk/*
 
