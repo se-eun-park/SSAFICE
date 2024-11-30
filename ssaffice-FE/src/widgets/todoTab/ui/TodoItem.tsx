@@ -9,10 +9,39 @@ type TodoItemProps = {
   todo?: ScheduleSummaries
   // todo 객체가 전달되면 -> 할일 리스트의 각 할일 컴포넌트
   // todo 객체가 전달되지 않으면 -> 새로운 할일 등록 컴포넌트
+  todoListReload?: () => void
 }
 
-export const TodoItem = ({ todo }: TodoItemProps) => {
+export const TodoItem = ({ todo, todoListReload }: TodoItemProps) => {
   const [selectedState, setSelectedState] = useState('default')
+  const [newTodo, setNewTodo] = useState<string | undefined>()
+  const handleNewTodo = (val: string) => {
+    setNewTodo(val)
+  }
+  const addNewTodoTrigger = (key: string) => {
+    if (key === 'Enter') {
+      console.log(newTodo)
+
+      // 일정 등록 api 요청 붙이기 -> refresh
+      //   {
+      //     "title" : "최종 발표회 준비",
+      //     "memo" : "",
+      //     "startDateTime" : "2024-11-30T23:21:00",
+      //     "endDateTime" : "2024-12:01T23:22:00",
+      //     "remindRequests": [
+      //     {
+      //       "essentialYn": "N",
+      //       "remindTypeCd": "ONCE",
+      //       "remindDateTime": "2024-11-07T15:00:00"
+      //     }
+      //   ]
+      // }
+
+      // todoList reload하는 trigger
+      todoListReload && todoListReload()
+      setNewTodo(undefined) // input 빈 값으로 돌려놓기
+    }
+  }
 
   return (
     <div
@@ -66,6 +95,8 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
             type='text'
             className='flex-1 text-color-text-primary body-sm-medium placeholder:text-color-text-disabled placeholder:body-sm-medium focus:outline-none'
             placeholder='할일을 입력해주세요'
+            onChange={(e) => handleNewTodo(e.currentTarget.value)}
+            onKeyDown={(e) => addNewTodoTrigger(e.key)}
           />
         )}
       </div>

@@ -9,14 +9,27 @@ type TodoDateGroupProps = {
   date: string
   // dailySchedules: ScheduleItemDisplay[]
   dailySchedules: ScheduleSummaries[]
+  todoListReload: () => void
   isLast?: boolean
 }
 
-export const TodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupProps) => {
+export const TodoDateGroup = ({
+  date,
+  dailySchedules,
+  todoListReload,
+  isLast,
+}: TodoDateGroupProps) => {
   const { isClicked, handleIsClicked } = useClickedToggle()
   const statusCounts: number[] = useCalculateStatusCounts({
     param: { todos: dailySchedules, type: 'user' },
   })
+
+  const todoListReloadExtended = () => {
+    // todoList에서 넘어온 reload 함수 + 할일 등록하기 버튼으로 다시 되돌리는 함수 추가
+    todoListReload()
+    handleIsClicked()
+  }
+
   return (
     <div className='relative flex flex-col'>
       <div className='sticky top-0 z-10 flex gap-spacing-8 pt-spacing-24 pb-spacing-16 bg-color-bg-tertiary'>
@@ -56,7 +69,7 @@ export const TodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupPro
         조건부렌더링 가독성 에바면 컴포를 아예 새로 하나 만들던가 
         
         */}
-            <TodoItem />
+            <TodoItem todoListReload={todoListReloadExtended} />
           </div>
         ) : (
           <div

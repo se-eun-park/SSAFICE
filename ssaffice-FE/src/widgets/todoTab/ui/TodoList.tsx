@@ -4,14 +4,20 @@ import { useQuery } from '@tanstack/react-query'
 import { instance } from '@/shared/api'
 import { useDateFormatter } from '@/shared/model'
 import { dummyTodoDatas } from '@/entities/dummy'
+import { useState } from 'react'
 
 type todoListProps = {
   startDate: Date
   endDate: Date
 }
 export const TodoList = ({ startDate, endDate }: todoListProps) => {
+  const [reloadTrigger, setReloadTrigger] = useState(false) // boolean, toggle 식으로 작동
+  const todoListReload = () => {
+    setReloadTrigger(!reloadTrigger)
+  }
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ['eachTodos_user', startDate, endDate],
+    queryKey: ['eachTodos_user', startDate, endDate, reloadTrigger],
     queryFn: async () => {
       const { data } = await instance.get(
         `/api/schedules/my?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
@@ -29,8 +35,8 @@ export const TodoList = ({ startDate, endDate }: todoListProps) => {
   }
 
   // const -> let (DUMMY TEST)
-  let sortedTodos = useSortingSchedule(data, 'by deadline')
-  sortedTodos = useSortingSchedule(dummyTodoDatas, 'by deadline')
+  let sortedTodos = useSortingSchedule(data, 'by registration')
+  sortedTodos = useSortingSchedule(dummyTodoDatas, 'by registration')
 
   return (
     <div className='relative w-full h-full '>
@@ -41,6 +47,7 @@ export const TodoList = ({ startDate, endDate }: todoListProps) => {
             date={date}
             dailySchedules={dailySchedules}
             isLast={index === Object.entries(sortedTodos).length - 1}
+            todoListReload={todoListReload}
           />
         ))}
       </div>
