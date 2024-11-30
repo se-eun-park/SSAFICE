@@ -62,13 +62,6 @@ export const TodoDateGroup = ({
                 h-[56px]
                 '
           >
-            {/* 
-        11/13 여기까지
-        이 라인이랑, TodoItem todo 없는 케이스 작업하면 됨
-        지금은 newTodo(새로 등록하는 경우)에서 hover 시 바탕화면 색 빼는 등등의 작업 필요
-        조건부렌더링 가독성 에바면 컴포를 아예 새로 하나 만들던가 
-        
-        */}
             <TodoItem todoListReload={todoListReloadExtended} />
           </div>
         ) : (

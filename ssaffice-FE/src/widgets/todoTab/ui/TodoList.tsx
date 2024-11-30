@@ -50,6 +50,16 @@ export const TodoList = ({ startDate, endDate }: todoListProps) => {
             todoListReload={todoListReload}
           />
         ))}
+        {Object.entries(sortedTodos).length === 0 && (
+          <div
+            className='
+              flex justify-center items-center
+              text-color-text-primary heading-desktop-md whitespace-pre-line
+            '
+          >
+            등록된 일정이 없습니다.
+          </div>
+        )}
       </div>
     </div>
   )
