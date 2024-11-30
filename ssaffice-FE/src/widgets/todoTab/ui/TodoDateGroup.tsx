@@ -24,12 +24,6 @@ export const TodoDateGroup = ({
     param: { todos: dailySchedules, type: 'user' },
   })
 
-  const todoListReloadExtended = () => {
-    // todoList에서 넘어온 reload 함수 + 할일 등록하기 버튼으로 다시 되돌리는 함수 추가
-    todoListReload()
-    handleIsClicked()
-  }
-
   return (
     <div className='relative flex flex-col'>
       <div className='sticky top-0 z-10 flex gap-spacing-8 pt-spacing-24 pb-spacing-16 bg-color-bg-tertiary'>
@@ -62,7 +56,11 @@ export const TodoDateGroup = ({
                 h-[56px]
                 '
           >
-            <TodoItem todoListReload={todoListReloadExtended} />
+            <TodoItem
+              todoListReload={todoListReload}
+              backToAddNewTodoButton={handleIsClicked}
+              today={new Date(date)}
+            />
           </div>
         ) : (
           <div
@@ -82,7 +80,7 @@ export const TodoDateGroup = ({
 
         {/* todoItems */}
         {dailySchedules.map((each) => (
-          <TodoItem key={each.scheduleId} todo={each} />
+          <TodoItem key={each.scheduleId} todo={each} todoListReload={todoListReload} />
         ))}
       </div>
     </div>

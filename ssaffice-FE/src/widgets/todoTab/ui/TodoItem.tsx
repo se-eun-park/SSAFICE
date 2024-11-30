@@ -1,18 +1,27 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TodoFlag } from '@/assets/svg'
 // import { type ScheduleItemDisplay } from '@/features/todoTab'
 import { SelectTodoState } from '@/shared/ui'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
+import { useDateFormatter } from '@/shared/model'
 
 type TodoItemProps = {
   // todo?: ScheduleItemDisplay
   todo?: ScheduleSummaries
   // todo 객체가 전달되면 -> 할일 리스트의 각 할일 컴포넌트
   // todo 객체가 전달되지 않으면 -> 새로운 할일 등록 컴포넌트
-  todoListReload?: () => void
+  todoListReload: () => void
+  backToAddNewTodoButton?: () => void
+  // 할일 간편 추가 시 startDate/endDate
+  today?: Date
 }
 
-export const TodoItem = ({ todo, todoListReload }: TodoItemProps) => {
+export const TodoItem = ({
+  todo,
+  todoListReload,
+  backToAddNewTodoButton,
+  today,
+}: TodoItemProps) => {
   const [selectedState, setSelectedState] = useState('default')
   const [newTodo, setNewTodo] = useState<string | undefined>()
   const handleNewTodo = (val: string) => {
@@ -21,13 +30,15 @@ export const TodoItem = ({ todo, todoListReload }: TodoItemProps) => {
   const addNewTodoTrigger = (key: string) => {
     if (key === 'Enter') {
       console.log(newTodo)
-
+      console.log(useDateFormatter('API REQUEST: start', today) as string)
+      console.log(useDateFormatter('API REQUEST: end', today) as string)
       // 일정 등록 api 요청 붙이기 -> refresh
       //   {
       //     "title" : "최종 발표회 준비",
       //     "memo" : "",
-      //     "startDateTime" : "2024-11-30T23:21:00",
-      //     "endDateTime" : "2024-12:01T23:22:00",
+      //     "startDateTime" : useDateFormatter('API REQUEST: start', today) as string,
+      //     "endDateTime" : useDateFormatter('API REQUEST: end', today) as string,
+      //     "scheduleStatusTypeCd" : selectedState,
       //     "remindRequests": [
       //     {
       //       "essentialYn": "N",
@@ -38,10 +49,23 @@ export const TodoItem = ({ todo, todoListReload }: TodoItemProps) => {
       // }
 
       // todoList reload하는 trigger
-      todoListReload && todoListReload()
+      todoListReload()
+      backToAddNewTodoButton && backToAddNewTodoButton()
       setNewTodo(undefined) // input 빈 값으로 돌려놓기
     }
   }
+
+  // TodoState modify request
+  useEffect(() => {
+    if (todo) {
+      // 이미 등록된 할일 객체에서만 실행
+
+      // 수정 요청 api -> /api/schedules/todo.scheduleId
+      // { "scheduleStatusTypeCd" : selectedState}
+      // todoListReload()
+      console.log(selectedState)
+    }
+  }, [selectedState])
 
   return (
     <div

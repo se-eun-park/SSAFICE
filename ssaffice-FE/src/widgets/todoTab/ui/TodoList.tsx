@@ -27,7 +27,7 @@ export const TodoList = ({ startDate, endDate }: todoListProps) => {
   })
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div className='flex w-full h-full'>Loading...</div>
   }
 
   if (error) {
