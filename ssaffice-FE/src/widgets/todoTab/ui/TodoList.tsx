@@ -3,6 +3,7 @@ import { TodoDateGroup } from './TodoDateGroup'
 import { useQuery } from '@tanstack/react-query'
 import { instance } from '@/shared/api'
 import { useDateFormatter } from '@/shared/model'
+import { dummyTodoDatas } from '@/entities/dummy'
 
 type todoListProps = {
   startDate: Date
@@ -27,7 +28,9 @@ export const TodoList = ({ startDate, endDate }: todoListProps) => {
     return <div>Error loading data</div>
   }
 
-  const sortedTodos = useSortingSchedule(data, 'by deadline')
+  // const -> let (DUMMY TEST)
+  let sortedTodos = useSortingSchedule(data, 'by deadline')
+  sortedTodos = useSortingSchedule(dummyTodoDatas, 'by deadline')
 
   return (
     <div className='relative w-full h-full '>
