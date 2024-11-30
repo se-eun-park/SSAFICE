@@ -12,7 +12,7 @@ type TodoItemProps = {
 }
 
 export const TodoItem = ({ todo }: TodoItemProps) => {
-  const [selectedState, setSelectedState] = useState('todo')
+  const [selectedState, setSelectedState] = useState('default')
 
   return (
     <div
