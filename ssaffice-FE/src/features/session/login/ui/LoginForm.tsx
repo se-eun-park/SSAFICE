@@ -5,9 +5,11 @@ import { instance } from '@/shared/api'
 import { useNavigate } from 'react-router-dom'
 import { useLoginStateStore, useSetLoginStateStore } from '@/entities/session/index.ts'
 import { useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 // import { useLoginFormModel } from '../model/useLoginFormModel'
-// import { CommonModal } from '@/shared/ui/CommonModal/CommonModal'
-// import { ModalName } from '@/shared/model'
+import { CommonModal } from '@/shared/ui/CommonModal/CommonModal'
+import { ModalName } from '@/shared/model'
+import { LoginFormEmailValidation } from '../model/LoginFormEmailValidation'
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('')
@@ -15,6 +17,13 @@ export const LoginForm = () => {
   const setIsAuthenticated = useSetLoginStateStore()
   const isAuthenticated = useLoginStateStore()
   const navigate = useNavigate()
+
+  // LOGIN ERROR MODAL SETTING
+  const [modalName, setModalName] = useState<ModalName>('LoginFail')
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const modalCloser = () => {
+    setIsOpen(false)
+  }
 
   useQuery({
     queryKey: ['user', isAuthenticated],
@@ -31,6 +40,13 @@ export const LoginForm = () => {
 
   async function handleLogin() {
     try {
+      if (LoginFormEmailValidation(email) === false) {
+        // 이메일 형식 유효성 검사 / ERROR MODAL APPEARS
+        setModalName('EmailValidFalse')
+        setIsOpen(true)
+        return
+      }
+
       const loginResponse = await instance.post('/api/auth/login', {
         username: email,
         password: password,
@@ -41,6 +57,13 @@ export const LoginForm = () => {
         setIsAuthenticated(true)
       }
     } catch (err) {
+      if (err instanceof AxiosError) {
+        // ERROR MODAL APPEARS
+        if (err.response?.status === 404 || 403) {
+          setModalName('LoginFail')
+          setIsOpen(true)
+        }
+      }
       console.error(err)
     }
   }
@@ -58,8 +81,6 @@ export const LoginForm = () => {
     }
   }
 
-  // const [modalName, setModalName] = useState<ModalName>('LoginFail')
-
   return (
     <div className='flex flex-col w-full'>
       <form
@@ -75,7 +96,7 @@ export const LoginForm = () => {
                 이메일
               </div>
               <input
-                type='email'
+                type='text'
                 className='flex w-full border px-spacing-16 py-spacing-12 border-color-border-secondary rounded-radius-8 placeholder:color-text-disabled placeholder:body-md-medium'
                 placeholder='EMAIL'
                 value={email}
@@ -97,7 +118,7 @@ export const LoginForm = () => {
           </div>
           <LoginButton label='로그인' onClick={handleLogin} />
 
-          {/* <CommonModal name={modalName} opened={isOpen} closeRequest={close} /> */}
+          <CommonModal name={modalName} opened={isOpen} closeRequest={modalCloser} />
         </div>
 
         <div className='relative flex flex-col items-center justify-center w-full h-spacing-32'>
