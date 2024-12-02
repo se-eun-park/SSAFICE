@@ -129,14 +129,13 @@ export const LoginForm = () => {
             또는
           </span>
         </div>
-
-        <LoginButton
-          label='SSAFY로 시작하기'
-          icon={ssafyIcon}
-          onClick={handleSSOLogin}
-          className='border text-color-text-info-bold bg-color-bg-info-subtle border-color-border-info-subtle'
-        />
       </form>
+      <LoginButton
+        label='SSAFY로 시작하기'
+        icon={ssafyIcon}
+        onClick={handleSSOLogin}
+        className='border text-color-text-info-bold bg-color-bg-info-subtle border-color-border-info-subtle'
+      />
     </div>
   )
 }
