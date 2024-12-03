@@ -16,7 +16,7 @@ class Notice(Base):
     channel_id = Column(String(255), ForeignKey("channel.channel_id"))
     content = Column(LONGTEXT)
     end_date_time = Column(DateTime)
-    is_essential_yn = Column(BooleanToYN, default="N")
+    essential_yn = Column(BooleanToYN, default="N")
     mm_message_id = Column(String(255))
     notice_type_cd = Column(Enum(NoticeType), nullable=True)
     start_date_time = Column(DateTime)

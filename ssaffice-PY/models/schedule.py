@@ -1,4 +1,13 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Boolean, Enum, DateTime, BigInteger
+from sqlalchemy import (
+    Column,
+    String,
+    Integer,
+    ForeignKey,
+    Boolean,
+    Enum,
+    DateTime,
+    BigInteger,
+)
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.sql import func
 from .type import *
@@ -11,11 +20,13 @@ class Schedule(Base):
     schedule_id = Column(BigInteger, primary_key=True, autoincrement=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(BigInteger, ForeignKey("user.user_id"))
-    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), default=func.now(), onupdate=func.now()
+    )
     updated_by = Column(BigInteger, ForeignKey("user.user_id"))
-    end_date_time = Column(DateTime(timezone=True))    
-    is_enroll_yn = Column(BooleanToYN, default="N")
-    is_essential_yn = Column(BooleanToYN, default="N")
+    end_date_time = Column(DateTime(timezone=True))
+    enroll_yn = Column(BooleanToYN, default="N")
+    essential_yn = Column(BooleanToYN, default="N")
     memo = Column(String(255))
     notice_id = Column(BigInteger, ForeignKey("notice.notice_id"), nullable=True)
     schedule_source_type_cd = Column(Enum(ScheduleSourceType), nullable=True)
@@ -26,16 +37,19 @@ class Schedule(Base):
     title = Column(String(255))
     user_id = Column(BigInteger, ForeignKey("user.user_id"), nullable=True)
 
+
 class Remind(Base):
     __tablename__ = "remind"
 
     remind_id = Column(BigInteger, primary_key=True, autoincrement=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
     created_by = Column(BigInteger, ForeignKey("user.user_id"))
-    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), default=func.now(), onupdate=func.now()
+    )
     updated_by = Column(BigInteger, ForeignKey("user.user_id"))
     created_by = Column(BigInteger, ForeignKey("user.user_id"))
-    is_essential_yn = Column(BooleanToYN, default="N")
+    essential_yn = Column(BooleanToYN, default="N")
     remind_date_time = Column(DateTime(timezone=True))
     remind_type_cd = Column(Enum(RemindType), nullable=True)
     schedule_id = Column(BigInteger, ForeignKey("schedule.schedule_id"), nullable=False)

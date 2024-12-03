@@ -20,7 +20,7 @@ class Attachment_File(Base):
     file_size = Column(BigInteger)
     file_type = Column(String(255))
     hash = Column(String(255))
-    is_deleted_yn = Column(BooleanToYN, default=False)
+    deleted_yn = Column(BooleanToYN, default=False)
     mime_type = Column(String(255))
     order_idx = Column(Integer)
     ref_id = Column(BigInteger)

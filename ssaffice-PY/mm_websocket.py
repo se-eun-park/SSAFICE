@@ -29,7 +29,7 @@ def on_message(ws, message):
 
     # 2. event중에 글이 게시되고 해당 게시글이 올라온 채널의 이름이 공지를 포함하면 실행
     if is_notice(data):
-        
+
         # 채널 정보를 DB에 저장
         channel_id = json.loads(data["data"]["post"])["channel_id"]
         channel_info = get_channel_info_by_channel_id(token, channel_id)
@@ -45,25 +45,27 @@ def on_message(ws, message):
                 notice_entity = make_notice_entity(data, notice)
                 notice_source_type = find_channel_type(data)
                 notice_entity.notice_type_cd = notice_source_type
-                
+
                 # notice를 DB에 저장
                 notice_db_id = insert_notice(notice_entity)
-                
+
                 # notice를 ES에 indexing
                 elasticsearch_index.index_data(notice_entity)
 
                 # 파일 업로드 하면서 동시에 db에 파일 정보 삽입
-                metadatas = get_file_metadata_from_data(data)               
-                if metadatas != None:                    
+                metadatas = get_file_metadata_from_data(data)
+                if metadatas != None:
                     order_idx = 0
                     for metadata in metadatas:
-                        response = get_file_by_file_id(token, metadata['id'])
-                        upload_file_to_s3(response)      
-                        file = make_file_entity(notice_db_id, response, metadata, order_idx)
+                        response = get_file_by_file_id(token, metadata["id"])
+                        upload_file_to_s3(response)
+                        file = make_file_entity(
+                            notice_db_id, response, metadata, order_idx
+                        )
                         file.created_by = notice_entity.created_by
                         file.updated_by = notice_entity.created_by
                         insert_file(file)
-                        order_idx+=1
+                        order_idx += 1
                 # 일정에 해당하는 유저를 먼저 정의해야함.
 
                 user_count = get_channel_members_count(token, channel_id)[
@@ -72,11 +74,11 @@ def on_message(ws, message):
                 max_page_num = user_count // 200 + 1
 
                 for page_num in range(0, max_page_num):
-                    member_ids = find_user_id_by_channel_id(token, channel_id, page_num)                                      
+                    member_ids = find_user_id_by_channel_id(token, channel_id, page_num)
                     for member_id in member_ids:
                         # user별로 DB에 넣을 schedule entity 생성
                         schedule = make_schedule_entity(notice_db_id)
-                        memo = notice['content']
+                        memo = notice["content"]
                         schedule.memo = memo
                         source_type = find_channel_type(data)
                         schedule.schedule_source_type = source_type
@@ -87,10 +89,10 @@ def on_message(ws, message):
                             user_id = get_user_id_by_user_mm_id(member_id)
                             schedule.user_id = user_id
                             # schedule를 DB에 저장
-                            schedule_id = insert_schedule(schedule)    
+                            schedule_id = insert_schedule(schedule)
                             # 필수 공지(= 필수 일정)인 경우에만 remind를 생성
-                            if schedule.is_essential_yn == True:
-                                remind = make_remind_entity(schedule_id)                                
+                            if schedule.essential_yn == True:
+                                remind = make_remind_entity(schedule_id)
                                 remind_id = insert_remind(remind)
 
             else:
