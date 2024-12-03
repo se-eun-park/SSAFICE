@@ -277,11 +277,11 @@ public class MattermostServiceImpl implements MattermostService {
 
     public Map<String, String> getMMTokenAndMMId(String mmId, String mmPassword) {
         MMLoginRequest payload = new MMLoginRequest(mmId, mmPassword);
-        ResponseEntity<String> response = this.mattermostUtil.callMattermostApi(
-                "/users/login", HttpMethod.POST, payload, String.class, null);
-        String jsonResponse = Objects.requireNonNull(response.getBody());
-        Map<String, String> data = new HashMap<>();
         try{
+            ResponseEntity<String> response = this.mattermostUtil.callMattermostApi(
+                    "/users/login", HttpMethod.POST, payload, String.class, null);
+            String jsonResponse = Objects.requireNonNull(response.getBody());
+            Map<String, String> data = new HashMap<>();
             String token = Objects.requireNonNull(response.getHeaders().get("Token")).get(0);
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(jsonResponse);
