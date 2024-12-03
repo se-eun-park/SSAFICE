@@ -9,4 +9,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long>, Sched
     List<Schedule> findAllByNoticeId(Long noticeId);
 
     List<Schedule> findAllByUserId(Long userId);
+
+    List<Schedule> findByUserIdAndEssentialYn(Long userId, String y);
 }

@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.user.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
+import com.jetty.ssafficebe.user.payload.DashBoardCount;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
@@ -132,6 +133,14 @@ public class UserController {
                                                         @RequestParam MultipartFile profileImg) throws IOException {
 
         return ResponseEntity.ok().body(userService.updateProfileImg(userDetails.getUserId(), profileImg));
+    }
+
+    /**
+     * SSAFICE 요약 컴포넌트
+     */
+    @GetMapping("/counts")
+    public ResponseEntity<DashBoardCount> getDashBoardCount(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(userService.getDashBoardCount(userDetails.getUserId()));
     }
 
 }

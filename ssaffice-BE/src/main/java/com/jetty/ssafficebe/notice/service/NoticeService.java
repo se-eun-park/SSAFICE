@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.notice.service;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.payload.BaseFilterRequest;
+import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummary;
@@ -21,6 +22,8 @@ public interface NoticeService {
     ApiResponse deleteNotice(Long userId, Long noticeId);
 
     Page<NoticeSummary> getNoticePage(Long userId, Pageable pageable);
+
+    List<Notice> getNoticeList(Long userId);
 
     NoticeDetail getNotice(Long userId, Long noticeId);
 
