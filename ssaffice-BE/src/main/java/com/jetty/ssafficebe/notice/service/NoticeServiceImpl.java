@@ -10,14 +10,19 @@ import com.jetty.ssafficebe.common.payload.BaseFilterRequest;
 import com.jetty.ssafficebe.file.service.AttachmentFileService;
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
 import com.jetty.ssafficebe.notice.entity.Notice;
+import com.jetty.ssafficebe.notice.payload.NoticeCounts;
 import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummary;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForAdmin;
 import com.jetty.ssafficebe.notice.repository.NoticeRepository;
+import com.jetty.ssafficebe.schedule.entity.Schedule;
+import com.jetty.ssafficebe.schedule.payload.ScheduleStatusCount;
+import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.schedule.service.ScheduleService;
 import com.jetty.ssafficebe.search.service.ESNoticeService;
 import com.jetty.ssafficebe.user.converter.UserConverter;
+import com.jetty.ssafficebe.user.payload.DashBoardCount;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import com.jetty.ssafficebe.user.service.UserService;
 import java.io.IOException;
@@ -40,6 +45,7 @@ public class NoticeServiceImpl implements NoticeService {
     private final AttachmentFileService attachmentFileService;
 
     private final ScheduleService scheduleService;
+    private final ScheduleRepository scheduleRepository;
 
     private final ChannelService channelService;
 
@@ -166,5 +172,41 @@ public class NoticeServiceImpl implements NoticeService {
             noticeSummaryForAdmin.setScheduleEnrolledCount(scheduleService.getEnrolledCount(noticeSummary.getNoticeId()));
             return noticeSummaryForAdmin;
         }).toList();
+    }
+
+    @Override
+    public DashBoardCount getDashBoardCount(Long userId) {
+
+        NoticeCounts noticeCounts = new NoticeCounts();
+        // 0. 유저 아이디로 공지 가져오기
+        List<Notice> noticeList = this.getNoticeList(userId);
+
+        // 1. 내가 해당하는 채널의 공지 개수 -> NoticeCounts.total
+        noticeCounts.setTotal((long) noticeList.size());
+
+        // 2. 그 중 필수 공지 개수 -> NoticeCounts.essential
+        long essentialCount = noticeList.stream()
+                                        .filter(Notice::isEssential)
+                                        .count();
+        noticeCounts.setEssential(essentialCount);
+
+        // 3. 내 일정 가져오기
+        List<Schedule> scheduleList = scheduleRepository.findByUserIdAndEssentialYn(userId, "Y");
+
+        // 공지사항에서 파생된 일정 중, 미완료 상태의 일정 수  (필수 + 선택) -> NoticeCounts.enrolled
+        long enrolledCount = scheduleList.stream()
+                                         .filter(schedule -> !schedule.getScheduleStatusTypeCd().equals("DONE"))
+                                         .filter(schedule -> (schedule.getScheduleSourceTypeCd().equals("GLOBAL") ||
+                                                 schedule.getScheduleSourceTypeCd().equals("TEAM")))
+                                         .count();
+        noticeCounts.setEnrolled(enrolledCount);
+
+        // 4. 내 일정 ScheduleStatusCount
+        ScheduleStatusCount scheduleStatusCount = scheduleRepository.getStatusCounts(scheduleList);
+
+        return DashBoardCount.builder()
+                             .noticeCounts(noticeCounts)
+                             .scheduleCounts(scheduleStatusCount)
+                             .build();
     }
 }

@@ -8,8 +8,6 @@ import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.file.storage.FileStorageService;
-import com.jetty.ssafficebe.notice.entity.Notice;
-import com.jetty.ssafficebe.notice.payload.NoticeCounts;
 import com.jetty.ssafficebe.notice.service.NoticeService;
 import com.jetty.ssafficebe.role.converter.RoleConverter;
 import com.jetty.ssafficebe.role.entity.Role;
@@ -17,14 +15,11 @@ import com.jetty.ssafficebe.role.entity.UserRole;
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
 import com.jetty.ssafficebe.role.repository.UserRoleRepository;
-import com.jetty.ssafficebe.schedule.entity.Schedule;
-import com.jetty.ssafficebe.schedule.payload.ScheduleStatusCount;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.search.payload.ESUserRequest;
 import com.jetty.ssafficebe.search.service.ESUserService;
 import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.entity.User;
-import com.jetty.ssafficebe.user.payload.DashBoardCount;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
@@ -61,10 +56,6 @@ public class UserServiceImpl implements UserService {
     private final FileStorageService fileStorageService;
 
     private final ESUserService esUserService;
-
-    private final NoticeService noticeService;
-
-    private final ScheduleRepository scheduleRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -251,39 +242,4 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Override
-    public DashBoardCount getDashBoardCount(Long userId) {
-
-        NoticeCounts noticeCounts = new NoticeCounts();
-        // 0. 유저 아이디로 공지 가져오기
-        List<Notice> noticeList = noticeService.getNoticeList(userId);
-
-        // 1. 내가 해당하는 채널의 공지 개수 -> NoticeCounts.total
-        noticeCounts.setTotal((long) noticeList.size());
-
-        // 2. 그 중 필수 공지 개수 -> NoticeCounts.essential
-        long essentialCount = noticeList.stream()
-                                        .filter(Notice::isEssential)
-                                        .count();
-        noticeCounts.setEssential(essentialCount);
-
-        // 3. 내 일정 가져오기
-        List<Schedule> scheduleList = scheduleRepository.findByUserIdAndEssentialYn(userId, "Y");
-
-        // 공지사항에서 파생된 일정 중, 미완료 상태의 일정 수  (필수 + 선택) -> NoticeCounts.enrolled
-        long enrolledCount = scheduleList.stream()
-                                         .filter(schedule -> !schedule.getScheduleStatusTypeCd().equals("DONE"))
-                                         .filter(schedule -> (schedule.getScheduleSourceTypeCd().equals("GLOBAL") ||
-                                                 schedule.getScheduleSourceTypeCd().equals("TEAM")))
-                                         .count();
-        noticeCounts.setEnrolled(enrolledCount);
-
-        // 4. 내 일정 ScheduleStatusCount
-        ScheduleStatusCount scheduleStatusCount = scheduleRepository.getStatusCounts(scheduleList);
-
-        return DashBoardCount.builder()
-                             .noticeCounts(noticeCounts)
-                             .scheduleCounts(scheduleStatusCount)
-                             .build();
-    }
 }
