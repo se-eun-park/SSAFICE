@@ -251,7 +251,7 @@ public class MattermostServiceImpl implements MattermostService {
     /**
      * ScheduleId를 통해 스케줄 정보를 가져와 메시지를 만드는 메서드
      *
-     * @param scheduleId 사용자가 속한 채널 목록입니다.
+     * @param scheduleId 메시지로 만들고자 하는 스케줄의 Id입니다.
      * @return DirectMessage 의 payload 입니다.
      */
     public String makeDirectMessageFromSchedule(Long scheduleId) {
