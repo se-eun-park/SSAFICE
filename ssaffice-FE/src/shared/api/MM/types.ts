@@ -1,4 +1,4 @@
 export type postMmSyncBody = {
-  email: string
+  loginId: string
   password: string
 }

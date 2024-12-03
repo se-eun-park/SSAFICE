@@ -16,7 +16,7 @@ export const SyncForm = () => {
   }, [email, password])
 
   const handleSync = () => {
-    postMmSync({ email, password })
+    postMmSync({ loginId: email, password })
   }
 
   return (
