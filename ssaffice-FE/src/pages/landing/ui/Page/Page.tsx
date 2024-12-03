@@ -21,8 +21,8 @@ const selectedBtnClasses: string = `
   ${btnClasses}
   text-color-text-interactive-secondary-press
   bg-color-bg-interactive-selected-press
-  border border-color-border-focus-ring border-2
-` // 선택된 탭 버튼에 적용됩니다.
+  ring-2 ring-color-border-focus-ring
+`
 
 export const LandingPage = () => {
   const {
@@ -36,15 +36,10 @@ export const LandingPage = () => {
   const animationClass = useLandingImageAnimation(selectedImage)
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col px-spacing-10'>
       {/* MARK: 화면 상단
        */}
-      <div
-        className='
-        flex flex-col gap-spacing-40 items-center justify-start
-        h-[400px] py-spacing-64
-        '
-      >
+      <div className='flex flex-col items-center justify-start gap-spacing-40 py-spacing-64'>
         {/* 헤더 텍스트 영역 */}
         <div className='flex flex-col items-center gap-spacing-16'>
           <div className='flex flex-col items-center gap-spacing-8'>
@@ -67,16 +62,17 @@ export const LandingPage = () => {
 
       {/* MARK: 화면 하단
        */}
-      <div className='flex flex-col justify-start border-t gap-spacing-40 px-spacing-128 py-spacing-64 border-t-color-border-tertiary'>
+      <div className='flex flex-col justify-start border-t gap-spacing-40 lg:px-spacing-128 py-spacing-64 border-t-color-border-tertiary'>
         {/* 텍스트, 탭 5개 영역 */}
         <div className='flex flex-col items-center gap-spacing-20'>
           <div className='text-color-text-primary body-xl-semibold'>
-            교육생과 프로 모두에게 최적의 경험을 제공합니다.
+            SSAFICE는 교육생과 프로 모두에게 최적의 경험을 제공합니다.
           </div>
           {/* button tabs */}
-          <div className='flex flex-row gap-spacing-16'>
+          <div className='grid grid-cols-2 md:grid-cols-4 gap-spacing-16'>
             {tabLabels.map((each, index) => (
               <button
+                key={index}
                 type='button'
                 className={index === selectedIndex ? selectedBtnClasses : btnClasses}
                 onClick={() => handleSelectedIndex(index)}
@@ -88,14 +84,9 @@ export const LandingPage = () => {
         </div>
 
         {/* 탭 이미지, 상세설명 영역 */}
-        <div
-          className='
-        flex justify-between gap-spacing-32
-        h-[400px]
-        '
-        >
+        <div className='flex flex-col items-center justify-between lg:flex-row gap-spacing-32'>
           {/* 탭 설명 영역 */}
-          <div className='flex flex-col items-start justify-center gap-spacing-32'>
+          <div className='flex flex-col items-start justify-center gap-spacing-24'>
             <div className='flex flex-col gap-spacing-16'>
               <div className='text-color-text-primary heading-desktop-2xl'>{selectedTitle}</div>
               <div className='whitespace-pre-wrap text-color-text-primary body-lg-medium'>
@@ -113,7 +104,7 @@ export const LandingPage = () => {
           </div>
 
           {/* 이미지 영역 */}
-          <div className={`w-[600px] h-[400px] overflow-hidden transform ${animationClass}`}>
+          <div className={`max-w-[500px] overflow-hidden transform ${animationClass}`}>
             <img
               id='slide-target'
               src={selectedImage}
