@@ -18,7 +18,5 @@ public class UpdateScheduleRequest {
     private String scheduleStatusTypeCd;
     private String essentialYn;
     private String enrollYn;
-    private Long userId;
-    private Long noticeId;
     private List<RemindRequest> remindRequests;
 }
