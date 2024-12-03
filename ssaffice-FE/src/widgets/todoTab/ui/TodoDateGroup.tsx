@@ -9,14 +9,21 @@ type TodoDateGroupProps = {
   date: string
   // dailySchedules: ScheduleItemDisplay[]
   dailySchedules: ScheduleSummaries[]
+  todoListReload: () => void
   isLast?: boolean
 }
 
-export const TodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupProps) => {
+export const TodoDateGroup = ({
+  date,
+  dailySchedules,
+  todoListReload,
+  isLast,
+}: TodoDateGroupProps) => {
   const { isClicked, handleIsClicked } = useClickedToggle()
   const statusCounts: number[] = useCalculateStatusCounts({
     param: { todos: dailySchedules, type: 'user' },
   })
+
   return (
     <div className='relative flex flex-col'>
       <div className='sticky top-0 z-10 flex gap-spacing-8 pt-spacing-24 pb-spacing-16 bg-color-bg-tertiary'>
@@ -49,14 +56,11 @@ export const TodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupPro
                 h-[56px]
                 '
           >
-            {/* 
-        11/13 여기까지
-        이 라인이랑, TodoItem todo 없는 케이스 작업하면 됨
-        지금은 newTodo(새로 등록하는 경우)에서 hover 시 바탕화면 색 빼는 등등의 작업 필요
-        조건부렌더링 가독성 에바면 컴포를 아예 새로 하나 만들던가 
-        
-        */}
-            <TodoItem />
+            <TodoItem
+              todoListReload={todoListReload}
+              backToAddNewTodoButton={handleIsClicked}
+              today={new Date(date)}
+            />
           </div>
         ) : (
           <div
@@ -76,7 +80,7 @@ export const TodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupPro
 
         {/* todoItems */}
         {dailySchedules.map((each) => (
-          <TodoItem key={each.scheduleId} todo={each} />
+          <TodoItem key={each.scheduleId} todo={each} todoListReload={todoListReload} />
         ))}
       </div>
     </div>

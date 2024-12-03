@@ -13,7 +13,11 @@ export const LoginErrorModal = ({ errorType, closeRequest }: LoginErrorModalProp
     '
     >
       <div className='flex w-full justify-end'>
-        <div className='flex w-spacing-12 h-spacing-20' onClick={closeRequest} role='presentation'>
+        <div
+          className='flex w-spacing-12 h-spacing-20 hover:cursor-pointer'
+          onClick={closeRequest}
+          role='presentation'
+        >
           <ExitButton />
         </div>
       </div>
