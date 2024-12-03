@@ -77,7 +77,7 @@ export const LoginForm = () => {
               </div>
               <input
                 type='email'
-                className='flex w-full border px-spacing-16 py-spacing-12 border-color-border-secondary rounded-radius-8 placeholder:color-text-disabled placeholder:body-md-medium'
+                className='flex w-full border focus:outline-none px-spacing-16 py-spacing-12 border-color-border-secondary rounded-radius-8 placeholder:color-text-disabled placeholder:body-md-medium'
                 placeholder='EMAIL'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -89,7 +89,7 @@ export const LoginForm = () => {
               </div>
               <input
                 type='password'
-                className='flex w-full border px-spacing-16 py-spacing-12 border-color-border-secondary rounded-radius-8 placeholder:color-text-disabled placeholder:body-md-medium'
+                className='flex w-full border focus:outline-none px-spacing-16 py-spacing-12 border-color-border-secondary rounded-radius-8 placeholder:color-text-disabled placeholder:body-md-medium'
                 placeholder='PASSWORD'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

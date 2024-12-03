@@ -3,6 +3,7 @@ import { NotFoundPage } from '@/pages/notFound'
 import { LoginPage } from '@/pages/login'
 import { SignupPage } from '@/pages/signup'
 import { LandingPage } from '@/pages/landing'
+import { MatterMostSyncPage } from '@/pages/mmSync'
 import { MainPage } from '@/pages/main'
 import { baseLayout } from './layouts/baseLayout'
 import { ProPage } from '@/pages/pro'
@@ -36,6 +37,10 @@ export const appRouter = ({ isAuthenticated, role }: AppRouterProps) => {
         {
           path: 'signup',
           element: <SignupPage />,
+        },
+        {
+          path: 'mattermost/sync',
+          element: <MatterMostSyncPage />,
         },
         {
           path: '/sso/providers/ssafy/callback',

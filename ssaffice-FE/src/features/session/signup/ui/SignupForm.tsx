@@ -24,7 +24,7 @@ export const SignupForm = () => {
     if (!email || !password || !nickNameValue || !cohort || !region || !track || !class_) return
 
     setIsDisabled(false)
-  }, [nickNameValue, cohort, region, track, class_])
+  }, [email, password, nickNameValue, cohort, region, track, class_])
 
   const handleOnClickSignup = () => {
     postUserSignup(userId, {
@@ -66,7 +66,7 @@ export const SignupForm = () => {
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>닉네임</p>
           <input
             type='text'
-            placeholder='NICKNAME'
+            placeholder='이름[지역_반]'
             value={nickNameValue}
             onChange={handleNickNameOncChange}
             className='w-[348px] border border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-primary px-spacing-16 py-spacing-8 focus:outline-none placeholder:text-color-text-disabled'
