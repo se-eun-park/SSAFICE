@@ -1,12 +1,16 @@
 package com.jetty.ssafficebe.mattermost.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jetty.ssafficebe.channel.service.ChannelService;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidTokenException;
+import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.mattermost.payload.DeleteSummary;
 import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
+import com.jetty.ssafficebe.mattermost.payload.MMLoginRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
@@ -18,6 +22,7 @@ import com.jetty.ssafficebe.user.repository.UserRepository;
 import com.jetty.ssafficebe.user.service.UserService;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -255,5 +260,36 @@ public class MattermostServiceImpl implements MattermostService {
 
         return "[REMIND]\n제목 : " + schedule.getTitle() + " \n" + "내용 : " + schedule.getMemo() + " \n" + "시작시간 : "
                 + schedule.getStartDateTime() + " \n" + "종료시간 : " + schedule.getEndDateTime();
+    }
+
+    @Override
+    public ApiResponse MMLogin(Long userId, MMLoginRequest mmLoginRequest){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+        Map<String, String> data = this.getMMTokenAndMMId(mmLoginRequest.getLoginId(), mmLoginRequest.getPassword());
+        user.setMattermostToken(data.get("token"));
+        user.setMattermostUserId(data.get("id"));
+        userRepository.save(user);
+        return new ApiResponse(true, HttpStatus.OK, "Login Success", user.getEmail());
+    }
+
+    public Map<String, String> getMMTokenAndMMId(String mmId, String mmPassword) {
+        MMLoginRequest payload = new MMLoginRequest(mmId, mmPassword);
+        ResponseEntity<String> response = this.mattermostUtil.callMattermostApi(
+                "/users/login", HttpMethod.POST, payload, String.class, null);
+        String jsonResponse = Objects.requireNonNull(response.getBody());
+        Map<String, String> data = new HashMap<>();
+        try{
+            String token = Objects.requireNonNull(response.getHeaders().get("Token")).get(0);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+            String id = jsonNode.get("id").asText();
+            data.put("token", token);
+            data.put("id", id);
+            return data;
+            
+        } catch(Exception e){
+            throw new InvalidValueException(ErrorCode.INVALID_MM_LOGIN, "mmID", mmId);
+        }
     }
 }
