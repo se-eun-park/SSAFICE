@@ -91,9 +91,6 @@ public class Schedule extends BaseEntity {
     private List<Remind> reminds = new ArrayList<>();
 
     public void addRemind(Remind remind) {
-        if (this.reminds == null) {
-            this.reminds = new ArrayList<>();
-        }
         this.reminds.add(remind);
         remind.setSchedule(this);
     }
