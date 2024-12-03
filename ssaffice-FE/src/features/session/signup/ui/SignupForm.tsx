@@ -1,9 +1,12 @@
+import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { CohortSelector, RegionSelector, TrackSelector, ClassSelector } from './UserInfoSelector'
 import { useUserIdStore } from '@/entities/session'
 import { postUserSignup } from '@/shared/api/User'
 
 export const SignupForm = () => {
+  const navigate = useNavigate()
+
   const userId = useUserIdStore()
 
   const [isDisabled, setIsDisabled] = useState(true)
@@ -21,10 +24,13 @@ export const SignupForm = () => {
   }
 
   useEffect(() => {
-    if (!email || !password || !nickNameValue || !cohort || !region || !track || !class_) return
+    if (!email || !password || !nickNameValue || !cohort || !region || !track || !class_) {
+      setIsDisabled(true)
+      return
+    }
 
     setIsDisabled(false)
-  }, [nickNameValue, cohort, region, track, class_])
+  }, [email, password, nickNameValue, cohort, region, track, class_])
 
   const handleOnClickSignup = () => {
     postUserSignup(userId, {
@@ -37,6 +43,8 @@ export const SignupForm = () => {
       trackCd: track,
       classNum: class_,
     })
+
+    navigate('/mattermost/sync')
   }
 
   return (
@@ -66,7 +74,7 @@ export const SignupForm = () => {
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>닉네임</p>
           <input
             type='text'
-            placeholder='NICKNAME'
+            placeholder='이름[지역_반]'
             value={nickNameValue}
             onChange={handleNickNameOncChange}
             className='w-[348px] border border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-primary px-spacing-16 py-spacing-8 focus:outline-none placeholder:text-color-text-disabled'

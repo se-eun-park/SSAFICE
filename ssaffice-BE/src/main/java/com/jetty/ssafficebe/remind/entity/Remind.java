@@ -17,12 +17,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "remind")
 public class Remind extends BaseEntity {
 
@@ -30,11 +36,19 @@ public class Remind extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long remindId;
 
+    @Builder.Default
     private String essentialYn = "N";
 
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "essentialYn", updatable = false, insertable = false)
     private Boolean essential;
+
+    @Builder.Default
+    private String activeYn = "Y";
+
+    @Convert(converter = BooleanToYNConverter.class)
+    @Column(name = "activeYn", updatable = false, insertable = false)
+    private Boolean active;
 
     private String remindTypeCd;
 

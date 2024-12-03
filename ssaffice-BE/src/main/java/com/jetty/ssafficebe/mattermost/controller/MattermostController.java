@@ -1,20 +1,15 @@
 package com.jetty.ssafficebe.mattermost.controller;
 
-import com.jetty.ssafficebe.channel.entity.Channel;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.mattermost.payload.DirectMessageRequest;
-import com.jetty.ssafficebe.mattermost.payload.MMChannelSummary;
-import com.jetty.ssafficebe.mattermost.payload.MMUserIdRequest;
+import com.jetty.ssafficebe.mattermost.payload.MMLoginRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
-import com.jetty.ssafficebe.mattermost.payload.UserAutocompleteSummary;
 import com.jetty.ssafficebe.mattermost.service.MattermostService;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,9 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Log4j2
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/mm")
@@ -54,53 +49,45 @@ public class MattermostController {
         return ResponseEntity.ok(this.mattermostService.deletePost(postId));
     }
 
-    @GetMapping("/users/autocomplete")
-    public ResponseEntity<List<UserAutocompleteSummary>> getUserAutocomplete(@RequestParam String name) {
-        // 영어 외의 문자도 인코딩할 수 있도록 인코딩 코드 추가
-        String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
-        return ResponseEntity.ok(this.mattermostService.getUserAutocomplete(encodedName));
-    }
+    /**
+     * 새로고침을 누를 때 사용자가 속한 MM 채널 목록을 가져와 해당 채널들을 Channel 테이블과 UserChannel 테이블에 저장하는 메서드입니다. 이 메서드는 두 단계로 구성됩니다: 1. 사용자가
+     * 속한 채널을 Mattermost 에서 가져와 Channel 테이블에 저장합니다. 2. 사용자와 채널의 연관 관계를 UserChannel 테이블에 저장합니다.
+     *
+     * @param userDetails 인증된 사용자의 세부 정보를 포함하는 객체입니다. 이를 통해 사용자 ID를 가져올 수 있습니다. JWT Token 을 통해 인증된 사용자의 정보를 가져옵니다.
+     * @return 요청의 처리 결과를 담고 있는 ResponseEntity 객체로, 성공적으로 저장되었을 때의 응답 결과를 포함합니다.
+     */
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse> saveChannelsByUserIdOnRefresh(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        log.info("[saveChannelsByUserId] userID 새로고침 시 채널 저장하는 메서드 시작 , userId : {}", userDetails.getUserId());
 
-    // user가 새로고침할 때 동작하는 endPoint
-    // 해당 userID를 통해 MM에서 채널리스트를 가져와 공지사항만 필터링 한 후 Channel table과 UserChannel table에 저장
-
-    @GetMapping("/channels")
-    public ResponseEntity<ApiResponse> saveChannelsByUserId(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Long userId = customUserDetails.getUserId();
-
-        // 1. Channel table에 저장하는 부분
-        // 1-1. MM에서 채널리스트를 가져와 공지사항만 필터링 한 후 Channel table에 저장
-        List<MMChannelSummary> mmchannelSummaryList = this.mattermostService.getChannelsByUserIdFromMM(userId);
-        List<MMChannelSummary> filteredNoticeChannels = this.mattermostService.filteredNoticeChannels(
-                mmchannelSummaryList);
-        List<Channel> nonDuplicateChannels = this.mattermostService.getNonDuplicateChannels(filteredNoticeChannels);
-        this.mattermostService.saveAllChannelsByMMChannelList(nonDuplicateChannels);
-
-
-        // 2. UserChannel table에 저장하는 부분
-        List<MMChannelSummary> nonDuplicateChannelsByUserId = this.mattermostService.getNonDuplicateChannelsByUserId(
-                userId, filteredNoticeChannels);
-
-        return ResponseEntity.ok(
-                this.mattermostService.saveChannelListToUserChannelByUserId(userId, nonDuplicateChannelsByUserId));
+        return ResponseEntity.ok(mattermostService.saveChannelsByUserIdOnRefresh(userDetails.getUserId()));
     }
 
 
-    @PostMapping("/remindmessage")
-    public ResponseEntity<ApiResponse> sendDirectMessage(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                         @RequestBody DirectMessageRequest request) {
+    /**
+     * 사용자가 대상 사용자들에게 직접 메시지를 전송하는 메서드입니다. 이 메서드는 각 대상 사용자에 대해 DM 채널을 생성하고, 해당 채널을 통해 메시지를 전송합니다.
+     *
+     * @param userDetails 인증된 사용자의 세부 정보를 포함하는 객체입니다. 이를 통해 사용자 ID를 가져올 수 있습니다. JWT Token 을 통해 인증된 사용자의 정보를 * 가져옵니다.
+     * @param request     직접 메시지를 전송하기 위한 요청 정보입니다. 스케줄 ID와 수신받을 사용자 ID 리스트를 포함합니다.
+     * @return 메시지 전송 결과를 담고 있는 ResponseEntity 객체로, 성공적으로 전송되었을 때의 응답 결과를 포함합니다.
+     */
+    @PostMapping("/send")
+    public ResponseEntity<ApiResponse> sendDirectMessageToUserList(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody DirectMessageRequest request) {
+        log.info("[sendDirectMessage] DM을 보내는 메서드 시작");
 
-        Long userId = userDetails.getUserId();
-        Long scheduleId = request.getScheduleId();
-        List<MMUserIdRequest> userIds = request.getUserIds();
+        return ResponseEntity.ok(this.mattermostService.sendRemindMessageToUserList(userDetails.getUserId(),
+                                                                                    request.getUserIds(),
+                                                                                    request.getScheduleId()));
+    }
 
-        for (MMUserIdRequest mmUserIdRequest : userIds) {
-            Long targetUserId = mmUserIdRequest.getTargetUserId();
-            String channelId = this.mattermostService.createDMChannel(userId, targetUserId);
-            this.mattermostService.sendDirectMessage(userId, channelId, scheduleId);
-        }
-        return ResponseEntity.ok(new ApiResponse(true, "메시지 전송 완료", userIds));
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> login(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody
+                                             MMLoginRequest request) {
+
+        return ResponseEntity.ok(this.mattermostService.MMLogin(userDetails.getUserId(), request));
     }
 
 

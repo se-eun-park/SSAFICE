@@ -3,7 +3,6 @@ package com.jetty.ssafficebe.schedule.service;
 import com.jetty.ssafficebe.common.exception.ErrorCode;
 import com.jetty.ssafficebe.common.exception.exceptiontype.DuplicateValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidAuthorizationException;
-import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException;
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.notice.entity.Notice;
@@ -117,7 +116,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 1. 입력값 검증
         if (userIds.isEmpty()) {
             log.info("[Schedule] 공지사항 일괄 생성 해당 유저 존재 X 종료");
-            return ;
+            return;
         }
 
         // ! 2. 모든 Schedule 생성 및 저장
@@ -153,8 +152,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ApiResponse updateSchedule(Long userId, Long scheduleId, UpdateScheduleRequest updateScheduleRequest) {
-        log.info("[Schedule] 일정 수정 시작 - scheduleId={}, userId={}, requestUserId={}", scheduleId, userId,
-                 updateScheduleRequest.getUserId());
+        log.info("[Schedule] 일정 수정 시작 - scheduleId={}, userId={}", scheduleId, userId);
 
         // ! 1. 수정할 Schedule 조회
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
@@ -316,8 +314,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         // ! 1. 관리자 할당 일정 조회
         filterRequest.setScheduleSourceTypeCd("ASSIGNED");
         List<Schedule> scheduleList = scheduleRepository.findScheduleListByUserIdAndFilterByAdmin(userId,
-                                                                                           filterRequest,
-                                                                                           sort);
+                                                                                                  filterRequest,
+                                                                                                  sort);
 
         // ! 2. 조회된 일정에서 등록 상태별 카운트
         ScheduleEnrolledCount scheduleEnrolledCount = scheduleRepository.getEnrolledCounts(scheduleList);

@@ -5,6 +5,8 @@ type SessionStoreProps = {
   setIsAuthenticated: (value: boolean) => void
   userId: number | null
   setUserId: (value: number) => void
+  protectRole: string | null
+  setProtectRole: (value: string) => void
 }
 
 const useSessionStore = create<SessionStoreProps>((set) => ({
@@ -13,6 +15,9 @@ const useSessionStore = create<SessionStoreProps>((set) => ({
 
   userId: null,
   setUserId: (value: number) => set({ userId: value }),
+
+  protectRole: null,
+  setProtectRole: (value: string) => set({ protectRole: value }),
 }))
 
 export const useLoginStateStore = () => useSessionStore((state) => state.isAuthenticated)
@@ -20,3 +25,6 @@ export const useSetLoginStateStore = () => useSessionStore((state) => state.setI
 
 export const useUserIdStore = () => useSessionStore((state) => state.userId)
 export const useSetUserIdStore = () => useSessionStore((state) => state.setUserId)
+
+export const useProtectRoleStore = () => useSessionStore((state) => state.protectRole)
+export const useSetProtectRoleStore = () => useSessionStore((state) => state.setProtectRole)

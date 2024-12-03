@@ -17,6 +17,7 @@ export const SSORedirect = () => {
           'Content-Type': 'text/plain',
         },
       })
+
       if (data && data.success) {
         setIsAuthenticated(true)
         navigate('/main')

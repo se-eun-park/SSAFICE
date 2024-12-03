@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useLoginStateStore } from '@/entities/session'
 import { useLandingImageAnimation, useLandingPageModel } from '@/features/landing/index'
 
 //MARK: 공통 CSS
@@ -25,6 +26,9 @@ const selectedBtnClasses: string = `
 ` // 선택된 탭 버튼에 적용됩니다.
 
 export const LandingPage = () => {
+  const navigate = useNavigate()
+  const isAuthenticated = useLoginStateStore()
+
   const {
     tabLabels,
     selectedIndex,
@@ -34,6 +38,10 @@ export const LandingPage = () => {
     handleSelectedIndex,
   } = useLandingPageModel()
   const animationClass = useLandingImageAnimation(selectedImage)
+
+  const handleOnClickShortcut = () => {
+    isAuthenticated ? navigate('/main') : navigate('/login')
+  }
 
   return (
     <div className='flex flex-col'>
@@ -57,12 +65,12 @@ export const LandingPage = () => {
             SSAFICE는 SSAFY 구성원에게 최적의 일정 관리 서비스를 제공합니다.
           </div>
         </div>
-        <Link
-          to='/login'
+        <button
+          onClick={handleOnClickShortcut}
           className='flex text-white px-spacing-24 py-spacing-10 body-lg-medium bg-color-bg-interactive-primary hover:bg-color-bg-interactive-primary-hover rounded-radius-32'
         >
           SSAFICE 바로가기
-        </Link>
+        </button>
       </div>
 
       {/* MARK: 화면 하단
@@ -103,12 +111,12 @@ export const LandingPage = () => {
               </div>
             </div>
             <div className='flex justify-start gap-spacing-12'>
-              <Link to='/login' className='text-color-text-info body-lg-semibold'>
-                SSAFICE 바로가기
-              </Link>
-              <Link to='/login' className='text-color-text-info body-lg-semibold'>
-                -&gt;
-              </Link>
+              <button
+                onClick={handleOnClickShortcut}
+                className='text-color-text-info body-lg-semibold'
+              >
+                SSAFICE 바로가기 -&gt;
+              </button>
             </div>
           </div>
 

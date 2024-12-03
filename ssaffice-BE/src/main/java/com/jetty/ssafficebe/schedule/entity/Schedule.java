@@ -24,12 +24,18 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "schedule")
 public class Schedule extends BaseEntity {
 
@@ -47,18 +53,21 @@ public class Schedule extends BaseEntity {
     @Column(name = "scheduleSourceTypeCd", updatable = false, insertable = false)
     private ScheduleSourceType scheduleSourceType;
 
+    @Builder.Default
     private String scheduleStatusTypeCd = "TODO";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "scheduleStatusTypeCd", updatable = false, insertable = false)
     private ScheduleStatusType scheduleStatusType;
 
+    @Builder.Default
     private String essentialYn = "N";
 
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "essentialYn", updatable = false, insertable = false)
     private boolean essential;
 
+    @Builder.Default
     private String enrollYn = "Y";
 
     @Convert(converter = BooleanToYNConverter.class)
@@ -77,7 +86,8 @@ public class Schedule extends BaseEntity {
     @JoinColumn(name = "noticeId", insertable = false, updatable = false)
     private Notice notice;
 
-    @OneToMany(mappedBy = "scheduleId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Remind> reminds = new ArrayList<>();
 
     public void addRemind(Remind remind) {
