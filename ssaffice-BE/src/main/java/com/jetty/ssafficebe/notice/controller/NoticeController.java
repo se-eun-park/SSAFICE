@@ -3,6 +3,7 @@ package com.jetty.ssafficebe.notice.controller;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.payload.BaseFilterRequest;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
+import com.jetty.ssafficebe.mattermost.service.MattermostService;
 import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummary;
@@ -38,12 +39,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class NoticeController {
 
     private final NoticeService noticeService;
-
+    private final MattermostService mattermostService;
     /**
      * 공지사항 추가
      */
     @PostMapping("/admin")
-    public ResponseEntity<ApiResponse> saveNotice(@RequestPart("notice") NoticeRequest noticeRequest,
+    public ResponseEntity<ApiResponse> saveNotice(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                  @RequestPart("notice") NoticeRequest noticeRequest,
                                                   @RequestPart(value = "files", required = false) List<MultipartFile> files)
             throws IOException {
         log.info("[saveNotice] 공지 저장 시작, title : {}", noticeRequest.getTitle());
@@ -51,7 +53,7 @@ public class NoticeController {
         if (files == null) {
             files = Collections.emptyList();
         }
-
+        mattermostService.sendMessageToChannel(userDetails.getUserId(), noticeRequest);
         return ResponseEntity.ok(noticeService.saveNotice(noticeRequest, files));
     }
 

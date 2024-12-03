@@ -15,6 +15,7 @@ import com.jetty.ssafficebe.mattermost.payload.PostRequest;
 import com.jetty.ssafficebe.mattermost.payload.PostSummary;
 import com.jetty.ssafficebe.mattermost.payload.PostUpdateRequest;
 import com.jetty.ssafficebe.mattermost.util.MattermostUtil;
+import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.user.entity.User;
@@ -22,8 +23,8 @@ import com.jetty.ssafficebe.user.repository.UserRepository;
 import com.jetty.ssafficebe.user.service.UserService;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -127,7 +128,7 @@ public class MattermostServiceImpl implements MattermostService {
      * @throws InvalidTokenException     MM 토큰이 유효하지 않을 때 발생합니다.
      */
     @Override
-    public void sendDirectMessage(Long userId, Long targetUserId, String message) {
+    public void     sendDirectMessage(Long userId, Long targetUserId, String message) {
         // 1. 사용자 정보를 조회(MM 토큰을 가져오기 위함)
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
@@ -159,6 +160,26 @@ public class MattermostServiceImpl implements MattermostService {
         }
         return new ApiResponse(true, HttpStatus.OK, "메시지 전송 성공", targetUserIdList.size());
     }
+
+    @Override
+    public void sendMessageToChannel(Long userId, NoticeRequest noticeRequest){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+
+        String message = "(SSAFICE) " + noticeRequest.getContent();
+
+        Map<String, String> payload = Map.of("channel_id", noticeRequest.getChannelId() , "message", message);
+
+        try {
+            this.mattermostUtil.callMattermostApi("/posts", HttpMethod.POST, payload, PostSummary.class,
+                                                  user.getMattermostToken());
+        } catch (InvalidTokenException e) {
+            throw new InvalidTokenException(ErrorCode.INVALID_MM_TOKEN);
+        }
+
+    }
+
+
 
     // TODO. 아래 메서드들은 private 처리 해도 됨. 현재는 테스트코드를 위해 public 으로 둔 상태.
 
