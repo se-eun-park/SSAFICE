@@ -1,9 +1,12 @@
+import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { CohortSelector, RegionSelector, TrackSelector, ClassSelector } from './UserInfoSelector'
 import { useUserIdStore } from '@/entities/session'
 import { postUserSignup } from '@/shared/api/User'
 
 export const SignupForm = () => {
+  const navigate = useNavigate()
+
   const userId = useUserIdStore()
 
   const [isDisabled, setIsDisabled] = useState(true)
@@ -21,7 +24,10 @@ export const SignupForm = () => {
   }
 
   useEffect(() => {
-    if (!email || !password || !nickNameValue || !cohort || !region || !track || !class_) return
+    if (!email || !password || !nickNameValue || !cohort || !region || !track || !class_) {
+      setIsDisabled(true)
+      return
+    }
 
     setIsDisabled(false)
   }, [email, password, nickNameValue, cohort, region, track, class_])
@@ -37,6 +43,8 @@ export const SignupForm = () => {
       trackCd: track,
       classNum: class_,
     })
+
+    navigate('/mattermost/sync')
   }
 
   return (

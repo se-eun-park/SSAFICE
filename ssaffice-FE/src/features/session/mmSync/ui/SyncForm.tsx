@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { postMmSync } from '@/shared/api/MM'
 
 export const SyncForm = () => {
   const [email, setEmail] = useState('')
@@ -6,13 +7,16 @@ export const SyncForm = () => {
   const [isDisabled, setIsDisabled] = useState(true)
 
   useEffect(() => {
-    if (!email || !password) return
+    if (!email || !password) {
+      setIsDisabled(true)
+      return
+    }
 
     setIsDisabled(false)
   }, [email, password])
 
   const handleSync = () => {
-    console.log(email, password)
+    postMmSync({ email, password })
   }
 
   return (
