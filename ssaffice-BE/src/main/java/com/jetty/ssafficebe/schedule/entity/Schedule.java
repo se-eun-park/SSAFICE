@@ -53,18 +53,21 @@ public class Schedule extends BaseEntity {
     @Column(name = "scheduleSourceTypeCd", updatable = false, insertable = false)
     private ScheduleSourceType scheduleSourceType;
 
+    @Builder.Default
     private String scheduleStatusTypeCd = "TODO";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "scheduleStatusTypeCd", updatable = false, insertable = false)
     private ScheduleStatusType scheduleStatusType;
 
+    @Builder.Default
     private String essentialYn = "N";
 
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "essentialYn", updatable = false, insertable = false)
     private boolean essential;
 
+    @Builder.Default
     private String enrollYn = "Y";
 
     @Convert(converter = BooleanToYNConverter.class)
@@ -83,7 +86,8 @@ public class Schedule extends BaseEntity {
     @JoinColumn(name = "noticeId", insertable = false, updatable = false)
     private Notice notice;
 
-    @OneToMany(mappedBy = "scheduleId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Remind> reminds = new ArrayList<>();
 
     public void addRemind(Remind remind) {
