@@ -4,7 +4,11 @@ import { instance } from '@/shared/api'
 import { useClickOutsideToggle } from '@/shared/model'
 import { UserIcon, PasswordResetIcon, LogoutIcon } from '@/assets/svg'
 import { useNavigate } from 'react-router-dom'
-import { useLoginStateStore, useSetLoginStateStore } from '@/entities/session/index.ts'
+import {
+  useLoginStateStore,
+  useSetLoginStateStore,
+  useSetProtectRoleStore,
+} from '@/entities/session'
 import { useQuery } from '@tanstack/react-query'
 
 export const ClickProfileButton = () => {
@@ -13,11 +17,19 @@ export const ClickProfileButton = () => {
   const navigate = useNavigate()
   const isAuthenticated = useLoginStateStore()
   const setIsAuthenticated = useSetLoginStateStore()
+  const setProtectRole = useSetProtectRoleStore()
   const { data } = useQuery({
     queryKey: ['userData'],
     queryFn: async () => {
       const response = await instance.get('/api/users/me')
-      if (response) console.log(response.data)
+      if (response) {
+        console.log(response.data)
+        const role = response.data.roles[0].roleId
+
+        if (role) {
+          setProtectRole(role)
+        }
+      }
       return response.data
     },
     enabled: isAuthenticated,

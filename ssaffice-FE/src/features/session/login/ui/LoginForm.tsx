@@ -39,6 +39,7 @@ export const LoginForm = () => {
       const response = loginResponse.data
       if (response) {
         setIsAuthenticated(true)
+        navigate('/main')
       }
     } catch (err) {
       console.error(err)
@@ -76,19 +77,19 @@ export const LoginForm = () => {
               </div>
               <input
                 type='email'
-                className='flex w-full border px-spacing-16 py-spacing-12 border-color-border-secondary rounded-radius-8 placeholder:color-text-disabled placeholder:body-md-medium'
+                className='flex w-full border focus:outline-none px-spacing-16 py-spacing-12 border-color-border-secondary rounded-radius-8 placeholder:color-text-disabled placeholder:body-md-medium'
                 placeholder='EMAIL'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className='flex-col flex gap-spacing-12'>
+            <div className='flex flex-col gap-spacing-12'>
               <div className='flex justify-start text-color-text-tertiary body-md-semibold'>
                 비밀번호
               </div>
               <input
                 type='password'
-                className='flex w-full border px-spacing-16 py-spacing-12 border-color-border-secondary rounded-radius-8 placeholder:color-text-disabled placeholder:body-md-medium'
+                className='flex w-full border focus:outline-none px-spacing-16 py-spacing-12 border-color-border-secondary rounded-radius-8 placeholder:color-text-disabled placeholder:body-md-medium'
                 placeholder='PASSWORD'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
