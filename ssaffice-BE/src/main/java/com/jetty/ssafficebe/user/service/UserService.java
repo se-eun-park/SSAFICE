@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.user.service;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.user.entity.User;
+import com.jetty.ssafficebe.user.payload.DashBoardCount;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
@@ -36,4 +37,6 @@ public interface UserService {
     User saveUserForSSO(String userId);
 
     void saveLastRefreshTime(Long userId);
+
+    DashBoardCount getDashBoardCount(Long userId);
 }

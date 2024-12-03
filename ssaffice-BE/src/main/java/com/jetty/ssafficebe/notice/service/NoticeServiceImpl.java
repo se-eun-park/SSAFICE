@@ -114,6 +114,24 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
+    public List<Notice> getNoticeList(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.", userId);
+        }
+
+        List<ChannelSummary> channelsByUserId = channelService.getChannelListByUserId(userId);
+        List<String> channelIds = channelsByUserId.stream()
+                                                  .map(ChannelSummary::getChannelId)
+                                                  .toList();
+
+        if (!channelIds.isEmpty()) {
+            return List.of();
+        }
+
+        return noticeRepository.findByChannelIdIn(channelIds);
+    }
+
+    @Override
     public NoticeDetail getNotice(Long userId, Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new ResourceNotFoundException(
                 ErrorCode.NOTICE_NOT_FOUND, "해당 공지사항을 찾을 수 없습니다.", noticeId));
