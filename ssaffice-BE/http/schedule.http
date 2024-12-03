@@ -1,6 +1,6 @@
 ### 변수 설정
-@scheduleId = 1
-@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3MzIxNzQwNjd9.kqf0VZFJh1AdVvPdJi54mtwb3OavORo22d7_TH5Dl9Q9e2yVQYfxm6XjFZWUvHqhlM4E4d8aGnAtT4Qa3AeXaQ
+@scheduleId = 18
+@JWT = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3MzMyOTA1MjB9.sBdiu4nH4K_B-h4pO79HA0c5OVl8jPeAwu3KLYmnZT5z6GRIPhDkEeAXmSBEbMiM4q4pslr4nPrUUwB5c2L4OA
 @noticeId = 1
 
 ### 개인 일정 등록
@@ -15,7 +15,6 @@ Authorization: Bearer {{JWT}}
   "endDateTime": "2024-11-29T18:00:00",
   "remindRequests": [
     {
-      "essentialYn": "N",
       "remindTypeCd": "ONCE",
       "remindDateTime": "2024-11-07T15:00:00"
     }
@@ -35,7 +34,6 @@ Authorization: Bearer {{JWT}}
     "endDateTime": "2024-11-17T18:00:00",
     "remindRequests": [
       {
-        "essentialYn": "N",
         "remindTypeCd": "ONCE",
         "remindDateTime": "2024-11-07T15:00:00"
       }
@@ -56,7 +54,6 @@ Authorization: Bearer {{JWT}}
   "endDateTime": "2024-11-12T16:00:00",
   "remindRequests": [
     {
-      "essentialYn": "N",
       "remindTypeCd": "ONCE",
       "remindDateTime": "2024-11-07T15:00:00"
     }
