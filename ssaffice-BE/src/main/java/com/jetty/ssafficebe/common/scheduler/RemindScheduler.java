@@ -72,7 +72,7 @@ public class RemindScheduler {
 
             // ! 본인에게 개인 MM 메세지로 알람 전송
             // TODO: 테스트 후 적용할 것. 아직 mm 관련 테스트는 x
-//            mattermostService.sendRemindMessageToUserList(userId, List.of(userId), scheduleId);
+            mattermostService.sendRemindMessageToUserList(userId, List.of(userId), scheduleId);
 
             log.info("[Remind] 리마인드 처리 완료 - remindId={}", remind.getRemindId());
         } catch (Exception e) {
