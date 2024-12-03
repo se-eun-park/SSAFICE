@@ -14,5 +14,6 @@ public class RemindRequest {
     private String remindTypeCd;
     @NotNull
     private LocalDateTime remindDateTime;
+    @NotNull
     private Long scheduleId;
 }
