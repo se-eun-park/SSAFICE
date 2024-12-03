@@ -83,10 +83,13 @@ public class Schedule extends BaseEntity {
     @JoinColumn(name = "noticeId", insertable = false, updatable = false)
     private Notice notice;
 
-    @OneToMany(mappedBy = "scheduleId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Remind> reminds = new ArrayList<>();
 
     public void addRemind(Remind remind) {
+        if (this.reminds == null) {
+            this.reminds = new ArrayList<>();
+        }
         this.reminds.add(remind);
         remind.setSchedule(this);
     }
