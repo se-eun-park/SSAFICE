@@ -20,6 +20,7 @@ import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.repository.UserRepository;
 import com.jetty.ssafficebe.user.service.UserService;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -269,6 +270,7 @@ public class MattermostServiceImpl implements MattermostService {
         Map<String, String> data = this.getMMTokenAndMMId(mmLoginRequest.getLoginId(), mmLoginRequest.getPassword());
         user.setMattermostToken(data.get("token"));
         user.setMattermostUserId(data.get("id"));
+        user.setRecentMmChannelSyncTime(LocalDateTime.now());
         userRepository.save(user);
         return new ApiResponse(true, HttpStatus.OK, "Login Success", user.getEmail());
     }
