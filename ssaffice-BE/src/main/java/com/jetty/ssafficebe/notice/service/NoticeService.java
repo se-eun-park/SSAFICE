@@ -7,6 +7,7 @@ import com.jetty.ssafficebe.notice.payload.NoticeDetail;
 import com.jetty.ssafficebe.notice.payload.NoticeRequest;
 import com.jetty.ssafficebe.notice.payload.NoticeSummary;
 import com.jetty.ssafficebe.notice.payload.NoticeSummaryForAdmin;
+import com.jetty.ssafficebe.user.payload.DashBoardCount;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -28,5 +29,7 @@ public interface NoticeService {
     NoticeDetail getNotice(Long userId, Long noticeId);
 
     List<NoticeSummaryForAdmin> getNoticePageByCreateUser(Long userId, BaseFilterRequest filterRequest, Sort sort);
+
+    DashBoardCount getDashBoardCount(Long userId);
 
 }

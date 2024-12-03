@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.user.controller;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
+import com.jetty.ssafficebe.notice.service.NoticeService;
 import com.jetty.ssafficebe.user.payload.DashBoardCount;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
@@ -37,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
     private final UserService userService;
+    private final NoticeService noticeService;
 
     /**
      * (관리자 권한) 유저 등록
@@ -141,7 +143,7 @@ public class UserController {
      */
     @GetMapping("/counts")
     public ResponseEntity<DashBoardCount> getDashBoardCount(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok(userService.getDashBoardCount(userDetails.getUserId()));
+        return ResponseEntity.ok(noticeService.getDashBoardCount(userDetails.getUserId()));
     }
 
 }
