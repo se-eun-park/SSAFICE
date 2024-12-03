@@ -45,7 +45,7 @@ def essential_test(data):
 
 def make_notice_entity(data, notice):
     json_data = json.loads(data["data"]["post"])
-    is_essential = essential_test(json_data)
+    essential = essential_test(json_data)
     mm_user_id = json_data["user_id"]
     user_id = get_user_id_by_user_mm_id(mm_user_id)
     original_message = json_data["message"]
@@ -57,7 +57,7 @@ def make_notice_entity(data, notice):
         channel_id=channel_id,
         content=original_message,
         end_date_time=notice["schedule_end_time"],
-        is_essential_yn=is_essential,
+        essential_yn=essential,
         mm_message_id=notice["id"],
         start_date_time=notice["schedule_start_time"],
         title=notice["title"],
@@ -117,12 +117,12 @@ def make_schedule_entity(notice_id):
         created_by=notice.created_by,
         updated_by=notice.updated_by,
         end_date_time=notice.end_date_time,
-        is_enroll_yn=notice.is_essential_yn,
-        is_essential_yn=notice.is_essential_yn,
+        enroll_yn=notice.essential_yn,
+        essential_yn=notice.essential_yn,
         notice_id=notice_id,
         start_date_time=notice.start_date_time,
         title=notice.title,
-        # is_enroll의 기본값은 is_essential을 따라감.
+        # enroll의 기본값은 essential을 따라감.
     )
     return response_schedule
 
@@ -144,7 +144,7 @@ def make_remind_entity(schedule_id):
         created_by=schedule.created_by,
         updated_at=schedule.updated_at,
         updated_by=schedule.updated_by,
-        is_essential_yn=schedule.is_essential_yn,
+        essential_yn=schedule.essential_yn,
         remind_date_time=schedule_date_time - timedelta(hours=1),
         remind_type_cd="ONCE",
         schedule_id=schedule_id,
