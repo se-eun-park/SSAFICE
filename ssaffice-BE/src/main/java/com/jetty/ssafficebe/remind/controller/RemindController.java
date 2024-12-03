@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/schedules")
+@RequestMapping("/api/reminds")
 @RequiredArgsConstructor
 public class RemindController {
 
@@ -24,15 +24,12 @@ public class RemindController {
     /**
      * 리마인드 등록
      * @param userDetails : userId (schedule 작성자와 일치하는지)
-     * @param scheduleId : 리마인드는 일정에 추가
      * @param remindRequest : type (DAILY, ONCE), localDateTime
      * @return 등록된 리마인드 id
      */
-    @PostMapping("/{scheduleId}/reminds")
+    @PostMapping
     public ResponseEntity<ApiResponse> saveRemind(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                  @PathVariable Long scheduleId,
                                                   @RequestBody RemindRequest remindRequest) {
-        remindRequest.setScheduleId(scheduleId);
         ApiResponse apiResponse = remindService.saveRemind(userDetails.getUserId(), remindRequest);
         return ResponseEntity.status(apiResponse.getStatus()).body(apiResponse);
     }
@@ -43,7 +40,7 @@ public class RemindController {
      * @param remindId : 삭제하고자 하는 리마인드 id
      * @return 삭제된 리마인드 id
      */
-    @DeleteMapping("/reminds/{remindId}")
+    @DeleteMapping("/{remindId}")
     public ResponseEntity<ApiResponse> deleteRemind(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                     @PathVariable Long remindId) {
         ApiResponse apiResponse = remindService.deleteRemind(userDetails.getUserId(), remindId);

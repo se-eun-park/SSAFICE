@@ -152,8 +152,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ApiResponse updateSchedule(Long userId, Long scheduleId, UpdateScheduleRequest updateScheduleRequest) {
-        log.info("[Schedule] 일정 수정 시작 - scheduleId={}, userId={}, requestUserId={}", scheduleId, userId,
-                 updateScheduleRequest.getUserId());
+        log.info("[Schedule] 일정 수정 시작 - scheduleId={}, userId={}", scheduleId, userId);
 
         // ! 1. 수정할 Schedule 조회
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ResourceNotFoundException(
