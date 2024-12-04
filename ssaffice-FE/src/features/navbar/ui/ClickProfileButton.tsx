@@ -2,12 +2,14 @@ import { useRef, useState } from 'react'
 import { DropDown } from '@/shared/ui'
 import { instance } from '@/shared/api'
 import { useClickOutsideToggle } from '@/shared/model'
-import { UserIcon, PasswordResetIcon, LogoutIcon } from '@/assets/svg'
+import { UserIcon, PasswordResetIcon, LogoutIcon, MattermostIcon } from '@/assets/svg'
 import { useNavigate } from 'react-router-dom'
 import {
   useLoginStateStore,
   useSetLoginStateStore,
   useSetProtectRoleStore,
+  useMattermostSyncStore,
+  useSetMattermostSyncStore,
 } from '@/entities/session'
 import { useQuery } from '@tanstack/react-query'
 
@@ -15,19 +17,29 @@ export const ClickProfileButton = () => {
   const [isOpen, setIsOpen] = useState(false)
   const dropDownRef = useRef<HTMLDivElement | null>(null)
   const navigate = useNavigate()
+
+  // store
   const isAuthenticated = useLoginStateStore()
   const setIsAuthenticated = useSetLoginStateStore()
   const setProtectRole = useSetProtectRoleStore()
+  const mattermostSync = useMattermostSyncStore()
+  const setMattermostSync = useSetMattermostSyncStore()
+
+  // qurey
   const { data } = useQuery({
     queryKey: ['userData'],
     queryFn: async () => {
       const response = await instance.get('/api/users/me')
       if (response) {
-        console.log(response.data)
         const role = response.data.roles[0].roleId
+        const mmSync = response.data.recentMmChannelSyncTime
 
         if (role) {
           setProtectRole(role)
+        }
+
+        if (mmSync) {
+          setMattermostSync(mmSync.toString())
         }
       }
       return response.data
@@ -48,6 +60,8 @@ export const ClickProfileButton = () => {
   const handleOnClickLogout = () => {
     localStorage.removeItem('access_token')
     setIsAuthenticated(false)
+    setMattermostSync(null)
+    setProtectRole(null)
     navigate('/login')
   }
 
@@ -73,7 +87,7 @@ export const ClickProfileButton = () => {
         isOpen={isOpen}
         isShadow={true}
         isDivide={true}
-        width='w-[15rem]'
+        width='w-[372px]'
         position='right-0 mt-spacing-8'
       >
         <DropDown.Content isPaddingY={true}>
@@ -92,8 +106,19 @@ export const ClickProfileButton = () => {
               </div>
             )}
           </DropDown.Image>
-          <DropDown.Title>{data?.name}</DropDown.Title>
-          <DropDown.SubTitle>{data?.email}</DropDown.SubTitle>
+
+          <div className='flex flex-col gap-y-spacing-2'>
+            <DropDown.Title>{data?.name}</DropDown.Title>
+            <div className='flex items-center gap-x-spacing-8'>
+              <DropDown.SubTitle>{data?.email}</DropDown.SubTitle>
+              {mattermostSync && (
+                <div className='flex items-center w-fit gap-x-spacing-2 h-fit bg-color-bg-info pl-spacing-4 pr-spacing-6 py-spacing-2 rounded-radius-circle'>
+                  <MattermostIcon className='size-3' />
+                  <p className='body-xs-medium text-color-text-interactive-inverse'>인증됨</p>
+                </div>
+              )}
+            </div>
+          </div>
         </DropDown.Content>
 
         <DropDown.Content

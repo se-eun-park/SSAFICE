@@ -8,7 +8,7 @@ import { MainPage } from '@/pages/main'
 import { baseLayout } from './layouts/baseLayout'
 import { ProPage } from '@/pages/pro'
 import ProtectedRoute from '@/app/layouts/ProtectedRoute'
-import { SSORedirect } from '@/pages/redirect'
+import { SSORedirect, LoginRedirect } from '@/pages/redirect'
 
 type AppRouterProps = {
   isAuthenticated: boolean
@@ -57,7 +57,9 @@ export const appRouter = ({ isAuthenticated, role }: AppRouterProps) => {
               <ProtectedRoute role='ROLE_ADMIN'>
                 <ProPage />
               </ProtectedRoute>
-            ) : null,
+            ) : (
+              <LoginRedirect />
+            ),
         },
       ],
     },
