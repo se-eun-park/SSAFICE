@@ -4,6 +4,7 @@ export const useApiParamFormatter = (
   componentName: 'SelectTodoSortCondition',
   value: string,
 ): 'endDateTime' | 'createdAt' => {
+  // 다른 api에서도 사용할 경우 리턴 형태 바꾸어야 함
   switch (componentName) {
     case 'SelectTodoSortCondition': {
       switch (value) {
