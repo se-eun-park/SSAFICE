@@ -6,6 +6,7 @@ import { SelectTodoState } from '@/shared/ui'
 import { useEffect, useRef, useState } from 'react'
 import { ManageEachTodoList } from './ManageEachTodoList'
 import { useSelectDateRange } from '@/shared/model/useSelectDateRange'
+import { useApiParamFormatter } from '@/shared/model'
 
 export const ManageEachTodosTab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -108,7 +109,11 @@ export const ManageEachTodosTab = () => {
             </div>
             <div className='h-[800px] px-spacing-16 bg-color-bg-tertiary overflow-y-scroll'>
               {fixedDate.from && fixedDate.to && (
-                <ManageEachTodoList startDate={fixedDate.from} endDate={fixedDate.to} />
+                <ManageEachTodoList
+                  startDate={fixedDate.from}
+                  endDate={fixedDate.to}
+                  selectedSort={useApiParamFormatter('SelectTodoSortCondition', selectedSort)}
+                />
               )}
             </div>
           </div>
