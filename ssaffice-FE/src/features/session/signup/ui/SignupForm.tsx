@@ -44,7 +44,7 @@ export const SignupForm = () => {
       classNum: class_,
     })
 
-    navigate('/mattermost/sync')
+    navigate('/login')
   }
 
   return (
