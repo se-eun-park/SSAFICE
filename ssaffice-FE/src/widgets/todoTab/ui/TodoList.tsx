@@ -12,7 +12,7 @@ type todoListProps = {
   selectedSort: 'endDateTime' | 'createdAt'
   selectedState: string
 }
-export const TodoList = ({ startDate, endDate, selectedSort }: todoListProps) => {
+export const TodoList = ({ startDate, endDate, selectedSort, selectedState }: todoListProps) => {
   const [reloadTrigger, setReloadTrigger] = useState(false) // boolean, toggle 식으로 작동
   const todoListReload = () => {
     setReloadTrigger(!reloadTrigger)
@@ -50,6 +50,7 @@ export const TodoList = ({ startDate, endDate, selectedSort }: todoListProps) =>
             dailySchedules={dailySchedules}
             isLast={index === Object.entries(sortedTodos).length - 1}
             todoListReload={todoListReload}
+            selectedState={selectedState}
           />
         ))}
         {Object.entries(sortedTodos).length === 0 && (
