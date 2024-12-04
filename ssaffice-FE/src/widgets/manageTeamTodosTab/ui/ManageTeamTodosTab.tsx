@@ -92,7 +92,7 @@ export const ManageTeamTodosTab = () => {
           <div className='flex flex-col gap-spacing-16'>
             <div className='flex gap-spacing-16'>
               <SelectTodoState
-                actionType='filter'
+                actionType='managerList'
                 selectedState={selectedState}
                 setSelectedState={setSelectedState}
               />

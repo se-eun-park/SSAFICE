@@ -30,9 +30,11 @@ export const SelectTodoState = ({
       ? SelectedStateElements({ selectedState, isOpen })
       : actionType === 'list'
         ? SelectedStateElements({ selectedState, isOpen, actionType: 'with all' })
-        : actionType === 'modify'
-          ? SelectedStateElements({ selectedState, isOpen, actionType: 'narrow plain' })
-          : SelectedStateElements({ selectedState, isOpen, actionType: 'with label' })
+        : actionType === 'managerList'
+          ? SelectedStateElements({ selectedState, isOpen, actionType: 'manager' })
+          : actionType === 'modify'
+            ? SelectedStateElements({ selectedState, isOpen, actionType: 'narrow plain' })
+            : SelectedStateElements({ selectedState, isOpen, actionType: 'with label' })
 
   // effect
   // hover 이벤트 발생 시, 기본 hover 상태를 해제
