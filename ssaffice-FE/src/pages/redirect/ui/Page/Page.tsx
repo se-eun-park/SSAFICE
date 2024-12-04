@@ -1,6 +1,7 @@
-import { useSetLoginStateStore, useSetUserIdStore } from '@/entities/session'
+import { useLoginStateStore, useSetLoginStateStore, useSetUserIdStore } from '@/entities/session'
 import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export const SSORedirect = () => {
@@ -31,6 +32,19 @@ export const SSORedirect = () => {
       return data
     },
   })
+
+  return null
+}
+
+export const LoginRedirect = () => {
+  const navigate = useNavigate()
+  const isAuthenticated = useLoginStateStore()
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login')
+    }
+  }, [isAuthenticated])
 
   return null
 }
