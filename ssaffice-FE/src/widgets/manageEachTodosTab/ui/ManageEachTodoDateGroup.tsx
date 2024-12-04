@@ -9,9 +9,15 @@ type TodoDateGroupProps = {
   // dailySchedules: EachTodoItemDisplay[]
   dailySchedules: ScheduleSummaries[]
   isLast?: boolean
+  selectedState: string
 }
 
-export const ManageEachTodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupProps) => {
+export const ManageEachTodoDateGroup = ({
+  date,
+  dailySchedules,
+  isLast,
+  selectedState,
+}: TodoDateGroupProps) => {
   const statusCounts: number[] = useCalculateStatusCounts({
     param: { todos: dailySchedules, type: 'managerEachTodo' },
   })
@@ -62,7 +68,7 @@ export const ManageEachTodoDateGroup = ({ date, dailySchedules, isLast }: TodoDa
       <div className={`flex flex-col gap-spacing-16 ${isLast ? 'pb-spacing-16' : ''}`}>
         {/* todoItems */}
         {dailySchedules.map((each) => (
-          <ManageEachTodoItem key={each.scheduleId} todo={each} />
+          <ManageEachTodoItem key={each.scheduleId} todo={each} selectedState={selectedState} />
         ))}
       </div>
     </div>

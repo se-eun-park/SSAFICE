@@ -113,6 +113,7 @@ export const ManageEachTodosTab = () => {
                   startDate={fixedDate.from}
                   endDate={fixedDate.to}
                   selectedSort={useApiParamFormatter('SelectTodoSortCondition', selectedSort)}
+                  selectedState={selectedState}
                 />
               )}
             </div>

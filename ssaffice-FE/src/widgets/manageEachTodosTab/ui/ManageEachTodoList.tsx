@@ -8,9 +8,15 @@ type ManageEachTodoProps = {
   startDate: Date
   endDate: Date
   selectedSort: string
+  selectedState: string
 }
 
-export const ManageEachTodoList = ({ startDate, endDate, selectedSort }: ManageEachTodoProps) => {
+export const ManageEachTodoList = ({
+  startDate,
+  endDate,
+  selectedSort,
+  selectedState,
+}: ManageEachTodoProps) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['eachTodos_manager', startDate, endDate, selectedSort],
     queryFn: async () => {
@@ -40,6 +46,7 @@ export const ManageEachTodoList = ({ startDate, endDate, selectedSort }: ManageE
             date={date}
             dailySchedules={dailySchedules}
             isLast={index === Object.entries(sortedTodos).length - 1}
+            selectedState={selectedState}
           />
         ))}
       </div>
