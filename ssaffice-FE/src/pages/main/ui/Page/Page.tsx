@@ -7,15 +7,17 @@ import { useMattermostSyncStore } from '@/entities/session'
 import { useEffect } from 'react'
 
 export const MainPage = () => {
-  const nacvigate = useNavigate()
+  const navigate = useNavigate()
 
+  //store
   const isTabOpen = useIsTabOpenStore()
   const isAnimation = useIsAnimationStore()
   const mattermostSync = useMattermostSyncStore()
 
   useEffect(() => {
     if (mattermostSync) return
-    nacvigate('/mattermost/sync')
+
+    navigate('/mattermost/sync')
   }, [mattermostSync])
 
   return (
