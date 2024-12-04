@@ -8,12 +8,14 @@ type ManageTeamTodoListProps = {
   startDate: Date
   endDate: Date
   selectedSort: string
+  selectedState: string
 }
 
 export const ManageTeamTodoList = ({
   startDate,
   endDate,
   selectedSort,
+  selectedState,
 }: ManageTeamTodoListProps) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['teamTodos', startDate, endDate, selectedSort],
@@ -44,6 +46,7 @@ export const ManageTeamTodoList = ({
             date={date}
             dailySchedules={dailySchedules}
             isLast={index === Object.entries(sortedTodos).length - 1}
+            selectedState={selectedState}
           />
         ))}
       </div>

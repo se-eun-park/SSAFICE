@@ -7,9 +7,15 @@ type TodoDateGroupProps = {
   date: string
   dailySchedules: TeamTodoItemDisplay[]
   isLast?: boolean
+  selectedState: string
 }
 
-export const ManageTeamTodoDateGroup = ({ date, dailySchedules, isLast }: TodoDateGroupProps) => {
+export const ManageTeamTodoDateGroup = ({
+  date,
+  dailySchedules,
+  isLast,
+  selectedState,
+}: TodoDateGroupProps) => {
   const statusCounts: number[] = useCalculateStatusCounts({
     param: { todos: dailySchedules, type: 'managerTeamTodo' },
   })
@@ -60,7 +66,11 @@ export const ManageTeamTodoDateGroup = ({ date, dailySchedules, isLast }: TodoDa
       <div className={`flex flex-col gap-spacing-16 ${isLast ? 'pb-spacing-16' : ''}`}>
         {/* todoItems */}
         {dailySchedules.map((each) => (
-          <ManageTeamTodoItem key={each.noticeSummary.noticeId} todo={each} />
+          <ManageTeamTodoItem
+            key={each.noticeSummary.noticeId}
+            todo={each}
+            selectedState={selectedState}
+          />
         ))}
       </div>
     </div>
