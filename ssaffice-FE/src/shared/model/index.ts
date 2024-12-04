@@ -16,6 +16,7 @@ export { useRefreshMattermostConnection } from './useRefreshMattermostConnection
 
 export { announcementDataEmojiSelectExpression } from './regularExpressions'
 
+export { useApiParamFormatter } from './useApiParamFormatter'
 export {
   useIsTabOpenStore,
   useSetIsTabOpenStore,

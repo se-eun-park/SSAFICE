@@ -43,6 +43,7 @@ export const ManageTeamTodosTab = () => {
   }
 
   const [selectedState, setSelectedState] = useState('default')
+  const [selectedSort, setSelectedSort] = useState('by deadline')
   const { selectedDate, handleSelectedDate, fixedDate, handleFixedDate } = useSelectDateRange()
 
   return (
@@ -94,7 +95,10 @@ export const ManageTeamTodosTab = () => {
                 selectedState={selectedState}
                 setSelectedState={setSelectedState}
               />
-              <SelectTodoSortCondition />
+              <SelectTodoSortCondition
+                selectedSort={selectedSort}
+                setSelectedSort={setSelectedSort}
+              />
               <SelectDateRange
                 selectedDate={selectedDate}
                 handleSelectedDate={handleSelectedDate}
