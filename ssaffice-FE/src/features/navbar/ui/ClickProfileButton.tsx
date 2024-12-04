@@ -2,7 +2,13 @@ import { useRef, useState } from 'react'
 import { DropDown } from '@/shared/ui'
 import { instance } from '@/shared/api'
 import { useClickOutsideToggle } from '@/shared/model'
-import { UserIcon, PasswordResetIcon, LogoutIcon, MattermostIcon } from '@/assets/svg'
+import {
+  UserIcon,
+  PasswordResetIcon,
+  LogoutIcon,
+  MattermostIcon,
+  EditProfileIcon,
+} from '@/assets/svg'
 import { useNavigate } from 'react-router-dom'
 import {
   useLoginStateStore,
@@ -15,6 +21,7 @@ import { useQuery } from '@tanstack/react-query'
 
 export const ClickProfileButton = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [isEditProfile, setIsEditProfile] = useState(false)
   const dropDownRef = useRef<HTMLDivElement | null>(null)
   const navigate = useNavigate()
 
@@ -53,9 +60,13 @@ export const ClickProfileButton = () => {
     setIsOpen(!isOpen)
   }
 
-  const handleOnClickPasswordReset = () => {
-    console.log('비밀번호 변경')
+  const handleOnClickEditProfile = () => {
+    setIsEditProfile(!isEditProfile)
   }
+
+  // const handleOnClickPasswordReset = () => {
+  //   console.log('비밀번호 변경')
+  // }
 
   const handleOnClickLogout = () => {
     localStorage.removeItem('access_token')
@@ -122,6 +133,20 @@ export const ClickProfileButton = () => {
         </DropDown.Content>
 
         <DropDown.Content
+          onClickEvent={handleOnClickEditProfile}
+          isHover={!isEditProfile}
+          isFocus={isEditProfile}
+          isPaddingY={true}
+        >
+          <DropDown.Image>
+            <EditProfileIcon className='w-4' />
+          </DropDown.Image>
+          <DropDown.SubTitle color='text-color-text-primary'>
+            {isEditProfile ? '프로필 변경 완료' : '프로필 변경'}
+          </DropDown.SubTitle>
+        </DropDown.Content>
+
+        {/* <DropDown.Content
           onClickEvent={handleOnClickPasswordReset}
           isHover={true}
           isPaddingY={true}
@@ -130,7 +155,7 @@ export const ClickProfileButton = () => {
             <PasswordResetIcon className='w-4' />
           </DropDown.Image>
           <DropDown.SubTitle color='text-color-text-primary'>비밀번호 변경</DropDown.SubTitle>
-        </DropDown.Content>
+        </DropDown.Content> */}
 
         <DropDown.Content onClickEvent={handleOnClickLogout} isHover={true} isPaddingY={true}>
           <DropDown.Image>

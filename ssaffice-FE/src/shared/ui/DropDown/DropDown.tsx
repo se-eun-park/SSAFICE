@@ -41,6 +41,7 @@ function DropDownContent({
   children,
   onClickEvent,
   isHover,
+  isFocus,
   isPaddingY,
   isHoverHighLight,
   isDefaultHover,
@@ -52,7 +53,7 @@ function DropDownContent({
   return (
     <Wrapper
       onClick={onClickEvent}
-      className={`flex w-full items-center px-spacing-16 ${isDefaultHover && isHoverHighLight ? 'bg-color-bg-tertiary shadow-[inset_3px_0_0_0_rgba(29,78,216,1)]' : isDefaultHover ? 'bg-color-bg-tertiary' : ''} ${isHoverHighLight ? 'hover:shadow-[inset_3px_0_0_0_rgba(29,78,216,1)]' : ''} ${isPaddingY ? 'py-spacing-10' : 'py-spacing-4'} ${isHover ? 'hover:bg-color-bg-tertiary' : ''}`}
+      className={`flex w-full items-center px-spacing-16 ${isFocus ? 'bg-color-bg-interactive-selected-hover' : ''} ${isDefaultHover && isHoverHighLight ? 'bg-color-bg-tertiary shadow-[inset_3px_0_0_0_rgba(29,78,216,1)]' : isDefaultHover ? 'bg-color-bg-tertiary' : ''} ${isHoverHighLight ? 'hover:shadow-[inset_3px_0_0_0_rgba(29,78,216,1)]' : ''} ${isPaddingY ? 'py-spacing-10' : 'py-spacing-4'} ${isHover ? 'hover:bg-color-bg-tertiary' : ''}`}
     >
       {dropDownImage.length > 0 && <div className='mr-spacing-12'>{dropDownImage}</div>}
       <div className='flex flex-col'>{dropDownContent}</div>

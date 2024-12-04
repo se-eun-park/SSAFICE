@@ -18,6 +18,7 @@ export type DropDownContentProps = {
   children?: ReactNode
   onClickEvent?: () => void
   isHover?: boolean
+  isFocus?: boolean
   isPaddingY?: boolean
   isHoverHighLight?: boolean
   isDefaultHover?: boolean
