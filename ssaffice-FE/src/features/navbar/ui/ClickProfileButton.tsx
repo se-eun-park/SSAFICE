@@ -60,6 +60,8 @@ export const ClickProfileButton = () => {
   const handleOnClickLogout = () => {
     localStorage.removeItem('access_token')
     setIsAuthenticated(false)
+    setMattermostSync(null)
+    setProtectRole(null)
     navigate('/login')
   }
 
@@ -104,16 +106,18 @@ export const ClickProfileButton = () => {
               </div>
             )}
           </DropDown.Image>
-          <DropDown.Title>{data?.name}</DropDown.Title>
-          <div className='flex items-center gap-x-spacing-8'>
-            <DropDown.SubTitle>{data?.email}</DropDown.SubTitle>
 
-            {mattermostSync && (
-              <div className='flex items-center w-fit gap-x-spacing-2 h-fit bg-color-bg-info pl-spacing-4 pr-spacing-6 py-spacing-2 rounded-radius-circle'>
-                <MattermostIcon className='size-3' />
-                <p className='body-xs-medium text-color-text-interactive-inverse'>인증됨</p>
-              </div>
-            )}
+          <div className='flex flex-col gap-y-spacing-2'>
+            <DropDown.Title>{data?.name}</DropDown.Title>
+            <div className='flex items-center gap-x-spacing-8'>
+              <DropDown.SubTitle>{data?.email}</DropDown.SubTitle>
+              {mattermostSync && (
+                <div className='flex items-center w-fit gap-x-spacing-2 h-fit bg-color-bg-info pl-spacing-4 pr-spacing-6 py-spacing-2 rounded-radius-circle'>
+                  <MattermostIcon className='size-3' />
+                  <p className='body-xs-medium text-color-text-interactive-inverse'>인증됨</p>
+                </div>
+              )}
+            </div>
           </div>
         </DropDown.Content>
 
