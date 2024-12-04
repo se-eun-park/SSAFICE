@@ -56,7 +56,7 @@ export const TodoTab = () => {
               <SelectTodoState
                 selectedState={selectedState}
                 setSelectedState={setSelectedState}
-                actionType='filter'
+                actionType='list'
               />
               <SelectTodoSortCondition
                 selectedSort={selectedSort}

@@ -28,9 +28,11 @@ export const SelectTodoState = ({
   const selectedStateElements =
     actionType === 'filter'
       ? SelectedStateElements({ selectedState, isOpen })
-      : actionType === 'modify'
-        ? SelectedStateElements({ selectedState, isOpen, actionType: 'narrow plain' })
-        : SelectedStateElements({ selectedState, isOpen, actionType: 'with label' })
+      : actionType === 'list'
+        ? SelectedStateElements({ selectedState, isOpen, actionType: 'with all' })
+        : actionType === 'modify'
+          ? SelectedStateElements({ selectedState, isOpen, actionType: 'narrow plain' })
+          : SelectedStateElements({ selectedState, isOpen, actionType: 'with label' })
 
   // effect
   // hover 이벤트 발생 시, 기본 hover 상태를 해제
@@ -93,7 +95,7 @@ export const SelectTodoState = ({
           >
             <p className={selectedStateElements?.labelClass}>{selectedStateElements?.label}</p>
             <DownArrowIcon
-              className={`w-4 ${selectedState !== 'default' ? 'stroke-color-border-inverse' : ''}`}
+              className={`w-4 ${selectedState !== 'default' && selectedState !== 'ALL' ? 'stroke-color-border-inverse' : ''}`}
             />
           </div>
         </button>
