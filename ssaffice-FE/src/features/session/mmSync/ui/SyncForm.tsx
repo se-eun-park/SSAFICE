@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { postMmSync } from '@/shared/api/MM'
 
 export const SyncForm = () => {
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isDisabled, setIsDisabled] = useState(true)
@@ -16,7 +19,7 @@ export const SyncForm = () => {
   }, [email, password])
 
   const handleSync = () => {
-    postMmSync({ loginId: email, password })
+    postMmSync({ loginId: email, password }, navigate)
   }
 
   return (
