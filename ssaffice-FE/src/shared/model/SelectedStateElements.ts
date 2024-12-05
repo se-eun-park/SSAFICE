@@ -139,24 +139,15 @@ export const SelectedStateElements = ({
         return defaultOption
 
       case 'TODO':
-        if (actionType === 'with all') {
-          todoOption.contents.push(withAllSelectOption(false))
-          return todoOption
-        }
+        if (actionType === 'with all') todoOption.contents.push(withAllSelectOption(false))
         return todoOption
 
       case 'IN_PROGRESS':
-        if (actionType === 'with all') {
-          inProgressOption.contents.push(withAllSelectOption(false))
-          return inProgressOption
-        }
+        if (actionType === 'with all') inProgressOption.contents.push(withAllSelectOption(false))
         return inProgressOption
 
       case 'DONE':
-        if (actionType === 'with all') {
-          doneOption.contents.push(withAllSelectOption(false))
-          return doneOption
-        }
+        if (actionType === 'with all') doneOption.contents.push(withAllSelectOption(false))
         return doneOption
 
       // 매니저 화면에서만 노출되는 드롭다운
