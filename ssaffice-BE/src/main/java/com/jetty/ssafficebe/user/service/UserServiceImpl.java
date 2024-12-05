@@ -8,18 +8,17 @@ import com.jetty.ssafficebe.common.exception.exceptiontype.InvalidValueException
 import com.jetty.ssafficebe.common.exception.exceptiontype.ResourceNotFoundException;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.file.storage.FileStorageService;
-import com.jetty.ssafficebe.notice.service.NoticeService;
 import com.jetty.ssafficebe.role.converter.RoleConverter;
 import com.jetty.ssafficebe.role.entity.Role;
 import com.jetty.ssafficebe.role.entity.UserRole;
 import com.jetty.ssafficebe.role.payload.RoleSummarySimple;
 import com.jetty.ssafficebe.role.repository.RoleRepository;
 import com.jetty.ssafficebe.role.repository.UserRoleRepository;
-import com.jetty.ssafficebe.schedule.repository.ScheduleRepository;
 import com.jetty.ssafficebe.search.payload.ESUserRequest;
 import com.jetty.ssafficebe.search.service.ESUserService;
 import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.entity.User;
+import com.jetty.ssafficebe.user.payload.SsoInfo;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
@@ -126,6 +125,14 @@ public class UserServiceImpl implements UserService {
         userSummary.setRoles(userRoles);
 
         return userSummary;
+    }
+
+    @Override
+    public SsoInfo getSSOInfo(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND, "userId", userId));
+
+        return userConverter.toSsoInfo(user);
     }
 
     @Transactional
