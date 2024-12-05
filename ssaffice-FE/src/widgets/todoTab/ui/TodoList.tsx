@@ -3,7 +3,6 @@ import { TodoDateGroup } from './TodoDateGroup'
 import { useQuery } from '@tanstack/react-query'
 import { instance } from '@/shared/api'
 import { useDateFormatter } from '@/shared/model'
-import { dummyTodoDatas } from '@/entities/dummy'
 import { useState } from 'react'
 
 type todoListProps = {
@@ -37,8 +36,7 @@ export const TodoList = ({ startDate, endDate, selectedSort, selectedState }: to
   }
 
   // const -> let (DUMMY TEST)
-  let sortedTodos = useSortingSchedule(data, selectedSort)
-  sortedTodos = useSortingSchedule(dummyTodoDatas, selectedSort) // 요 라인 앞에 let 붙어고 윗줄 주석 붙여서 죽이기
+  const sortedTodos = useSortingSchedule(data, selectedSort)
 
   return (
     <div className='relative w-full h-full '>

@@ -4,6 +4,7 @@ import { TodoFlag } from '@/assets/svg'
 import { SelectTodoState } from '@/shared/ui'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 import { useDateFormatter } from '@/shared/model'
+import { instance } from '@/shared/api'
 
 type TodoItemProps = {
   // todo?: ScheduleItemDisplay
@@ -25,32 +26,38 @@ export const TodoItem = ({
   visible,
 }: TodoItemProps) => {
   const [selectedState, setSelectedState] = useState('default')
+  const [fetchedState, setFetchedState] = useState<'TODO' | 'IN_PROGRESS' | 'DONE'>(
+    todo ? todo.scheduleStatusTypeCd : 'TODO',
+  )
   const [newTodo, setNewTodo] = useState<string | undefined>()
   const handleNewTodo = (val: string) => {
     setNewTodo(val)
   }
-  const addNewTodoTrigger = (key: string) => {
-    if (key === 'Enter') {
-      console.log(newTodo)
-      console.log(useDateFormatter('API REQUEST: start', today) as string)
-      console.log(useDateFormatter('API REQUEST: end', today) as string)
-      // 일정 등록 api 요청 붙이기 -> refresh
-      //   {
-      //     "title" : "최종 발표회 준비",
-      //     "memo" : "",
-      //     "startDateTime" : useDateFormatter('API REQUEST: start', today) as string,
-      //     "endDateTime" : useDateFormatter('API REQUEST: end', today) as string,
-      //     "scheduleStatusTypeCd" : selectedState,
-      //     "remindRequests": [
-      //     {
-      //       "essentialYn": "N",
-      //       "remindTypeCd": "ONCE",
-      //       "remindDateTime": "2024-11-07T15:00:00"
-      //     }
-      //   ]
-      // }
 
-      // todoList reload하는 trigger
+  const handleFetchedState = (value: string) => {
+    switch (value) {
+      case 'TODO':
+      case 'IN_PROGRESS':
+      case 'DONE': {
+        setFetchedState(value)
+        break
+      }
+      default: {
+        console.log(value)
+      }
+    }
+  }
+
+  const addNewTodoTrigger = async (key: string) => {
+    if (key === 'Enter') {
+      await instance.post('/api/schedules', {
+        title: newTodo,
+        memo: '',
+        startDateTime: useDateFormatter('API REQUEST: start', today) as string,
+        endDateTime: useDateFormatter('API REQUEST: end', today) as string,
+        scheduleStatusTypeCd: selectedState === 'default' ? 'TODO' : selectedState,
+        scheduleSourceTypeCd: 'PERSONAL',
+      })
       todoListReload()
       backToAddNewTodoButton && backToAddNewTodoButton()
       setNewTodo(undefined) // input 빈 값으로 돌려놓기
@@ -60,14 +67,15 @@ export const TodoItem = ({
   // TodoState modify request
   useEffect(() => {
     if (todo) {
-      // 이미 등록된 할일 객체에서만 실행
-
-      // 수정 요청 api -> /api/schedules/todo.scheduleId
-      // { "scheduleStatusTypeCd" : selectedState}
-      // todoListReload()
-      console.log(selectedState)
+      if (todo.scheduleStatusTypeCd !== fetchedState) {
+        instance
+          .put(`/api/schedules/${todo.scheduleId}`, {
+            scheduleStatusTypeCd: fetchedState,
+          })
+          .then(() => todoListReload())
+      }
     }
-  }, [selectedState])
+  }, [fetchedState])
 
   if (!visible) {
     return null
@@ -137,8 +145,8 @@ export const TodoItem = ({
           <>
             {/* 할 일 상태 드롭다운 파트 */}
             <SelectTodoState
-              selectedState={todo.scheduleStatusTypeCd}
-              setSelectedState={setSelectedState}
+              selectedState={fetchedState}
+              setSelectedState={handleFetchedState}
               actionType='modify'
             />
           </>
