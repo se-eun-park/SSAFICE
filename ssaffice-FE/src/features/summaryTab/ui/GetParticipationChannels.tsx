@@ -1,6 +1,7 @@
 import { DropDown } from '@/shared/ui'
 import { useClickOutsideToggle } from '@/shared/model'
 import { useRef, useState } from 'react'
+import { useGetUserChannels } from '../model/useGetUserChannels'
 
 export const GetParticipationChannels = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -11,6 +12,8 @@ export const GetParticipationChannels = () => {
   const handleOnClickButton = () => {
     setIsOpen(!isOpen)
   }
+
+  const channels = useGetUserChannels()
 
   return (
     <div ref={dropDownRef} className='relative flex flex-col'>
@@ -25,31 +28,17 @@ export const GetParticipationChannels = () => {
       </div>
 
       <DropDown isOpen={isOpen} isDivide={true} width='w-60' position='top-spacing-32 right-0'>
-        <DropDown.Content isPaddingY={true}>
-          <DropDown.SubTitle color='text-color-text-primary'>11기 공지전용</DropDown.SubTitle>
-        </DropDown.Content>
-
-        <DropDown.Content isPaddingY={true}>
-          <DropDown.SubTitle color='text-color-text-primary'>11기 서울4반</DropDown.SubTitle>
-        </DropDown.Content>
-
-        <DropDown.Content isPaddingY={true}>
-          <DropDown.SubTitle color='text-color-text-primary'>11기 공통 서울 8반</DropDown.SubTitle>
-        </DropDown.Content>
-
-        <DropDown.Content isPaddingY={true}>
-          <DropDown.SubTitle color='text-color-text-primary'>11기 특화 서울 6반</DropDown.SubTitle>
-        </DropDown.Content>
-
-        <DropDown.Content isPaddingY={true}>
-          <DropDown.SubTitle color='text-color-text-primary'>11기 자율 서울 6반</DropDown.SubTitle>
-        </DropDown.Content>
+        {channels.map((each) => (
+          <DropDown.Content isPaddingY={true}>
+            <DropDown.SubTitle color='text-color-text-primary'>{each.name}</DropDown.SubTitle>
+          </DropDown.Content>
+        ))}
       </DropDown>
 
       <ul className='flex flex-col border-t body-md-medium px-spacing-4 py-spacing-10 border-color-border-info gap-y-spacing-10 text-color-text-primary min-w-max'>
-        <li>11기 공지전용</li>
-        <li>11기 서울 4반</li>
-        <li>11기 공통 서울 6반</li>
+        {channels.slice(0, 3).map((each, index) => (
+          <li key={index}>{each.name}</li>
+        ))}
       </ul>
     </div>
   )
