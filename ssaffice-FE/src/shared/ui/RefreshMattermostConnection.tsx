@@ -16,7 +16,7 @@ const formatDateTime = (dateTimeString: string) => {
 export const RefreshMattermostConnection = () => {
   const queryClient = useQueryClient()
   const fetchMattermostConnection = async () => {
-    const response = await instance.get('/api/mm/channels')
+    const response = await instance.post('/api/mm/refresh')
     return response.data
   }
 

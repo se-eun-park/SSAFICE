@@ -7,10 +7,17 @@ type TodoItemProps = {
   todo: ScheduleSummaries
   // todo 객체가 전달되면 -> 할일 리스트의 각 할일 컴포넌트
   // todo 객체가 전달되지 않으면 -> 새로운 할일 등록 컴포넌트
+  selectedState: string
 }
 
-export const ManageEachTodoItem = ({ todo }: TodoItemProps) => {
+export const ManageEachTodoItem = ({ todo, selectedState }: TodoItemProps) => {
   const isCompleted: boolean = todo.isEnrollYn === 'Y' && todo.scheduleStatusTypeCd === 'DONE'
+
+  // select 태그가 '처리 중'인데 '처리 완료'인 할 일이 보이면 안 됨
+  if (selectedState === 'MANAGER_IN_PROGRESS' && isCompleted) return null
+  // select 태그가 '처리 완료' 인데 '처리 중'인 할 일이 보이면 안 됨
+  if (selectedState === 'MANAGER_DONE' && !isCompleted) return null
+
   return (
     <div
       className={`

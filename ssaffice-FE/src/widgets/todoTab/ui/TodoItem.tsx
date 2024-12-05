@@ -14,6 +14,7 @@ type TodoItemProps = {
   backToAddNewTodoButton?: () => void
   // 할일 간편 추가 시 startDate/endDate
   today?: Date
+  visible: boolean
 }
 
 export const TodoItem = ({
@@ -21,6 +22,7 @@ export const TodoItem = ({
   todoListReload,
   backToAddNewTodoButton,
   today,
+  visible,
 }: TodoItemProps) => {
   const [selectedState, setSelectedState] = useState('default')
   const [newTodo, setNewTodo] = useState<string | undefined>()
@@ -66,6 +68,10 @@ export const TodoItem = ({
       console.log(selectedState)
     }
   }, [selectedState])
+
+  if (!visible) {
+    return null
+  }
 
   return (
     <div

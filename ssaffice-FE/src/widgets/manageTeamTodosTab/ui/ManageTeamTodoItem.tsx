@@ -5,12 +5,19 @@ type TodoItemProps = {
   todo: TeamTodoItemDisplay
   // todo 객체가 전달되면 -> 할일 리스트의 각 할일 컴포넌트
   // todo 객체가 전달되지 않으면 -> 새로운 할일 등록 컴포넌트
+  selectedState: string
 }
 
-export const ManageTeamTodoItem = ({ todo }: TodoItemProps) => {
+export const ManageTeamTodoItem = ({ todo, selectedState }: TodoItemProps) => {
   const isCompleted: boolean =
     todo.scheduleEnrolledCount.enrolledCount !== 0 &&
     todo.scheduleEnrolledCount.completedCount === todo.scheduleEnrolledCount.enrolledCount
+
+  // select 태그가 '처리 중'인데 '처리 완료'인 할 일이 보이면 안 됨
+  if (selectedState === 'MANAGER_IN_PROGRESS' && isCompleted) return null
+  // select 태그가 '처리 완료' 인데 '처리 중'인 할 일이 보이면 안 됨
+  if (selectedState === 'MANAGER_DONE' && !isCompleted) return null
+
   return (
     <div
       className={`

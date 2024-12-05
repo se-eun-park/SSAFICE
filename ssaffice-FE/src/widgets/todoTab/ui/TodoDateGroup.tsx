@@ -11,6 +11,7 @@ type TodoDateGroupProps = {
   dailySchedules: ScheduleSummaries[]
   todoListReload: () => void
   isLast?: boolean
+  selectedState: string
 }
 
 export const TodoDateGroup = ({
@@ -18,6 +19,7 @@ export const TodoDateGroup = ({
   dailySchedules,
   todoListReload,
   isLast,
+  selectedState,
 }: TodoDateGroupProps) => {
   const { isClicked, handleIsClicked } = useClickedToggle()
   const statusCounts: number[] = useCalculateStatusCounts({
@@ -60,6 +62,7 @@ export const TodoDateGroup = ({
               todoListReload={todoListReload}
               backToAddNewTodoButton={handleIsClicked}
               today={new Date(date)}
+              visible
             />
           </div>
         ) : (
@@ -80,7 +83,16 @@ export const TodoDateGroup = ({
 
         {/* todoItems */}
         {dailySchedules.map((each) => (
-          <TodoItem key={each.scheduleId} todo={each} todoListReload={todoListReload} />
+          <TodoItem
+            key={each.scheduleId}
+            todo={each}
+            todoListReload={todoListReload}
+            visible={
+              selectedState === 'ALL' ||
+              selectedState === 'default' ||
+              each.scheduleStatusTypeCd === selectedState
+            }
+          />
         ))}
       </div>
     </div>
