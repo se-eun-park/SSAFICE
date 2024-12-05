@@ -1,5 +1,6 @@
 package com.jetty.ssafficebe.user.controller;
 
+import com.jetty.ssafficebe.user.payload.SsoInfo;
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.common.security.userdetails.CustomUserDetails;
 import com.jetty.ssafficebe.notice.service.NoticeService;
@@ -74,6 +75,14 @@ public class UserController {
     @GetMapping("/admin/{userId}")
     public ResponseEntity<UserSummary> getUser(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUserSummary(userId));
+    }
+
+    /**
+     * 회원가입 진행 시 유저 정보 조회
+     */
+    @GetMapping("/{userId}")
+    public ResponseEntity<SsoInfo> getSsoInfo(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getSSOInfo(userId));
     }
 
     /**

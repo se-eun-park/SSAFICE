@@ -3,6 +3,7 @@ package com.jetty.ssafficebe.user.converter;
 import com.jetty.ssafficebe.search.payload.ESUserRequest;
 import com.jetty.ssafficebe.user.entity.User;
 import com.jetty.ssafficebe.user.payload.CreatedBySummary;
+import com.jetty.ssafficebe.user.payload.SsoInfo;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserSummary;
@@ -27,4 +28,6 @@ public interface UserConverter {
     ESUserRequest toESUserRequest(User savedUser);
 
     List<UserSummary> toUserSummaryList(List<User> userList);
+
+    SsoInfo toSsoInfo(User user);
 }
