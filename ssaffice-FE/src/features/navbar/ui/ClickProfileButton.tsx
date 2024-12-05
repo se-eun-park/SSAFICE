@@ -1,14 +1,9 @@
 import { useRef, useState } from 'react'
 import { DropDown } from '@/shared/ui'
 import { instance } from '@/shared/api'
+import { putUserNickname } from '@/shared/api/User'
 import { useClickOutsideToggle } from '@/shared/model'
-import {
-  UserIcon,
-  PasswordResetIcon,
-  LogoutIcon,
-  MattermostIcon,
-  EditProfileIcon,
-} from '@/assets/svg'
+import { UserIcon, LogoutIcon, MattermostIcon, EditProfileIcon } from '@/assets/svg'
 import { useNavigate } from 'react-router-dom'
 import {
   useLoginStateStore,
@@ -22,6 +17,9 @@ import { useQuery } from '@tanstack/react-query'
 export const ClickProfileButton = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [isEditProfile, setIsEditProfile] = useState(false)
+  const [isEditTitle, setIsEditTitle] = useState(false)
+  const [myName, setMyName] = useState('')
+  const [title, setTitle] = useState('')
   const dropDownRef = useRef<HTMLDivElement | null>(null)
   const navigate = useNavigate()
 
@@ -48,6 +46,9 @@ export const ClickProfileButton = () => {
         if (mmSync) {
           setMattermostSync(mmSync.toString())
         }
+
+        setMyName(response.data.name)
+        setTitle(response.data.name)
       }
       return response.data
     },
@@ -58,15 +59,34 @@ export const ClickProfileButton = () => {
 
   const handleOnClickUserIcon = () => {
     setIsOpen(!isOpen)
+
+    if (!isOpen) {
+      setIsEditProfile(false)
+      setIsEditTitle(false)
+      setTitle(myName)
+    }
   }
 
   const handleOnClickEditProfile = () => {
     setIsEditProfile(!isEditProfile)
+
+    if (isEditProfile) {
+      setTitle(myName)
+      setIsEditTitle(false)
+    }
   }
 
-  // const handleOnClickPasswordReset = () => {
-  //   console.log('비밀번호 변경')
-  // }
+  const handleOnClickEditTitle = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation()
+    setIsEditTitle(!isEditTitle)
+  }
+
+  const handleOnClickSaveTitle = () => {
+    putUserNickname(title).then(() => {
+      setMyName(title)
+      setIsEditTitle(false)
+    })
+  }
 
   const handleOnClickLogout = () => {
     localStorage.removeItem('access_token')
@@ -111,15 +131,31 @@ export const ClickProfileButton = () => {
               />
             ) : (
               <div className='flex items-center justify-center w-10 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
-                <p className='body-lg-medium text-color-text-interactive-inverse'>
-                  {data?.name[0]}
-                </p>
+                <p className='body-lg-medium text-color-text-interactive-inverse'>{myName[0]}</p>
               </div>
             )}
           </DropDown.Image>
 
           <div className='flex flex-col gap-y-spacing-2'>
-            <DropDown.Title>{data?.name}</DropDown.Title>
+            <div className='flex items-center justify-between w-full'>
+              <DropDown.Title
+                titleType={isEditTitle ? 'EDIT' : 'VIEW'}
+                title={title}
+                setTitle={setTitle}
+                onClickEvent={handleOnClickSaveTitle}
+              >
+                {myName}
+              </DropDown.Title>
+              {isEditProfile && !isEditTitle && (
+                <button
+                  onClick={(event) => {
+                    handleOnClickEditTitle(event)
+                  }}
+                >
+                  <EditProfileIcon className='w-4 fill-color-icon-tertiary' />
+                </button>
+              )}
+            </div>
             <div className='flex items-center gap-x-spacing-8'>
               <DropDown.SubTitle>{data?.email}</DropDown.SubTitle>
               {mattermostSync && (
@@ -145,17 +181,6 @@ export const ClickProfileButton = () => {
             {isEditProfile ? '프로필 변경 완료' : '프로필 변경'}
           </DropDown.SubTitle>
         </DropDown.Content>
-
-        {/* <DropDown.Content
-          onClickEvent={handleOnClickPasswordReset}
-          isHover={true}
-          isPaddingY={true}
-        >
-          <DropDown.Image>
-            <PasswordResetIcon className='w-4' />
-          </DropDown.Image>
-          <DropDown.SubTitle color='text-color-text-primary'>비밀번호 변경</DropDown.SubTitle>
-        </DropDown.Content> */}
 
         <DropDown.Content onClickEvent={handleOnClickLogout} isHover={true} isPaddingY={true}>
           <DropDown.Image>

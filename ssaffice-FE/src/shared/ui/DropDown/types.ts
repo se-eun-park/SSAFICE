@@ -7,6 +7,10 @@ export type DropDownImageProps = {
 export type DropDownTitleProps = {
   children?: ReactNode
   color?: string
+  titleType?: 'EDIT' | 'VIEW'
+  title?: string
+  setTitle?: (title: string) => void
+  onClickEvent?: () => void
 }
 
 export type DropDownSubTitleProps = {

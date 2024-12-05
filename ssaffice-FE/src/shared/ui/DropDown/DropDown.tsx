@@ -13,8 +13,39 @@ function DropDownImage({ children }: DropDownImageProps) {
   return children
 }
 
-function DropDownTitle({ children, color = 'text-color-text-primary' }: DropDownTitleProps) {
-  return <h1 className={`body-sm-medium ${color}`}>{children}</h1>
+function DropDownTitle({
+  children,
+  color = 'text-color-text-primary',
+  titleType = 'VIEW',
+  title,
+  setTitle,
+  onClickEvent,
+}: DropDownTitleProps) {
+  const onChangetitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle && setTitle(e.target.value)
+  }
+
+  switch (titleType) {
+    case 'EDIT':
+      return (
+        <div className='flex items-center gap-x-spacing-8'>
+          <input
+            type='text'
+            onChange={onChangetitle}
+            className={`body-sm-medium w-[260px] border border-color-border-primary rounded-radius-2 px-spacing-4 focus:outline-none ${color}`}
+            value={title}
+          />
+          <button
+            onClick={onClickEvent}
+            className='body-xs-semibold text-color-text-info min-w-max'
+          >
+            저장
+          </button>
+        </div>
+      )
+    case 'VIEW':
+      return <h1 className={`body-sm-medium ${color} truncate w-[265px]`}>{children}</h1>
+  }
 }
 
 function DropDownSubTitle({ children, color = 'text-color-text-disabled' }: DropDownSubTitleProps) {
@@ -78,7 +109,7 @@ function DropDownMain({
 
   return (
     <div
-      className={`absolute z-20 flex flex-col border bg-color-bg-primary border-color-border-tertiary rounded-radius-8 ${width} ${position} ${isShadow ? 'effect-shadow' : ''} ${isDivide ? 'divide-y-2' : ''} ${isPaddingY ? 'py-spacing-10' : ''}`}
+      className={`absolute z-20 flex flex-col border bg-color-bg-primary border-color-border-tertiary rounded-radius-8 ${width} ${position} ${isShadow ? 'effect-shadow' : ''} ${isDivide ? 'divide-y-2 divide-color-bg-tertiary' : ''} ${isPaddingY ? 'py-spacing-10' : ''}`}
     >
       {children}
     </div>
