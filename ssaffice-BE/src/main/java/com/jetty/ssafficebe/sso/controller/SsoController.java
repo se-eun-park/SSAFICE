@@ -49,9 +49,9 @@ public class SsoController {
         String loginId = this.userService.handleSsoLogin(userRequest);
 
         if (loginId == null) {
-            log.info("[SSO] 존재하지 않는 SSO ID. 임시 유저 생성 후 SSO ID 저장");
-            // isDisabled가 false인 유저 객체 생성 후 SSO Id만 set하여 저장
-            User user = this.userService.saveUserForSSO(userRequest.getUserId());
+            log.info("[SSO] 존재하지 않는 SSO ID. 임시 유저 생성 후 SSO info 저장");
+            // isDisabled가 false인 유저 객체 생성 후 SSO를 이용하여 가져온 정보 저장
+            User user = this.userService.saveUserForSso(userRequest);
             return AuthenticationResponse.builder().userId(user.getUserId()).isSuccess(false).build();
         }
 

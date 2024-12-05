@@ -234,10 +234,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUserForSSO(String ssoId) {
-        User user = userRepository.findBySsafyUUID(ssoId).orElse(new User());
-        user.setSsafyUUID(ssoId);
+    public User saveUserForSso(UserRequestForSso userRequest) {
+        User user = userRepository.findBySsafyUUID(userRequest.getUserId()).orElse(new User());
+        user.setSsafyUUID(userRequest.getUserId());
         user.setDisabledYn("N");
+        user.setEmail(userRequest.getLoginId());
+        user.setName(userRequest.getName());
         return this.userRepository.save(user);
     }
 
