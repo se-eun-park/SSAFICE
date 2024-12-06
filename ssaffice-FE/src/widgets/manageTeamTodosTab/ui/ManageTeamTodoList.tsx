@@ -21,7 +21,7 @@ export const ManageTeamTodoList = ({
     queryKey: ['teamTodos', startDate, endDate, selectedSort],
     queryFn: async () => {
       const { data } = await instance.get(
-        `/api/notice/admin/my?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
+        `/api/notice/admin/my?filterType=createdAt&sort=${selectedSort},asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
       )
       return data
     },
