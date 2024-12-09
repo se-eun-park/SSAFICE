@@ -29,7 +29,7 @@ export const GetParticipationChannels = () => {
 
       <DropDown isOpen={isOpen} isDivide={true} width='w-60' position='top-spacing-32 right-0'>
         {channels.map((each) => (
-          <DropDown.Content isPaddingY={true}>
+          <DropDown.Content isPaddingY={true} key={each.teamId}>
             <DropDown.SubTitle color='text-color-text-primary'>{each.name}</DropDown.SubTitle>
           </DropDown.Content>
         ))}

@@ -23,11 +23,6 @@ export const useGetUserCounts = () => {
     })
   }, [])
 
-  useEffect(() => {
-    console.log('usercounts changed')
-    console.log(userCounts)
-  }, [userCounts])
-
   return {
     noticeCounts: userCounts?.noticeCounts,
     scheduleCounts: userCounts?.scheduleCounts,
