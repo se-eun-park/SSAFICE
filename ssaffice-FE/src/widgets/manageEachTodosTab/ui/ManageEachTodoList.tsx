@@ -7,11 +7,18 @@ import { useQuery } from '@tanstack/react-query'
 type ManageEachTodoProps = {
   startDate: Date
   endDate: Date
+  selectedSort: string
+  selectedState: string
 }
 
-export const ManageEachTodoList = ({ startDate, endDate }: ManageEachTodoProps) => {
+export const ManageEachTodoList = ({
+  startDate,
+  endDate,
+  selectedSort,
+  selectedState,
+}: ManageEachTodoProps) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['eachTodos_manager', startDate, endDate],
+    queryKey: ['eachTodos_manager', startDate, endDate, selectedSort],
     queryFn: async () => {
       const { data } = await instance.get(
         `/api/schedules/admin/assigned?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
@@ -39,6 +46,7 @@ export const ManageEachTodoList = ({ startDate, endDate }: ManageEachTodoProps) 
             date={date}
             dailySchedules={dailySchedules}
             isLast={index === Object.entries(sortedTodos).length - 1}
+            selectedState={selectedState}
           />
         ))}
       </div>

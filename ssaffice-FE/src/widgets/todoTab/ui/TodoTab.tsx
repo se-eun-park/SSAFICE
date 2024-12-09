@@ -3,7 +3,7 @@ import { TodoList } from './TodoList'
 import { TodoBoard } from './TodoBoard'
 
 import { HoverTitle } from '@/features/todoTab'
-import { useIsTabOpenStore } from '@/shared/model'
+import { useApiParamFormatter, useIsTabOpenStore } from '@/shared/model'
 import { TabLayout, HoverButton, SelectTodoState, SelectDateRange } from '@/shared/ui'
 import { CommonModal } from '@/shared/ui'
 import { HamburgerMenuIcon, FastLeftArrowIcon, EditIcon } from '@/assets/svg'
@@ -18,6 +18,7 @@ export const TodoTab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const close = () => setIsModalOpen(false)
   const [selectedState, setSelectedState] = useState('default')
+  const [selectedSort, setSelectedSort] = useState('by deadline')
 
   const handleOnClickCreateTodo = () => {
     setIsModalOpen(true)
@@ -55,10 +56,12 @@ export const TodoTab = () => {
               <SelectTodoState
                 selectedState={selectedState}
                 setSelectedState={setSelectedState}
-                actionType='filter'
+                actionType='list'
               />
-              <SelectTodoSortCondition />
-
+              <SelectTodoSortCondition
+                selectedSort={selectedSort}
+                setSelectedSort={setSelectedSort}
+              />
               <SelectDateRange
                 selectedDate={selectedDate}
                 handleSelectedDate={handleSelectedDate}
@@ -80,7 +83,12 @@ export const TodoTab = () => {
             `}
             >
               {fixedDate.from && fixedDate.to && (
-                <TodoList startDate={fixedDate.from} endDate={fixedDate.to} />
+                <TodoList
+                  startDate={fixedDate.from}
+                  endDate={fixedDate.to}
+                  selectedSort={useApiParamFormatter('SelectTodoSortCondition', selectedSort)}
+                  selectedState={selectedState}
+                />
               )}
             </div>
           ) : (

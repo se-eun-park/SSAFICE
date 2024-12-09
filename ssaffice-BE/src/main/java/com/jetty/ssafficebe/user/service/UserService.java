@@ -2,6 +2,7 @@ package com.jetty.ssafficebe.user.service;
 
 import com.jetty.ssafficebe.common.payload.ApiResponse;
 import com.jetty.ssafficebe.user.entity.User;
+import com.jetty.ssafficebe.user.payload.SsoInfo;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
@@ -19,6 +20,8 @@ public interface UserService {
 
     UserSummary getUserSummary(Long userId);
 
+    SsoInfo getSSOInfo(Long userId);
+
     ApiResponse updateUser(Long userId, UpdateUserRequest saveUserRequest);
 
     ApiResponse deleteUsers(List<Long> userIds);
@@ -33,7 +36,7 @@ public interface UserService {
 
     String handleSsoLogin(UserRequestForSso userRequest);
 
-    User saveUserForSSO(String userId);
+    User saveUserForSso(UserRequestForSso userRequest);
 
     void saveLastRefreshTime(Long userId);
 

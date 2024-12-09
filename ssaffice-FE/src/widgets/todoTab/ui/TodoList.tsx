@@ -9,18 +9,20 @@ import { useState } from 'react'
 type todoListProps = {
   startDate: Date
   endDate: Date
+  selectedSort: 'endDateTime' | 'createdAt'
+  selectedState: string
 }
-export const TodoList = ({ startDate, endDate }: todoListProps) => {
+export const TodoList = ({ startDate, endDate, selectedSort, selectedState }: todoListProps) => {
   const [reloadTrigger, setReloadTrigger] = useState(false) // boolean, toggle 식으로 작동
   const todoListReload = () => {
     setReloadTrigger(!reloadTrigger)
   }
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['eachTodos_user', startDate, endDate, reloadTrigger],
+    queryKey: ['eachTodos_user', startDate, endDate, selectedSort, reloadTrigger],
     queryFn: async () => {
       const { data } = await instance.get(
-        `/api/schedules/my?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
+        `/api/schedules/my?filterType=createdAt&sort=${selectedSort},asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
       )
       return data.scheduleSummaries
     },
@@ -35,8 +37,8 @@ export const TodoList = ({ startDate, endDate }: todoListProps) => {
   }
 
   // const -> let (DUMMY TEST)
-  let sortedTodos = useSortingSchedule(data, 'by registration')
-  sortedTodos = useSortingSchedule(dummyTodoDatas, 'by registration')
+  let sortedTodos = useSortingSchedule(data, selectedSort)
+  sortedTodos = useSortingSchedule(dummyTodoDatas, selectedSort) // 요 라인 앞에 let 붙어고 윗줄 주석 붙여서 죽이기
 
   return (
     <div className='relative w-full h-full '>
@@ -48,6 +50,7 @@ export const TodoList = ({ startDate, endDate }: todoListProps) => {
             dailySchedules={dailySchedules}
             isLast={index === Object.entries(sortedTodos).length - 1}
             todoListReload={todoListReload}
+            selectedState={selectedState}
           />
         ))}
         {Object.entries(sortedTodos).length === 0 && (

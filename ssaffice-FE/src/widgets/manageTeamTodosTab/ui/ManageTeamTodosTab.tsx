@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ManageTeamTodoList } from './ManageTeamTodoList'
 import { CommonModal } from '@/shared/ui'
 import { useSelectDateRange } from '@/shared/model/useSelectDateRange'
+import { useApiParamFormatter } from '@/shared/model'
 
 export const ManageTeamTodosTab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -43,6 +44,7 @@ export const ManageTeamTodosTab = () => {
   }
 
   const [selectedState, setSelectedState] = useState('default')
+  const [selectedSort, setSelectedSort] = useState('by deadline')
   const { selectedDate, handleSelectedDate, fixedDate, handleFixedDate } = useSelectDateRange()
 
   return (
@@ -90,11 +92,14 @@ export const ManageTeamTodosTab = () => {
           <div className='flex flex-col gap-spacing-16'>
             <div className='flex gap-spacing-16'>
               <SelectTodoState
-                actionType='filter'
+                actionType='managerList'
                 selectedState={selectedState}
                 setSelectedState={setSelectedState}
               />
-              <SelectTodoSortCondition />
+              <SelectTodoSortCondition
+                selectedSort={selectedSort}
+                setSelectedSort={setSelectedSort}
+              />
               <SelectDateRange
                 selectedDate={selectedDate}
                 handleSelectedDate={handleSelectedDate}
@@ -103,7 +108,12 @@ export const ManageTeamTodosTab = () => {
             </div>
             <div className='h-[800px] px-spacing-16 bg-color-bg-tertiary overflow-y-scroll'>
               {fixedDate.from && fixedDate.to && (
-                <ManageTeamTodoList startDate={fixedDate.from} endDate={fixedDate.to} />
+                <ManageTeamTodoList
+                  startDate={fixedDate.from}
+                  endDate={fixedDate.to}
+                  selectedSort={useApiParamFormatter('SelectTodoSortCondition', selectedSort)}
+                  selectedState={selectedState}
+                />
               )}
             </div>
           </div>

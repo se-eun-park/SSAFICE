@@ -44,7 +44,7 @@ export const dummyTodoDatas: ScheduleSummaries[] = [
     startDateTime: '2024-12-01T10:00:00',
     endDateTime: '2024-12-10T11:00:00',
     scheduleSourceTypeCd: 'TEAM',
-    scheduleStatusTypeCd: 'TODO',
+    scheduleStatusTypeCd: 'IN_PROGRESS',
     isEssentialYn: 'Y',
     isEnrollYn: 'Y',
     chargeUser: {
@@ -80,7 +80,7 @@ export const dummyTodoDatas: ScheduleSummaries[] = [
     startDateTime: '2024-12-04T10:00:00',
     endDateTime: '2024-12-10T11:00:00',
     scheduleSourceTypeCd: 'TEAM',
-    scheduleStatusTypeCd: 'TODO',
+    scheduleStatusTypeCd: 'DONE',
     isEssentialYn: 'Y',
     isEnrollYn: 'Y',
     chargeUser: {

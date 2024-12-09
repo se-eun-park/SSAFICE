@@ -1,5 +1,7 @@
 type SelectTodoSortConditionProps = {
-  state?: string
+  // state?: string
+  selectedSort: string
+  setSelectedSort: (sort: string) => void
 }
 
 import { useClickOutsideToggle, useHover } from '@/shared/model'
@@ -9,10 +11,12 @@ import { SelectedSortConditionElements } from '../model/SelectedSortConditionEle
 import { DownArrowIcon } from '@/assets/svg'
 
 export const SelectTodoSortCondition = ({
-  state = 'by deadline',
+  // state = 'by deadline',
+  selectedSort,
+  setSelectedSort,
 }: SelectTodoSortConditionProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedSortCondition, setSelectedSortCondition] = useState(state)
+  //  const [selectedSortCondition, setSelectedSortCondition] = useState(state)
   const [isDefaultHover, setIsDefaultHover] = useState(true)
   const dropDownRef = useRef<HTMLDivElement | null>(null)
 
@@ -20,7 +24,7 @@ export const SelectTodoSortCondition = ({
   const [hoverRef, isHover] = useHover<HTMLDivElement>()
 
   const selectedSortConditionElements = SelectedSortConditionElements({
-    selectedSortCondition,
+    selectedSortCondition: selectedSort,
     isOpen,
   })
 
@@ -46,14 +50,14 @@ export const SelectTodoSortCondition = ({
   }
 
   const handleOnClickContent = (type: string) => {
-    setSelectedSortCondition(type)
+    setSelectedSort(type)
     setIsDefaultHover(true)
   }
   return (
     <div ref={dropDownRef} className='relative w-fit'>
       <button onClick={handleOnClickOpen} className={selectedSortConditionElements?.bgClass}>
         <div
-          className={`flex items-center ${selectedSortCondition === 'by deadline' ? 'gap-x-spacing-10' : ''}`}
+          className={`flex items-center ${selectedSort === 'by deadline' ? 'gap-x-spacing-10' : ''}`}
         >
           <p className={selectedSortConditionElements?.labelClass}>
             {selectedSortConditionElements?.label}
