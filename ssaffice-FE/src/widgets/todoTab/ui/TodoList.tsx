@@ -21,7 +21,7 @@ export const TodoList = ({ startDate, endDate, selectedSort, selectedState }: to
     queryKey: ['eachTodos_user', startDate, endDate, selectedSort, reloadTrigger],
     queryFn: async () => {
       const { data } = await instance.get(
-        `/api/schedules/my?filterType=endDateTime&sort=${selectedSort},asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
+        `/api/schedules/my?filterType=${selectedSort}&sort=${selectedSort},asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
       )
       return data.scheduleSummaries
     },
