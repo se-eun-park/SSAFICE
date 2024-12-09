@@ -130,7 +130,7 @@ public class NoticeServiceImpl implements NoticeService {
                                                   .map(ChannelSummary::getChannelId)
                                                   .toList();
 
-        if (!channelIds.isEmpty()) {
+        if (channelIds.isEmpty()) {
             return List.of();
         }
 
@@ -191,7 +191,7 @@ public class NoticeServiceImpl implements NoticeService {
         noticeCounts.setEssential(essentialCount);
 
         // 3. 내 일정 가져오기
-        List<Schedule> scheduleList = scheduleRepository.findByUserIdAndEssentialYn(userId, "Y");
+        List<Schedule> scheduleList = scheduleRepository.findByUserIdAndEnrollYn(userId, "Y");
 
         // 공지사항에서 파생된 일정 중, 미완료 상태의 일정 수  (필수 + 선택) -> NoticeCounts.enrolled
         long enrolledCount = scheduleList.stream()
