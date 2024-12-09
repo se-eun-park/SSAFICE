@@ -3,7 +3,6 @@ import { MattermostTeam } from './types'
 
 export const useSortingMattermostChannel = (channel: ChannelSummary[]): MattermostTeam[] => {
   const sorted: Record<string, MattermostTeam> = {}
-  console.log(channel)
 
   if (channel === undefined || channel.length === 0)
     return [
