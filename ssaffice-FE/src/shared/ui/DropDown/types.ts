@@ -10,7 +10,7 @@ export type DropDownTitleProps = {
   titleType?: 'EDIT' | 'VIEW'
   title?: string
   setTitle?: (title: string) => void
-  onClickEvent?: () => void
+  onClickEvent?: (() => void) | ((event: React.MouseEvent<HTMLButtonElement>) => void)
 }
 
 export type DropDownSubTitleProps = {

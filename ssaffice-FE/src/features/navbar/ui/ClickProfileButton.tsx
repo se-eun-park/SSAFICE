@@ -57,6 +57,7 @@ export const ClickProfileButton = () => {
 
   useClickOutsideToggle(dropDownRef, setIsOpen)
 
+  // 유저 아이콘 누를 시
   const handleOnClickUserIcon = () => {
     setIsOpen(!isOpen)
 
@@ -67,6 +68,7 @@ export const ClickProfileButton = () => {
     }
   }
 
+  // 프로필 변경 버튼 누를 시
   const handleOnClickEditProfile = () => {
     setIsEditProfile(!isEditProfile)
 
@@ -76,18 +78,27 @@ export const ClickProfileButton = () => {
     }
   }
 
+  // 닉네임 변경 버튼 누를 시
   const handleOnClickEditTitle = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation()
     setIsEditTitle(!isEditTitle)
   }
 
-  const handleOnClickSaveTitle = () => {
+  // 닉네임 변경 저장 버튼 누를 시
+  const handleOnClickSaveTitle = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (title === myName) {
+      event.stopPropagation()
+      setIsEditTitle(false)
+      return
+    }
+
     putUserNickname(title).then(() => {
       setMyName(title)
       setIsEditTitle(false)
     })
   }
 
+  // 로그아웃 버튼 누를 시
   const handleOnClickLogout = () => {
     localStorage.removeItem('access_token')
     setIsAuthenticated(false)
@@ -147,11 +158,7 @@ export const ClickProfileButton = () => {
                 {myName}
               </DropDown.Title>
               {isEditProfile && !isEditTitle && (
-                <button
-                  onClick={(event) => {
-                    handleOnClickEditTitle(event)
-                  }}
-                >
+                <button onClick={handleOnClickEditTitle}>
                   <EditProfileIcon className='w-4 fill-color-icon-tertiary' />
                 </button>
               )}
