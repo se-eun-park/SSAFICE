@@ -62,6 +62,10 @@ export const TodoItem = ({
       backToAddNewTodoButton && backToAddNewTodoButton()
       setNewTodo(undefined) // input 빈 값으로 돌려놓기
     }
+    if (key === 'Escape') {
+      backToAddNewTodoButton && backToAddNewTodoButton()
+      setNewTodo(undefined)
+    }
   }
 
   // TodoState modify request
