@@ -18,8 +18,8 @@ import com.jetty.ssafficebe.search.payload.ESUserRequest;
 import com.jetty.ssafficebe.search.service.ESUserService;
 import com.jetty.ssafficebe.user.converter.UserConverter;
 import com.jetty.ssafficebe.user.entity.User;
-import com.jetty.ssafficebe.user.payload.SsoInfo;
 import com.jetty.ssafficebe.user.payload.SaveUserRequest;
+import com.jetty.ssafficebe.user.payload.SsoInfo;
 import com.jetty.ssafficebe.user.payload.UpdatePasswordRequest;
 import com.jetty.ssafficebe.user.payload.UpdateUserRequest;
 import com.jetty.ssafficebe.user.payload.UserRequestForSso;
@@ -227,7 +227,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String handleSsoLogin(UserRequestForSso userRequest) {
         User existingUser = userRepository.findBySsafyUUID(userRequest.getUserId()).orElse(null);
-        if (Objects.isNull(existingUser)) {
+        if (Objects.isNull(existingUser) || existingUser.getPassword() == null) {
             return null;
         }
         return existingUser.getEmail();
