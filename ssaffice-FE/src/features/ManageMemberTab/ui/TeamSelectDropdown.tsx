@@ -75,7 +75,7 @@ export const TeamSelectDropdown = ({
                     key={each.teamId}
                   >
                     <div className='text-color-text-primary body-md-medium'>{each.name}</div>
-                    <div className='flex items-center justify-end h-full w-full'>
+                    <div className='flex items-center justify-end h-full'>
                       <div className='flex items-center justify-center w-spacing-12 h-spacing-12'>
                         <div className='w-spacing-6 h-spacing-10'>
                           <SpreadRight />
