@@ -39,6 +39,16 @@ export const UnscheduledList = ({ page }: { page: number }) => {
             isLast={index === Object.entries(datas).length - 1}
           />
         ))}
+        {Object.entries(datas).length === 0 && (
+          <div
+            className='
+              flex justify-center items-center
+              text-color-text-primary heading-desktop-md whitespace-pre-line
+            '
+          >
+            등록되지 않은 공지가 없습니다.
+          </div>
+        )}
       </div>
     </div>
   )

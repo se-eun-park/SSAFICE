@@ -52,6 +52,16 @@ export const AnnouncementList = ({ page, searchValue }: { page: number; searchVa
             isLast={index === Object.entries(datas).length - 1}
           />
         ))}
+        {Object.entries(datas).length === 0 && (
+          <div
+            className='
+              flex justify-center items-center
+              text-color-text-primary heading-desktop-md whitespace-pre-line
+            '
+          >
+            표시할 공지가 없습니다.
+          </div>
+        )}
       </div>
     </div>
   )
