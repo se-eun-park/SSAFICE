@@ -29,6 +29,8 @@ def on_message(ws, message):
 
     # 2. event중에 글이 게시되고 해당 게시글이 올라온 채널의 이름이 공지를 포함하면 실행
     if is_notice(data):
+        if is_ssafice_notice(data):
+            return
 
         # 채널 정보를 DB에 저장
         channel_id = json.loads(data["data"]["post"])["channel_id"]
