@@ -1,1 +1,1 @@
-export { postUserSignup, putUserNickname } from './apis'
+export { postUserSignup, putUserNickname, postUserProfileImg } from './apis'

@@ -11,3 +11,12 @@ export const putUserNickname = async (name: string) => {
   const response = await instance.put(`/api/users/me`, { name })
   return response
 }
+
+export const postUserProfileImg = async (formData: FormData) => {
+  const response = await instance.post(`/api/users/me/profileImg`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+  return response
+}
