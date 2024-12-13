@@ -5,6 +5,7 @@ import { SelectTodoState } from '@/shared/ui'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
 import { SummaryContext, useDateFormatter } from '@/shared/model'
 import { instance } from '@/shared/api'
+import { postEasyTraineeSchedule } from '@/shared/api/Schedule'
 
 type TodoItemProps = {
   // todo?: ScheduleItemDisplay
@@ -55,15 +56,13 @@ export const TodoItem = ({
   }
 
   const addNewTodoTrigger = async (key: string) => {
-    if (key === 'Enter') {
-      await instance.post('/api/schedules', {
-        title: newTodo,
-        memo: '',
-        startDateTime: useDateFormatter('API REQUEST: start', today) as string,
-        endDateTime: useDateFormatter('API REQUEST: end', today) as string,
-        scheduleStatusTypeCd: selectedState === 'default' ? 'TODO' : selectedState,
-        scheduleSourceTypeCd: 'PERSONAL',
-      })
+    if (key === 'Enter' && newTodo && newTodo?.trim() !== '') {
+      await postEasyTraineeSchedule(
+        newTodo,
+        useDateFormatter('API REQUEST: start', today) as string,
+        useDateFormatter('API REQUEST: end', today) as string,
+        selectedState,
+      )
       todoListReload()
       summaryContext.summaryRefresher()
       backToAddNewTodoButton && backToAddNewTodoButton()
