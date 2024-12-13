@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { TodoFlag } from '@/assets/svg'
 // import { type ScheduleItemDisplay } from '@/features/todoTab'
 import { SelectTodoState } from '@/shared/ui'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
-import { useDateFormatter } from '@/shared/model'
+import { SummaryContext, useDateFormatter } from '@/shared/model'
 import { instance } from '@/shared/api'
 
 type TodoItemProps = {
@@ -34,6 +34,12 @@ export const TodoItem = ({
     setNewTodo(val)
   }
 
+  // useContext
+  const summaryContext = useContext(SummaryContext)
+  if (!summaryContext) {
+    throw new Error('no Provider Error : SummaryContext, called at TodoItem')
+  }
+
   const handleFetchedState = (value: string) => {
     switch (value) {
       case 'TODO':
@@ -59,6 +65,7 @@ export const TodoItem = ({
         scheduleSourceTypeCd: 'PERSONAL',
       })
       todoListReload()
+      summaryContext.summaryRefresher()
       backToAddNewTodoButton && backToAddNewTodoButton()
       setNewTodo(undefined) // input 빈 값으로 돌려놓기
     }
@@ -76,7 +83,10 @@ export const TodoItem = ({
           .put(`/api/schedules/${todo.scheduleId}`, {
             scheduleStatusTypeCd: fetchedState,
           })
-          .then(() => todoListReload())
+          .then(() => {
+            todoListReload()
+            summaryContext.summaryRefresher()
+          })
       }
     }
   }, [fetchedState])

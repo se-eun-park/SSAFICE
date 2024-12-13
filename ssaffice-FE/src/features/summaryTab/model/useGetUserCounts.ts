@@ -1,4 +1,5 @@
 import { instance } from '@/shared/api'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
 type UserCounts = {
@@ -14,14 +15,20 @@ type UserCounts = {
     doneCount: number
   }
 }
-export const useGetUserCounts = () => {
-  const [userCounts, setUserCounts] = useState<UserCounts | null>(null)
+export const useGetUserCounts = (reloadTrigger: boolean) => {
+  const { data } = useQuery({
+    queryKey: ['summary', reloadTrigger],
+    queryFn: async () => {
+      const { data } = await instance.get('/api/users/counts')
+      return data
+    },
+  })
+
+  const [userCounts, setUserCounts] = useState<UserCounts | null>(data)
 
   useEffect(() => {
-    instance.get('/api/users/counts').then((res) => {
-      setUserCounts(res.data)
-    })
-  }, [])
+    setUserCounts(data)
+  }, [data])
 
   return {
     noticeCounts: userCounts?.noticeCounts,

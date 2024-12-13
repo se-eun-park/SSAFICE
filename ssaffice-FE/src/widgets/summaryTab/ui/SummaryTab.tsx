@@ -4,9 +4,15 @@ import {
   GetParticipationChannels,
   useGetUserCounts,
 } from '@/features/summaryTab'
+import { SummaryContext } from '@/shared/model'
+import { useContext } from 'react'
 
 export const SummaryTab = () => {
-  const { noticeCounts, scheduleCounts } = useGetUserCounts()
+  const summaryContext = useContext(SummaryContext)
+  if (!summaryContext) {
+    throw new Error('no Provider Error : SummaryContext, called at SummaryTab')
+  }
+  const { noticeCounts, scheduleCounts } = useGetUserCounts(summaryContext.reloadTrigger)
 
   return (
     <section className='flex items-center justify-between w-full bg-color-bg-info-subtle py-spacing-40 px-spacing-128'>
