@@ -15,7 +15,7 @@ import {
 import { useQuery } from '@tanstack/react-query'
 
 export const ClickProfileButton = () => {
-  const MAX_FILE_SIZE = 1 * 1024 * 1024
+  const MAX_FILE_SIZE = 5 * 1024 * 1024
 
   const [isOpen, setIsOpen] = useState(false)
   const [isEditProfile, setIsEditProfile] = useState(false)
@@ -109,7 +109,7 @@ export const ClickProfileButton = () => {
     const file = event.target.files[0]
 
     if (file.size > MAX_FILE_SIZE) {
-      alert('파일 크기가 너무 큽니다. 1MB 이하의 파일을 업로드해주세요.')
+      alert('파일 크기가 너무 큽니다. 5MB 이하의 파일을 업로드해주세요.')
       return
     }
 
