@@ -144,7 +144,7 @@ export const ClickProfileButton = () => {
           <img
             src={imgUrl}
             alt='내 프로필 사진'
-            className='object-cover object-center rounded-full w-7 h-7'
+            className='object-cover object-center rounded-full w-7 aspect-square'
           />
         ) : (
           <div className='flex items-center justify-center size-7 rounded-radius-circle bg-color-bg-interactive-selected-press'>
@@ -172,7 +172,7 @@ export const ClickProfileButton = () => {
                   <img
                     src={imgUrl}
                     alt='내 프로필 사진'
-                    className='w-10 rounded-full aspect-square'
+                    className='object-cover object-center w-10 rounded-full aspect-square'
                   />
                   {isEditProfile && (
                     <>
