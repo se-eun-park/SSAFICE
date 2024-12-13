@@ -28,8 +28,8 @@ export const TodoBoard = () => {
   // state
   const { data, isLoading } = useTraineeScheduleList(
     'updatedAt',
-    '2024-11-01T00:00:00',
-    '2024-12-01T00:00:00',
+    '2024-01-01T00:00:00',
+    '2100-01-01T00:00:00',
   )
 
   const [tasks, setTasks] = useState<TaskResponse[]>(data?.scheduleSummaries)
