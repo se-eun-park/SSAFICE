@@ -5,18 +5,25 @@ import {
   useSetIsAnimationStore,
   useIsFirstRenderStore,
   useSetIsFirstRenderStore,
+  SummaryContext,
 } from '@/shared/model'
 import { SearchBar, TabLayout, HoverButton, RefreshMattermostConnection } from '@/shared/ui'
 import { FastLeftArrowIcon } from '@/assets/svg'
 import { AnnouncementList } from './AnnouncementList'
 import { useAnnouncementTabSelectView } from '@/features/announcementTab'
 import { UnscheduledList } from '@/widgets/unscheduledTab'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 
 export const AnnouncementTab = () => {
   const [page, setPage] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const [searchValue, setSearchValue] = useState('')
+
+  // context
+  const summaryContext = useContext(SummaryContext)
+  if (!summaryContext)
+    throw new Error('no Provider Error : SummaryContext, called at AnnouncementTab')
+
   // store
   const isTabOpen = useIsTabOpenStore()
   const setIsTabOpen = useSetIsTabOpenStore()
@@ -98,7 +105,7 @@ export const AnnouncementTab = () => {
       </TabLayout.Header>
 
       <TabLayout.Add animation={contentsAnimationClass}>
-        <div className='pb-spacing-8'>
+        <div className='pb-spacing-8' onClick={summaryContext.summaryRefresher} role='presentation'>
           <RefreshMattermostConnection />
         </div>
         {isAllNoticeView && <SearchBar setSearchValue={setSearchValue} />}
