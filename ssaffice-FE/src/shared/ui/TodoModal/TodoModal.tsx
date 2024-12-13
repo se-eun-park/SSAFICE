@@ -88,7 +88,7 @@ function TaskDescription({
           <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>설명</h3>
           <MarkdownEditor
             value={description}
-            className='body-md-medium text-color-text-primary bg-color-bg-primary'
+            className='z-30 body-md-medium text-color-text-primary bg-color-bg-primary'
             height='300px'
             onChange={onChangeDescription}
           />
@@ -161,6 +161,7 @@ function SaveEditButton({
     case 'CREATE':
       return (
         <button
+          type='button'
           onClick={saveRequest}
           className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press'
         >
@@ -170,6 +171,7 @@ function SaveEditButton({
     case 'VIEW':
       return editRequest ? (
         <button
+          type='button'
           onClick={editRequest}
           className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press'
         >
@@ -181,6 +183,7 @@ function SaveEditButton({
     case 'EDIT':
       return (
         <button
+          type='button'
           onClick={saveEditRequest}
           className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press'
         >
@@ -222,11 +225,19 @@ function Assignee({
             <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
               <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당자</p>
               <div className='flex items-center gap-x-spacing-6'>
-                <img
-                  src={user.profileImgUrl}
-                  alt='profile'
-                  className='w-5 h-5 rounded-radius-circle'
-                />
+                {user.profileImgUrl ? (
+                  <img
+                    src={user.profileImgUrl}
+                    alt='profile'
+                    className='object-cover object-center w-5 aspect-square rounded-radius-circle'
+                  />
+                ) : (
+                  <div className='flex items-center justify-center w-5 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                    <p className='body-xs-medium text-color-text-interactive-inverse'>
+                      {user.name[0]}
+                    </p>
+                  </div>
+                )}
                 <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
                   {user.name}
                 </p>
@@ -286,7 +297,19 @@ function Assignee({
         <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
           <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당자</p>
           <div className='flex items-center gap-x-spacing-6'>
-            <img src={user.profileImgUrl} alt='profile' className='w-5 h-5 rounded-radius-circle' />
+            {user.profileImgUrl ? (
+              <img
+                src={user.profileImgUrl}
+                alt='profile'
+                className='object-cover object-center w-5 aspect-square rounded-radius-circle'
+              />
+            ) : (
+              <div className='flex items-center justify-center w-5 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                <p className='body-xs-medium text-color-text-interactive-inverse'>
+                  {user.name && user.name[0]}
+                </p>
+              </div>
+            )}
             <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
               {user.name}
             </p>
@@ -299,7 +322,17 @@ function Assignee({
         <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
           <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당자</p>
           <div className='flex items-center gap-x-spacing-6'>
-            <img src={user.profileImgUrl} alt='profile' className='w-5 h-5 rounded-radius-circle' />
+            {user.profileImgUrl ? (
+              <img
+                src={user.profileImgUrl}
+                alt='profile'
+                className='object-cover object-center w-5 aspect-square rounded-radius-circle'
+              />
+            ) : (
+              <div className='flex items-center justify-center w-5 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                <p className='body-xs-medium text-color-text-interactive-inverse'>{user.name[0]}</p>
+              </div>
+            )}
             <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
               {user.name}
             </p>

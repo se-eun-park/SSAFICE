@@ -71,11 +71,19 @@ export const Card = ({
 
           <div className='flex items-center justify-end w-4/5 gap-x-spacing-8'>
             <p className='truncate body-sm-regular text-color-text-disabled'>{createUser?.name}</p>
-            <img
-              src={createUser?.profileImgUrl}
-              alt='create user image'
-              className='w-6 h-6 rounded-radius-circle'
-            />
+            {createUser?.profileImgUrl ? (
+              <img
+                src={createUser?.profileImgUrl}
+                alt='create user image'
+                className='object-cover object-center w-6 aspect-square rounded-radius-circle'
+              />
+            ) : (
+              <div className='flex items-center justify-center w-6 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                <p className='body-xs-medium text-color-text-interactive-inverse'>
+                  {createUser?.name[0]}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </button>

@@ -7,6 +7,10 @@ export type DropDownImageProps = {
 export type DropDownTitleProps = {
   children?: ReactNode
   color?: string
+  titleType?: 'EDIT' | 'VIEW'
+  title?: string
+  setTitle?: (title: string) => void
+  onClickEvent?: (() => void) | ((event: React.MouseEvent<HTMLButtonElement>) => void)
 }
 
 export type DropDownSubTitleProps = {
@@ -18,6 +22,7 @@ export type DropDownContentProps = {
   children?: ReactNode
   onClickEvent?: () => void
   isHover?: boolean
+  isFocus?: boolean
   isPaddingY?: boolean
   isHoverHighLight?: boolean
   isDefaultHover?: boolean
