@@ -51,7 +51,7 @@ export const TraineeTodoModal = ({
     }
 
     const startDateTime = `${new Date().toISOString().split('T')[0]}T00:00:00`
-    const endDateTime = `${endDate}T23:59:59`
+    const endDateTime = endDate ? `${endDate}T23:59:59` : ''
 
     const createData = {
       title: title,

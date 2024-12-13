@@ -186,3 +186,8 @@ def make_channel_entity(channel_id, channel_info):
         mm_team_id = team_id
     )
     return response_channel
+
+def is_ssafice_notice(data):
+    if json.loads(data["data"]["post"])["message"][:9] == "(SSAFICE)":
+        return True
+    return False
