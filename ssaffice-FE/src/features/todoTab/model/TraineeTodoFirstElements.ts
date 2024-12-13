@@ -64,7 +64,7 @@ export const TraineeTodoFirstElements = ({
           name: detail?.createUser?.name,
           profileImgUrl: detail?.createUser?.profileImgUrl,
         },
-        endDate: detail?.endDateTime.split('T')[0],
+        endDate: detail?.endDateTime ? detail?.endDateTime.split('T')[0] : '-',
         remindRequests: [...remindList],
       }
     case 'EDIT':
