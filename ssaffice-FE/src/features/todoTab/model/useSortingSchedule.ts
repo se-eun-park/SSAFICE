@@ -7,8 +7,10 @@ export const useSortingSchedule = (
   //datas: ScheduleItemDisplay[],
   datas: ScheduleSummaries[],
   sortType: 'endDateTime' | 'createdAt',
-): ScheduleListDisplay => {
+) => {
   const result: ScheduleListDisplay = {}
+  const todaySchedule: ScheduleListDisplay = {}
+  const restSchedules: ScheduleListDisplay = {}
 
   datas.forEach((each) => {
     let keyDate: string = '1970-01-01' // 임의 기본값
@@ -30,33 +32,46 @@ export const useSortingSchedule = (
     }
 
     result[keyDate].push(each)
+    if (keyDate === (useDateFormatter('YYYY-MM-DD(string)', new Date()) as string)) {
+      if (!todaySchedule[keyDate]) todaySchedule[keyDate] = []
+      todaySchedule[keyDate].push(each)
+    } else {
+      if (!restSchedules[keyDate]) restSchedules[keyDate] = []
+      restSchedules[keyDate].push(each)
+    }
   })
 
   const sortedResult: ScheduleListDisplay = {}
+  const sortedRestSchedules: ScheduleListDisplay = {}
 
-  Object.keys(result)
-    .sort((a, b) => {
-      return new Date(a).getTime() - new Date(b).getTime()
-    })
-    .forEach((key) => {
-      switch (sortType) {
-        case 'endDateTime': {
-          sortedResult[key] = result[key].sort((a, b) => {
-            if (a.endDateTime && b.endDateTime)
-              return new Date(a.endDateTime).getTime() - new Date(b.endDateTime).getTime()
-            else return 0
-          })
-          break
+  const sort = (prev: ScheduleListDisplay, sorted: ScheduleListDisplay) => {
+    Object.keys(prev)
+      .sort((a, b) => {
+        return new Date(a).getTime() - new Date(b).getTime()
+      })
+      .forEach((key) => {
+        switch (sortType) {
+          case 'endDateTime': {
+            sorted[key] = prev[key].sort((a, b) => {
+              if (a.endDateTime && b.endDateTime)
+                return new Date(a.endDateTime).getTime() - new Date(b.endDateTime).getTime()
+              else return 0
+            })
+            break
+          }
+
+          case 'createdAt': {
+            sorted[key] = prev[key].sort(
+              (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+            )
+            break
+          }
         }
+      })
+  }
 
-        case 'createdAt': {
-          sortedResult[key] = result[key].sort(
-            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-          )
-          break
-        }
-      }
-    })
+  sort(result, sortedResult)
+  sort(restSchedules, sortedRestSchedules)
 
-  return sortedResult
+  return { sortedResult, todaySchedule, restSchedules }
 }
