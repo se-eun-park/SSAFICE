@@ -13,7 +13,7 @@ export const SignupForm = () => {
   const [isDisabled, setIsDisabled] = useState(true)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
-  const { data: userSsoInfo } = useUserSsoInfo(13)
+  const { data: userSsoInfo } = useUserSsoInfo(userId)
 
   const [password, setPassword] = useState('')
   const [nickname, setNickname] = useState('')
