@@ -92,15 +92,15 @@ export const RegionSelector = ({ value, setValue }: SelectorProps) => {
 
   const formattedRegion = useMemo(() => {
     switch (value) {
-      case 'SEOUL':
+      case 'SEOUL/서울':
         return '서울'
-      case 'DAEGU':
+      case 'DAEGU/대구':
         return '대구'
-      case 'BU_UL_GYEONG':
+      case 'BU_UL_GYEONG/부울경':
         return '부울경'
-      case 'GWANGJU':
+      case 'GWANGJU/광주':
         return '광주'
-      case 'DAEJEON':
+      case 'DAEJEON/대전':
         return '대전'
       default:
         return '지역 선택'
@@ -147,7 +147,7 @@ export const RegionSelector = ({ value, setValue }: SelectorProps) => {
       <div ref={hoverRef}>
         <DropDown isOpen={isOpen} position='top-7 right-0' width='w-[200px]' isPaddingY={true}>
           <DropDown.Content
-            onClickEvent={() => handleOnClickContent('SEOUL')}
+            onClickEvent={() => handleOnClickContent('SEOUL/서울')}
             isHover={true}
             isHoverHighLight={true}
             isDefaultHover={isDefaultHover}
@@ -155,28 +155,28 @@ export const RegionSelector = ({ value, setValue }: SelectorProps) => {
             <p className='body-xs-medium text-color-text-primary'>서울</p>
           </DropDown.Content>
           <DropDown.Content
-            onClickEvent={() => handleOnClickContent('DAEGU')}
+            onClickEvent={() => handleOnClickContent('DAEGU/대구')}
             isHover={true}
             isHoverHighLight={true}
           >
             <p className='body-xs-medium text-color-text-primary'>대구</p>
           </DropDown.Content>
           <DropDown.Content
-            onClickEvent={() => handleOnClickContent('BU_UL_GYEONG')}
+            onClickEvent={() => handleOnClickContent('BU_UL_GYEONG/부울경')}
             isHover={true}
             isHoverHighLight={true}
           >
             <p className='body-xs-medium text-color-text-primary'>부울경</p>
           </DropDown.Content>
           <DropDown.Content
-            onClickEvent={() => handleOnClickContent('GWANGJU')}
+            onClickEvent={() => handleOnClickContent('GWANGJU/광주')}
             isHover={true}
             isHoverHighLight={true}
           >
             <p className='body-xs-medium text-color-text-primary'>광주</p>
           </DropDown.Content>
           <DropDown.Content
-            onClickEvent={() => handleOnClickContent('DAEJEON')}
+            onClickEvent={() => handleOnClickContent('DAEJEON/대전')}
             isHover={true}
             isHoverHighLight={true}
           >
