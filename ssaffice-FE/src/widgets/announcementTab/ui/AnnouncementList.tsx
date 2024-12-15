@@ -3,9 +3,17 @@ import { useSortingAnnouncement } from '@/features/announcementTab'
 import type { AnnouncementListDisplay } from '@/features/announcementTab'
 import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export const AnnouncementList = ({ page, searchValue }: { page: number; searchValue: string }) => {
+export const AnnouncementList = ({
+  page,
+  searchValue,
+  overflowHandler,
+}: {
+  page: number
+  searchValue: string
+  overflowHandler: () => void
+}) => {
   const [resultList, setResultList] = useState<AnnouncementListDisplay | null>(null)
   const [searchResultList, setSearchResultList] = useState<AnnouncementListDisplay | null>(null)
   const {} = useQuery({
@@ -38,6 +46,12 @@ export const AnnouncementList = ({ page, searchValue }: { page: number; searchVa
       return response.data
     },
   })
+
+  // calculate overflow
+  useEffect(() => {
+    overflowHandler()
+  }, [resultList, searchResultList])
+
   const datas: AnnouncementListDisplay = useSortingAnnouncement(
     (searchResultList?.content?.length ? searchResultList.content : resultList?.content) || [],
   )

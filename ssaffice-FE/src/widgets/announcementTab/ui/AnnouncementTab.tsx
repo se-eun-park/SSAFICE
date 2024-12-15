@@ -7,7 +7,13 @@ import {
   useSetIsFirstRenderStore,
   SummaryContext,
 } from '@/shared/model'
-import { SearchBar, TabLayout, HoverButton, RefreshMattermostConnection } from '@/shared/ui'
+import {
+  SearchBar,
+  TabLayout,
+  HoverButton,
+  RefreshMattermostConnection,
+  useElementOverflow,
+} from '@/shared/ui'
 import { FastLeftArrowIcon } from '@/assets/svg'
 import { AnnouncementList } from './AnnouncementList'
 import { useAnnouncementTabSelectView } from '@/features/announcementTab'
@@ -18,6 +24,12 @@ export const AnnouncementTab = () => {
   const [page, setPage] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const [searchValue, setSearchValue] = useState('')
+
+  // hook
+  const { isOverflow, overflowCalcTrigger } = useElementOverflow({
+    ref: containerRef,
+    isHeight: true,
+  })
 
   // context
   const summaryContext = useContext(SummaryContext)
@@ -116,16 +128,20 @@ export const AnnouncementTab = () => {
           ref={containerRef}
           className={`
           flex
-          ${isAllNoticeView ? 'mb-[172px]' : 'mb-[100px]'} px-spacing-16 pb-spacing-16 
+          ${isOverflow ? (isAllNoticeView ? 'mb-[172px]' : 'mb-[100px]') : 'h-full'} px-spacing-16 pb-spacing-16 
           bg-color-bg-tertiary
           rounded-radius-8
           overflow-y-auto
           `}
         >
           {isAllNoticeView ? (
-            <AnnouncementList page={page} searchValue={searchValue} />
+            <AnnouncementList
+              page={page}
+              searchValue={searchValue}
+              overflowHandler={overflowCalcTrigger}
+            />
           ) : (
-            <UnscheduledList page={page} />
+            <UnscheduledList page={page} overflowHandler={overflowCalcTrigger} />
           )}
         </div>
       </TabLayout.Content>

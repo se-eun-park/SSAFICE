@@ -22,7 +22,10 @@ export const TodoTab = () => {
 
   // hook
   const overflowRef = useRef<HTMLDivElement>(null)
-  const { isOverflow, triggerHandler } = useElementOverflow({ ref: overflowRef, isHeight: true })
+  const { isOverflow, overflowCalcTrigger } = useElementOverflow({
+    ref: overflowRef,
+    isHeight: true,
+  })
 
   // state
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -99,7 +102,7 @@ export const TodoTab = () => {
                   endDate={fixedDate.to}
                   selectedSort={useApiParamFormatter('SelectTodoSortCondition', selectedSort)}
                   selectedState={selectedState}
-                  overflowHandler={triggerHandler}
+                  overflowHandler={overflowCalcTrigger}
                 />
               )}
             </div>

@@ -10,12 +10,11 @@ export const useElementOverflow = ({ ref, isHeight }: useElementOverflowProp) =>
   const [isOverflow, setIsOverflow] = useState<boolean>(false)
   const [trigger, setTrigger] = useState<number>(Date.now()) // 컨테이너 크기 다시 계산
 
-  const triggerHandler = () => {
+  const overflowCalcTrigger = () => {
     setTrigger(Date.now())
   }
 
   useEffect(() => {
-    console.log(ref)
     const checkOverflow = () => {
       if (ref.current) {
         const { scrollHeight, scrollWidth, clientWidth, clientHeight } = ref.current
@@ -33,5 +32,5 @@ export const useElementOverflow = ({ ref, isHeight }: useElementOverflowProp) =>
     }
   }, [ref, isHeight, trigger])
 
-  return { isOverflow, triggerHandler }
+  return { isOverflow, overflowCalcTrigger }
 }
