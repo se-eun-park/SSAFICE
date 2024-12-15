@@ -57,7 +57,7 @@ export const TodoList = ({
     <div className='relative w-full h-full '>
       <div className='relative flex flex-col w-full h-full '>
         {/* 등록 순으로 설정된 경우, 오늘 날짜로만(*마감일도 오늘 날짜임) 간편 등록 가능합니다. */}
-        {selectedSort === 'createdAt' ? (
+        {
           <>
             {Object.entries(todaySchedule).map(([date, dailySchedules], index) => (
               <TodoDateGroup
@@ -83,21 +83,7 @@ export const TodoList = ({
               />
             ))}
           </>
-        ) : (
-          <>
-            {Object.entries(sortedResult).map(([date, dailySchedules], index) => (
-              <TodoDateGroup
-                key={date}
-                date={date}
-                dailySchedules={dailySchedules}
-                isLast={index === Object.entries(sortedResult).length - 1}
-                todoListReload={todoListReload}
-                selectedState={selectedState}
-                selectedSort={selectedSort}
-              />
-            ))}
-          </>
-        )}
+        }
 
         {Object.entries(sortedResult).length === 0 && (
           <div
