@@ -3,15 +3,22 @@ import { TodoDateGroup } from './TodoDateGroup'
 import { useQuery } from '@tanstack/react-query'
 import { instance } from '@/shared/api'
 import { useDateFormatter } from '@/shared/model'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type todoListProps = {
   startDate: Date
   endDate: Date
   selectedSort: 'endDateTime' | 'createdAt'
   selectedState: string
+  overflowHandler: () => void
 }
-export const TodoList = ({ startDate, endDate, selectedSort, selectedState }: todoListProps) => {
+export const TodoList = ({
+  startDate,
+  endDate,
+  selectedSort,
+  selectedState,
+  overflowHandler,
+}: todoListProps) => {
   const [reloadTrigger, setReloadTrigger] = useState(false) // boolean, toggle 식으로 작동
   const todoListReload = () => {
     setReloadTrigger(!reloadTrigger)
@@ -26,6 +33,10 @@ export const TodoList = ({ startDate, endDate, selectedSort, selectedState }: to
       return data.scheduleSummaries
     },
   })
+
+  useEffect(() => {
+    overflowHandler()
+  }, [data])
 
   if (isLoading) {
     return <div className='flex w-full h-full'>Loading...</div>
