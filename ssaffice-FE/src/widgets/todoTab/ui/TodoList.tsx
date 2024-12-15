@@ -2,10 +2,8 @@ import { useSortingSchedule } from '@/features/todoTab'
 import { TodoDateGroup } from './TodoDateGroup'
 import { useQuery } from '@tanstack/react-query'
 import { instance } from '@/shared/api'
-import { useClickedToggle, useDateFormatter } from '@/shared/model'
+import { useDateFormatter } from '@/shared/model'
 import { useState } from 'react'
-import { TodoItem } from './TodoItem'
-import { AddIcon } from '@/assets/svg'
 
 type todoListProps = {
   startDate: Date
