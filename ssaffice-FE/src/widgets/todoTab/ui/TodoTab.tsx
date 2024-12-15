@@ -79,7 +79,7 @@ export const TodoTab = () => {
               mb-[99px] px-spacing-16 pb-spacing-16 
               bg-color-bg-tertiary
               rounded-radius-8
-              overflow-y-scroll
+              overflow-y-auto
             `}
             >
               {fixedDate.from && fixedDate.to && (
