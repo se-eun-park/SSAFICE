@@ -12,7 +12,7 @@ export const AnnouncementList = ({
 }: {
   page: number
   searchValue: string
-  overflowHandler: () => void
+  overflowHandler?: () => void
 }) => {
   const [resultList, setResultList] = useState<AnnouncementListDisplay | null>(null)
   const [searchResultList, setSearchResultList] = useState<AnnouncementListDisplay | null>(null)
@@ -49,7 +49,7 @@ export const AnnouncementList = ({
 
   // calculate overflow
   useEffect(() => {
-    overflowHandler()
+    if (overflowHandler) overflowHandler()
   }, [resultList, searchResultList])
 
   const datas: AnnouncementListDisplay = useSortingAnnouncement(
