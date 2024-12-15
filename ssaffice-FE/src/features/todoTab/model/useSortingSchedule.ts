@@ -41,6 +41,12 @@ export const useSortingSchedule = (
     }
   })
 
+  if (Object.entries(todaySchedule).length !== 1) {
+    // 오늘 날짜에 해당하는 스케줄이 없는 경우, 빈 배열 리턴
+    // (날짜:일정 배열의 key:value 형태로 묶기 때문에, todaySchedule의 길이가 1보다 클 수 없습니다)
+    todaySchedule[useDateFormatter('YYYY-MM-DD(string)', new Date()) as string] = []
+  }
+
   const sortedResult: ScheduleListDisplay = {}
   const sortedRestSchedules: ScheduleListDisplay = {}
 
