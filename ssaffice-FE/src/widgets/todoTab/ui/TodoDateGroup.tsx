@@ -68,7 +68,7 @@ export const TodoDateGroup = ({
           </div>
 
           {isToday && (
-            <div className='flex items-center justify-center px-spacing-8 py-spacing-2 text-color-text-interactive-inverse body-sm-medium bg-color-bg-info rounded-radius-circle'>
+            <div className='flex items-center justify-center px-spacing-8 py-spacing-2 text-color-text-interactive-inverse body-sm-medium bg-color-bg-info rounded-radius-8'>
               오늘
             </div>
           )}

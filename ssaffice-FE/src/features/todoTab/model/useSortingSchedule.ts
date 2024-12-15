@@ -7,6 +7,10 @@ export const useSortingSchedule = (
   //datas: ScheduleItemDisplay[],
   datas: ScheduleSummaries[],
   sortType: 'endDateTime' | 'createdAt',
+
+  // 선택된 일정 조회 기간
+  startDate: Date,
+  endDate: Date,
 ) => {
   const result: ScheduleListDisplay = {}
   const todaySchedule: ScheduleListDisplay = {}
@@ -41,7 +45,14 @@ export const useSortingSchedule = (
     }
   })
 
-  if (Object.entries(todaySchedule).length !== 1) {
+  // 조회 요청한 날짜 내에 오늘 날짜가 없으면 today header를 노출하지 않습니다.
+  if (
+    // 오늘 날짜에 해당하는 일정이 없는 경우
+    Object.entries(todaySchedule).length !== 1 &&
+    // 조회 기간에 오늘이 포함되는 경우
+    startDate.getTime() <= new Date().getTime() &&
+    new Date().getTime() <= endDate.getTime()
+  ) {
     // 오늘 날짜에 해당하는 스케줄이 없는 경우, 빈 배열 리턴
     // (날짜:일정 배열의 key:value 형태로 묶기 때문에, todaySchedule의 길이가 1보다 클 수 없습니다)
     todaySchedule[useDateFormatter('YYYY-MM-DD(string)', new Date()) as string] = []

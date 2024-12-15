@@ -35,7 +35,12 @@ export const TodoList = ({ startDate, endDate, selectedSort, selectedState }: to
     return <div>Error loading data</div>
   }
 
-  const { sortedResult, todaySchedule, restSchedules } = useSortingSchedule(data, selectedSort)
+  const { sortedResult, todaySchedule, restSchedules } = useSortingSchedule(
+    data,
+    selectedSort,
+    startDate,
+    endDate,
+  )
 
   return (
     <div className='relative w-full h-full '>
