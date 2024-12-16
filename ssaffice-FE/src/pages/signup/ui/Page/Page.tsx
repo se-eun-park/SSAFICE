@@ -8,14 +8,14 @@ export const SignupPage = () => {
   const isUserId = useUserIdStore()
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   if (!isUserId) {
-  //     navigate('/login')
-  //   }
+  useEffect(() => {
+    if (!isUserId) {
+      navigate('/login')
+    }
 
-  //   if (!isAuthenticated) return
-  //   navigate('/main')
-  // }, [isAuthenticated, isUserId])
+    if (!isAuthenticated) return
+    navigate('/main')
+  }, [isAuthenticated, isUserId])
 
   return (
     <div className='flex flex-col w-full h-[calc(100vh-108px)] justify-center items-center'>
