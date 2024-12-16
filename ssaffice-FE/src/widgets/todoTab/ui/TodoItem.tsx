@@ -50,7 +50,7 @@ export const TodoItem = ({
         break
       }
       default: {
-        console.log(value)
+        // console.log(value)
       }
     }
   }

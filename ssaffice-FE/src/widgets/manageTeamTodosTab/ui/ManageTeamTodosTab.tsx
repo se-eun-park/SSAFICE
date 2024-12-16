@@ -19,7 +19,7 @@ export const ManageTeamTodosTab = () => {
     const handleScroll = () => {
       if (containerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = containerRef.current
-        console.log(scrollTop, scrollHeight, clientHeight)
+        // console.log(scrollTop, scrollHeight, clientHeight)
         if (scrollTop + clientHeight >= scrollHeight) {
           setPage && setPage((prevPage: number) => prevPage + 1)
         }
@@ -36,7 +36,7 @@ export const ManageTeamTodosTab = () => {
 
   // event
   const handleOnClickCalendar = () => {
-    console.log('나중엔 캘린더가 열림')
+    // console.log('나중엔 캘린더가 열림')
   }
 
   const handleOnClickCreateTodo = () => {

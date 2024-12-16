@@ -70,7 +70,7 @@ export const AnnouncementTab = () => {
     const handleScroll = () => {
       if (containerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = containerRef.current
-        console.log(scrollTop, scrollHeight, clientHeight)
+        // console.log(scrollTop, scrollHeight, clientHeight)
         if (scrollTop + clientHeight >= scrollHeight) {
           setPage && setPage((prevPage: number) => prevPage + 1)
         }

@@ -85,9 +85,9 @@ export const useDateFormatter = (
       return `${yyyy}-${mm}-${dd}T23:59:59`
 
     default:
-      console.log(
-        'DateFormatter가 정상 작동되지 않습니다. useDateFormatter에 전달된 파라메터 값(type)을 확인해 주세요.',
-      )
+      // console.log(
+      //   'DateFormatter가 정상 작동되지 않습니다. useDateFormatter에 전달된 파라메터 값(type)을 확인해 주세요.',
+      // )
       return ''
   }
 }
