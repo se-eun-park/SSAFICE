@@ -35,6 +35,11 @@ export const TodoItem = ({
     setNewTodo(val)
   }
 
+  // board에서 할 일 상태 바꾸고 돌아오면 반영되도록
+  useEffect(() => {
+    if (todo) setFetchedState(todo?.scheduleStatusTypeCd)
+  }, [todo])
+
   // useContext
   const summaryContext = useContext(SummaryContext)
   if (!summaryContext) {
@@ -86,6 +91,9 @@ export const TodoItem = ({
             todoListReload()
             summaryContext.summaryRefresher()
           })
+
+        console.log(todo)
+        console.log(`${todo.scheduleStatusTypeCd}:api, ${fetchedState}: local`)
       }
     }
   }, [fetchedState])
