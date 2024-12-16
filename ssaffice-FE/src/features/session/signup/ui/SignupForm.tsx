@@ -41,6 +41,15 @@ export const SignupForm = () => {
     setIsPasswordVisible(!isPasswordVisible)
   }
 
+  const handleOnChangeClass = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+
+    if (value.length > 2) {
+      value = value.slice(0, 2)
+    }
+    setClass(parseInt(value))
+  }
+
   const handleOnClickSignup = () => {
     postUserSignup(userId, {
       email: userSsoInfo?.email,
@@ -52,7 +61,6 @@ export const SignupForm = () => {
       trackCd: track,
       classNum: class_,
     })
-
     navigate('/login')
   }
 
@@ -105,8 +113,7 @@ export const SignupForm = () => {
           <input
             type='number'
             placeholder='0'
-            onChange={(e) => setClass(parseInt(e.target.value))}
-            maxLength={2}
+            onChange={handleOnChangeClass}
             value={class_ ? class_ : ''}
             className='w-[49px] border text-center border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-disabled py-spacing-8 focus:outline-none placeholder:text-color-text-disabled focus:placeholder:text-color-bg-primary'
           />
