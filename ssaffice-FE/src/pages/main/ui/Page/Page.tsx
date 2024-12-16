@@ -5,6 +5,7 @@ import { TodoTab } from '@/widgets/todoTab'
 import { useIsTabOpenStore, useIsAnimationStore } from '@/shared/model'
 import { useMattermostSyncStore } from '@/entities/session'
 import { useEffect } from 'react'
+import { SummaryProvider } from '@/shared/model'
 
 export const MainPage = () => {
   const navigate = useNavigate()
@@ -22,14 +23,16 @@ export const MainPage = () => {
 
   return (
     <main className='flex flex-col w-full min-h-[calc(100vh+190px)] gap-y-spacing-32 pt-spacing-40'>
-      <SummaryTab />
+      <SummaryProvider>
+        <SummaryTab />
 
-      <div
-        className={`flex gap-x-spacing-40 px-spacing-32 ${isAnimation ? ' animate-gapShrink' : ''}`}
-      >
-        {isTabOpen && <AnnouncementTab />}
-        <TodoTab />
-      </div>
+        <div
+          className={`flex gap-x-spacing-40 px-spacing-32 ${isAnimation ? ' animate-gapShrink' : ''}`}
+        >
+          {isTabOpen && <AnnouncementTab />}
+          <TodoTab />
+        </div>
+      </SummaryProvider>
     </main>
   )
 }

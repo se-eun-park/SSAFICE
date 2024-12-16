@@ -21,7 +21,7 @@ export const ManageEachTodoList = ({
     queryKey: ['eachTodos_manager', startDate, endDate, selectedSort],
     queryFn: async () => {
       const { data } = await instance.get(
-        `/api/schedules/admin/assigned?filterType=createdAt&sort=endDateTime,asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
+        `/api/schedules/admin/assigned?filterType=${selectedSort}&sort=${selectedSort},asc&start=${useDateFormatter('API REQUEST: start', startDate) as string}&end=${useDateFormatter('API REQUEST: end', endDate) as string}`,
       )
       return data.scheduleSummaries
     },

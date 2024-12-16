@@ -9,7 +9,6 @@ export const useManageMembersTabContent = (channel: MattermostChannel) => {
   const [selectedAll, setSelectedAll] = useState(false)
   const [pageInfo, setPageInfo] = useState<Pagenation | null>(null)
 
-  // ====================== 여기 API 다는 걸로 수정해야 함 =====================
   const fetchAPI = async (
     channelId: string,
     pageNumber?: number,
@@ -22,11 +21,6 @@ export const useManageMembersTabContent = (channel: MattermostChannel) => {
 
   const fetchUserInChannelList = async (pageNumber?: number) => {
     await fetchAPI(channel.channelId, pageNumber).then((res) => {
-      // await instance.get(
-      //   `/admin/12345?page=${pageNumber}&size=10&sort=name,asc`
-      // ).then((res) => {
-      console.log(res)
-      console.log(res.content)
       setUserInChannelList(res.content)
       if (res.pageable && res.totalPages !== undefined && res.totalElements !== undefined)
         setPageInfo({
@@ -37,11 +31,10 @@ export const useManageMembersTabContent = (channel: MattermostChannel) => {
         })
     })
   }
-  // ===========================================
 
   useEffect(() => {
     fetchUserInChannelList()
-  }, [])
+  }, [channel.channelId])
 
   const handleSelectedUserInChannelList = (user: SsafyUser, checked: boolean) => {
     checked

@@ -18,7 +18,7 @@ export const ManageEachTodosTab = () => {
     const handleScroll = () => {
       if (containerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = containerRef.current
-        console.log(scrollTop, scrollHeight, clientHeight)
+        // console.log(scrollTop, scrollHeight, clientHeight)
         if (scrollTop + clientHeight >= scrollHeight) {
           setPage && setPage((prevPage: number) => prevPage + 1)
         }
@@ -35,7 +35,7 @@ export const ManageEachTodosTab = () => {
 
   // event
   const handleOnClickCalendar = () => {
-    console.log('나중엔 캘린더가 열림')
+    // console.log('나중엔 캘린더가 열림')
   }
 
   const handleOnClickCreateTodo = () => {

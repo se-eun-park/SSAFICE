@@ -5,9 +5,7 @@ export const useSearchInput = () => {
   const [searchResult, setSearchResult] = useState('')
 
   const searchApi = (keyword: string) => {
-    console.log(`검색 수행: ${keyword}`)
     setSearchResult(keyword)
-    // 추후 API 로직을 여기에 넣어 주세요.
   }
 
   // useEffect(() => {

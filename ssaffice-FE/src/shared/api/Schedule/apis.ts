@@ -13,6 +13,22 @@ export const getTraineeScheduleDetail = async (scheduleId: number) => {
   return await instance.get(`/api/schedules/${scheduleId}`).then((res) => res.data)
 }
 
+export const postEasyTraineeSchedule = async (
+  title: string,
+  startDateTime: string,
+  endDateTime: string,
+  status: string,
+) => {
+  await instance.post('/api/schedules', {
+    title,
+    memo: '',
+    startDateTime,
+    endDateTime,
+    scheduleStatusTypeCd: status === 'default' ? 'TODO' : status,
+    scheduleSourceTypeCd: 'PERSONAL',
+  })
+}
+
 export const postTraineeSchedule = async (data: postScheduleResponse) => {
   const response = await instance.post(`/api/schedules`, data).then((res) => res.data)
   return response

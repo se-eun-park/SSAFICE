@@ -63,9 +63,9 @@ export const SelectTodoState = ({
     setIsDefaultHover(true)
 
     if (actionType === 'filter') {
-      console.log('추후에 필터링 api 연결')
+      // console.log('추후에 필터링 api 연결')
     } else {
-      console.log('추후에 수정 api 연결')
+      // console.log('추후에 수정 api 연결')
     }
 
     setIsOpen(false)

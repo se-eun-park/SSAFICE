@@ -59,8 +59,15 @@ export const TeamSelectDropdown = ({
           </div>
 
           <div className='flex w-full h-full'>
-            <div className='flex flex-col w-1/2 h-full overflow-y-scroll border-r gap-spacing-4 border-spacing-1 border-color-border-secondary'>
-              {mattermostTeams &&
+            <div
+              className={`
+                flex flex-col gap-spacing-4 ${mattermostTeams && mattermostTeams.length == 0 && 'justify-center'}
+                w-1/2 h-full
+                border-r border-spacing-1 border-color-border-secondary 
+                overflow-y-scroll 
+              `}
+            >
+              {mattermostTeams && mattermostTeams.length > 0 ? (
                 mattermostTeams.map((each, index) => (
                   <button
                     className={`
@@ -75,7 +82,7 @@ export const TeamSelectDropdown = ({
                     key={each.teamId}
                   >
                     <div className='text-color-text-primary body-md-medium'>{each.name}</div>
-                    <div className='flex items-center justify-end h-full w-full'>
+                    <div className='flex items-center justify-end h-full'>
                       <div className='flex items-center justify-center w-spacing-12 h-spacing-12'>
                         <div className='w-spacing-6 h-spacing-10'>
                           <SpreadRight />
@@ -83,7 +90,12 @@ export const TeamSelectDropdown = ({
                       </div>
                     </div>
                   </button>
-                ))}
+                ))
+              ) : (
+                <div className='text-center whitespace-pre-line'>
+                  {`MM 팀 정보를 가져올 수 없습니다.\n관리자에게 문의해 주세요.`}
+                </div>
+              )}
             </div>
             <div className='flex flex-col w-1/2 h-full'>
               {/* hover하는 팀명에 따라 렌더링되는 채널 리스트 달라야 합니다 */}

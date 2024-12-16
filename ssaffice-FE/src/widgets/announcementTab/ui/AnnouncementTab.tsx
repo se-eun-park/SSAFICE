@@ -5,18 +5,37 @@ import {
   useSetIsAnimationStore,
   useIsFirstRenderStore,
   useSetIsFirstRenderStore,
+  SummaryContext,
 } from '@/shared/model'
-import { SearchBar, TabLayout, HoverButton, RefreshMattermostConnection } from '@/shared/ui'
+import {
+  SearchBar,
+  TabLayout,
+  HoverButton,
+  RefreshMattermostConnection,
+  useElementOverflow,
+} from '@/shared/ui'
 import { FastLeftArrowIcon } from '@/assets/svg'
 import { AnnouncementList } from './AnnouncementList'
 import { useAnnouncementTabSelectView } from '@/features/announcementTab'
 import { UnscheduledList } from '@/widgets/unscheduledTab'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 
 export const AnnouncementTab = () => {
   const [page, setPage] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const [searchValue, setSearchValue] = useState('')
+
+  // hook
+  const { isOverflow, overflowCalcTrigger } = useElementOverflow({
+    ref: containerRef,
+    isHeight: true,
+  })
+
+  // context
+  const summaryContext = useContext(SummaryContext)
+  if (!summaryContext)
+    throw new Error('no Provider Error : SummaryContext, called at AnnouncementTab')
+
   // store
   const isTabOpen = useIsTabOpenStore()
   const setIsTabOpen = useSetIsTabOpenStore()
@@ -51,7 +70,7 @@ export const AnnouncementTab = () => {
     const handleScroll = () => {
       if (containerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = containerRef.current
-        console.log(scrollTop, scrollHeight, clientHeight)
+        // console.log(scrollTop, scrollHeight, clientHeight)
         if (scrollTop + clientHeight >= scrollHeight) {
           setPage && setPage((prevPage: number) => prevPage + 1)
         }
@@ -98,7 +117,7 @@ export const AnnouncementTab = () => {
       </TabLayout.Header>
 
       <TabLayout.Add animation={contentsAnimationClass}>
-        <div className='pb-spacing-8'>
+        <div className='pb-spacing-8' onClick={summaryContext.summaryRefresher} role='presentation'>
           <RefreshMattermostConnection />
         </div>
         {isAllNoticeView && <SearchBar setSearchValue={setSearchValue} />}
@@ -109,16 +128,20 @@ export const AnnouncementTab = () => {
           ref={containerRef}
           className={`
           flex
-          ${isAllNoticeView ? 'mb-[172px]' : 'mb-[100px]'} px-spacing-16 pb-spacing-16 
+          ${isOverflow ? (isAllNoticeView ? 'mb-[172px]' : 'mb-[100px]') : 'h-full'} px-spacing-16 pb-spacing-16 
           bg-color-bg-tertiary
           rounded-radius-8
-          overflow-y-scroll
+          overflow-y-auto
           `}
         >
           {isAllNoticeView ? (
-            <AnnouncementList page={page} searchValue={searchValue} />
+            <AnnouncementList
+              page={page}
+              searchValue={searchValue}
+              overflowHandler={overflowCalcTrigger}
+            />
           ) : (
-            <UnscheduledList page={page} />
+            <UnscheduledList page={page} overflowHandler={overflowCalcTrigger} />
           )}
         </div>
       </TabLayout.Content>

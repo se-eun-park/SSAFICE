@@ -72,7 +72,7 @@ export const TraineeTodoModal = ({
 
   const handleOnClickEditSave = () => {
     // 일정 수정 사항 검사 후 있으면 api 보내기
-    console.log(scheduleId, title, description, selectedState, endDate, reminder)
+    // console.log(scheduleId, title, description, selectedState, endDate, reminder)
     setModalType('VIEW')
     // 수정사항 없으면 그냥 view로 변경
   }

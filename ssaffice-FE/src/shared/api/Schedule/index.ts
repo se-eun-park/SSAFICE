@@ -1,6 +1,7 @@
 export {
   getTraineeScheduleList,
   getTraineeScheduleDetail,
+  postEasyTraineeSchedule,
   postTraineeSchedule,
   postManagerSchedule,
   postManagerTeamSchedule,

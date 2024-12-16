@@ -3,9 +3,17 @@ import { useSortingAnnouncement } from '@/features/announcementTab'
 import type { AnnouncementListDisplay } from '@/features/announcementTab'
 import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export const AnnouncementList = ({ page, searchValue }: { page: number; searchValue: string }) => {
+export const AnnouncementList = ({
+  page,
+  searchValue,
+  overflowHandler,
+}: {
+  page: number
+  searchValue: string
+  overflowHandler?: () => void
+}) => {
   const [resultList, setResultList] = useState<AnnouncementListDisplay | null>(null)
   const [searchResultList, setSearchResultList] = useState<AnnouncementListDisplay | null>(null)
   const {} = useQuery({
@@ -38,6 +46,12 @@ export const AnnouncementList = ({ page, searchValue }: { page: number; searchVa
       return response.data
     },
   })
+
+  // calculate overflow
+  useEffect(() => {
+    if (overflowHandler) overflowHandler()
+  }, [resultList, searchResultList])
+
   const datas: AnnouncementListDisplay = useSortingAnnouncement(
     (searchResultList?.content?.length ? searchResultList.content : resultList?.content) || [],
   )
@@ -52,6 +66,16 @@ export const AnnouncementList = ({ page, searchValue }: { page: number; searchVa
             isLast={index === Object.entries(datas).length - 1}
           />
         ))}
+        {Object.entries(datas).length === 0 && (
+          <div
+            className='
+              flex justify-center items-center
+              text-color-text-primary heading-desktop-md whitespace-pre-line
+            '
+          >
+            표시할 공지가 없습니다.
+          </div>
+        )}
       </div>
     </div>
   )

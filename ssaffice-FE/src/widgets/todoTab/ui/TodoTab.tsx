@@ -1,10 +1,16 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { TodoList } from './TodoList'
 import { TodoBoard } from './TodoBoard'
 
 import { HoverTitle } from '@/features/todoTab'
 import { useApiParamFormatter, useIsTabOpenStore } from '@/shared/model'
-import { TabLayout, HoverButton, SelectTodoState, SelectDateRange } from '@/shared/ui'
+import {
+  TabLayout,
+  HoverButton,
+  SelectTodoState,
+  SelectDateRange,
+  useElementOverflow,
+} from '@/shared/ui'
 import { CommonModal } from '@/shared/ui'
 import { HamburgerMenuIcon, FastLeftArrowIcon, EditIcon } from '@/assets/svg'
 import { SelectTodoSortCondition } from '@/features/todoTab/ui/SelectTodoSortCondition'
@@ -13,6 +19,13 @@ import { useSelectDateRange } from '@/shared/model/useSelectDateRange'
 export const TodoTab = () => {
   // store
   const isTabOpen = useIsTabOpenStore()
+
+  // hook
+  const overflowRef = useRef<HTMLDivElement>(null)
+  const { isOverflow, overflowCalcTrigger } = useElementOverflow({
+    ref: overflowRef,
+    isHeight: true,
+  })
 
   // state
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -74,12 +87,13 @@ export const TodoTab = () => {
         <TabLayout.Content>
           {isTabOpen ? (
             <div
+              ref={overflowRef}
               className={`
               flex
-              mb-[99px] px-spacing-16 pb-spacing-16 
+              ${isOverflow ? 'mb-[99px]' : 'h-full'} px-spacing-16 pb-spacing-16 
               bg-color-bg-tertiary
               rounded-radius-8
-              overflow-y-scroll
+              overflow-y-auto
             `}
             >
               {fixedDate.from && fixedDate.to && (
@@ -88,6 +102,7 @@ export const TodoTab = () => {
                   endDate={fixedDate.to}
                   selectedSort={useApiParamFormatter('SelectTodoSortCondition', selectedSort)}
                   selectedState={selectedState}
+                  overflowHandler={overflowCalcTrigger}
                 />
               )}
             </div>

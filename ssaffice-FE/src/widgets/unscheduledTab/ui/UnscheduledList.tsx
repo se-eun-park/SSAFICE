@@ -3,9 +3,15 @@ import { UnscheduledDateGroup } from './UnscheduledDateGroup'
 import type { UnscheduledListDisplay } from '@/features/unscheduledTab'
 import { instance } from '@/shared/api'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export const UnscheduledList = ({ page }: { page: number }) => {
+export const UnscheduledList = ({
+  page,
+  overflowHandler,
+}: {
+  page: number
+  overflowHandler: () => void
+}) => {
   const [resultList, setResultList] = useState<UnscheduledListDisplay | null>(null)
   const {} = useQuery({
     queryKey: ['unscheduled', page],
@@ -24,6 +30,11 @@ export const UnscheduledList = ({ page }: { page: number }) => {
     },
   })
 
+  // calculate overflow
+  useEffect(() => {
+    overflowHandler()
+  }, [resultList])
+
   const datas: UnscheduledListDisplay = useSortingUnscheduled(
     resultList?.content || [],
     'by registration',
@@ -39,6 +50,16 @@ export const UnscheduledList = ({ page }: { page: number }) => {
             isLast={index === Object.entries(datas).length - 1}
           />
         ))}
+        {Object.entries(datas).length === 0 && (
+          <div
+            className='
+              flex justify-center items-center
+              text-color-text-primary heading-desktop-md whitespace-pre-line
+            '
+          >
+            등록되지 않은 공지가 없습니다.
+          </div>
+        )}
       </div>
     </div>
   )

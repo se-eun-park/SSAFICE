@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { TodoFlag } from '@/assets/svg'
 // import { type ScheduleItemDisplay } from '@/features/todoTab'
 import { SelectTodoState } from '@/shared/ui'
 import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
-import { useDateFormatter } from '@/shared/model'
+import { SummaryContext, useDateFormatter } from '@/shared/model'
+import { instance } from '@/shared/api'
+import { postEasyTraineeSchedule } from '@/shared/api/Schedule'
 
 type TodoItemProps = {
   // todo?: ScheduleItemDisplay
@@ -25,49 +27,76 @@ export const TodoItem = ({
   visible,
 }: TodoItemProps) => {
   const [selectedState, setSelectedState] = useState('default')
+  const [fetchedState, setFetchedState] = useState<'TODO' | 'IN_PROGRESS' | 'DONE'>(
+    todo ? todo.scheduleStatusTypeCd : 'TODO',
+  )
   const [newTodo, setNewTodo] = useState<string | undefined>()
   const handleNewTodo = (val: string) => {
     setNewTodo(val)
   }
-  const addNewTodoTrigger = (key: string) => {
-    if (key === 'Enter') {
-      console.log(newTodo)
-      console.log(useDateFormatter('API REQUEST: start', today) as string)
-      console.log(useDateFormatter('API REQUEST: end', today) as string)
-      // 일정 등록 api 요청 붙이기 -> refresh
-      //   {
-      //     "title" : "최종 발표회 준비",
-      //     "memo" : "",
-      //     "startDateTime" : useDateFormatter('API REQUEST: start', today) as string,
-      //     "endDateTime" : useDateFormatter('API REQUEST: end', today) as string,
-      //     "scheduleStatusTypeCd" : selectedState,
-      //     "remindRequests": [
-      //     {
-      //       "essentialYn": "N",
-      //       "remindTypeCd": "ONCE",
-      //       "remindDateTime": "2024-11-07T15:00:00"
-      //     }
-      //   ]
-      // }
 
-      // todoList reload하는 trigger
+  // board에서 할 일 상태 바꾸고 돌아오면 반영되도록
+  useEffect(() => {
+    if (todo) setFetchedState(todo?.scheduleStatusTypeCd)
+  }, [todo])
+
+  // useContext
+  const summaryContext = useContext(SummaryContext)
+  if (!summaryContext) {
+    throw new Error('no Provider Error : SummaryContext, called at TodoItem')
+  }
+
+  const handleFetchedState = (value: string) => {
+    switch (value) {
+      case 'TODO':
+      case 'IN_PROGRESS':
+      case 'DONE': {
+        setFetchedState(value)
+        break
+      }
+      default: {
+        // console.log(value)
+      }
+    }
+  }
+
+  const addNewTodoTrigger = async (key: string) => {
+    if (key === 'Enter' && newTodo && newTodo?.trim() !== '') {
+      await postEasyTraineeSchedule(
+        newTodo,
+        useDateFormatter('API REQUEST: start', today) as string,
+        useDateFormatter('API REQUEST: end', today) as string,
+        selectedState,
+      )
       todoListReload()
+      summaryContext.summaryRefresher()
       backToAddNewTodoButton && backToAddNewTodoButton()
       setNewTodo(undefined) // input 빈 값으로 돌려놓기
+    }
+    if (key === 'Escape') {
+      backToAddNewTodoButton && backToAddNewTodoButton()
+      setNewTodo(undefined)
     }
   }
 
   // TodoState modify request
   useEffect(() => {
     if (todo) {
-      // 이미 등록된 할일 객체에서만 실행
+      if (todo.scheduleStatusTypeCd !== fetchedState) {
+        instance
+          .put(`/api/schedules/${todo.scheduleId}`, {
+            scheduleStatusTypeCd: fetchedState,
+          })
+          .then(() => {
+            todoListReload()
+            summaryContext.summaryRefresher()
+          })
 
-      // 수정 요청 api -> /api/schedules/todo.scheduleId
-      // { "scheduleStatusTypeCd" : selectedState}
-      // todoListReload()
-      console.log(selectedState)
+        console.log(todo)
+        console.log(`${todo.scheduleStatusTypeCd}:api, ${fetchedState}: local`)
+      }
     }
-  }, [selectedState])
+  }, [fetchedState])
 
   if (!visible) {
     return null
@@ -137,8 +166,8 @@ export const TodoItem = ({
           <>
             {/* 할 일 상태 드롭다운 파트 */}
             <SelectTodoState
-              selectedState={todo.scheduleStatusTypeCd}
-              setSelectedState={setSelectedState}
+              selectedState={fetchedState}
+              setSelectedState={handleFetchedState}
               actionType='modify'
             />
           </>

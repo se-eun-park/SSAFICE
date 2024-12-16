@@ -1,5 +1,5 @@
 import type { AnnouncementItemDisplay, createUser } from '@/features/announcementTab'
-import { ScheduleSummaries } from '@/features/manageEachTodoTab/model/types'
+import { ScheduleSummaries } from '@/features/manageEachTodoTab'
 
 export type TodoItemDisplay = {
   scheduleId: number
