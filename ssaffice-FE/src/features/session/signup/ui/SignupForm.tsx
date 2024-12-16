@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { CohortSelector, RegionSelector, TrackSelector, ClassSelector } from './UserInfoSelector'
+import { CohortSelector, RegionSelector, TrackSelector } from './UserInfoSelector'
 import { useUserIdStore, useUserSsoInfo } from '@/entities/session'
 import { postUserSignup } from '@/shared/api/User'
 import { EyeOpenIcon, EyeCloseIcon } from '@/assets/svg'
@@ -13,7 +13,7 @@ export const SignupForm = () => {
   const [isDisabled, setIsDisabled] = useState(true)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
-  const { data: userSsoInfo } = useUserSsoInfo(userId)
+  const { data: userSsoInfo } = useUserSsoInfo(13)
 
   const [password, setPassword] = useState('')
   const [nickname, setNickname] = useState('')
@@ -25,6 +25,8 @@ export const SignupForm = () => {
   useEffect(() => {
     if (cohort && region && class_) {
       setNickname(`${userSsoInfo?.name}[${cohort}기_${region.split('/')[1]} ${class_}반]`)
+    } else if (cohort && region && !class_) {
+      setNickname(`${userSsoInfo?.name}`)
     }
 
     if (!password || !cohort || !region || !track || !class_) {
@@ -59,7 +61,7 @@ export const SignupForm = () => {
       <div className='flex flex-col w-full h-full gap-y-spacing-24'>
         <div className='flex items-center justify-between'>
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>이메일</p>
-          <p className='body-sm-medium text-color-text-primary'>{userSsoInfo?.email}</p>
+          <p className='body-sm-medium text-color-text-disabled'>{userSsoInfo?.email}</p>
         </div>
         <div className='flex items-center justify-between'>
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>비밀번호</p>
@@ -69,7 +71,7 @@ export const SignupForm = () => {
               placeholder='PASSWORD'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className='w-[348px] border border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-primary pl-spacing-16 pr-spacing-48 py-spacing-8 focus:outline-none placeholder:text-color-text-disabled'
+              className='w-[348px] border border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-disabled pl-spacing-16 pr-spacing-48 py-spacing-8 focus:outline-none placeholder:text-color-text-disabled'
             />
             <button onClick={handleOnClickPasswordVisible} className='absolute right-spacing-16'>
               {isPasswordVisible ? (
@@ -82,7 +84,7 @@ export const SignupForm = () => {
         </div>
         <div className='flex items-center justify-between'>
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>닉네임</p>
-          <p className='body-sm-medium text-color-text-primary'>
+          <p className='body-sm-medium text-color-text-disabled'>
             {nickname ? `${nickname}` : `${userSsoInfo?.name}`}
           </p>
         </div>
@@ -100,7 +102,14 @@ export const SignupForm = () => {
         </div>
         <div className='flex items-center justify-between'>
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>반</p>
-          <ClassSelector value={class_} setValue={setClass} />
+          <input
+            type='number'
+            placeholder='0'
+            onChange={(e) => setClass(parseInt(e.target.value))}
+            maxLength={2}
+            value={class_ ? class_ : ''}
+            className='w-[49px] border text-center border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-disabled py-spacing-8 focus:outline-none placeholder:text-color-text-disabled focus:placeholder:text-color-bg-primary'
+          />
         </div>
       </div>
       <button
