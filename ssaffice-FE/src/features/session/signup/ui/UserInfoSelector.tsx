@@ -92,15 +92,15 @@ export const RegionSelector = ({ value, setValue }: SelectorProps) => {
 
   const formattedRegion = useMemo(() => {
     switch (value) {
-      case 'SEOUL':
+      case 'SEOUL/서울':
         return '서울'
-      case 'DAEGU':
+      case 'DAEGU/대구':
         return '대구'
-      case 'BU_UL_GYEONG':
+      case 'BU_UL_GYEONG/부울경':
         return '부울경'
-      case 'GWANGJU':
+      case 'GWANGJU/광주':
         return '광주'
-      case 'DAEJEON':
+      case 'DAEJEON/대전':
         return '대전'
       default:
         return '지역 선택'
@@ -147,7 +147,7 @@ export const RegionSelector = ({ value, setValue }: SelectorProps) => {
       <div ref={hoverRef}>
         <DropDown isOpen={isOpen} position='top-7 right-0' width='w-[200px]' isPaddingY={true}>
           <DropDown.Content
-            onClickEvent={() => handleOnClickContent('SEOUL')}
+            onClickEvent={() => handleOnClickContent('SEOUL/서울')}
             isHover={true}
             isHoverHighLight={true}
             isDefaultHover={isDefaultHover}
@@ -155,28 +155,28 @@ export const RegionSelector = ({ value, setValue }: SelectorProps) => {
             <p className='body-xs-medium text-color-text-primary'>서울</p>
           </DropDown.Content>
           <DropDown.Content
-            onClickEvent={() => handleOnClickContent('DAEGU')}
+            onClickEvent={() => handleOnClickContent('DAEGU/대구')}
             isHover={true}
             isHoverHighLight={true}
           >
             <p className='body-xs-medium text-color-text-primary'>대구</p>
           </DropDown.Content>
           <DropDown.Content
-            onClickEvent={() => handleOnClickContent('BU_UL_GYEONG')}
+            onClickEvent={() => handleOnClickContent('BU_UL_GYEONG/부울경')}
             isHover={true}
             isHoverHighLight={true}
           >
             <p className='body-xs-medium text-color-text-primary'>부울경</p>
           </DropDown.Content>
           <DropDown.Content
-            onClickEvent={() => handleOnClickContent('GWANGJU')}
+            onClickEvent={() => handleOnClickContent('GWANGJU/광주')}
             isHover={true}
             isHoverHighLight={true}
           >
             <p className='body-xs-medium text-color-text-primary'>광주</p>
           </DropDown.Content>
           <DropDown.Content
-            onClickEvent={() => handleOnClickContent('DAEJEON')}
+            onClickEvent={() => handleOnClickContent('DAEJEON/대전')}
             isHover={true}
             isHoverHighLight={true}
           >
@@ -296,79 +296,6 @@ export const TrackSelector = ({ value, setValue }: SelectorProps) => {
           >
             <p className='body-xs-medium text-color-text-primary'>데이터</p>
           </DropDown.Content>
-        </DropDown>
-      </div>
-    </div>
-  )
-}
-
-// 반
-export const ClassSelector = ({ value, setValue }: SelectorProps) => {
-  const dropDownRef = useRef<HTMLDivElement | null>(null)
-
-  const [isOpen, setIsOpen] = useState(false)
-  const [isDefaultHover, setIsDefaultHover] = useState(true)
-
-  // hook
-  useClickOutsideToggle(dropDownRef, setIsOpen)
-  const [hoverRef, isHover] = useHover<HTMLDivElement>()
-
-  // effect
-  // hover 이벤트 발생 시, 기본 hover 상태를 해제
-  useEffect(() => {
-    if (!isDefaultHover) return
-
-    if (isHover) {
-      setIsDefaultHover(false)
-    }
-  }, [isHover])
-
-  // dropDown이 닫힐 때, 기본 hover 상태로 변경
-  useEffect(() => {
-    if (!isOpen) {
-      setIsDefaultHover(true)
-    }
-  }, [isOpen])
-
-  const handleOnClickOpen = () => {
-    setIsOpen(!isOpen)
-  }
-
-  const handleOnClickContent = (cohort: number) => {
-    setValue(cohort)
-    setIsOpen(!isOpen)
-  }
-
-  return (
-    <div ref={dropDownRef} className='relative'>
-      <button onClick={handleOnClickOpen} className='flex items-center '>
-        <p className='body-sm-medium min-w-max text-color-text-primary'>
-          {value === 0 ? '반 선택' : `${value}`}
-        </p>
-        <DownArrowIcon className='w-5' />
-      </button>
-
-      <div ref={hoverRef}>
-        <DropDown isOpen={isOpen} position='top-7 right-0' width='w-[200px]' isPaddingY={true}>
-          <DropDown.Content
-            onClickEvent={() => handleOnClickContent(9)}
-            isHover={true}
-            isHoverHighLight={true}
-            isDefaultHover={isDefaultHover}
-          >
-            <p className='body-xs-medium text-color-text-primary'>9</p>
-          </DropDown.Content>
-          {Array.from({ length: 8 }, (_, i) => 8 - i).map((number) => (
-            <Fragment key={number}>
-              <DropDown.Content
-                onClickEvent={() => handleOnClickContent(number)}
-                isHover={true}
-                isHoverHighLight={true}
-              >
-                <p className='body-xs-medium text-color-text-primary'>{number}</p>
-              </DropDown.Content>
-            </Fragment>
-          ))}
         </DropDown>
       </div>
     </div>

@@ -20,3 +20,8 @@ export const postUserProfileImg = async (formData: FormData) => {
   })
   return response
 }
+
+export const getUserSsoInfo = async (userId: number | null) => {
+  const response = await instance.get(`/api/users/${userId}`).then((res) => res.data)
+  return response
+}

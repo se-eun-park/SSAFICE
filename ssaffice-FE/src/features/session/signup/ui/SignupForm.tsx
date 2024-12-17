@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { CohortSelector, RegionSelector, TrackSelector, ClassSelector } from './UserInfoSelector'
-import { useUserIdStore } from '@/entities/session'
+import { CohortSelector, RegionSelector, TrackSelector } from './UserInfoSelector'
+import { useUserIdStore, useUserSsoInfo } from '@/entities/session'
 import { postUserSignup } from '@/shared/api/User'
+import { EyeOpenIcon, EyeCloseIcon } from '@/assets/svg'
 
 export const SignupForm = () => {
   const navigate = useNavigate()
@@ -10,40 +11,56 @@ export const SignupForm = () => {
   const userId = useUserIdStore()
 
   const [isDisabled, setIsDisabled] = useState(true)
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
-  const [email, setEmail] = useState('')
+  const { data: userSsoInfo } = useUserSsoInfo(userId)
+
   const [password, setPassword] = useState('')
-  const [nickNameValue, setNickNameValue] = useState('')
+  const [nickname, setNickname] = useState('')
   const [cohort, setCohort] = useState(0)
   const [region, setRegion] = useState('')
   const [track, setTrack] = useState('')
   const [class_, setClass] = useState(0)
 
-  const handleNickNameOncChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickNameValue(e.target.value)
-  }
-
   useEffect(() => {
-    if (!email || !password || !nickNameValue || !cohort || !region || !track || !class_) {
+    if (cohort && region && class_) {
+      setNickname(`${userSsoInfo?.name}[${cohort}기_${region.split('/')[1]} ${class_}반]`)
+    } else if (cohort && region && !class_) {
+      setNickname(`${userSsoInfo?.name}`)
+    }
+
+    if (!password || !cohort || !region || !track || !class_) {
       setIsDisabled(true)
       return
     }
 
     setIsDisabled(false)
-  }, [email, password, nickNameValue, cohort, region, track, class_])
+  }, [password, cohort, region, track, class_])
+
+  const handleOnClickPasswordVisible = () => {
+    setIsPasswordVisible(!isPasswordVisible)
+  }
+
+  const handleOnChangeClass = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+
+    if (value.length > 2) {
+      value = value.slice(0, 2)
+    }
+    setClass(parseInt(value))
+  }
 
   const handleOnClickSignup = () => {
     postUserSignup(userId, {
-      email: email,
+      email: userSsoInfo?.email,
       password: password,
-      name: nickNameValue,
+      name: nickname,
       roleIds: ['ROLE_USER'],
       cohortNum: cohort,
       regionCd: region,
       trackCd: track,
       classNum: class_,
     })
-
     navigate('/login')
   }
 
@@ -52,33 +69,32 @@ export const SignupForm = () => {
       <div className='flex flex-col w-full h-full gap-y-spacing-24'>
         <div className='flex items-center justify-between'>
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>이메일</p>
-          <input
-            type='email'
-            placeholder='EMAIL'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className='w-[348px] border border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-primary px-spacing-16 py-spacing-8 focus:outline-none placeholder:text-color-text-disabled'
-          />
+          <p className='body-sm-medium text-color-text-disabled'>{userSsoInfo?.email}</p>
         </div>
         <div className='flex items-center justify-between'>
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>비밀번호</p>
-          <input
-            type='password'
-            placeholder='PASSWORD'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className='w-[348px] border border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-primary px-spacing-16 py-spacing-8 focus:outline-none placeholder:text-color-text-disabled'
-          />
+          <div className='relative flex items-center'>
+            <input
+              type={isPasswordVisible ? 'text' : 'password'}
+              placeholder='PASSWORD'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className='w-[348px] border border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-disabled pl-spacing-16 pr-spacing-48 py-spacing-8 focus:outline-none placeholder:text-color-text-disabled'
+            />
+            <button onClick={handleOnClickPasswordVisible} className='absolute right-spacing-16'>
+              {isPasswordVisible ? (
+                <EyeOpenIcon className='w-6' />
+              ) : (
+                <EyeCloseIcon className='w-6' />
+              )}
+            </button>
+          </div>
         </div>
         <div className='flex items-center justify-between'>
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>닉네임</p>
-          <input
-            type='text'
-            placeholder='이름[지역_반]'
-            value={nickNameValue}
-            onChange={handleNickNameOncChange}
-            className='w-[348px] border border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-primary px-spacing-16 py-spacing-8 focus:outline-none placeholder:text-color-text-disabled'
-          />
+          <p className='body-sm-medium text-color-text-disabled'>
+            {nickname ? `${nickname}` : `${userSsoInfo?.name}`}
+          </p>
         </div>
         <div className='flex items-center justify-between'>
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>기수</p>
@@ -94,7 +110,13 @@ export const SignupForm = () => {
         </div>
         <div className='flex items-center justify-between'>
           <p className='body-md-semibold text-color-text-tertiary min-w-max'>반</p>
-          <ClassSelector value={class_} setValue={setClass} />
+          <input
+            type='number'
+            placeholder='0'
+            onChange={handleOnChangeClass}
+            value={class_ ? class_ : ''}
+            className='w-[49px] border text-center border-color-border-secondary rounded-radius-8 body-sm-medium text-color-text-disabled py-spacing-8 focus:outline-none placeholder:text-color-text-disabled focus:placeholder:text-color-bg-primary'
+          />
         </div>
       </div>
       <button
