@@ -30,7 +30,7 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemProps) => {
             <img
               src={unscheduledItem.createUser?.profileImgUrl}
               alt='사진 없음'
-              className='w-full h-full rounded-full aspect-square'
+              className='object-cover object-center w-full rounded-full aspect-square'
             />
           )}
         </div>
