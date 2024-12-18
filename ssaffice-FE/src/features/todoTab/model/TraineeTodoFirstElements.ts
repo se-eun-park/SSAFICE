@@ -41,7 +41,24 @@ export const TraineeTodoFirstElements = ({
         remindRequests: [],
       }
     case 'VIEW':
-      const { data: detail } = useTraineeScheduleDetail(scheduleId)
+      const { data: detail, isLoading } = useTraineeScheduleDetail(scheduleId)
+
+      if (isLoading)
+        return {
+          title: '',
+          description: '',
+          selectedState: 'Loading',
+          user: {
+            name: '',
+            profileImgUrl: '',
+          },
+          createUser: {
+            name: '',
+            profileImgUrl: '',
+          },
+          endDate: '',
+          remindRequests: [],
+        }
 
       const remindList = Array.isArray(detail?.remindSummarys)
         ? detail.remindSummarys.map((remind: any) => {

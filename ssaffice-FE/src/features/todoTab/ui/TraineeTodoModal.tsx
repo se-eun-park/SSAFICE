@@ -78,45 +78,49 @@ export const TraineeTodoModal = ({
   }
 
   return (
-    <TodoModal modaltype={modalType}>
-      <TodoModal.LeftSection>
-        <div className='flex items-center gap-x-spacing-10 mb-spacing-16'>
-          <TodoModal.ExitButton closeRequest={closeRequest} />
-          <h1 className='heading-desktop-lg text-color-text-primary'>{headTitle}</h1>
-        </div>
-        <TodoModal.Title title={title} setTitle={setTitle}>
-          {title}
-        </TodoModal.Title>
-        <TodoModal.Description description={description} setDescription={setDescription}>
-          {description}
-        </TodoModal.Description>
-      </TodoModal.LeftSection>
-      <TodoModal.RightSection>
-        <TodoModal.Flex>
-          <TodoModal.Status selectedState={selectedState} setSelectedState={setSelectedState} />
-          <TodoModal.Button
-            saveRequest={handleOnClickSave}
-            editRequest={handleOnClickEdit}
-            saveEditRequest={handleOnClickEditSave}
-          />
-        </TodoModal.Flex>
+    <>
+      {elements.selectedState === 'Loading' ? null : (
+        <TodoModal modaltype={modalType}>
+          <TodoModal.LeftSection>
+            <div className='flex items-center gap-x-spacing-10 mb-spacing-16'>
+              <TodoModal.ExitButton closeRequest={closeRequest} />
+              <h1 className='heading-desktop-lg text-color-text-primary'>{headTitle}</h1>
+            </div>
+            <TodoModal.Title title={title} setTitle={setTitle}>
+              {title}
+            </TodoModal.Title>
+            <TodoModal.Description description={description} setDescription={setDescription}>
+              {description}
+            </TodoModal.Description>
+          </TodoModal.LeftSection>
+          <TodoModal.RightSection>
+            <TodoModal.Flex>
+              <TodoModal.Status selectedState={selectedState} setSelectedState={setSelectedState} />
+              <TodoModal.Button
+                saveRequest={handleOnClickSave}
+                editRequest={handleOnClickEdit}
+                saveEditRequest={handleOnClickEditSave}
+              />
+            </TodoModal.Flex>
 
-        <TodoModal.DetailsSection>
-          <TodoModal.Assignee
-            user={elements.user}
-            userType='trainee'
-            userIds={[]} // type error 방지를 위해 빈 배열 전달
-            setUserIds={() => []}
-          />
-          <TodoModal.Manager
-            user={elements.user}
-            createUser={elements.createUser}
-            userType='trainee'
-          />
-          <TodoModal.EndDate endDate={endDate} setEndDate={setEndDate} />
-          <TodoModal.Reminder reminder={reminder} setReminder={setReminder} />
-        </TodoModal.DetailsSection>
-      </TodoModal.RightSection>
-    </TodoModal>
+            <TodoModal.DetailsSection>
+              <TodoModal.Assignee
+                user={elements.user}
+                userType='trainee'
+                userIds={[]} // type error 방지를 위해 빈 배열 전달
+                setUserIds={() => []}
+              />
+              <TodoModal.Manager
+                user={elements.user}
+                createUser={elements.createUser}
+                userType='trainee'
+              />
+              <TodoModal.EndDate endDate={endDate} setEndDate={setEndDate} />
+              <TodoModal.Reminder reminder={reminder} setReminder={setReminder} />
+            </TodoModal.DetailsSection>
+          </TodoModal.RightSection>
+        </TodoModal>
+      )}
+    </>
   )
 }

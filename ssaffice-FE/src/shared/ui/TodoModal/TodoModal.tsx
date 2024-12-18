@@ -390,19 +390,21 @@ function Manager({ user, createUser, userType, modaltype }: ManagerResponse) {
 
     case 'EDIT':
       return (
-        <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
-          <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
-          <div className='flex items-center gap-x-spacing-6'>
-            <img
-              src={createUser.profileImgUrl}
-              alt='profile'
-              className='w-5 h-5 rounded-radius-circle'
-            />
-            <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
-              {createUser.name}
-            </p>
+        !isTrainee && (
+          <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
+            <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
+            <div className='flex items-center gap-x-spacing-6'>
+              <img
+                src={createUser.profileImgUrl}
+                alt='profile'
+                className='w-5 h-5 rounded-radius-circle'
+              />
+              <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
+                {createUser.name}
+              </p>
+            </div>
           </div>
-        </div>
+        )
       )
   }
 }
