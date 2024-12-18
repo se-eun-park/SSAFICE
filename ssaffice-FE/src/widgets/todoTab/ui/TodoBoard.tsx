@@ -108,7 +108,11 @@ export const TodoBoard = () => {
                   title={todo.title}
                   endDateTime={todo.endDateTime}
                   scheduleStatusTypeCd={todo.scheduleStatusTypeCd}
-                  scheduleSourceTypeCd={todo.scheduleSourceTypeCd}
+                  scheduleSourceTypeCd={
+                    todo.scheduleSourceTypeCd
+                      ? todo.scheduleSourceTypeCd
+                      : todo.noticeSummary?.noticeTypeCd
+                  }
                   createUser={todo.createUser}
                 />
               ))}
