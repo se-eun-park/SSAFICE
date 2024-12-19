@@ -83,10 +83,10 @@ def on_message(ws, message):
                         memo = notice["content"]
                         schedule.memo = memo
                         source_type = find_channel_type(data)
-                        schedule.schedule_source_type = source_type
+                        schedule.schedule_source_type_cd = source_type
                         # 아직 회원가입하지 않은 유저라면 일정에 넣지 않고 pass
                         if get_user_id_by_user_mm_id(member_id) == None:
-                            pass
+                            continue
                         else:
                             user_id = get_user_id_by_user_mm_id(member_id)
                             schedule.user_id = user_id
