@@ -10,8 +10,8 @@ class NoticeType(enum.Enum):
 
 
 class ScheduleSourceType(enum.Enum):
-    GLOBAL_NOTICE = "GLOBAL"
-    TEAM_NOTICE = "TEAM"
+    GLOBAL= "GLOBAL"
+    TEAM = "TEAM"
     ASSIGNED = "ASSIGNED"
     PERSONAL = "PERSONAL"
 
