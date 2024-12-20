@@ -68,34 +68,24 @@ def on_message(ws, message):
                         file.updated_by = notice_entity.created_by
                         insert_file(file)
                         order_idx += 1
-                # 일정에 해당하는 유저를 먼저 정의해야함.
 
-                user_count = get_channel_members_count(token, channel_id)[
-                    "member_count"
-                ]
-                max_page_num = user_count // 200 + 1
+                # 해당 채널에 속한 user정보를 받아와서 일정에 넣어줌(유저가 새로고침 눌러야 반영됨)
+                user_ids = get_user_id_list_by_channel_id(channel_id)
 
-                for page_num in range(0, max_page_num):
-                    member_ids = find_user_id_by_channel_id(token, channel_id, page_num)
-                    for member_id in member_ids:
-                        # user별로 DB에 넣을 schedule entity 생성
-                        schedule = make_schedule_entity(notice_db_id)
-                        memo = notice["content"]
-                        schedule.memo = memo
-                        source_type = find_channel_type(data)
-                        schedule.schedule_source_type_cd = source_type
-                        # 아직 회원가입하지 않은 유저라면 일정에 넣지 않고 pass
-                        if get_user_id_by_user_mm_id(member_id) == None:
-                            continue
-                        else:
-                            user_id = get_user_id_by_user_mm_id(member_id)
-                            schedule.user_id = user_id
-                            # schedule를 DB에 저장
-                            schedule_id = insert_schedule(schedule)
-                            # 필수 공지(= 필수 일정)인 경우에만 remind를 생성
-                            if schedule.essential_yn == True:
-                                remind = make_remind_entity(schedule_id)
-                                remind_id = insert_remind(remind)
+                for user_id in user_ids:
+                    # user별로 DB에 넣을 schedule entity 생성
+                    schedule = make_schedule_entity(notice_db_id)
+                    memo = notice["content"]
+                    schedule.memo = memo
+                    source_type = find_channel_type(data)
+                    schedule.schedule_source_type_cd = source_type                   
+                    schedule.user_id = user_id
+                    # schedule를 DB에 저장
+                    schedule_id = insert_schedule(schedule)
+                    # 필수 공지(= 필수 일정)인 경우에만 remind를 생성
+                    if schedule.essential_yn == True:
+                        remind = make_remind_entity(schedule_id)
+                        remind_id = insert_remind(remind)
 
             else:
                 print("일정이 아닙니다.")
