@@ -36,3 +36,8 @@ def get_mm_team_by_mm_team_id(mm_team_id):
     with get_db() as db:
         team = db.query(MM_Team).filter(MM_Team.mm_team_id == mm_team_id).first()
         return team
+    
+def get_user_id_list_by_channel_id(channel_id):
+    with get_db() as db:
+        user_id_list = db.query(UserChannel.user_id).filter(UserChannel.channel_id == channel_id).all()
+        return [user_id[0] for user_id in user_id_list]
