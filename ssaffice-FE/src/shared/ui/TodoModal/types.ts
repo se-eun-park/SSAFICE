@@ -33,6 +33,8 @@ export type AssigneeResponse = BaseResponse & {
   }
   userIds: number[]
   setUserIds: (userIds: number[]) => void
+  setChannelId: (channelId: string) => void
+  setNoticeType: (noticeType: string) => void
 
   userType: string
   manageType?: 'TEAM' | 'PERSONAL' | undefined
@@ -62,6 +64,7 @@ export type ReminderResponse = BaseResponse & {
 }
 
 export type SaveEditButtonResponse = BaseResponse & {
+  isDisabled: boolean
   saveRequest: () => void
   editRequest?: () => void
   saveEditRequest?: () => void

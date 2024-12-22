@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ManagerTodoFirstElements } from '../model/ManagerTodoFirstElements'
 import { TodoModal } from '@/shared/ui'
 import { postManagerSchedule, postManagerTeamSchedule } from '@/shared/api/Schedule'
@@ -27,7 +27,22 @@ export const ManagerTodoModal = ({
   const [endDate, setEndDate] = useState(elements.endDate)
   const [reminder, setReminder] = useState(elements.remindRequests)
   const [userIds, setUserIds] = useState<number[]>([])
+  const [channelId, setChannelId] = useState('')
+  const [noticeType, setNoticeType] = useState('')
   const [isRequired, setIsRequired] = useState(elements.isEssentialYn)
+  const [isDisabled, setIsDisabled] = useState(true)
+
+  useEffect(() => {
+    if (manageType === 'PERSONAL') {
+      if (!title || userIds.length === 0) return
+
+      setIsDisabled(false)
+    } else {
+      if (!channelId || !noticeType) return
+
+      setIsDisabled(false)
+    }
+  }, [title, userIds, channelId, noticeType])
 
   const headTitle = useMemo(() => {
     switch (modaltype) {
@@ -39,10 +54,6 @@ export const ManagerTodoModal = ({
   }, [modaltype])
 
   const handleOnClickSave = () => {
-    if (!title || userIds.length === 0) {
-      return
-    }
-
     const startDateTime = `${new Date().toISOString().split('T')[0]}T00:00:00`
     const endDateTime = `${endDate}T23:59:59`
 
@@ -62,9 +73,9 @@ export const ManagerTodoModal = ({
         content: description,
         startDateTime: startDateTime,
         endDateTime: endDateTime,
-        noticeTypeCd: 'TEAM',
-        isEssentialYn: isRequired,
-        channelId: '4c96tn5s63bbmnjxuqress7j4r',
+        noticeTypeCd: noticeType,
+        essentialYn: isRequired,
+        channelId: channelId,
       }
       postManagerTeamSchedule(createData)
     }
@@ -89,8 +100,8 @@ export const ManagerTodoModal = ({
 
       <TodoModal.RightSection>
         <TodoModal.Flex>
-          {/* <TodoModal.Status selectedState={selectedState} setSelectedState={setSelectedState} /> */}
-          <TodoModal.Button saveRequest={handleOnClickSave} />
+          <div />
+          <TodoModal.Button isDisabled={isDisabled} saveRequest={handleOnClickSave} />
         </TodoModal.Flex>
 
         <TodoModal.DetailsSection>
@@ -100,6 +111,8 @@ export const ManagerTodoModal = ({
             userType='manager'
             userIds={userIds}
             setUserIds={setUserIds}
+            setChannelId={setChannelId}
+            setNoticeType={setNoticeType}
           />
           <TodoModal.Manager
             user={elements.user}

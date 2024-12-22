@@ -152,6 +152,7 @@ function TaskStatus({ selectedState, setSelectedState, modaltype }: TaskStatusRe
 }
 
 function SaveEditButton({
+  isDisabled,
   saveRequest,
   editRequest,
   saveEditRequest,
@@ -162,8 +163,9 @@ function SaveEditButton({
       return (
         <button
           type='button'
+          disabled={isDisabled}
           onClick={saveRequest}
-          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press'
+          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press disabled:bg-color-bg-disabled'
         >
           저장
         </button>
@@ -199,11 +201,14 @@ function Assignee({
   userIds,
   setUserIds,
   userType,
+  setChannelId,
+  setNoticeType,
   manageType,
   modaltype,
 }: AssigneeResponse) {
   const [isOpen, setIsOpen] = useState(false)
   const [userNameList, setUserNameList] = useState<string[]>([])
+  const [channelName, setChannelName] = useState('')
 
   const handleOnClick = () => {
     setIsOpen(!isOpen)
@@ -253,17 +258,21 @@ function Assignee({
                   onClick={handleOnClick}
                   className='border w-fit h-fit p-spacing-4 bg-color-bg-interactive-secondary rounded-radius-4 border-color-border-disabled body-sm-semibold text-color-text-primary'
                 >
-                  {manageType === 'PERSONAL' ? '교육생 추가' : '팀 추가'}
+                  {manageType === 'PERSONAL' ? '교육생 추가' : '채널 추가'}
                 </button>
                 <div className='flex flex-col w-full h-full gap-y-spacing-10'>
-                  {userNameList.map((userName, index) => (
-                    <div key={index} className='flex items-center gap-x-spacing-4'>
-                      <button onClick={() => handleOnclickX(index)}>
-                        <XIcon className='w-3' />
-                      </button>
-                      <p className='body-xs-semibold text-color-text-primary'>{userName}</p>
-                    </div>
-                  ))}
+                  {manageType === 'PERSONAL' ? (
+                    userNameList.map((userName, index) => (
+                      <div key={index} className='flex items-center gap-x-spacing-4'>
+                        <button onClick={() => handleOnclickX(index)}>
+                          <XIcon className='w-3' />
+                        </button>
+                        <p className='body-xs-semibold text-color-text-primary'>{userName}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className='body-xs-semibold text-color-text-tertiary'>{channelName}</p>
+                  )}
                 </div>
               </div>
 
@@ -281,10 +290,9 @@ function Assignee({
                   isOpen && (
                     <AddTeamModal
                       setIsOpen={setIsOpen}
-                      userIds={userIds}
-                      setUserIds={setUserIds}
-                      userNameList={userNameList}
-                      setUserNameList={setUserNameList}
+                      setChannelId={setChannelId}
+                      setNoticeType={setNoticeType}
+                      setChannelName={setChannelName}
                     />
                   )}
             </div>
@@ -355,11 +363,19 @@ function Manager({ user, createUser, userType, modaltype }: ManagerResponse) {
             <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
               <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
               <div className='flex items-center gap-x-spacing-6'>
-                <img
-                  src={createUser.profileImgUrl}
-                  alt='profile'
-                  className='w-5 h-5 rounded-radius-circle'
-                />
+                {createUser.profileImgUrl ? (
+                  <img
+                    src={createUser.profileImgUrl}
+                    alt='profile'
+                    className='object-cover object-center w-5 aspect-square rounded-radius-circle'
+                  />
+                ) : (
+                  <div className='flex items-center justify-center w-5 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                    <p className='body-xs-medium text-color-text-interactive-inverse'>
+                      {createUser.name[0]}
+                    </p>
+                  </div>
+                )}
                 <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
                   {createUser.name}
                 </p>
@@ -375,11 +391,19 @@ function Manager({ user, createUser, userType, modaltype }: ManagerResponse) {
           <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
             <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
             <div className='flex items-center gap-x-spacing-6'>
-              <img
-                src={createUser.profileImgUrl}
-                alt='profile'
-                className='w-5 h-5 rounded-radius-circle'
-              />
+              {createUser.profileImgUrl ? (
+                <img
+                  src={createUser.profileImgUrl}
+                  alt='profile'
+                  className='object-cover object-center w-5 aspect-square rounded-radius-circle'
+                />
+              ) : (
+                <div className='flex items-center justify-center w-5 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                  <p className='body-xs-medium text-color-text-interactive-inverse'>
+                    {createUser.name[0]}
+                  </p>
+                </div>
+              )}
               <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
                 {createUser.name}
               </p>
@@ -394,11 +418,19 @@ function Manager({ user, createUser, userType, modaltype }: ManagerResponse) {
           <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
             <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
             <div className='flex items-center gap-x-spacing-6'>
-              <img
-                src={createUser.profileImgUrl}
-                alt='profile'
-                className='w-5 h-5 rounded-radius-circle'
-              />
+              {createUser.profileImgUrl ? (
+                <img
+                  src={createUser.profileImgUrl}
+                  alt='profile'
+                  className='object-cover object-center w-5 aspect-square rounded-radius-circle'
+                />
+              ) : (
+                <div className='flex items-center justify-center w-5 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                  <p className='body-xs-medium text-color-text-interactive-inverse'>
+                    {createUser.name[0]}
+                  </p>
+                </div>
+              )}
               <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
                 {createUser.name}
               </p>
