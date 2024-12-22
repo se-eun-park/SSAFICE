@@ -2,6 +2,7 @@ import { FoldUp, SpreadDown } from '@/assets/svg'
 import type { UnScheduledDisplay } from '@/features/todoTab'
 import { useClickedToggle, useCustomEmojiRemover, useDateFormatter, useHover } from '@/shared/model'
 import Markdown from 'react-markdown'
+import { putTraineeSchedule } from '@/shared/api/Schedule'
 
 type UnscheduledItemProps = {
   unscheduledItem: UnScheduledDisplay
@@ -13,6 +14,12 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemProps) => {
   // useHover 훅을 사용하여 ref, isHovered, setIsHovered 값 가져오기
   const [hoverRef, isHovered] = useHover<HTMLDivElement>()
 
+  const handleOnClickAddTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    const scheduleId = Number(unscheduledItem.scheduleId)
+    const data = { enrollYn: 'Y' }
+    putTraineeSchedule(scheduleId, data)
+  }
   return (
     <div
       ref={hoverRef}
@@ -55,7 +62,8 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemProps) => {
           h-[44px]
           '
         >
-          <div
+          <button
+            onClick={handleOnClickAddTodo}
             className={`${
               isHovered ? 'visible' : 'invisible'
             } flex gap-spacing-10 self-start items-center justify-around
@@ -68,7 +76,7 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemProps) => {
             {/* '등록하기' 클릭 이벤트 시 propagation stop 꼭 넣어주세요! 지금은 이벤트 연동 전이라 탭 열리고 닫힙니다 */}
 
             <div>{/* svg */} -&gt;</div>
-          </div>
+          </button>
 
           {/* 드롭다운/업 SVG */}
           <div className='flex items-end self-end justify-end w-spacing-16 h-spacing-16'>
