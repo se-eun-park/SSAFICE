@@ -42,10 +42,10 @@ export const postManagerSchedule = async ({ createData, userIds }: any) => {
 }
 
 export const postManagerTeamSchedule = async (createData: any) => {
-  const formData = new FormData()
-  formData.append('noticeRequest', JSON.stringify(createData))
+  // const formData = new FormData()
+  // formData.append('noticeRequest', JSON.stringify(createData))
 
-  const response = await instance.post('/api/notice/admin', formData).then((res) => res.data)
+  const response = await instance.post('/api/notice/admin', createData).then((res) => res.data)
 
   return response
 }
