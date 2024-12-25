@@ -17,7 +17,7 @@ export const UnscheduledItem = ({ unscheduledItem }: UnscheduledItemProps) => {
   const handleOnClickAddTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     const scheduleId = Number(unscheduledItem.scheduleId)
-    const data = { enrollYn: 'Y' }
+    const data = { enrollYn: 'Y', notice: unscheduledItem.noticeSummary.content }
     putTraineeSchedule(scheduleId, data)
   }
   return (
