@@ -14,6 +14,7 @@ export const CardEndDateElements = ({
   const endDateFormatted = parseInt(endDate.split('-')[1])
 
   const endDateInfo = useMemo(() => {
+    if (endDateTime === null) return { endDate: '', color: '' }
     if (scheduleStatusTypeCd === 'DONE') return { endDate: '', color: '' }
 
     if (endDateFormatted >= 6) {

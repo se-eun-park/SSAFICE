@@ -106,7 +106,9 @@ export const TodoBoard = () => {
                   key={todo.scheduleId}
                   scheduleId={todo.scheduleId}
                   title={todo.title}
-                  endDateTime={todo.endDateTime}
+                  endDateTime={
+                    todo.noticeSummary ? todo.noticeSummary.endDateTime : todo.endDateTime
+                  }
                   scheduleStatusTypeCd={todo.scheduleStatusTypeCd}
                   scheduleSourceTypeCd={
                     todo.scheduleSourceTypeCd
