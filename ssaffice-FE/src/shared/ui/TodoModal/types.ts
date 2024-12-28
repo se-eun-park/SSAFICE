@@ -66,6 +66,7 @@ export type ReminderResponse = BaseResponse & {
 
 export type SaveEditButtonResponse = BaseResponse & {
   isDisabled: boolean
+  manageType?: 'TEAM' | 'PERSONAL' | undefined
   saveRequest: () => void
   editRequest?: () => void
   saveEditRequest?: () => void

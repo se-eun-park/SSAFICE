@@ -29,6 +29,7 @@ export const TraineeTodoFirstElements = ({
         title: '',
         description: '',
         selectedState: 'TODO',
+        manageType: '',
         user: {
           name: user?.name,
           profileImgUrl: user?.profileImgUrl,
@@ -48,6 +49,8 @@ export const TraineeTodoFirstElements = ({
           title: '',
           description: '',
           selectedState: 'Loading',
+          manageType: '',
+
           user: {
             name: '',
             profileImgUrl: '',
@@ -73,6 +76,8 @@ export const TraineeTodoFirstElements = ({
         title: detail?.title,
         description: detail?.memo,
         selectedState: detail?.scheduleStatusTypeCd,
+        manageType: detail?.scheduleSourceTypeCd,
+
         user: {
           name: detail?.chargeUser?.name,
           profileImgUrl: detail?.chargeUser?.profileImgUrl,
@@ -89,6 +94,7 @@ export const TraineeTodoFirstElements = ({
         title: '수정하거라',
         description: '수정하거라',
         selectedState: 'progress',
+        manageType: '',
         user: {
           name: '곽성재(교육생)',
           profileImgUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',

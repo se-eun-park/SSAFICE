@@ -167,6 +167,7 @@ function TaskStatus({ selectedState, setSelectedState, modaltype }: TaskStatusRe
 
 function SaveEditButton({
   isDisabled,
+  manageType,
   saveRequest,
   editRequest,
   saveEditRequest,
@@ -185,7 +186,7 @@ function SaveEditButton({
         </button>
       )
     case 'VIEW':
-      return editRequest ? (
+      return editRequest && manageType === 'PERSONAL' ? (
         <button
           type='button'
           onClick={editRequest}

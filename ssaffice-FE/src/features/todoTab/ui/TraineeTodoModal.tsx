@@ -103,6 +103,7 @@ export const TraineeTodoModal = ({
               <TodoModal.Status selectedState={selectedState} setSelectedState={setSelectedState} />
               <TodoModal.Button
                 isDisabled={isDisabled}
+                manageType={elements.manageType}
                 saveRequest={handleOnClickSave}
                 editRequest={handleOnClickEdit}
                 saveEditRequest={handleOnClickEditSave}
