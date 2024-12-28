@@ -492,7 +492,7 @@ function EndDate({ endDate, setEndDate, modaltype, userType }: EndDateResponse) 
       return (
         <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
           <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>마감일</p>
-          <p className='body-sm-semibold text-color-text-primary'>{endDate}</p>
+          <p className='body-sm-semibold text-color-text-primary'>{endDate ? endDate : '-'}</p>
         </div>
       )
     case 'EDIT':
@@ -571,23 +571,25 @@ function ReminderTime({ reminder, setReminder, modaltype }: ReminderResponse) {
           <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>리마인드</p>
           <div className='flex flex-col gap-y-spacing-10'>
             <div className='flex flex-col w-full h-full gap-y-spacing-10'>
-              {reminder.map((item, idx) => (
-                <div key={idx} className='flex items-center gap-x-spacing-4'>
-                  <p className='body-xs-semibold text-color-text-tertiary'>
-                    <span
-                      className={`mr-spacing-2 ${item.remindTypeCd === 'DAILY' ? 'text-color-text-info' : 'text-color-text-danger'}`}
-                    >
-                      {item.remindTypeCd === 'DAILY' ? '매일' : '한번만'}
-                    </span>
-                    {item.remindTypeCd === 'ONCE' && item.remindDateTime.split('T')[0]}{' '}
-                    {parseInt(item.remindDateTime.split('T')[1].split(':')[0]) === 12
-                      ? '오후 12시'
-                      : parseInt(item.remindDateTime.split('T')[1].split(':')[0]) > 12
-                        ? `오후 ${parseInt(item.remindDateTime.split('T')[1].split(':')[0]) - 12}시`
-                        : `오전 ${parseInt(item.remindDateTime.split('T')[1].split(':')[0])}시`}
-                  </p>
-                </div>
-              ))}
+              {reminder.length > 0
+                ? reminder.map((item, idx) => (
+                    <div key={idx} className='flex items-center gap-x-spacing-4'>
+                      <p className='body-xs-semibold text-color-text-tertiary'>
+                        <span
+                          className={`mr-spacing-2 ${item.remindTypeCd === 'DAILY' ? 'text-color-text-info' : 'text-color-text-danger'}`}
+                        >
+                          {item.remindTypeCd === 'DAILY' ? '매일' : '한번만'}
+                        </span>
+                        {item.remindTypeCd === 'ONCE' && item.remindDateTime.split('T')[0]}{' '}
+                        {parseInt(item.remindDateTime.split('T')[1].split(':')[0]) === 12
+                          ? '오후 12시'
+                          : parseInt(item.remindDateTime.split('T')[1].split(':')[0]) > 12
+                            ? `오후 ${parseInt(item.remindDateTime.split('T')[1].split(':')[0]) - 12}시`
+                            : `오전 ${parseInt(item.remindDateTime.split('T')[1].split(':')[0])}시`}
+                      </p>
+                    </div>
+                  ))
+                : '-'}
             </div>
           </div>
         </div>
