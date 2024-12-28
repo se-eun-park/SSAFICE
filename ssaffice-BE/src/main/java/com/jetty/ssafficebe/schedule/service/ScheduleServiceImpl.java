@@ -121,12 +121,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // ! 2. 모든 Schedule 생성 및 저장
         List<Schedule> schedules = userIds.stream().map(userId -> {
-                                              Schedule schedule = scheduleConverter.toSchedule(userId, notice.getNoticeId());
-                                              schedule.setTitle(notice.getTitle());
+                                              Schedule schedule = scheduleConverter.toSchedule(userId, notice);
                                               schedule.setMemo(notice.getContent());
-                                              schedule.setScheduleSourceTypeCd("TODO");
                                               schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
-                                              schedule.setEssentialYn(notice.getEssentialYn());
                                               if (!notice.isEssential()) {
                                                   schedule.setEnrollYn("N");
                                               }

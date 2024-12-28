@@ -1,6 +1,7 @@
 package com.jetty.ssafficebe.schedule.converter;
 
 import com.jetty.ssafficebe.notice.converter.NoticeConverter;
+import com.jetty.ssafficebe.notice.entity.Notice;
 import com.jetty.ssafficebe.remind.converter.RemindConverter;
 import com.jetty.ssafficebe.schedule.entity.Schedule;
 import com.jetty.ssafficebe.schedule.payload.ScheduleDetail;
@@ -14,7 +15,7 @@ import org.mapstruct.ReportingPolicy;
         RemindConverter.class, NoticeConverter.class})
 public interface ScheduleConverter {
 
-    Schedule toSchedule(Long userId, Long noticeId);
+    Schedule toSchedule(Long userId, Notice notice);
 
     Schedule toSchedule(ScheduleRequest scheduleRequest);
 
