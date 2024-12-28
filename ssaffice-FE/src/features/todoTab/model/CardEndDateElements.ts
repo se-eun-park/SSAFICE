@@ -23,8 +23,10 @@ export const CardEndDateElements = ({
       return { endDate: `마감 ${endDate}`, color: 'text-color-text-warning-bold' }
     } else if (endDateFormatted <= 3 && endDateFormatted) {
       return { endDate: `마감 ${endDate}`, color: 'text-color-text-danger-bold' }
+    } else if (!endDateFormatted && !endDate.includes('D+')) {
+      return { endDate: `마감 ${endDate}`, color: 'text-color-text-danger-bold' }
     } else {
-      return { endDate: '마감됨', color: 'text-color-text-danger-bold' }
+      return { endDate: `마감됨`, color: 'text-color-text-danger-bold' }
     }
   }, [endDateTime])
 

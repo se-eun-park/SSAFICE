@@ -51,8 +51,6 @@ export const useDateFormatter = (
 
       if (hoursDifference > 0) {
         return `${hoursDifference}시간 전`
-      } else {
-        return 'D-Day'
       }
     }
 
