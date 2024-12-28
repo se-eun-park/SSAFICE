@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { TraineeTodoFirstElements } from '../model/TraineeTodoFirstElements'
-import { postTraineeSchedule } from '@/shared/api/Schedule'
+import { postTraineeSchedule, putTraineeSchedule } from '@/shared/api/Schedule'
 import { TodoModal } from '@/shared/ui'
 
 type TraineeTodoModalProps = {
@@ -30,6 +30,9 @@ export const TraineeTodoModal = ({
     } else {
       setIsDisabled(true)
     }
+  }, [title])
+
+  useEffect(() => {
     if (modalType === 'CREATE') return
 
     setTitle(elements.title)
@@ -37,7 +40,7 @@ export const TraineeTodoModal = ({
     setSelectedState(elements.selectedState)
     setEndDate(elements.endDate)
     setReminder(elements.remindRequests)
-  }, [elements, title])
+  }, [modalType, elements.title])
 
   const headTitle = useMemo(() => {
     switch (modalType) {
@@ -76,10 +79,30 @@ export const TraineeTodoModal = ({
   }
 
   const handleOnClickEditSave = () => {
-    // 일정 수정 사항 검사 후 있으면 api 보내기
-    // console.log(scheduleId, title, description, selectedState, endDate, reminder)
+    // 변경사항 없으면 그냥 return
+    if (
+      elements.title === title &&
+      elements.description === description &&
+      elements.selectedState === selectedState &&
+      elements.endDate === endDate &&
+      JSON.stringify(elements.remindRequests) === JSON.stringify(reminder)
+    ) {
+      setModalType('VIEW')
+      return
+    }
+
+    const endDateTime = endDate ? `${endDate}T23:59:59` : ''
+
+    const editData = {
+      title: title,
+      memo: description,
+      endDateTime: endDateTime,
+      remindRequests: reminder,
+      scheduleStatusTypeCd: selectedState,
+    }
+    putTraineeSchedule(scheduleId, editData)
+
     setModalType('VIEW')
-    // 수정사항 없으면 그냥 view로 변경
   }
 
   return (

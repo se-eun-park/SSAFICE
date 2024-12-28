@@ -180,7 +180,7 @@ function SaveEditButton({
           type='button'
           disabled={isDisabled}
           onClick={saveRequest}
-          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press disabled:bg-color-bg-disabled'
+          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover active:bg-color-bg-interactive-primary-press disabled:bg-color-bg-disabled'
         >
           저장
         </button>
@@ -190,7 +190,7 @@ function SaveEditButton({
         <button
           type='button'
           onClick={editRequest}
-          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press'
+          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover active:bg-color-bg-interactive-primary-press'
         >
           수정
         </button>
@@ -201,8 +201,9 @@ function SaveEditButton({
       return (
         <button
           type='button'
+          disabled={isDisabled}
           onClick={saveEditRequest}
-          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press'
+          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover active:bg-color-bg-interactive-primary-press disabled:bg-color-bg-disabled'
         >
           저장
         </button>
