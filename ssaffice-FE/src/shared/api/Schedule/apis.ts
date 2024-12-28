@@ -41,21 +41,6 @@ export const postManagerSchedule = async ({ createData, userIds }: any) => {
   return response
 }
 
-export const postManagerTeamSchedule = async (createData: any) => {
-  const formData = new FormData()
-     formData.append('notice', new Blob([JSON.stringify(createData)], { type: 'application/json' }))
-
-  const response = await instance
-    .post('/api/notice/admin', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-    .then((res) => res.data)
-
-  return response
-}
-
 export const putTraineeSchedule = async (scheduleId: number, data: putTraineeScheduleResponse) => {
   return await instance.put(`/api/schedules/${scheduleId}`, data).then((res) => res.data)
 }

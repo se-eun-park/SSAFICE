@@ -1,1 +1,1 @@
-export { getNoticeDetail } from './api'
+export { getNoticeDetail, postManagerTeamSchedule } from './api'
