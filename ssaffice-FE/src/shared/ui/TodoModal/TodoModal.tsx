@@ -14,6 +14,7 @@ import type {
   ReminderResponse,
   SaveEditButtonResponse,
   RequiredResponse,
+  FileResponse,
 } from './types'
 import {
   SelectTodoState,
@@ -43,13 +44,21 @@ function TaskTitle({ children, title, setTitle, modaltype }: TaskTitleResponse) 
   switch (modaltype) {
     case 'CREATE':
       return (
-        <input
-          type='text'
-          onChange={onChangetitle}
-          value={title}
-          placeholder='할 일을 요약해주세요.'
-          className='outline-none bg-color-bg-primary heading-desktop-md text-color-text-primary placeholder:text-color-text-disabled'
-        />
+        <div className='flex flex-col gap-y-spacing-6'>
+          <div className='flex items-center gap-x-spacing-6'>
+            <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>
+              제목
+            </h3>
+            <p className='body-md-medium text-color-text-warning'>*</p>
+          </div>
+          <input
+            type='text'
+            onChange={onChangetitle}
+            value={title}
+            placeholder='할 일을 요약해주세요.'
+            className='outline-none bg-color-bg-primary heading-desktop-md text-color-text-primary placeholder:text-color-text-disabled'
+          />
+        </div>
       )
     case 'VIEW':
       return (
@@ -59,13 +68,21 @@ function TaskTitle({ children, title, setTitle, modaltype }: TaskTitleResponse) 
       )
     case 'EDIT':
       return (
-        <input
-          type='text'
-          onChange={onChangetitle}
-          value={title}
-          placeholder='할 일을 요약해주세요.'
-          className='outline-none bg-color-bg-primary heading-desktop-md text-color-text-primary placeholder:text-color-text-disabled'
-        />
+        <div className='flex flex-col gap-y-spacing-6'>
+          <div className='flex items-center gap-x-spacing-6'>
+            <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>
+              제목
+            </h3>
+            <p className='body-md-medium text-color-text-warning'>*</p>
+          </div>
+          <input
+            type='text'
+            onChange={onChangetitle}
+            value={title}
+            placeholder='할 일을 요약해주세요.'
+            className='outline-none bg-color-bg-primary heading-desktop-md text-color-text-primary placeholder:text-color-text-disabled'
+          />
+        </div>
       )
   }
 }
@@ -84,8 +101,7 @@ function TaskDescription({
   switch (modaltype) {
     case 'CREATE':
       return (
-        <div className='flex flex-col gap-y-spacing-6 mt-spacing-12'>
-          <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>설명</h3>
+        <div className='mt-spacing-12'>
           <MarkdownEditor
             value={description}
             className='z-30 body-md-medium text-color-text-primary bg-color-bg-primary'
@@ -97,8 +113,7 @@ function TaskDescription({
 
     case 'VIEW':
       return (
-        <div className='flex flex-col gap-y-spacing-6 mt-spacing-12'>
-          <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>설명</h3>
+        <div className='mt-spacing-12'>
           <MarkdownPreview
             source={String(children)}
             className='max-h-[500px] min-h-[200px] overflow-y-auto body-md-medium'
@@ -108,8 +123,7 @@ function TaskDescription({
 
     case 'EDIT':
       return (
-        <div className='flex flex-col gap-y-spacing-6 mt-spacing-12'>
-          <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>설명</h3>
+        <div className='mt-spacing-12'>
           <MarkdownEditor
             value={description}
             className='body-md-medium text-color-text-primary bg-color-bg-primary'
@@ -252,7 +266,10 @@ function Assignee({
         case 'manager':
           return (
             <div className='relative flex items-start w-fit h-fit p-spacing-10 gap-x-spacing-10'>
-              <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당자</p>
+              <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>
+                담당자
+                <span className='body-md-medium text-color-text-warning ml-spacing-6'>*</span>
+              </p>
               <div className='flex flex-col gap-y-spacing-10'>
                 <button
                   onClick={handleOnClick}
@@ -441,7 +458,7 @@ function Manager({ user, createUser, userType, modaltype }: ManagerResponse) {
   }
 }
 
-function EndDate({ endDate, setEndDate, modaltype }: EndDateResponse) {
+function EndDate({ endDate, setEndDate, modaltype, userType }: EndDateResponse) {
   const today = new Date()
   const formattedDate = today.toISOString().split('T')[0]
 
@@ -453,7 +470,12 @@ function EndDate({ endDate, setEndDate, modaltype }: EndDateResponse) {
     case 'CREATE':
       return (
         <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
-          <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>마감일</p>
+          <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>
+            마감일
+            {userType === 'manager' && (
+              <span className='body-md-medium text-color-text-warning ml-spacing-6'>*</span>
+            )}
+          </p>
           <input
             type='date'
             value={endDate}
@@ -664,6 +686,37 @@ function Required({ isRequired, setIsRequired, modaltype }: RequiredResponse) {
   }
 }
 
+function File({ manageType, modaltype, userType, fileList, setFileList }: FileResponse) {
+  const handlePostFile = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return
+
+    const file = event.target.files[0]
+
+    if (fileList && setFileList) {
+      setFileList([...fileList, file])
+    }
+  }
+
+  if (userType === 'manager' && manageType === 'TEAM') {
+    switch (modaltype) {
+      case 'CREATE':
+        return (
+          <div className='flex items-center'>
+            <label htmlFor='fileCreate'>
+              <div className='cursor-pointer text-color-text-primary body-xs-medium bg-color-bg-interactive-secondary w-fit rounded-radius-4 px-spacing-10 py-spacing-4'>
+                파일찾기
+              </div>
+              <input type='file' id='fileCreate' onChange={handlePostFile} className='hidden' />
+            </label>
+          </div>
+        )
+    }
+  } else {
+    // 교육생이면 업로드된 파일 다운로드 가능
+    null
+  }
+}
+
 //레이아웃
 function LeftSectionContainer({ children, modaltype }: BaseResponse) {
   return (
@@ -752,4 +805,5 @@ export const TodoModal = Object.assign(TodoModalMain, {
   EndDate: EndDate,
   Reminder: ReminderTime,
   Required: Required,
+  File: File,
 })

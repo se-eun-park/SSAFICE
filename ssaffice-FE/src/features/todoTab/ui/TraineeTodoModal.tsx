@@ -22,17 +22,22 @@ export const TraineeTodoModal = ({
   const [selectedState, setSelectedState] = useState(elements.selectedState)
   const [endDate, setEndDate] = useState(elements.endDate)
   const [reminder, setReminder] = useState(elements.remindRequests)
+  const [isDisabled, setIsDisabled] = useState(true)
 
   useEffect(() => {
+    if (title) {
+      setIsDisabled(false)
+    } else {
+      setIsDisabled(true)
+    }
     if (modalType === 'CREATE') return
-    if (title) return
 
     setTitle(elements.title)
     setDescription(elements.description)
     setSelectedState(elements.selectedState)
     setEndDate(elements.endDate)
     setReminder(elements.remindRequests)
-  }, [elements])
+  }, [elements, title])
 
   const headTitle = useMemo(() => {
     switch (modalType) {
@@ -97,6 +102,7 @@ export const TraineeTodoModal = ({
             <TodoModal.Flex>
               <TodoModal.Status selectedState={selectedState} setSelectedState={setSelectedState} />
               <TodoModal.Button
+                isDisabled={isDisabled}
                 saveRequest={handleOnClickSave}
                 editRequest={handleOnClickEdit}
                 saveEditRequest={handleOnClickEditSave}
@@ -109,6 +115,8 @@ export const TraineeTodoModal = ({
                 userType='trainee'
                 userIds={[]} // type error 방지를 위해 빈 배열 전달
                 setUserIds={() => []}
+                setChannelId={() => ''}
+                setNoticeType={() => ''}
               />
               <TodoModal.Manager
                 user={elements.user}

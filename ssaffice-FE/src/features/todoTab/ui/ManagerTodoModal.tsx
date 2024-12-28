@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ManagerTodoFirstElements } from '../model/ManagerTodoFirstElements'
 import { TodoModal } from '@/shared/ui'
-import { postManagerSchedule, postManagerTeamSchedule } from '@/shared/api/Schedule'
+import { postManagerSchedule } from '@/shared/api/Schedule'
+import { postManagerTeamSchedule } from '@/shared/api/Notice'
 
 type RemindRequest = {
   remindTypeCd: string
@@ -26,6 +27,7 @@ export const ManagerTodoModal = ({
   // const [selectedState, setSelectedState] = useState(elements.selectedState)
   const [endDate, setEndDate] = useState(elements.endDate)
   const [reminder, setReminder] = useState(elements.remindRequests)
+  const [fileList, setFileList] = useState<File[]>([])
   const [userIds, setUserIds] = useState<number[]>([])
   const [channelId, setChannelId] = useState('')
   const [noticeType, setNoticeType] = useState('')
@@ -34,15 +36,21 @@ export const ManagerTodoModal = ({
 
   useEffect(() => {
     if (manageType === 'PERSONAL') {
-      if (!title || userIds.length === 0) return
+      if (!title || userIds.length === 0 || !endDate) {
+        setIsDisabled(true)
+        return
+      }
 
       setIsDisabled(false)
     } else {
-      if (!channelId || !noticeType) return
+      if (!channelId || !noticeType || !endDate || !title) {
+        setIsDisabled(true)
+        return
+      }
 
       setIsDisabled(false)
     }
-  }, [title, userIds, channelId, noticeType])
+  }, [title, userIds, channelId, noticeType, endDate])
 
   const headTitle = useMemo(() => {
     switch (modaltype) {
@@ -77,7 +85,7 @@ export const ManagerTodoModal = ({
         essentialYn: isRequired,
         channelId: channelId,
       }
-      postManagerTeamSchedule(createData)
+      postManagerTeamSchedule(createData, fileList)
     }
 
     closeRequest()
@@ -104,6 +112,13 @@ export const ManagerTodoModal = ({
           <TodoModal.Button isDisabled={isDisabled} saveRequest={handleOnClickSave} />
         </TodoModal.Flex>
 
+        <TodoModal.File
+          manageType={manageType}
+          userType='manager'
+          fileList={fileList}
+          setFileList={setFileList}
+        />
+
         <TodoModal.DetailsSection>
           <TodoModal.Assignee
             manageType={manageType}
@@ -119,7 +134,7 @@ export const ManagerTodoModal = ({
             createUser={elements.createUser}
             userType='manager'
           />
-          <TodoModal.EndDate endDate={endDate} setEndDate={setEndDate} />
+          <TodoModal.EndDate userType='manager' endDate={endDate} setEndDate={setEndDate} />
 
           {manageType === 'PERSONAL' ? null : (
             <TodoModal.Required isRequired={isRequired} setIsRequired={setIsRequired} />
