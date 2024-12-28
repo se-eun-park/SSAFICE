@@ -127,8 +127,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                                               schedule.setScheduleSourceTypeCd("TODO");
                                               schedule.setScheduleSourceTypeCd(notice.getNoticeTypeCd());
                                               schedule.setEssentialYn(notice.getEssentialYn());
-                                              if (notice.isEssential()) {
-                                                  schedule.setEnrollYn("Y");
+                                              if (!notice.isEssential()) {
+                                                  schedule.setEnrollYn("N");
                                               }
                                               return schedule;
                                           })
