@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 type CardSourceTypeElementProps = {
-  scheduleSourceTypeCd: string
+  scheduleSourceTypeCd: string | undefined
 }
 
 export const CardSourceTypeElements = ({ scheduleSourceTypeCd }: CardSourceTypeElementProps) =>
@@ -15,15 +15,15 @@ export const CardSourceTypeElements = ({ scheduleSourceTypeCd }: CardSourceTypeE
         }
       case 'TEAM':
         return {
-          description: '공지에서 등록',
+          description: '팀 공지에서 등록',
           classname:
             'bg-color-bg-warning w-fit h-fit px-spacing-4 py-spacing-2 rounded-radius-4 text-color-text-interactive-inverse body-xs-semibold',
         }
       case 'ASSIGNED':
         return {
-          description: '공지에서 등록',
+          description: '관리자가 등록',
           classname:
-            'bg-color-bg-warning w-fit h-fit px-spacing-4 py-spacing-2 rounded-radius-4 text-color-text-interactive-inverse body-xs-semibold',
+            'bg-color-bg-danger w-fit h-fit px-spacing-4 py-spacing-2 rounded-radius-4 text-color-text-interactive-inverse body-xs-semibold',
         }
       case 'PERSONAL':
         return {

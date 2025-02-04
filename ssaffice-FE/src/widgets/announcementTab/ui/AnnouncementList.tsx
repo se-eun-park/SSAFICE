@@ -67,12 +67,7 @@ export const AnnouncementList = ({
           />
         ))}
         {Object.entries(datas).length === 0 && (
-          <div
-            className='
-              flex justify-center items-center
-              text-color-text-primary heading-desktop-md whitespace-pre-line
-            '
-          >
+          <div className='flex items-center justify-center whitespace-pre-line  text-color-text-primary heading-desktop-md'>
             표시할 공지가 없습니다.
           </div>
         )}

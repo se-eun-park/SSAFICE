@@ -14,6 +14,7 @@ import type {
   ReminderResponse,
   SaveEditButtonResponse,
   RequiredResponse,
+  FileResponse,
 } from './types'
 import {
   SelectTodoState,
@@ -43,13 +44,21 @@ function TaskTitle({ children, title, setTitle, modaltype }: TaskTitleResponse) 
   switch (modaltype) {
     case 'CREATE':
       return (
-        <input
-          type='text'
-          onChange={onChangetitle}
-          value={title}
-          placeholder='할 일을 요약해주세요.'
-          className='outline-none bg-color-bg-primary heading-desktop-md text-color-text-primary placeholder:text-color-text-disabled'
-        />
+        <div className='flex flex-col gap-y-spacing-6'>
+          <div className='flex items-center gap-x-spacing-6'>
+            <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>
+              제목
+            </h3>
+            <p className='body-md-medium text-color-text-warning'>*</p>
+          </div>
+          <input
+            type='text'
+            onChange={onChangetitle}
+            value={title}
+            placeholder='할 일을 요약해주세요.'
+            className='outline-none bg-color-bg-primary heading-desktop-md text-color-text-primary placeholder:text-color-text-disabled'
+          />
+        </div>
       )
     case 'VIEW':
       return (
@@ -59,13 +68,21 @@ function TaskTitle({ children, title, setTitle, modaltype }: TaskTitleResponse) 
       )
     case 'EDIT':
       return (
-        <input
-          type='text'
-          onChange={onChangetitle}
-          value={title}
-          placeholder='할 일을 요약해주세요.'
-          className='outline-none bg-color-bg-primary heading-desktop-md text-color-text-primary placeholder:text-color-text-disabled'
-        />
+        <div className='flex flex-col gap-y-spacing-6'>
+          <div className='flex items-center gap-x-spacing-6'>
+            <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>
+              제목
+            </h3>
+            <p className='body-md-medium text-color-text-warning'>*</p>
+          </div>
+          <input
+            type='text'
+            onChange={onChangetitle}
+            value={title}
+            placeholder='할 일을 요약해주세요.'
+            className='outline-none bg-color-bg-primary heading-desktop-md text-color-text-primary placeholder:text-color-text-disabled'
+          />
+        </div>
       )
   }
 }
@@ -84,8 +101,7 @@ function TaskDescription({
   switch (modaltype) {
     case 'CREATE':
       return (
-        <div className='flex flex-col gap-y-spacing-6 mt-spacing-12'>
-          <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>설명</h3>
+        <div className='mt-spacing-12'>
           <MarkdownEditor
             value={description}
             className='z-30 body-md-medium text-color-text-primary bg-color-bg-primary'
@@ -97,8 +113,7 @@ function TaskDescription({
 
     case 'VIEW':
       return (
-        <div className='flex flex-col gap-y-spacing-6 mt-spacing-12'>
-          <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>설명</h3>
+        <div className='mt-spacing-12'>
           <MarkdownPreview
             source={String(children)}
             className='max-h-[500px] min-h-[200px] overflow-y-auto body-md-medium'
@@ -108,8 +123,7 @@ function TaskDescription({
 
     case 'EDIT':
       return (
-        <div className='flex flex-col gap-y-spacing-6 mt-spacing-12'>
-          <h3 className='heading-desktop-sm text-color-text-tertiary bg-color-bg-primary'>설명</h3>
+        <div className='mt-spacing-12'>
           <MarkdownEditor
             value={description}
             className='body-md-medium text-color-text-primary bg-color-bg-primary'
@@ -152,6 +166,8 @@ function TaskStatus({ selectedState, setSelectedState, modaltype }: TaskStatusRe
 }
 
 function SaveEditButton({
+  isDisabled,
+  manageType,
   saveRequest,
   editRequest,
   saveEditRequest,
@@ -162,18 +178,19 @@ function SaveEditButton({
       return (
         <button
           type='button'
+          disabled={isDisabled}
           onClick={saveRequest}
-          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press'
+          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover active:bg-color-bg-interactive-primary-press disabled:bg-color-bg-disabled'
         >
           저장
         </button>
       )
     case 'VIEW':
-      return editRequest ? (
+      return editRequest && manageType === 'PERSONAL' ? (
         <button
           type='button'
           onClick={editRequest}
-          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press'
+          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover active:bg-color-bg-interactive-primary-press'
         >
           수정
         </button>
@@ -184,8 +201,9 @@ function SaveEditButton({
       return (
         <button
           type='button'
+          disabled={isDisabled}
           onClick={saveEditRequest}
-          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover focus:bg-color-bg-interactive-primary-press'
+          className='w-fit h-fit px-spacing-16 py-spacing-4 bg-color-bg-interactive-primary rounded-radius-4 text-color-text-interactive-inverse body-md-medium hover:bg-color-bg-interactive-primary-hover active:bg-color-bg-interactive-primary-press disabled:bg-color-bg-disabled'
         >
           저장
         </button>
@@ -199,11 +217,14 @@ function Assignee({
   userIds,
   setUserIds,
   userType,
+  setChannelId,
+  setNoticeType,
   manageType,
   modaltype,
 }: AssigneeResponse) {
   const [isOpen, setIsOpen] = useState(false)
   const [userNameList, setUserNameList] = useState<string[]>([])
+  const [channelName, setChannelName] = useState('')
 
   const handleOnClick = () => {
     setIsOpen(!isOpen)
@@ -247,23 +268,30 @@ function Assignee({
         case 'manager':
           return (
             <div className='relative flex items-start w-fit h-fit p-spacing-10 gap-x-spacing-10'>
-              <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당자</p>
+              <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>
+                담당자
+                <span className='body-md-medium text-color-text-warning ml-spacing-6'>*</span>
+              </p>
               <div className='flex flex-col gap-y-spacing-10'>
                 <button
                   onClick={handleOnClick}
                   className='border w-fit h-fit p-spacing-4 bg-color-bg-interactive-secondary rounded-radius-4 border-color-border-disabled body-sm-semibold text-color-text-primary'
                 >
-                  {manageType === 'PERSONAL' ? '교육생 추가' : '팀 추가'}
+                  {manageType === 'PERSONAL' ? '교육생 추가' : '채널 추가'}
                 </button>
                 <div className='flex flex-col w-full h-full gap-y-spacing-10'>
-                  {userNameList.map((userName, index) => (
-                    <div key={index} className='flex items-center gap-x-spacing-4'>
-                      <button onClick={() => handleOnclickX(index)}>
-                        <XIcon className='w-3' />
-                      </button>
-                      <p className='body-xs-semibold text-color-text-primary'>{userName}</p>
-                    </div>
-                  ))}
+                  {manageType === 'PERSONAL' ? (
+                    userNameList.map((userName, index) => (
+                      <div key={index} className='flex items-center gap-x-spacing-4'>
+                        <button onClick={() => handleOnclickX(index)}>
+                          <XIcon className='w-3' />
+                        </button>
+                        <p className='body-xs-semibold text-color-text-primary'>{userName}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className='body-xs-semibold text-color-text-tertiary'>{channelName}</p>
+                  )}
                 </div>
               </div>
 
@@ -281,10 +309,9 @@ function Assignee({
                   isOpen && (
                     <AddTeamModal
                       setIsOpen={setIsOpen}
-                      userIds={userIds}
-                      setUserIds={setUserIds}
-                      userNameList={userNameList}
-                      setUserNameList={setUserNameList}
+                      setChannelId={setChannelId}
+                      setNoticeType={setNoticeType}
+                      setChannelName={setChannelName}
                     />
                   )}
             </div>
@@ -355,11 +382,19 @@ function Manager({ user, createUser, userType, modaltype }: ManagerResponse) {
             <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
               <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
               <div className='flex items-center gap-x-spacing-6'>
-                <img
-                  src={createUser.profileImgUrl}
-                  alt='profile'
-                  className='w-5 h-5 rounded-radius-circle'
-                />
+                {createUser.profileImgUrl ? (
+                  <img
+                    src={createUser.profileImgUrl}
+                    alt='profile'
+                    className='object-cover object-center w-5 aspect-square rounded-radius-circle'
+                  />
+                ) : (
+                  <div className='flex items-center justify-center w-5 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                    <p className='body-xs-medium text-color-text-interactive-inverse'>
+                      {createUser.name[0]}
+                    </p>
+                  </div>
+                )}
                 <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
                   {createUser.name}
                 </p>
@@ -375,11 +410,19 @@ function Manager({ user, createUser, userType, modaltype }: ManagerResponse) {
           <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
             <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
             <div className='flex items-center gap-x-spacing-6'>
-              <img
-                src={createUser.profileImgUrl}
-                alt='profile'
-                className='w-5 h-5 rounded-radius-circle'
-              />
+              {createUser.profileImgUrl ? (
+                <img
+                  src={createUser.profileImgUrl}
+                  alt='profile'
+                  className='object-cover object-center w-5 aspect-square rounded-radius-circle'
+                />
+              ) : (
+                <div className='flex items-center justify-center w-5 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                  <p className='body-xs-medium text-color-text-interactive-inverse'>
+                    {createUser.name[0]}
+                  </p>
+                </div>
+              )}
               <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
                 {createUser.name}
               </p>
@@ -390,24 +433,34 @@ function Manager({ user, createUser, userType, modaltype }: ManagerResponse) {
 
     case 'EDIT':
       return (
-        <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
-          <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
-          <div className='flex items-center gap-x-spacing-6'>
-            <img
-              src={createUser.profileImgUrl}
-              alt='profile'
-              className='w-5 h-5 rounded-radius-circle'
-            />
-            <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
-              {createUser.name}
-            </p>
+        !isTrainee && (
+          <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
+            <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>담당 프로</p>
+            <div className='flex items-center gap-x-spacing-6'>
+              {createUser.profileImgUrl ? (
+                <img
+                  src={createUser.profileImgUrl}
+                  alt='profile'
+                  className='object-cover object-center w-5 aspect-square rounded-radius-circle'
+                />
+              ) : (
+                <div className='flex items-center justify-center w-5 aspect-square bg-color-bg-interactive-selected-press rounded-radius-circle'>
+                  <p className='body-xs-medium text-color-text-interactive-inverse'>
+                    {createUser.name[0]}
+                  </p>
+                </div>
+              )}
+              <p className='w-[193px] truncate body-sm-semibold text-color-text-primary'>
+                {createUser.name}
+              </p>
+            </div>
           </div>
-        </div>
+        )
       )
   }
 }
 
-function EndDate({ endDate, setEndDate, modaltype }: EndDateResponse) {
+function EndDate({ endDate, setEndDate, modaltype, userType }: EndDateResponse) {
   const today = new Date()
   const formattedDate = today.toISOString().split('T')[0]
 
@@ -419,7 +472,12 @@ function EndDate({ endDate, setEndDate, modaltype }: EndDateResponse) {
     case 'CREATE':
       return (
         <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
-          <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>마감일</p>
+          <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>
+            마감일
+            {userType === 'manager' && (
+              <span className='body-md-medium text-color-text-warning ml-spacing-6'>*</span>
+            )}
+          </p>
           <input
             type='date'
             value={endDate}
@@ -434,7 +492,7 @@ function EndDate({ endDate, setEndDate, modaltype }: EndDateResponse) {
       return (
         <div className='flex items-center w-full h-fit p-spacing-10 gap-x-spacing-10'>
           <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>마감일</p>
-          <p className='body-sm-semibold text-color-text-primary'>{endDate}</p>
+          <p className='body-sm-semibold text-color-text-primary'>{endDate ? endDate : '-'}</p>
         </div>
       )
     case 'EDIT':
@@ -513,23 +571,25 @@ function ReminderTime({ reminder, setReminder, modaltype }: ReminderResponse) {
           <p className='heading-desktop-sm min-w-20 text-color-text-tertiary'>리마인드</p>
           <div className='flex flex-col gap-y-spacing-10'>
             <div className='flex flex-col w-full h-full gap-y-spacing-10'>
-              {reminder.map((item, idx) => (
-                <div key={idx} className='flex items-center gap-x-spacing-4'>
-                  <p className='body-xs-semibold text-color-text-tertiary'>
-                    <span
-                      className={`mr-spacing-2 ${item.remindTypeCd === 'DAILY' ? 'text-color-text-info' : 'text-color-text-danger'}`}
-                    >
-                      {item.remindTypeCd === 'DAILY' ? '매일' : '한번만'}
-                    </span>
-                    {item.remindTypeCd === 'ONCE' && item.remindDateTime.split('T')[0]}{' '}
-                    {parseInt(item.remindDateTime.split('T')[1].split(':')[0]) === 12
-                      ? '오후 12시'
-                      : parseInt(item.remindDateTime.split('T')[1].split(':')[0]) > 12
-                        ? `오후 ${parseInt(item.remindDateTime.split('T')[1].split(':')[0]) - 12}시`
-                        : `오전 ${parseInt(item.remindDateTime.split('T')[1].split(':')[0])}시`}
-                  </p>
-                </div>
-              ))}
+              {reminder.length > 0
+                ? reminder.map((item, idx) => (
+                    <div key={idx} className='flex items-center gap-x-spacing-4'>
+                      <p className='body-xs-semibold text-color-text-tertiary'>
+                        <span
+                          className={`mr-spacing-2 ${item.remindTypeCd === 'DAILY' ? 'text-color-text-info' : 'text-color-text-danger'}`}
+                        >
+                          {item.remindTypeCd === 'DAILY' ? '매일' : '한번만'}
+                        </span>
+                        {item.remindTypeCd === 'ONCE' && item.remindDateTime.split('T')[0]}{' '}
+                        {parseInt(item.remindDateTime.split('T')[1].split(':')[0]) === 12
+                          ? '오후 12시'
+                          : parseInt(item.remindDateTime.split('T')[1].split(':')[0]) > 12
+                            ? `오후 ${parseInt(item.remindDateTime.split('T')[1].split(':')[0]) - 12}시`
+                            : `오전 ${parseInt(item.remindDateTime.split('T')[1].split(':')[0])}시`}
+                      </p>
+                    </div>
+                  ))
+                : '-'}
             </div>
           </div>
         </div>
@@ -630,6 +690,37 @@ function Required({ isRequired, setIsRequired, modaltype }: RequiredResponse) {
   }
 }
 
+function File({ manageType, modaltype, userType, fileList, setFileList }: FileResponse) {
+  const handlePostFile = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return
+
+    const file = event.target.files[0]
+
+    if (fileList && setFileList) {
+      setFileList([...fileList, file])
+    }
+  }
+
+  if (userType === 'manager' && manageType === 'TEAM') {
+    switch (modaltype) {
+      case 'CREATE':
+        return (
+          <div className='flex items-center'>
+            <label htmlFor='fileCreate'>
+              <div className='cursor-pointer text-color-text-primary body-xs-medium bg-color-bg-interactive-secondary w-fit rounded-radius-4 px-spacing-10 py-spacing-4'>
+                파일찾기
+              </div>
+              <input type='file' id='fileCreate' onChange={handlePostFile} className='hidden' />
+            </label>
+          </div>
+        )
+    }
+  } else {
+    // 교육생이면 업로드된 파일 다운로드 가능
+    null
+  }
+}
+
 //레이아웃
 function LeftSectionContainer({ children, modaltype }: BaseResponse) {
   return (
@@ -718,4 +809,5 @@ export const TodoModal = Object.assign(TodoModalMain, {
   EndDate: EndDate,
   Reminder: ReminderTime,
   Required: Required,
+  File: File,
 })

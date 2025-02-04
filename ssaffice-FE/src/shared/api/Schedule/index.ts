@@ -4,7 +4,6 @@ export {
   postEasyTraineeSchedule,
   postTraineeSchedule,
   postManagerSchedule,
-  postManagerTeamSchedule,
   putTraineeSchedule,
 } from './apis'
 

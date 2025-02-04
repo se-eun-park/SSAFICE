@@ -24,14 +24,14 @@ export const useGetUserCounts = (reloadTrigger: boolean) => {
     },
   })
 
-  const [userCounts, setUserCounts] = useState<UserCounts | null>(data)
+  // const [userCounts, setUserCounts] = useState<UserCounts | null>(data)
 
-  useEffect(() => {
-    setUserCounts(data)
-  }, [data])
+  // useEffect(() => {
+  //   setUserCounts(data)
+  // }, [data])
 
   return {
-    noticeCounts: userCounts?.noticeCounts,
-    scheduleCounts: userCounts?.scheduleCounts,
+    noticeCounts: data?.noticeCounts,
+    scheduleCounts: data?.scheduleCounts,
   }
 }

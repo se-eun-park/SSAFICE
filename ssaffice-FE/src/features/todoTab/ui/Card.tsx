@@ -11,7 +11,7 @@ type CardProps = {
   title: string
   endDateTime: string
   scheduleStatusTypeCd: string
-  scheduleSourceTypeCd: string
+  scheduleSourceTypeCd: string | undefined
   createUser: TaskResponse['createUser']
 }
 export const Card = ({

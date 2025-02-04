@@ -29,6 +29,7 @@ export const TraineeTodoFirstElements = ({
         title: '',
         description: '',
         selectedState: 'TODO',
+        manageType: '',
         user: {
           name: user?.name,
           profileImgUrl: user?.profileImgUrl,
@@ -41,7 +42,26 @@ export const TraineeTodoFirstElements = ({
         remindRequests: [],
       }
     case 'VIEW':
-      const { data: detail } = useTraineeScheduleDetail(scheduleId)
+      const { data: detail, isLoading } = useTraineeScheduleDetail(scheduleId)
+
+      if (isLoading)
+        return {
+          title: '',
+          description: '',
+          selectedState: 'Loading',
+          manageType: '',
+
+          user: {
+            name: '',
+            profileImgUrl: '',
+          },
+          createUser: {
+            name: '',
+            profileImgUrl: '',
+          },
+          endDate: '',
+          remindRequests: [],
+        }
 
       const remindList = Array.isArray(detail?.remindSummarys)
         ? detail.remindSummarys.map((remind: any) => {
@@ -56,6 +76,8 @@ export const TraineeTodoFirstElements = ({
         title: detail?.title,
         description: detail?.memo,
         selectedState: detail?.scheduleStatusTypeCd,
+        manageType: detail?.scheduleSourceTypeCd,
+
         user: {
           name: detail?.chargeUser?.name,
           profileImgUrl: detail?.chargeUser?.profileImgUrl,
@@ -64,24 +86,26 @@ export const TraineeTodoFirstElements = ({
           name: detail?.createUser?.name,
           profileImgUrl: detail?.createUser?.profileImgUrl,
         },
-        endDate: detail?.endDateTime ? detail?.endDateTime.split('T')[0] : '-',
+        endDate: detail?.endDateTime ? detail?.endDateTime.split('T')[0] : '',
         remindRequests: [...remindList],
       }
     case 'EDIT':
       return {
-        title: '수정하거라',
-        description: '수정하거라',
-        selectedState: 'progress',
+        title: '',
+        description: '',
+        selectedState: 'Loading',
+        manageType: '',
+
         user: {
-          name: '곽성재(교육생)',
-          profileImgUrl: 'https://i.pinimg.com/564x/4d/b2/42/4db2422c74f12f70391ec386bf95e4db.jpg',
+          name: '',
+          profileImgUrl: '',
         },
         createUser: {
-          name: '용상윤[서울_5, 6반]실습코치',
-          profileImgUrl: 'https://i.pinimg.com/236x/a5/73/59/a5735920142505068fd1e5ebd0ce86f1.jpg',
+          name: '',
+          profileImgUrl: '',
         },
-        endDate: '2024-11-19',
-        remindRequests: [{ remindtype: 'DAILY', remindDateTime: '1999-09-22T11:00:00' }],
+        endDate: '',
+        remindRequests: [],
       }
   }
 }

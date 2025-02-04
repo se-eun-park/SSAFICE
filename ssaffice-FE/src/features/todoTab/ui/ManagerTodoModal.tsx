@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ManagerTodoFirstElements } from '../model/ManagerTodoFirstElements'
 import { TodoModal } from '@/shared/ui'
-import { postManagerSchedule, postManagerTeamSchedule } from '@/shared/api/Schedule'
+import { postManagerSchedule } from '@/shared/api/Schedule'
+import { postManagerTeamSchedule } from '@/shared/api/Notice'
 
 type RemindRequest = {
   remindTypeCd: string
@@ -26,8 +27,30 @@ export const ManagerTodoModal = ({
   // const [selectedState, setSelectedState] = useState(elements.selectedState)
   const [endDate, setEndDate] = useState(elements.endDate)
   const [reminder, setReminder] = useState(elements.remindRequests)
+  const [fileList, setFileList] = useState<File[]>([])
   const [userIds, setUserIds] = useState<number[]>([])
+  const [channelId, setChannelId] = useState('')
+  const [noticeType, setNoticeType] = useState('')
   const [isRequired, setIsRequired] = useState(elements.isEssentialYn)
+  const [isDisabled, setIsDisabled] = useState(true)
+
+  useEffect(() => {
+    if (manageType === 'PERSONAL') {
+      if (!title || userIds.length === 0 || !endDate) {
+        setIsDisabled(true)
+        return
+      }
+
+      setIsDisabled(false)
+    } else {
+      if (!channelId || !noticeType || !endDate || !title) {
+        setIsDisabled(true)
+        return
+      }
+
+      setIsDisabled(false)
+    }
+  }, [title, userIds, channelId, noticeType, endDate])
 
   const headTitle = useMemo(() => {
     switch (modaltype) {
@@ -39,10 +62,6 @@ export const ManagerTodoModal = ({
   }, [modaltype])
 
   const handleOnClickSave = () => {
-    if (!title || userIds.length === 0) {
-      return
-    }
-
     const startDateTime = `${new Date().toISOString().split('T')[0]}T00:00:00`
     const endDateTime = `${endDate}T23:59:59`
 
@@ -62,11 +81,11 @@ export const ManagerTodoModal = ({
         content: description,
         startDateTime: startDateTime,
         endDateTime: endDateTime,
-        noticeTypeCd: 'TEAM',
-        isEssentialYn: isRequired,
-        channelId: '4c96tn5s63bbmnjxuqress7j4r',
+        noticeTypeCd: noticeType,
+        essentialYn: isRequired,
+        channelId: channelId,
       }
-      postManagerTeamSchedule(createData)
+      postManagerTeamSchedule(createData, fileList)
     }
 
     closeRequest()
@@ -89,9 +108,16 @@ export const ManagerTodoModal = ({
 
       <TodoModal.RightSection>
         <TodoModal.Flex>
-          {/* <TodoModal.Status selectedState={selectedState} setSelectedState={setSelectedState} /> */}
-          <TodoModal.Button saveRequest={handleOnClickSave} />
+          <div />
+          <TodoModal.Button isDisabled={isDisabled} saveRequest={handleOnClickSave} />
         </TodoModal.Flex>
+
+        <TodoModal.File
+          manageType={manageType}
+          userType='manager'
+          fileList={fileList}
+          setFileList={setFileList}
+        />
 
         <TodoModal.DetailsSection>
           <TodoModal.Assignee
@@ -100,13 +126,15 @@ export const ManagerTodoModal = ({
             userType='manager'
             userIds={userIds}
             setUserIds={setUserIds}
+            setChannelId={setChannelId}
+            setNoticeType={setNoticeType}
           />
           <TodoModal.Manager
             user={elements.user}
             createUser={elements.createUser}
             userType='manager'
           />
-          <TodoModal.EndDate endDate={endDate} setEndDate={setEndDate} />
+          <TodoModal.EndDate userType='manager' endDate={endDate} setEndDate={setEndDate} />
 
           {manageType === 'PERSONAL' ? null : (
             <TodoModal.Required isRequired={isRequired} setIsRequired={setIsRequired} />

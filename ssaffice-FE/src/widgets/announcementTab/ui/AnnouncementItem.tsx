@@ -25,7 +25,7 @@ export const AnnouncementItem = ({ announcementItem }: AnnouncementItemProps) =>
             <img
               src={announcementItem?.createUser?.profileImgUrl}
               alt='사진 없음'
-              className='w-full h-full rounded-full aspect-square'
+              className='object-cover object-center w-full rounded-full aspect-square'
             />
           )}
         </div>
